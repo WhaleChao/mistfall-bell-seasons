@@ -14,16 +14,27 @@ New-Item -ItemType Directory -Path $smokeRoot -Force | Out-Null
 $runId = [Guid]::NewGuid().ToString('N')
 $stdoutPath = Join-Path $smokeRoot "$runId.stdout.txt"
 $stderrPath = Join-Path $smokeRoot "$runId.stderr.txt"
-$process = Start-Process -FilePath $game `
-    -ArgumentList @('--headless', '--quit-after', '120') `
-    -PassThru `
-    -WindowStyle Hidden `
-    -RedirectStandardOutput $stdoutPath `
-    -RedirectStandardError $stderrPath
-if (-not $process.WaitForExit(15000)) {
-    $process.Kill()
-    $process.WaitForExit()
-    throw '匯出的遊戲啟動 smoke test 逾時。'
+$previousAppData = $env:APPDATA
+$previousLocalAppData = $env:LOCALAPPDATA
+$isolatedUserRoot = Join-Path $smokeRoot 'appdata'
+New-Item -ItemType Directory -Path $isolatedUserRoot -Force | Out-Null
+$env:APPDATA = $isolatedUserRoot
+$env:LOCALAPPDATA = $isolatedUserRoot
+try {
+    $process = Start-Process -FilePath $game `
+        -ArgumentList @('--headless', '--quit-after', '120') `
+        -PassThru `
+        -WindowStyle Hidden `
+        -RedirectStandardOutput $stdoutPath `
+        -RedirectStandardError $stderrPath
+    if (-not $process.WaitForExit(15000)) {
+        $process.Kill()
+        $process.WaitForExit()
+        throw '匯出的遊戲啟動 smoke test 逾時。'
+    }
+} finally {
+    $env:APPDATA = $previousAppData
+    $env:LOCALAPPDATA = $previousLocalAppData
 }
 $output = @()
 if (Test-Path -LiteralPath $stdoutPath) { $output += Get-Content -LiteralPath $stdoutPath }

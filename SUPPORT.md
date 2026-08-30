@@ -8,4 +8,4 @@
 - 畫面模糊：遊戲使用 640×360 基準與整數縮放；請在設定切換全螢幕。
 - 手把配置：在 Esc／Start 的「設定」頁重新綁定。
 - 存檔問題：先備份 Godot `user://` 中的存檔再回報；不要手動降級 SaveGame schema。
-- Windows SmartScreen：v1.0.1 是未簽章的獨立遊戲；請只從專案 GitHub Releases 下載並核對 SHA-256。
+- Windows SmartScreen：v1.0.2 是未簽章的獨立遊戲；請只從專案 GitHub Releases 下載並核對 SHA-256。

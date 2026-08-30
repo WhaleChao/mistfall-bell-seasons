@@ -252,9 +252,11 @@ func _create_visual_sprite() -> void:
 	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas.png")
 	if atlas == null:
 		return
+	var frame_width := floori(atlas.get_width() / 4.0)
+	var frame_height := floori(atlas.get_height() / 4.0)
 	visual_region = AtlasTexture.new()
 	visual_region.atlas = atlas
-	visual_region.region = Rect2(0, 0, atlas.get_width() / 4.0, atlas.get_height() / 4.0)
+	visual_region.region = Rect2(0, 0, frame_width, frame_height)
 	visual_sprite = Sprite2D.new()
 	visual_sprite.texture = visual_region
 	visual_sprite.position = Vector2(0, -12)
@@ -285,7 +287,9 @@ func _update_visual() -> void:
 		visual_frame = frame
 		visual_direction_row = direction_row
 		var atlas := visual_region.atlas
-		visual_region.region = Rect2(frame * atlas.get_width() / 4.0, direction_row * atlas.get_height() / 4.0, atlas.get_width() / 4.0, atlas.get_height() / 4.0)
+		var frame_width := floori(atlas.get_width() / 4.0)
+		var frame_height := floori(atlas.get_height() / 4.0)
+		visual_region.region = Rect2(frame * frame_width, direction_row * frame_height, frame_width, frame_height)
 	visual_sprite.position = Vector2(0, -12)
 	visual_sprite.flip_h = false
 	visual_sprite.rotation = 0.0

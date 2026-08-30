@@ -16,13 +16,18 @@ jobs:
       - run: pip install -e './creator_service[test]'
       - run: python scripts/validate_content.py --release
       - run: python scripts/audit_release.py
+      - run: pip-audit --local
       - run: pytest tests/python
 
   godot-smoke:
     runs-on: ubuntu-latest
     container: barichello/godot-ci:4.7.2
+    env:
+      PIXELRPG_TEST_ISOLATED: '1'
     steps:
       - uses: actions/checkout@v7
       - run: godot --headless --path . --editor --quit
       - run: godot --headless --path . --script res://tests/godot/smoke_test.gd
+      - run: godot --headless --path . --script res://tests/godot/image_integrity_test.gd
+      - run: godot --headless --path . --script res://tests/godot/commercial_stress_test.gd
       - run: godot --headless --path . --script res://tests/godot/performance_test.gd

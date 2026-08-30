@@ -193,7 +193,9 @@ func _create_visual_sprite() -> void:
 		return
 	var region := AtlasTexture.new()
 	region.atlas = atlas
-	region.region = Rect2((index % 4) * atlas.get_width() / 4.0, (index / 4) * atlas.get_height() / 4.0, atlas.get_width() / 4.0, atlas.get_height() / 4.0)
+	var frame_width := floori(atlas.get_width() / 4.0)
+	var frame_height := floori(atlas.get_height() / 4.0)
+	region.region = Rect2((index % 4) * frame_width, (index / 4) * frame_height, frame_width, frame_height)
 	visual_sprite = Sprite2D.new()
 	visual_sprite.texture = region
 	visual_sprite.position = Vector2(0, -7)

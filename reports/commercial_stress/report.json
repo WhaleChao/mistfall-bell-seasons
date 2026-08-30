@@ -1,0 +1,107 @@
+{
+	"generated_at": "2026-08-30T02:47:49",
+	"engine": {
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"hex": 263938,
+		"status": "stable",
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"timestamp": 0,
+		"string": "4.7.2-stable (official)"
+	},
+	"checks": 13,
+	"passed": 13,
+	"failed": 0,
+	"metrics": {
+		"simulated_days": 12000,
+		"monthly_roundtrips": 400,
+		"festivals_seen": 1200,
+		"severe_forecasts": 600,
+		"generated_request_instances": 34923,
+		"final_save_bytes": 3041,
+		"disk_save_cycles": 250,
+		"elapsed_seconds": 4.922
+	},
+	"cases": [
+		{
+			"category": "百年模擬",
+			"name": "初始雞牛狀態建立成功",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "百年模擬",
+			"name": "12,000 日後準確進入第 101 年春 1 日",
+			"passed": true,
+			"detail": "第 101 年 春季 1 日"
+		},
+		{
+			"category": "百年模擬",
+			"name": "遊玩日數統計無漂移",
+			"passed": true,
+			"detail": "12000.0"
+		},
+		{
+			"category": "百年模擬",
+			"name": "400 次每月序列化均成功",
+			"passed": true,
+			"detail": "400/400"
+		},
+		{
+			"category": "百年模擬",
+			"name": "100 年節慶排程維持每年 12 場",
+			"passed": true,
+			"detail": "1200"
+		},
+		{
+			"category": "百年模擬",
+			"name": "颱風與暴雪預警在長期模擬中可達",
+			"passed": true,
+			"detail": "600"
+		},
+		{
+			"category": "百年模擬",
+			"name": "第 4 年後規則式委託持續生成",
+			"passed": true,
+			"detail": "34923"
+		},
+		{
+			"category": "百年模擬",
+			"name": "動物資料長期保存且不自行增殖",
+			"passed": true,
+			"detail": "2"
+		},
+		{
+			"category": "百年模擬",
+			"name": "百年存檔維持在 1 MiB 內",
+			"passed": true,
+			"detail": "3041 bytes"
+		},
+		{
+			"category": "存檔壓力",
+			"name": "250 次磁碟存讀 round-trip",
+			"passed": true,
+			"detail": "250/250"
+		},
+		{
+			"category": "存檔復原",
+			"name": "主存檔截斷時自動讀取上一份安全備份",
+			"passed": true,
+			"detail": "coins=5216 expected=5216"
+		},
+		{
+			"category": "存檔復原",
+			"name": "中斷寫入留下的完整暫存檔可復原",
+			"passed": true,
+			"detail": "coins=77777"
+		},
+		{
+			"category": "存檔復原",
+			"name": "未知 schema 版本會明確拒絕",
+			"passed": true,
+			"detail": ""
+		}
+	]
+}

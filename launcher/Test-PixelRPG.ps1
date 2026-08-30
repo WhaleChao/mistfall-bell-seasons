@@ -25,6 +25,14 @@ if ($LASTEXITCODE -ne 0) { throw '內容 release gate 失敗。' }
 & $python (Join-Path $projectRoot 'scripts\audit_release.py')
 if ($LASTEXITCODE -ne 0) { throw '離線／匯出邊界稽核失敗。' }
 Push-Location $projectRoot
+$previousAppData = $env:APPDATA
+$previousLocalAppData = $env:LOCALAPPDATA
+$previousTestIsolation = $env:PIXELRPG_TEST_ISOLATED
+$testUserRoot = Join-Path $projectRoot 'work\automated-test-appdata'
+New-Item -ItemType Directory -Path $testUserRoot -Force | Out-Null
+$env:APPDATA = $testUserRoot
+$env:LOCALAPPDATA = $testUserRoot
+$env:PIXELRPG_TEST_ISOLATED = '1'
 try {
     & $python -m pytest tests\python -q
     if ($LASTEXITCODE -ne 0) { throw 'Python 測試失敗。' }
@@ -35,9 +43,16 @@ try {
     }
     & $godot --headless --path . --script res://tests/godot/smoke_test.gd
     if ($LASTEXITCODE -ne 0) { throw 'Godot smoke test 失敗。' }
+    & $godot --headless --path . --script res://tests/godot/image_integrity_test.gd
+    if ($LASTEXITCODE -ne 0) { throw '圖片完整性閘門失敗。' }
+    & $godot --headless --path . --script res://tests/godot/commercial_stress_test.gd
+    if ($LASTEXITCODE -ne 0) { throw '商業長期／存檔壓力閘門失敗。' }
     & $godot --headless --path . --script res://tests/godot/performance_test.gd
     if ($LASTEXITCODE -ne 0) { throw '20 敵人效能閘門失敗。' }
 } finally {
+    $env:APPDATA = $previousAppData
+    $env:LOCALAPPDATA = $previousLocalAppData
+    $env:PIXELRPG_TEST_ISOLATED = $previousTestIsolation
     Pop-Location
 }
 Write-Host 'PixelRPG 所有自動驗證均通過。'

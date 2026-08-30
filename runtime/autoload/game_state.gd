@@ -164,7 +164,7 @@ func advance_day(debug_skip: bool = false) -> Dictionary:
 
 func sleep_if_allowed() -> bool:
 	if calendar.minute_of_day < 20 * 60:
-		EventBus.toast("20:00 後才能就寢；F4 可在測試版快轉一天")
+		EventBus.toast("20:00 後才能就寢")
 		return false
 	advance_day()
 	return true

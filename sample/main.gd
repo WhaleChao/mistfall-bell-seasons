@@ -122,9 +122,6 @@ func _process(delta: float) -> void:
 			_show_toast("請先由村口返回農場")
 	if Input.is_action_just_pressed("attend_festival") and mode == "farm":
 		festival_overlay.open_today()
-	if Input.is_action_just_pressed("advance_day_debug"):
-		GameState.advance_day(true)
-		player.restore_from_game_state()
 	if Input.is_action_just_pressed("use_potion") and is_instance_valid(player):
 		if GameState.consume_item(&"health_potion"):
 			player.heal(35)
@@ -306,7 +303,9 @@ func _create_npc_sprites() -> void:
 		var index: int = int(atlas_indices[npc_id])
 		var region := AtlasTexture.new()
 		region.atlas = atlas
-		region.region = Rect2((index % 4) * atlas.get_width() / 4.0, (index / 4) * atlas.get_height() / 3.0, atlas.get_width() / 4.0, atlas.get_height() / 3.0)
+		var frame_width := floori(atlas.get_width() / 4.0)
+		var frame_height := floori(atlas.get_height() / 3.0)
+		region.region = Rect2((index % 4) * frame_width, (index / 4) * frame_height, frame_width, frame_height)
 		var sprite := Sprite2D.new()
 		sprite.texture = region
 		sprite.scale = Vector2(0.145, 0.145)
@@ -653,7 +652,9 @@ func _update_animal_sprites() -> void:
 			var atlas_index := 1 if String(animal.get("species", "")) == "chicken" else 3
 			var region := AtlasTexture.new()
 			region.atlas = atlas
-			region.region = Rect2((atlas_index % 4) * atlas.get_width() / 4.0, (atlas_index / 4) * atlas.get_height() / 2.0, atlas.get_width() / 4.0, atlas.get_height() / 2.0)
+			var frame_width := floori(atlas.get_width() / 4.0)
+			var frame_height := floori(atlas.get_height() / 2.0)
+			region.region = Rect2((atlas_index % 4) * frame_width, (atlas_index / 4) * frame_height, frame_width, frame_height)
 			sprite = Sprite2D.new()
 			sprite.texture = region
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

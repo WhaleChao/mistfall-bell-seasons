@@ -10,6 +10,8 @@ if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "VERSION 格式錯誤：$versi
 if ($LASTEXITCODE -ne 0) { throw '自動測試未通過。' }
 & (Join-Path $PSScriptRoot 'Test-RenderPerformance.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw '1080p 效能測試未通過。' }
+& (Join-Path $PSScriptRoot 'Test-ResolutionLayout.ps1') -GodotPath $GodotPath
+if ($LASTEXITCODE -ne 0) { throw '多解析度畫面測試未通過。' }
 & (Join-Path $PSScriptRoot 'Export-Sample.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw 'Windows 匯出失敗。' }
 & (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1')
@@ -31,6 +33,8 @@ Copy-Item -LiteralPath (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.exe'
 Copy-Item -LiteralPath (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.pck') -Destination $packageRoot
 Copy-Item -LiteralPath (Join-Path $projectRoot 'README.md') -Destination (Join-Path $packageRoot 'README.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $packageRoot 'LICENSE.txt')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'GODOT_ENGINE_LICENSE.txt') -Destination $packageRoot
+Copy-Item -LiteralPath (Join-Path $projectRoot 'GODOT_ENGINE_COPYRIGHT.txt') -Destination $packageRoot
 Copy-Item -LiteralPath (Join-Path $projectRoot 'THIRD_PARTY.md') -Destination (Join-Path $packageRoot 'THIRD_PARTY_NOTICES.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.creator\ASSET_LICENSES.md') -Destination (Join-Path $packageRoot 'ASSET_LICENSES.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'PRIVACY.md') -Destination (Join-Path $packageRoot 'PRIVACY.md')
@@ -43,4 +47,6 @@ foreach ($path in @((Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.exe'), 
     $hashLines += "$hash  $([IO.Path]::GetFileName($path))"
 }
 [IO.File]::WriteAllLines((Join-Path $distRoot 'SHA256SUMS.txt'), $hashLines, [Text.UTF8Encoding]::new($false))
+& (Join-Path $PSScriptRoot 'Test-ReleaseArchive.ps1') -ArchivePath $archive
+if ($LASTEXITCODE -ne 0) { throw '正式 ZIP 完整性驗證失敗。' }
 Write-Host "發行包完成：$archive"

@@ -1,0 +1,174 @@
+{
+	"generated_at": "2026-08-30T02:44:04",
+	"engine": {
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"hex": 263938,
+		"status": "stable",
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"timestamp": 0,
+		"string": "4.7.2-stable (official)"
+	},
+	"renderer": "NVIDIA GeForce RTX 3060",
+	"checks": 20,
+	"passed": 20,
+	"failed": 0,
+	"captures": [
+		{
+			"file": "640x360.png",
+			"width": 640,
+			"height": 360,
+			"integer_scale": 1,
+			"variance": 0.0202901730168456,
+			"black_ratio": 0.00199652777777778
+		},
+		{
+			"file": "1280x720.png",
+			"width": 1280,
+			"height": 720,
+			"integer_scale": 2,
+			"variance": 0.0205891263023429,
+			"black_ratio": 0.00203125
+		},
+		{
+			"file": "1920x1080.png",
+			"width": 1920,
+			"height": 1080,
+			"integer_scale": 3,
+			"variance": 0.0209460342840268,
+			"black_ratio": 0.00234375
+		},
+		{
+			"file": "2560x1440.png",
+			"width": 2560,
+			"height": 1440,
+			"integer_scale": 4,
+			"variance": 0.0212991605228631,
+			"black_ratio": 0.0021875
+		}
+	],
+	"cases": [
+		{
+			"category": "截圖",
+			"name": "640x360.png 可輸出 PNG",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "解析度",
+			"name": "640x360.png 實際 framebuffer 尺寸正確",
+			"passed": true,
+			"detail": "640x360"
+		},
+		{
+			"category": "畫面",
+			"name": "640x360.png 不是空白或純色畫面",
+			"passed": true,
+			"detail": "variance=0.02029"
+		},
+		{
+			"category": "畫面",
+			"name": "640x360.png 沒有異常大面積黑屏",
+			"passed": true,
+			"detail": "black=0.20%"
+		},
+		{
+			"category": "整數縮放",
+			"name": "640x360.png 使用整數像素倍率",
+			"passed": true,
+			"detail": "1x"
+		},
+		{
+			"category": "截圖",
+			"name": "1280x720.png 可輸出 PNG",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "解析度",
+			"name": "1280x720.png 實際 framebuffer 尺寸正確",
+			"passed": true,
+			"detail": "1280x720"
+		},
+		{
+			"category": "畫面",
+			"name": "1280x720.png 不是空白或純色畫面",
+			"passed": true,
+			"detail": "variance=0.02059"
+		},
+		{
+			"category": "畫面",
+			"name": "1280x720.png 沒有異常大面積黑屏",
+			"passed": true,
+			"detail": "black=0.20%"
+		},
+		{
+			"category": "整數縮放",
+			"name": "1280x720.png 使用整數像素倍率",
+			"passed": true,
+			"detail": "2x"
+		},
+		{
+			"category": "截圖",
+			"name": "1920x1080.png 可輸出 PNG",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "解析度",
+			"name": "1920x1080.png 實際 framebuffer 尺寸正確",
+			"passed": true,
+			"detail": "1920x1080"
+		},
+		{
+			"category": "畫面",
+			"name": "1920x1080.png 不是空白或純色畫面",
+			"passed": true,
+			"detail": "variance=0.02095"
+		},
+		{
+			"category": "畫面",
+			"name": "1920x1080.png 沒有異常大面積黑屏",
+			"passed": true,
+			"detail": "black=0.23%"
+		},
+		{
+			"category": "整數縮放",
+			"name": "1920x1080.png 使用整數像素倍率",
+			"passed": true,
+			"detail": "3x"
+		},
+		{
+			"category": "截圖",
+			"name": "2560x1440.png 可輸出 PNG",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "解析度",
+			"name": "2560x1440.png 實際 framebuffer 尺寸正確",
+			"passed": true,
+			"detail": "2560x1440"
+		},
+		{
+			"category": "畫面",
+			"name": "2560x1440.png 不是空白或純色畫面",
+			"passed": true,
+			"detail": "variance=0.02130"
+		},
+		{
+			"category": "畫面",
+			"name": "2560x1440.png 沒有異常大面積黑屏",
+			"passed": true,
+			"detail": "black=0.22%"
+		},
+		{
+			"category": "整數縮放",
+			"name": "2560x1440.png 使用整數像素倍率",
+			"passed": true,
+			"detail": "4x"
+		}
+	]
+}
