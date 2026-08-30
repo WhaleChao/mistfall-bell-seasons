@@ -26,6 +26,12 @@ jobs:
       PIXELRPG_TEST_ISOLATED: '1'
     steps:
       - uses: actions/checkout@v7
+      - name: Install Godot headless font runtime
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends libfontconfig1
+          rm -rf /var/lib/apt/lists/*
       - name: Run Godot gates and reject engine error output
         shell: bash
         run: |
