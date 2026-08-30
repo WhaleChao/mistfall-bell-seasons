@@ -38,7 +38,7 @@
     },
     {
       "category": "移動動畫",
-      "detail": "位移 79.9 px",
+      "detail": "位移 81.9 px",
       "name": "ui_right 方向移動",
       "passed": true
     },
@@ -716,7 +716,7 @@
     }
   ],
   "checks": 119,
-  "elapsed_seconds": 23.21,
+  "elapsed_seconds": 23.52,
   "engine": {
     "build": "official",
     "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
@@ -729,7 +729,7 @@
     "timestamp": 0
   },
   "failed": 0,
-  "generated_at": "2026-08-30T02:39:50",
+  "generated_at": "2026-08-30T05:28:51",
   "passed": 119,
   "renderer": "NVIDIA GeForce RTX 3060",
   "schema_version": 1,

@@ -2,8 +2,14 @@
 
 ## Unreleased
 
-- 加入公開 GitHub Release 的乾淨 Windows VM 驗證，涵蓋遠端下載 digest、ZIP 內容、法律文件、PCK 邊界、解壓啟動與執行期零網路端點。
-- 加入正式 PFX／時間戳 Authenticode 管線與隔離複本測試；私鑰檔案由 Git 及 release audit 阻擋。
+## 1.0.3 — 2026-08-30
+
+- 加入 Godot EditorPlugin 的 57 項實機 UI 驗收；巡覽 15 頁、16 種資料、7 個長期系統頁，驗證 UndoRedo、節點圖、錯誤 JSON 拒絕與 16 張互異畫面。
+- 加入真實 Ollama／Qwen 4B、9B 與 0.6B embedding 驗收，原始服務與 371.97 MiB 封裝 EXE 均為 24/24；涵蓋串流、RAG、來源、圖片理解、結構修復與取消。
+- Creator Service 單檔封裝納入 Docling 插件 metadata、PDF 資源、RapidOCR 模型及 sqlite-vec DLL；TXT、Markdown、CSV、HTML、DOCX、PPTX、XLSX、PDF、PNG 離線索引 9/9 通過。
+- 修正 PyInstaller 子程序清理、Studio 實際主畫面切換、GraphEdit 新節點重疊、Editor 內容驗證及 AI 修復回合看不到上一版 JSON 等問題。
+- 完整環境 138 個依賴經 `pip-audit` 掃描為 0 個已知漏洞；Python 測試增加至 16 個，最終 Creator Service EXE 經 Microsoft Defender 掃描無新偵測。
+- 加入公開 GitHub Release 的乾淨 Windows VM 驗證與 PFX／時間戳 Authenticode 隔離複本測試；私鑰檔案由 Git 及 release audit 阻擋。
 
 ## 1.0.2 — 2026-08-30
 

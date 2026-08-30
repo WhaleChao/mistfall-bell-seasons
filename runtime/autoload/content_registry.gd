@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 const CONTENT_DIRECTORIES := {

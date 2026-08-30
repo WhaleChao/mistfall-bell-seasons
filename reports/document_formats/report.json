@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "formats": [
+    {
+      "extension": ".txt",
+      "bytes": 53,
+      "extracted_characters": 32,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 0.001,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".md",
+      "bytes": 57,
+      "extracted_characters": 41,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 0.001,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".csv",
+      "bytes": 45,
+      "extracted_characters": 38,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 0.001,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".html",
+      "bytes": 76,
+      "extracted_characters": 32,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 8.389,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".docx",
+      "bytes": 36693,
+      "extracted_characters": 45,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 0.042,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".pptx",
+      "bytes": 28303,
+      "extracted_characters": 38,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 0.037,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".xlsx",
+      "bytes": 4930,
+      "extracted_characters": 128,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 0.017,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".pdf",
+      "bytes": 596,
+      "extracted_characters": 23,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 8.639,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    },
+    {
+      "extension": ".png",
+      "bytes": 8384,
+      "extracted_characters": 26,
+      "marker_found": true,
+      "warnings": [],
+      "seconds": 4.89,
+      "offline_marker_found": true,
+      "offline_warnings": []
+    }
+  ],
+  "format_count": 9,
+  "offline_external_connections_allowed": 0,
+  "offline_process_exit_code": 0
+}

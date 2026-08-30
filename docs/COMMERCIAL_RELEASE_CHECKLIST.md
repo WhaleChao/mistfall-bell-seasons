@@ -4,7 +4,7 @@
 
 - [x] 269 筆內容通過 JSON Schema、穩定 ID 與跨檔引用驗證。
 - [x] 11 個發行素材逐檔存在、授權非空且 SHA-256 完全相符；9 張 Runtime 圖片另通過 217 項解碼、尺寸、圖集格線、餘邊、空格、重複格與動畫幀檢查。
-- [x] 15 個 Python 測試通過；Godot smoke 與 600 幀／20 敵人模擬通過。
+- [x] 16 個 Python 測試通過；Godot smoke 與 600 幀／20 敵人模擬通過。
 - [x] 四季 30 日與 12,000 日／100 年模擬無漂移；1,200 場節慶與第 4 年後委託持續生成。
 - [x] 250 次磁碟存讀、主檔截斷備份復原、暫存檔復原與未知 schema 拒絕通過。
 - [x] SaveGame v1、v2 可遷移至 v3。
@@ -12,7 +12,9 @@
 - [x] RTX 3060、1920×1080、20 敵人實測遠高於 60 FPS 容量。
 - [x] Windows x64 release export、PCK 邊界、可執行檔啟動、正式 ZIP 精確檔案清單、解壓後啟動與 SHA-256 通過。
 - [x] 640×360、1280×720、1920×1080、2560×1440 實際 GPU framebuffer 與 1×–4× 整數縮放通過。
-- [x] 59 個 Creator Service 測試依賴的已知漏洞掃描為 0，15 個 Python 測試零警告通過；Godot 4.7.2 授權與完整第三方著作權原文以固定雜湊納入 ZIP。
+- [x] 完整 Creator Service 環境 138 個依賴的已知漏洞掃描為 0，16 個 Python 測試通過；Godot 4.7.2 授權與完整第三方著作權原文以固定雜湊納入 ZIP。
+- [x] 最終 Creator Service EXE 以真實 Ollama／Qwen 通過 24/24，並以 Docling、RapidOCR、sqlite-vec 通過 9/9 文件格式與離線增量索引。
+- [x] Godot EditorPlugin 通過 57/57 實機 UI 驗收與 16 張互異畫面，涵蓋 15 頁、UndoRedo、節點圖、引用、diff 與套用前驗證。
 - [x] 最終發行資料夾與 ZIP 經 Windows Defender 定義 1.457.393.0 掃描，偵測 0 項威脅。
 - [x] GitHub 全新 Windows 11 VM 從公開 Release 下載、驗證、解壓及啟動；23 次執行期網路觀測為 0 端點。
 - [x] PFX Authenticode 管線以公開 EXE 隔離複本完成，且正式 EXE 原雜湊不變。
@@ -28,7 +30,7 @@
 
 ## 發布資訊
 
-- 版本：1.0.2
+- 版本：1.0.3
 - 平台：Windows x64 portable
 - 語系：繁體中文
 - 簽章：未簽章；提供 SHA-256 供核對

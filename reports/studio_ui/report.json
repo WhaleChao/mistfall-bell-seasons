@@ -1,0 +1,379 @@
+{
+	"passed": 57,
+	"failed": 0,
+	"checks": [
+		{
+			"category": "啟動",
+			"name": "EditorPlugin 已載入 PixelRPG Studio",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "啟動",
+			"name": "Godot 主畫面實際切換到 PixelRPG",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "導覽",
+			"name": "15 個製作頁面完整",
+			"passed": true,
+			"details": "15"
+		},
+		{
+			"category": "導覽",
+			"name": "頁面名稱契約完整",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "專案",
+			"name": "Manifest 已載入編輯器",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "專案",
+			"name": "Manifest JSON 合法",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "UndoRedo",
+			"name": "Studio 保存動作實際寫入",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "UndoRedo",
+			"name": "Ctrl+Z 路徑逐位元還原原檔",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "素材",
+			"name": "素材庫 UI 與索引數量一致",
+			"passed": true,
+			"details": "11"
+		},
+		{
+			"category": "素材",
+			"name": "精靈切割預設值可用",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "資料庫",
+			"name": "16 種資料均可載入並產生合法新建草稿",
+			"passed": true,
+			"details": "{\"NPC 排程\":1,\"世界事件\":1,\"任務\":13,\"作物\":1,\"動物\":1,\"委託模板\":1,\"對話\":13,\"技能\":1,\"敵人\":19,\"料理\":1,\"洞窟\":1,\"物品\":13,\"節慶\":1,\"角色\":11,\"農場升級\":1,\"魚類\":1}"
+		},
+		{
+			"category": "長期系統",
+			"name": "日曆、排程、作物、節慶、升級、家庭、洞窟頁均載入合法 JSON",
+			"passed": true,
+			"details": "7"
+		},
+		{
+			"category": "安全",
+			"name": "無效 JSON 不會寫入內容",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "劇情",
+			"name": "三年主線對話出現在節點圖清單",
+			"passed": true,
+			"details": "13"
+		},
+		{
+			"category": "劇情",
+			"name": "DialogueGraph 實際轉為視覺節點",
+			"passed": true,
+			"details": "5"
+		},
+		{
+			"category": "劇情",
+			"name": "新增台詞節點可互動",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "劇情",
+			"name": "新增台詞節點自動放在未重疊格位",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "測試",
+			"name": "Studio 內容與授權檢查通過",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "匯出",
+			"name": "Studio Release Gate 通過",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "版面",
+			"name": "01 專案 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "01_project 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜63 sampled colors｜8d79fa1789e0"
+		},
+		{
+			"category": "版面",
+			"name": "02 素材／參考庫 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "02_assets 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜84 sampled colors｜6d0f641e21e4"
+		},
+		{
+			"category": "版面",
+			"name": "03 世界 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "03_world 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜74 sampled colors｜431276e310a3"
+		},
+		{
+			"category": "版面",
+			"name": "04 資料庫 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "04_database 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜64 sampled colors｜14e0a79dc728"
+		},
+		{
+			"category": "版面",
+			"name": "05 日曆 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "05_calendar 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜102 sampled colors｜6d33f38f2b41"
+		},
+		{
+			"category": "版面",
+			"name": "06 NPC 排程 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "06_npc_schedules 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜132 sampled colors｜79363207d8c4"
+		},
+		{
+			"category": "版面",
+			"name": "07 農作 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "07_crops 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜114 sampled colors｜1ee460230665"
+		},
+		{
+			"category": "版面",
+			"name": "08 節慶 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "08_festivals 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜107 sampled colors｜c9fad435e51d"
+		},
+		{
+			"category": "版面",
+			"name": "09 農場升級 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "09_farm_upgrades 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜108 sampled colors｜97c9da1fff00"
+		},
+		{
+			"category": "版面",
+			"name": "10 家庭 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "10_family 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜73 sampled colors｜dbe9af0c18fa"
+		},
+		{
+			"category": "版面",
+			"name": "11 洞窟 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "11_dungeon 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜81 sampled colors｜f6a1b41f061a"
+		},
+		{
+			"category": "版面",
+			"name": "12 劇情 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "12_story 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜91 sampled colors｜e35d6fbef2aa"
+		},
+		{
+			"category": "版面",
+			"name": "13 AI 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "13_ai 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜71 sampled colors｜6c25f0d1d1ed"
+		},
+		{
+			"category": "版面",
+			"name": "14 測試 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "14_tests 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜63 sampled colors｜3dfc44660e74"
+		},
+		{
+			"category": "版面",
+			"name": "15 匯出 可顯示且沒有零尺寸",
+			"passed": true,
+			"details": "1118x685"
+		},
+		{
+			"category": "畫面",
+			"name": "15_export 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜68 sampled colors｜66750d3f5378"
+		},
+		{
+			"category": "畫面",
+			"name": "15 個製作頁面像素內容互異",
+			"passed": true,
+			"details": "15/15"
+		},
+		{
+			"category": "AI UI",
+			"name": "GDScript client 連接 localhost Creator Service",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "AI UI",
+			"name": "Studio UI 收到完整 WebSocket 草稿",
+			"passed": true,
+			"details": "草稿完成；請檢查引用與差異後再套用。"
+		},
+		{
+			"category": "AI UI",
+			"name": "Studio UI 草稿為合法 JSON",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "AI UI",
+			"name": "引用來源與差異面板有內容",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "AI UI",
+			"name": "套用前本機驗證通過",
+			"passed": true,
+			"details": ""
+		},
+		{
+			"category": "畫面",
+			"name": "13_ai_completed 截圖可解碼且非空白",
+			"passed": true,
+			"details": "1920x1017｜72 sampled colors｜9766b5e3fc8a"
+		},
+		{
+			"category": "畫面",
+			"name": "AI 完成畫面與其他頁面像素互異",
+			"passed": true,
+			"details": "16/16"
+		}
+	],
+	"screenshots": [
+		"res://reports/studio_ui/01_project.png",
+		"res://reports/studio_ui/02_assets.png",
+		"res://reports/studio_ui/03_world.png",
+		"res://reports/studio_ui/04_database.png",
+		"res://reports/studio_ui/05_calendar.png",
+		"res://reports/studio_ui/06_npc_schedules.png",
+		"res://reports/studio_ui/07_crops.png",
+		"res://reports/studio_ui/08_festivals.png",
+		"res://reports/studio_ui/09_farm_upgrades.png",
+		"res://reports/studio_ui/10_family.png",
+		"res://reports/studio_ui/11_dungeon.png",
+		"res://reports/studio_ui/12_story.png",
+		"res://reports/studio_ui/13_ai.png",
+		"res://reports/studio_ui/14_tests.png",
+		"res://reports/studio_ui/15_export.png",
+		"res://reports/studio_ui/13_ai_completed.png"
+	],
+	"elapsed_seconds": 30.755,
+	"renderer": "NVIDIA GeForce RTX 3060",
+	"godot": {
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"hex": 263938,
+		"status": "stable",
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"timestamp": 0,
+		"string": "4.7.2-stable (official)"
+	}
+}

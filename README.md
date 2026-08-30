@@ -1,6 +1,6 @@
 # 霧落農歌：鐘塔之季
 
-《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 單人俯視像素農場動作 RPG。v1.0.2 為可離線遊玩的商業發行候選版；遊戲 Runtime 不包含模型、Creator Service、知識庫或網路請求。
+《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 單人俯視像素農場動作 RPG。v1.0.3 為可離線遊玩的商業發行候選版；遊戲 Runtime 不包含模型、Creator Service、知識庫或網路請求。
 
 ![農場畫面](screenshots/commercial_farm.png)
 
@@ -17,7 +17,7 @@
 
 ## 下載與遊玩
 
-[GitHub Releases 的 Windows x64 v1.0.2 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.0.2)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；不需要網路或 AI 模型。
+[GitHub Releases 的 Windows x64 v1.0.3 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.0.3)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；不需要網路或 AI 模型。
 
 原始專案中也可雙擊 `Play Mistfall.cmd`；若尚未安裝 Godot，先執行 `launcher/Fetch-Godot.ps1`。
 
@@ -40,19 +40,24 @@
 ```powershell
 .\launcher\Fetch-Godot.ps1
 .\launcher\Fetch-ExportTemplates.ps1
+.\launcher\Setup-PixelRPG.ps1 -WithDocuments -WithVector -WithTestTools
+.\launcher\Build-CreatorService.ps1
 .\launcher\Test-PixelRPG.ps1
+.\launcher\Test-PackagedDocuments.ps1
+.\launcher\Test-RealAI.ps1 -CreatorExecutable .\creator_service\dist\PixelRPGCreatorService.exe
+.\launcher\Test-StudioUI.ps1
 .\launcher\Test-RenderPerformance.ps1
 .\launcher\Run-FullAcceptance.ps1
 .\launcher\Package-Release.ps1
-.\launcher\Test-PublishedRelease.ps1 -Tag v1.0.2
+.\launcher\Test-PublishedRelease.ps1 -Tag v1.0.3
 .\launcher\Test-CodeSigningPipeline.ps1
 ```
 
-發行閘門會驗證 269 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、217 項圖片／圖集規則、Save v1→v2→v3、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、離線 PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，119 項通過並保存 12 張畫面證據。公開 v1.0.2 亦由[全新 Windows 11 VM](reports/CLEAN_WINDOWS_RELEASE.md)重新下載與啟動，23 次執行期 TCP／UDP 觀測為零端點。RTX 3060 的 1080p／20 敵人測試遠高於 60 FPS 容量；正式遊玩鎖定 60 FPS。
+發行閘門會驗證 269 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、217 項圖片／圖集規則、Save v1→v2→v3、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、離線 PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，119 項通過並保存 12 張畫面證據。公開版另由[全新 Windows 11 VM](reports/CLEAN_WINDOWS_RELEASE.md)重新下載與啟動，執行期 TCP／UDP 觀測為零端點。RTX 3060 的 1080p／20 敵人最終打包前實測為 658.6 FPS 容量；正式遊玩鎖定 60 FPS。
 
 ## PixelRPG Studio 與本機 AI
 
-雙擊 `PixelRPG Studio.cmd` 可開啟 15 頁 Godot 編輯插件；Creator Service 可在製作端連接本機 Ollama，產生帶引用、可驗證並需人工套用的草稿。AI 工具與設計文件由匯出規則硬性排除，不會跟著遊戲發布。
+雙擊 `PixelRPG Studio.cmd` 可開啟 15 頁 Godot 編輯插件；Creator Service 可在製作端連接本機 Ollama，產生帶引用、可驗證並需人工套用的草稿。Studio 已通過 [57 項實機 UI 驗收](reports/studio_ui/REPORT.md)，最終封裝服務已通過 [24 項真實 AI 驗收](reports/real_ai_packaged/REPORT.md)與 [9 種文件／OCR／sqlite-vec 離線索引](reports/packaged_documents/REPORT.md)。AI 工具與設計文件由匯出規則硬性排除，不會跟著遊戲發布。
 
 ## 授權與隱私
 

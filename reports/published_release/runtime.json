@@ -2,7 +2,7 @@
   "passed": true,
   "tested_at": "2026-08-30T11:06:30.9735734+08:00",
   "os": "Microsoft Windows NT 10.0.19045.0",
-  "build_directory": "C:\\Users\\lumi6\\AppData\\Local\\Temp\\pixelrpg-published-1.0.2-d78af5fc671347cd80eb59ab4f389a9b\\expanded\\Mistfall-Bell-Seasons-v1.0.2-Windows-x64",
+  "build_directory": "<temporary-directory>/expanded/Mistfall-Bell-Seasons-v1.0.2-Windows-x64",
   "quit_after_frames": 600,
   "exit_code": 0,
   "network_samples": 14,

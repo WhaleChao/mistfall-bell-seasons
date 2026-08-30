@@ -8,7 +8,7 @@ on:
       tag:
         description: Public GitHub release tag to verify
         required: true
-        default: v1.0.2
+        default: v1.0.3
       expected_sha256:
         description: Optional expected SHA-256 for the Windows ZIP
         required: false

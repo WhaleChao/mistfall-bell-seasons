@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "started_at": "2026-08-30T13:40:25.9507257+08:00",
+  "elapsed_seconds": 79.518,
+  "executable": {
+    "path": "creator_service/dist/PixelRPGCreatorService.exe",
+    "bytes": 390035505,
+    "sha256": "0C88759088CDD8A9EE899F9CBB2439A3367053F0E9127913D2A632D43CFC46FC",
+    "authenticode": "NotSigned"
+  },
+  "formats": [
+    "txt",
+    "md",
+    "csv",
+    "html",
+    "docx",
+    "pptx",
+    "xlsx",
+    "pdf",
+    "png"
+  ],
+  "checks": {
+    "service_health": true,
+    "localhost_only_listener": true,
+    "forced_indexed_all_formats": true,
+    "forced_chunks_present": true,
+    "forced_without_warnings": true,
+    "sqlite_vec_active": true,
+    "incremental_skipped_all": true,
+    "health_reports_index": true,
+    "no_external_connections": true
+  },
+  "forced": {
+    "indexed_files": 9,
+    "unchanged_files": 0,
+    "chunks": 9,
+    "warnings": [],
+    "vector_backend": "sqlite-vec"
+  },
+  "incremental": {
+    "indexed_files": 0,
+    "unchanged_files": 9,
+    "chunks": 0,
+    "warnings": [],
+    "vector_backend": "sqlite-vec"
+  },
+  "health_before": {
+    "service": "ok",
+    "project_root": "<isolated-project-root>",
+    "ollama": true,
+    "gpu": null,
+    "index_chunks": 0,
+    "models": [
+      "qwen3.5:9b",
+      "qwen3-embedding:0.6b",
+      "qwen3.5:4b",
+      "mistral-nemo:12b"
+    ],
+    "warnings": []
+  },
+  "health_after": {
+    "service": "ok",
+    "project_root": "<isolated-project-root>",
+    "ollama": true,
+    "gpu": "Q8_0",
+    "index_chunks": 9,
+    "models": [
+      "qwen3.5:9b",
+      "qwen3-embedding:0.6b",
+      "qwen3.5:4b",
+      "mistral-nemo:12b"
+    ],
+    "warnings": []
+  },
+  "network_samples": 40,
+  "external_connections": [],
+  "fixture_source": "work/document-formats-df8080f8912447db885c2cbc9ed3dccd",
+  "isolated_project_root": "work/packaged-documents-f00c67f0f069415490f65ca391868a0c"
+}

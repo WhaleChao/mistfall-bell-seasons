@@ -26,6 +26,7 @@ function Find-Godot {
 
 $godot = Find-Godot $GodotPath
 $creatorProcess = $null
+$creatorListenerProcessId = $null
 $ollamaProcess = $null
 
 try {
@@ -70,16 +71,32 @@ try {
                 -RedirectStandardOutput (Join-Path $creatorDirectory 'service.out.log') `
                 -RedirectStandardError (Join-Path $creatorDirectory 'service.err.log')
         }
-        Start-Sleep -Seconds 1
-        if ($creatorProcess.HasExited) {
-            throw "Creator Service 啟動失敗；請查看 $creatorDirectory\service.err.log"
+        $creatorReady = $false
+        for ($attempt = 0; $attempt -lt 60; $attempt++) {
+            if ($creatorProcess.HasExited) {
+                throw "Creator Service 啟動失敗；請查看 $creatorDirectory\service.err.log"
+            }
+            try {
+                $health = Invoke-RestMethod -Uri 'http://127.0.0.1:8765/api/v1/health' `
+                    -Headers @{ 'X-PixelRPG-Token' = $sessionToken } -TimeoutSec 2
+                if ($health.service -eq 'ok') { $creatorReady = $true; break }
+            } catch { Start-Sleep -Milliseconds 250 }
         }
+        if (-not $creatorReady) { throw 'Creator Service 在 15 秒內未就緒。' }
+        $listeners = @(Get-NetTCPConnection -LocalPort 8765 -State Listen -ErrorAction SilentlyContinue)
+        if ($listeners.Count -ne 1 -or $listeners[0].LocalAddress -ne '127.0.0.1') {
+            throw 'Creator Service 未嚴格綁定 127.0.0.1:8765。'
+        }
+        $creatorListenerProcessId = [int]$listeners[0].OwningProcess
     }
 
     Write-Host "開啟 PixelRPG Studio：$projectRoot"
     $godotProcess = Start-Process -FilePath $godot -ArgumentList '--editor', '--path', $projectRoot -PassThru
     $godotProcess.WaitForExit()
 } finally {
+    if ($creatorListenerProcessId -and $creatorListenerProcessId -ne $creatorProcess.Id) {
+        Stop-Process -Id $creatorListenerProcessId -ErrorAction SilentlyContinue
+    }
     if ($creatorProcess -and -not $creatorProcess.HasExited) {
         Stop-Process -Id $creatorProcess.Id
     }

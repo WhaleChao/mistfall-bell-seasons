@@ -1,9 +1,9 @@
 {
-  "average_fps": 657.4,
-  "base_scene_fps": 1571.9,
-  "capacity_ratio": 0.214,
+  "average_fps": 658.6,
+  "base_scene_fps": 1447.0,
+  "capacity_ratio": 0.302,
   "elapsed_seconds": 0.456,
-  "empty_window_fps": 3066.5,
+  "empty_window_fps": 2183.5,
   "enemies": 20,
   "frames": 300,
   "passed": true,

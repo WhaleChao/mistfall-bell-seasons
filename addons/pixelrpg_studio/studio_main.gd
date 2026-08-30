@@ -292,7 +292,11 @@ func _save_extended(path: String) -> void:
 	var editor: TextEdit = extended_editors.get(path)
 	if not is_instance_valid(editor):
 		return
-	var parsed: Variant = JSON.parse_string(editor.text)
+	var parser := JSON.new()
+	if parser.parse(editor.text) != OK:
+		_set_status("JSON 無效或缺少 schema_version: 1", true)
+		return
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary or int(parsed.get("schema_version", 0)) != 1:
 		_set_status("JSON 無效或缺少 schema_version: 1", true)
 		return
@@ -458,7 +462,11 @@ func _load_manifest() -> void:
 
 
 func _save_manifest() -> void:
-	var parsed: Variant = JSON.parse_string(manifest_editor.text)
+	var parser := JSON.new()
+	if parser.parse(manifest_editor.text) != OK:
+		_set_status("Manifest JSON 無效或 schema_version 不是 1", true)
+		return
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary or int(parsed.get("schema_version", 0)) != 1:
 		_set_status("Manifest JSON 無效或 schema_version 不是 1", true)
 		return
@@ -632,7 +640,11 @@ func _new_artifact() -> void:
 
 
 func _save_database_artifact() -> void:
-	var parsed: Variant = JSON.parse_string(database_editor.text)
+	var parser := JSON.new()
+	if parser.parse(database_editor.text) != OK:
+		_set_status("資料不是有效 JSON 物件", true)
+		return
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary:
 		_set_status("資料不是有效 JSON 物件", true)
 		return
@@ -719,9 +731,14 @@ func _clear_story_graph() -> void:
 
 
 func _add_story_line() -> void:
-	var node_id := "line_%d" % (story_graph.get_child_count() + 1)
+	var graph_node_count := 0
+	for child in story_graph.get_children():
+		if child is GraphNode:
+			graph_node_count += 1
+	var node_id := "line_%d" % (graph_node_count + 1)
 	var node_data := {"id": node_id, "type": "line", "speaker": "", "text": "", "next": null}
-	story_graph.add_child(_make_story_node(node_data, story_graph.scroll_offset + Vector2(80, 80)))
+	var grid_position := Vector2(44 + (graph_node_count % 3) * 310, 44 + (graph_node_count / 3) * 220)
+	story_graph.add_child(_make_story_node(node_data, story_graph.scroll_offset + grid_position))
 
 
 func _save_story() -> void:
@@ -806,10 +823,16 @@ func _on_ai_event(event: Dictionary) -> void:
 			_refresh_ai_diff()
 		"error":
 			ai_status.text = "錯誤：%s" % event.get("message", "未知錯誤")
+			if event.has("raw"):
+				ai_draft.text = String(event.get("raw", ""))
 
 
 func _validate_ai_draft() -> void:
-	var parsed: Variant = JSON.parse_string(ai_draft.text)
+	var parser := JSON.new()
+	if parser.parse(ai_draft.text) != OK:
+		ai_status.text = "草稿不是 JSON 物件；問答結果不可直接套用。"
+		return
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary:
 		ai_status.text = "草稿不是 JSON 物件；問答結果不可直接套用。"
 		return
@@ -820,7 +843,11 @@ func _validate_ai_draft() -> void:
 
 
 func _apply_ai_draft() -> void:
-	var parsed: Variant = JSON.parse_string(ai_draft.text)
+	var parser := JSON.new()
+	if parser.parse(ai_draft.text) != OK:
+		ai_status.text = "草稿驗證失敗，未寫入任何檔案。"
+		return
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary or int(parsed.get("schema_version", 0)) != 1:
 		ai_status.text = "草稿驗證失敗，未寫入任何檔案。"
 		return
@@ -903,7 +930,7 @@ func _restore_text(path: String, value: String, remove_file: bool) -> void:
 			DirAccess.remove_absolute(absolute)
 	else:
 		ContentTools.write_text(path, value)
-	if editor_plugin != null:
+	if editor_plugin != null and OS.get_environment("PIXELRPG_STUDIO_ACCEPTANCE") != "1":
 		editor_plugin.get_editor_interface().get_resource_filesystem().scan()
 
 

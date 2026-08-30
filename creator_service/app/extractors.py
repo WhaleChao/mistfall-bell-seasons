@@ -2,11 +2,19 @@ from __future__ import annotations
 
 import csv
 import io
+from functools import lru_cache
 from pathlib import Path
 
 
 PLAIN_EXTENSIONS = {".md", ".txt", ".json", ".csv", ".tsv", ".gd"}
 DOCLING_EXTENSIONS = {".pdf", ".docx", ".pptx", ".xlsx", ".html", ".png", ".jpg", ".jpeg", ".webp"}
+
+
+@lru_cache(maxsize=1)
+def _document_converter():
+    from docling.document_converter import DocumentConverter
+
+    return DocumentConverter()
 
 
 def extract_document(path: Path) -> tuple[str, list[str]]:
@@ -22,11 +30,11 @@ def extract_document(path: Path) -> tuple[str, list[str]]:
     if suffix not in DOCLING_EXTENSIONS:
         return "", [f"Unsupported document type: {suffix}"]
     try:
-        from docling.document_converter import DocumentConverter
+        converter = _document_converter()
     except ImportError:
         return "", [f"Docling is not installed; skipped {path.name}"]
     try:
-        result = DocumentConverter().convert(path)
+        result = converter.convert(path)
         return result.document.export_to_markdown(), warnings
     except Exception as exc:  # Docling can expose parser-specific failures.
         return "", [f"Could not parse {path.name}: {exc}"]

@@ -69,7 +69,15 @@ class OllamaClient:
             "model": model,
             "messages": [{"role": "system", "content": system}, user_message],
             "stream": True,
-            "options": {"num_ctx": settings.max_context_tokens, "temperature": 0.45},
+            # Constrained drafts must be repeatable: creative variance belongs
+            # in the requested prose, not in whether the JSON remains valid.
+            "think": False,
+            "options": {
+                "num_ctx": settings.max_context_tokens,
+                "num_predict": 2048,
+                "temperature": 0.0,
+                "seed": 42,
+            },
         }
         if output_format:
             payload["format"] = output_format
