@@ -1,0 +1,63 @@
+name: macOS Commercial Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  universal-build-and-launch:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install content validation runtime
+        run: python3 -m pip install jsonschema
+      - name: Download and verify official Godot 4.7.2 editor and templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          release='https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable'
+          curl -fL "$release/Godot_v4.7.2-stable_macos.universal.zip" -o godot-editor.zip
+          curl -fL "$release/Godot_v4.7.2-stable_export_templates.tpz" -o export-templates.tpz
+          curl -fL "$release/SHA512-SUMS.txt" -o SHA512-SUMS.txt
+          grep -E 'Godot_v4\.7\.2-stable_(macos\.universal\.zip|export_templates\.tpz)$' SHA512-SUMS.txt > selected-SHA512-SUMS.txt
+          test "$(wc -l < selected-SHA512-SUMS.txt | tr -d ' ')" -eq 2
+          shasum -a 512 -c selected-SHA512-SUMS.txt
+          unzip -q godot-editor.zip -d godot-editor
+          unzip -q export-templates.tpz -d export-templates
+          template_root="$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable"
+          mkdir -p "$template_root"
+          cp -R export-templates/templates/. "$template_root/"
+          godot_path="$(find godot-editor -path '*/Godot.app/Contents/MacOS/Godot' -type f -print -quit)"
+          test -n "$godot_path"
+          chmod +x "$godot_path"
+          printf 'GODOT_PATH=%s\n' "$PWD/$godot_path" >> "$GITHUB_ENV"
+      - name: Export, ad-hoc sign, launch, and audit the Universal 2 game
+        shell: bash
+        run: |
+          chmod +x launcher/Build-Test-macOS-Release.sh
+          GODOT_PATH="$GODOT_PATH" ./launcher/Build-Test-macOS-Release.sh
+          cat reports/macos_archive/report.json >> "$GITHUB_STEP_SUMMARY"
+          cat reports/macos_archive/runtime.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload macOS Universal release candidate
+        uses: actions/upload-artifact@v6
+        with:
+          name: Mistfall-Bell-Seasons-${{ github.ref_name }}-macOS-Universal
+          path: |
+            dist/Mistfall-Bell-Seasons-v*-macOS-Universal.zip
+            dist/SHA256SUMS-macOS.txt
+          if-no-files-found: error
+      - name: Upload macOS verification evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: macOS-commercial-evidence-${{ github.run_id }}
+          path: reports/macos_archive/
+          if-no-files-found: error

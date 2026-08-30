@@ -1,6 +1,6 @@
 # 《霧落農歌：鐘塔之季》全功能實機驗收
 
-結果：**PASS**　｜　137 通過／0 失敗　｜　23.36 秒　｜　NVIDIA GeForce RTX 3060
+結果：**PASS**　｜　146 通過／0 失敗　｜　26.00 秒　｜　NVIDIA GeForce RTX 3060
 
 此報告由非 headless 的 Godot 視窗執行，實際建立遊戲場景、渲染畫面、驅動輸入、開啟 UI 並驗證狀態。
 
@@ -93,6 +93,13 @@
 | 動物 | 照料、心情與繁殖 | 通過 |  |
 | 商店 | 商品列表與購買回呼 | 通過 |  |
 | 經濟 | 出貨箱與隔夜結算 | 通過 |  |
+| 新地圖 | 鳴鐘河畔可進入、釣魚、採蘆葦並顯示同行村民 | 通過 |  |
+| 新地圖 | 古鐘林可進入、採藥草並顯示關係角色 | 通過 |  |
+| 新地圖 | 古鐘機械遺跡可進入、取得齒輪並呈現自動化線索 | 通過 |  |
+| 農場自動化 | 九種設備可購買並連成單一鐘能網路 | 通過 |  |
+| 農場自動化 | 供電供水、播種、澆水、收割、餵食與雙加工每日實際運作 | 通過 |  |
+| 農場自動化 | 霧封農產與夢潮鹽進入可出貨庫 | 通過 |  |
+| 農場自動化 | 可視化 6×4 設計圖、設備選擇、作物篩選、優先序與停機資訊可操作 | 通過 |  |
 | 異潮釣魚 | 四季皆可釣起異魚 | 通過 | spring, summer, autumn, winter |
 | 異潮釣魚 | 四種異魚解鎖夢岸挑戰 | 通過 |  |
 | 理智 | 異魚降低理智並產生洞見 | 通過 |  |
@@ -110,8 +117,8 @@
 | 節慶 | 五回合評分與獎勵 | 通過 |  |
 | 節慶 | 四季 12 場節慶資料 | 通過 |  |
 | 選單 | 旅人手冊暫停遊戲 | 通過 |  |
-| 選單 | 九個功能分頁 | 通過 |  |
-| 選單 | 狀態、背包、關係、日曆、主線、成就、料理、設定、深潮均可切換 | 通過 |  |
+| 選單 | 十一個功能分頁 | 通過 |  |
+| 選單 | 狀態、背包、關係、日曆、主線、成就、料理、設定、自動化、地圖、深潮均可切換 | 通過 |  |
 | 戀愛家庭 | 告白、求婚與婚姻 | 通過 |  |
 | 戀愛家庭 | 婚後 30/60 日家庭事件 | 通過 |  |
 | 戀愛家庭 | 孩子四階段成長 | 通過 |  |
@@ -123,13 +130,14 @@
 | 設定 | 按鍵重新綁定與還原 | 通過 |  |
 | 手把 | 14 項完整 XInput 按鈕映射 | 通過 |  |
 | 設定 | 所有遊戲操作重綁可跨重啟保存 | 通過 |  |
-| 存檔 | SaveGame v4 快速存讀 | 通過 |  |
+| 存檔 | SaveGame v5 快速存讀 | 通過 |  |
 | 連線介面 | 自行開服／IP 加入表單 | 通過 |  |
 | 連線規則 | 共同／私人／競賽農場與獨立／競爭關係可選 | 通過 |  |
 | 連線介面 | 遊戲內 ENet 主機可啟動 | 通過 |  |
 | 連線規則 | 開服選項寫入世界契約 | 通過 |  |
 | 多人劇情 | 1／2／3–4／5+ 人使用四種劇情分支 | 通過 |  |
 | 連線介面 | 離線／關服可安全返回單人 | 通過 |  |
+| 商用圖片 | 五類疊加圖集可在高對比底色上以真 Alpha 渲染 | 通過 |  |
 | 日曆 | 10 年／1,200 日無漂移 | 通過 |  |
 | 日曆 | 冬 30 日跨年 | 通過 |  |
 | 日曆 | 三種日長結果一致 | 通過 |  |
@@ -137,11 +145,12 @@
 | 主線 | 12 章且沒有期限 | 通過 |  |
 | 主線 | 三年主線可連續完成 | 通過 |  |
 | 成就 | 14 項成就可解鎖 | 通過 | 14/14 |
-| 存檔 | v3→v4 異潮資料遷移 | 通過 |  |
-| 存檔 | v2→v4 遷移 | 通過 |  |
-| 存檔 | 28 日制 v1→v4 保留日期 | 通過 |  |
+| 存檔 | v4→v5 自動化資料遷移 | 通過 |  |
+| 存檔 | v3→v5 異潮資料遷移 | 通過 |  |
+| 存檔 | v2→v5 遷移 | 通過 |  |
+| 存檔 | 28 日制 v1→v5 保留日期 | 通過 |  |
 | 內容 | 48 作物／20 魚／40 料理 | 通過 |  |
-| 內容 | 10 NPC／12 節慶／17+ 洞窟與異潮敵人 | 通過 |  |
+| 內容 | 10 NPC／12 節慶／17+ 洞窟與異潮敵人／9 種自動設備 | 通過 |  |
 | 離線 | Runtime 場景沒有 HTTPRequest | 通過 |  |
 
 ## 畫面證據
@@ -154,10 +163,15 @@
 - `res://reports/full_feature_acceptance/06_mature_crop_and_weather.png`
 - `res://reports/full_feature_acceptance/07_animals_and_farm.png`
 - `res://reports/full_feature_acceptance/08_shop_purchase.png`
+- `res://reports/full_feature_acceptance/16_mistfall_river_map.png`
+- `res://reports/full_feature_acceptance/17_bellwood_grove_map.png`
+- `res://reports/full_feature_acceptance/18_clockwork_ruins_map.png`
+- `res://reports/full_feature_acceptance/19_automation_network.png`
 - `res://reports/full_feature_acceptance/13_eldritch_journal.png`
 - `res://reports/full_feature_acceptance/14_drowned_dreamer_boss.png`
 - `res://reports/full_feature_acceptance/09_village_dialogue.png`
 - `res://reports/full_feature_acceptance/10_interactive_festival.png`
 - `res://reports/full_feature_acceptance/11_status_inventory_menu.png`
 - `res://reports/full_feature_acceptance/15_multiplayer_host_ui.png`
+- `res://reports/full_feature_acceptance/20_alpha_matte_contrast.png`
 - `res://reports/full_feature_acceptance/12_acceptance_complete.png`

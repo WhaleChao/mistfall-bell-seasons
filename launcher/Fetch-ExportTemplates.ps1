@@ -10,9 +10,10 @@ $expectedSha512 = 'ca4d71c4d7b81dfc15d1a98baa07534aa95b03fdda78a0075b06672e1648d
 $destination = Join-Path $env:APPDATA "Godot\export_templates\$templateVersion"
 $releaseTemplate = Join-Path $destination 'windows_release_x86_64.exe'
 $debugTemplate = Join-Path $destination 'windows_debug_x86_64.exe'
+$macOSUniversalTemplate = Join-Path $destination 'macos.zip'
 
-if ((Test-Path -LiteralPath $releaseTemplate) -and (Test-Path -LiteralPath $debugTemplate)) {
-    Write-Host "Godot $templateVersion Windows 匯出模板已就緒：$destination"
+if ((Test-Path -LiteralPath $releaseTemplate) -and (Test-Path -LiteralPath $debugTemplate) -and (Test-Path -LiteralPath $macOSUniversalTemplate)) {
+    Write-Host "Godot $templateVersion Windows x64／macOS Universal 匯出模板已就緒：$destination"
     exit 0
 }
 
@@ -31,12 +32,14 @@ try {
     $sourceRoot = Join-Path $expanded 'templates'
     $sourceRelease = Join-Path $sourceRoot 'windows_release_x86_64.exe'
     $sourceDebug = Join-Path $sourceRoot 'windows_debug_x86_64.exe'
-    if (-not (Test-Path -LiteralPath $sourceRelease) -or -not (Test-Path -LiteralPath $sourceDebug)) {
-        throw '官方壓縮檔中找不到 Windows x64 匯出模板。'
+    $sourceMacOS = Join-Path $sourceRoot 'macos.zip'
+    if (-not (Test-Path -LiteralPath $sourceRelease) -or -not (Test-Path -LiteralPath $sourceDebug) -or -not (Test-Path -LiteralPath $sourceMacOS)) {
+        throw '官方壓縮檔中找不到 Windows x64 或 macOS Universal 匯出模板。'
     }
     New-Item -ItemType Directory -Path $destination -Force | Out-Null
     Copy-Item -LiteralPath $sourceRelease -Destination $releaseTemplate -Force
     Copy-Item -LiteralPath $sourceDebug -Destination $debugTemplate -Force
+    Copy-Item -LiteralPath $sourceMacOS -Destination $macOSUniversalTemplate -Force
     $versionFile = Join-Path $sourceRoot 'version.txt'
     if (Test-Path -LiteralPath $versionFile) {
         Copy-Item -LiteralPath $versionFile -Destination (Join-Path $destination 'version.txt') -Force
@@ -51,4 +54,4 @@ try {
     }
 }
 
-Write-Host "Godot Windows x64 匯出模板安裝完成：$destination"
+Write-Host "Godot Windows x64／macOS Universal 匯出模板安裝完成：$destination"

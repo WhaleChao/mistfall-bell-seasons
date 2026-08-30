@@ -10,6 +10,8 @@ func _enter_tree() -> void:
 	studio = StudioMain.new()
 	studio.name = "PixelRPGStudioMain"
 	studio.editor_plugin = self
+	studio.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	studio.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	get_editor_interface().get_editor_main_screen().add_child(studio)
 	studio.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_make_visible(false)

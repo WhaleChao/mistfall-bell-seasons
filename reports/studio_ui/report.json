@@ -9,12 +9,6 @@
 			"details": ""
 		},
 		{
-			"category": "啟動",
-			"name": "Godot 主畫面實際切換到 PixelRPG",
-			"passed": true,
-			"details": ""
-		},
-		{
 			"category": "導覽",
 			"name": "15 個製作頁面完整",
 			"passed": true,
@@ -54,7 +48,7 @@
 			"category": "素材",
 			"name": "素材庫 UI 與索引數量一致",
 			"passed": true,
-			"details": "10"
+			"details": "14"
 		},
 		{
 			"category": "素材",
@@ -66,7 +60,7 @@
 			"category": "資料庫",
 			"name": "16 種資料均可載入並產生合法新建草稿",
 			"passed": true,
-			"details": "{\"NPC 排程\":1,\"世界事件\":1,\"任務\":13,\"作物\":1,\"動物\":1,\"委託模板\":1,\"對話\":13,\"技能\":1,\"敵人\":19,\"料理\":1,\"洞窟\":1,\"物品\":13,\"節慶\":1,\"角色\":11,\"農場升級\":1,\"魚類\":1}"
+			"details": "{\"NPC 排程\":1,\"世界事件\":1,\"任務\":14,\"作物\":1,\"動物\":1,\"委託模板\":1,\"對話\":14,\"技能\":1,\"敵人\":20,\"料理\":1,\"洞窟\":1,\"物品\":19,\"節慶\":1,\"角色\":11,\"農場升級\":1,\"魚類\":1}"
 		},
 		{
 			"category": "長期系統",
@@ -84,7 +78,7 @@
 			"category": "劇情",
 			"name": "三年主線對話出現在節點圖清單",
 			"passed": true,
-			"details": "13"
+			"details": "14"
 		},
 		{
 			"category": "劇情",
@@ -117,184 +111,190 @@
 			"details": ""
 		},
 		{
+			"category": "啟動",
+			"name": "Godot 主畫面實際切換到 PixelRPG",
+			"passed": true,
+			"details": ""
+		},
+		{
 			"category": "版面",
 			"name": "01 專案 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "01_project 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜63 sampled colors｜595ddac537d7"
+			"details": "1920x1017｜62 sampled colors｜c168530de0d2"
 		},
 		{
 			"category": "版面",
 			"name": "02 素材／參考庫 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "02_assets 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜84 sampled colors｜6e5fbb3e62ff"
+			"details": "1920x1017｜96 sampled colors｜1869b1cf6646"
 		},
 		{
 			"category": "版面",
 			"name": "03 世界 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "03_world 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜74 sampled colors｜860b2aaf62c7"
+			"details": "1920x1017｜70 sampled colors｜e70aff77c7a9"
 		},
 		{
 			"category": "版面",
 			"name": "04 資料庫 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "04_database 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜64 sampled colors｜a21668a0dbeb"
+			"details": "1920x1017｜62 sampled colors｜c5ee3feb3c33"
 		},
 		{
 			"category": "版面",
 			"name": "05 日曆 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "05_calendar 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜102 sampled colors｜32d9c3fc0a5b"
+			"details": "1920x1017｜85 sampled colors｜86962079a6ee"
 		},
 		{
 			"category": "版面",
 			"name": "06 NPC 排程 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "06_npc_schedules 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜132 sampled colors｜ea6ca656c44a"
+			"details": "1920x1017｜117 sampled colors｜55f45496123b"
 		},
 		{
 			"category": "版面",
 			"name": "07 農作 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "07_crops 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜114 sampled colors｜8ac116d7e4a8"
+			"details": "1920x1017｜149 sampled colors｜61986474ea4c"
 		},
 		{
 			"category": "版面",
 			"name": "08 節慶 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "08_festivals 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜107 sampled colors｜af2b05516e3e"
+			"details": "1920x1017｜107 sampled colors｜4476d6c19470"
 		},
 		{
 			"category": "版面",
 			"name": "09 農場升級 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "09_farm_upgrades 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜108 sampled colors｜f0b8e7871788"
+			"details": "1920x1017｜92 sampled colors｜988a6d7e1e7b"
 		},
 		{
 			"category": "版面",
 			"name": "10 家庭 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "10_family 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜73 sampled colors｜00fc5e9c3296"
+			"details": "1920x1017｜73 sampled colors｜27488aca69fc"
 		},
 		{
 			"category": "版面",
 			"name": "11 洞窟 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "11_dungeon 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜81 sampled colors｜447bdef2cd65"
+			"details": "1920x1017｜76 sampled colors｜c3521196684c"
 		},
 		{
 			"category": "版面",
 			"name": "12 劇情 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "12_story 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜91 sampled colors｜6a0a4da42fe4"
+			"details": "1920x1017｜92 sampled colors｜a8e855a3e5bb"
 		},
 		{
 			"category": "版面",
 			"name": "13 AI 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "13_ai 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜71 sampled colors｜f95903f73426"
+			"details": "1920x1017｜78 sampled colors｜f42ee4292a91"
 		},
 		{
 			"category": "版面",
 			"name": "14 測試 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "14_tests 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜63 sampled colors｜a9f5029b6a0b"
+			"details": "1920x1017｜63 sampled colors｜d29f2adc007a"
 		},
 		{
 			"category": "版面",
 			"name": "15 匯出 可顯示且沒有零尺寸",
 			"passed": true,
-			"details": "1118x685"
+			"details": "1118x855"
 		},
 		{
 			"category": "畫面",
 			"name": "15_export 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜68 sampled colors｜98a32397f26e"
+			"details": "1920x1017｜70 sampled colors｜b0b34955d251"
 		},
 		{
 			"category": "畫面",
@@ -336,7 +336,7 @@
 			"category": "畫面",
 			"name": "13_ai_completed 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜72 sampled colors｜46d320621a3b"
+			"details": "1920x1017｜89 sampled colors｜287006664fe5"
 		},
 		{
 			"category": "畫面",
@@ -363,7 +363,7 @@
 		"res://reports/studio_ui/15_export.png",
 		"res://reports/studio_ui/13_ai_completed.png"
 	],
-	"elapsed_seconds": 26.875,
+	"elapsed_seconds": 27.903,
 	"renderer": "NVIDIA GeForce RTX 3060",
 	"godot": {
 		"major": 4,

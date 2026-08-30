@@ -19,6 +19,7 @@ func _run() -> void:
 	_assert_content(registry, failures)
 	_assert_calendar(failures)
 	_assert_farming(failures)
+	_assert_farm_automation(registry, failures)
 	_assert_social(failures)
 	_assert_dungeon(failures)
 	_assert_eldritch_fishing(registry, state_store, failures)
@@ -57,6 +58,8 @@ func _assert_content(registry: Node, failures: PackedStringArray) -> void:
 		failures.append("Expected 12 seasonal fish and eight eldritch fish")
 	if registry.get_all("tools").size() != 6 or registry.get_all("shops").size() != 4 or registry.get_all("achievements").size() != 14:
 		failures.append("Commercial economy catalogs are incomplete")
+	if registry.get_all("automation_devices").size() != 9:
+		failures.append("Expected nine farm automation devices")
 	if registry.get_all("quests").size() < 14 or registry.get_all("dialogues").size() < 14:
 		failures.append("Three-year playable narrative content is incomplete")
 	var dungeon_definition: Dictionary = registry.get_artifact("dungeons", &"mistfall_depths")
@@ -147,6 +150,54 @@ func _assert_social(failures: PackedStringArray) -> void:
 		failures.append("Child stage boundaries are incorrect")
 
 
+func _assert_farm_automation(registry: Node, failures: PackedStringArray) -> void:
+	var farm: RefCounted = load("res://runtime/farming/farm_system.gd").new()
+	farm.reset()
+	farm.rank = 10
+	var placements := [
+		[Vector2i(0, 0), "bell_generator", 100], [Vector2i(0, 1), "bell_generator", 100],
+		[Vector2i(1, 0), "mist_pump", 90], [Vector2i(2, 0), "field_sprinkler", 80],
+		[Vector2i(2, 1), "seed_distributor", 70], [Vector2i(3, 1), "crop_harvester", 95],
+		[Vector2i(3, 0), "preserves_processor", 60], [Vector2i(4, 0), "animal_feeder", 50],
+		[Vector2i(5, 0), "tide_condenser", 40],
+	]
+	for entry: Array in placements:
+		var placed: Dictionary = farm.place_automation_device(entry[0], StringName(entry[1]), {"priority": entry[2], "crop_filter": "spring_turnip"})
+		if not bool(placed.get("ok", false)):
+			failures.append("Automation placement failed for %s" % entry[1])
+	var ready_tile := Vector2i(4, 1)
+	farm.plots["4,1"] = {"tile":[4,1],"tilled":true,"watered":false,"crop_id":"spring_turnip","growth_progress":3,"ready":true,"withered":false}
+	farm.plots["2,0"] = {"tile":[2,0],"tilled":true,"watered":false,"crop_id":"spring_potato","growth_progress":0,"ready":false,"withered":false}
+	farm.produce["spring_turnip"] = 2
+	var tide_fish_id := ""
+	for fish: Dictionary in registry.get_all("fish"):
+		if bool(fish.get("tide_required", false)):
+			tide_fish_id = String(fish.get("id", ""))
+			break
+	farm.produce[tide_fish_id] = 1
+	farm.animals.append({"id":"chicken_1","species":"chicken","name":"測試雞","hearts":0,"mood":50,"fed":false,"grazed":false,"product_ready":false,"pregnant_days":0})
+	var inventory := {"animal_feed": 1, "mist_shard": 1}
+	var report: Dictionary = farm.run_automation_day(&"spring", inventory)
+	if int(report.get("networks", 0)) != 1 or int(report.get("stalled", 0)) != 0:
+		failures.append("Connected automation network did not balance power/water")
+	if int(report.get("watered", 0)) < 1 or int(report.get("harvested", 0)) < 1 or int(report.get("fed", 0)) != 1 or int(report.get("processed", 0)) != 2:
+		failures.append("Automation did not water/harvest/feed/process deterministically")
+	if int(farm.produce.get("mist_preserves", 0)) != 1 or int(farm.produce.get("dream_tide_salt", 0)) != 1 or int(inventory.get("animal_feed", 0)) != 0:
+		failures.append("Automation outputs or consumable accounting are incorrect")
+	var saved: Dictionary = farm.to_data()
+	var restored: RefCounted = load("res://runtime/farming/farm_system.gd").new()
+	restored.reset()
+	restored.load_data(saved)
+	if restored.automation_devices.size() != 9 or restored.automation_cycle_count != 1:
+		failures.append("Automation network did not survive save round-trip")
+	var isolated: RefCounted = load("res://runtime/farming/farm_system.gd").new()
+	isolated.reset()
+	isolated.rank = 10
+	isolated.place_automation_device(Vector2i(5, 3), &"field_sprinkler")
+	if int(isolated.run_automation_day(&"spring", {}).get("stalled", 0)) != 1:
+		failures.append("Unpowered isolated machine must report a stall")
+
+
 func _assert_dungeon(failures: PackedStringArray) -> void:
 	var dungeon: RefCounted = load("res://runtime/dungeon/dungeon_system.gd").new()
 	dungeon.reset()
@@ -212,8 +263,16 @@ func _assert_multiplayer_rules(failures: PackedStringArray) -> void:
 func _assert_save_migration(state_store: Node, failures: PackedStringArray) -> void:
 	state_store.reset()
 	var save_data: Dictionary = state_store.to_save_data()
-	if int(save_data.get("schema_version", 0)) != 4 or not save_data.has("calendar") or not save_data.has("farm") or not save_data.has("dungeon") or not save_data.has("eldritch") or not save_data.has("economy") or not save_data.has("tools"):
-		failures.append("SaveGame v4 contract is incomplete")
+	if int(save_data.get("schema_version", 0)) != 5 or not save_data.has("calendar") or not save_data.has("farm") or not save_data.has("dungeon") or not save_data.has("eldritch") or not save_data.has("economy") or not save_data.has("tools"):
+		failures.append("SaveGame v5 contract is incomplete")
+	var v4_save := save_data.duplicate(true)
+	v4_save["schema_version"] = 4
+	var v4_farm: Dictionary = Dictionary(v4_save.get("farm", {})).duplicate(true)
+	for key in ["automation_devices", "automation_cycle_count", "automation_last_report"]:
+		v4_farm.erase(key)
+	v4_save["farm"] = v4_farm
+	if not state_store.load_save_data(v4_save) or not state_store.farm.automation_devices.is_empty():
+		failures.append("SaveGame v4 automation migration failed")
 	var v3_save := save_data.duplicate(true)
 	v3_save["schema_version"] = 3
 	v3_save.erase("eldritch")
@@ -276,7 +335,7 @@ func _assert_story(registry: Node, state_store: Node, failures: PackedStringArra
 		return
 	var completed: Array = []
 	var flags: Dictionary = {}
-	var complete_metrics := {"crops_harvested":1000,"dungeon_floor":40,"bosses_defeated":4,"farm_rank":10,"festivals_attended":12,"days_played":360,"purchases":50,"tool_upgrades":18,"relationship_max_hearts":10,"monsters_defeated":100,"season_seals":4,"final_boss_defeated":1}
+	var complete_metrics := {"crops_harvested":1000,"fish_caught":100,"eldritch_fish_caught":20,"dungeon_floor":40,"bosses_defeated":4,"farm_rank":10,"festivals_attended":12,"days_played":360,"purchases":50,"tool_upgrades":18,"relationship_max_hearts":10,"relationship_unique_villagers":10,"romance_candidates_known":4,"dating_candidates":4,"monsters_defeated":100,"season_seals":4,"final_boss_defeated":1,"eldritch_unique_catches":8,"eldritch_boss_defeated":1,"automation_devices":9,"automation_networks":2,"automation_cycles":100,"automation_items_processed":50}
 	for expected_chapter: Dictionary in arc.get("chapters", []):
 		var chapter: Dictionary = story.next_available(completed, flags)
 		if chapter.get("id", "") != expected_chapter.get("id", ""):
@@ -290,6 +349,8 @@ func _assert_story(registry: Node, state_store: Node, failures: PackedStringArra
 		failures.append("Story did not finish after twelve chapters")
 	state_store.reset()
 	state_store.lifetime_stats["crops_harvested"] = 1
+	state_store.social.add_affection(&"mira", 250)
+	state_store.social.add_affection(&"toma", 250)
 	var first_result: Dictionary = state_store.try_complete_current_story_chapter()
 	if not bool(first_result.get("ok", false)) or String(state_store.quest_states.get("y1_spring_new_soil_quest", "")) != "completed":
 		failures.append("Runtime could not complete and reward the first story chapter")

@@ -53,6 +53,13 @@ class RealAITest:
             self.check(models.get("embedding", {}).get("available") is True, "模型", "Qwen3 Embedding 可用", models.get("embedding"))
             self.metrics["models"] = models
 
+            # A previous indexing or assist session can leave another runner in
+            # VRAM for five minutes. Evict every PixelRPG model first so the
+            # cold-start measurement is isolated instead of timing GPU memory
+            # pressure caused by an unrelated embedding runner.
+            for installed_model in ("qwen3.5:4b", "qwen3.5:9b", "qwen3-embedding:0.6b"):
+                await self._unload_model(client, installed_model)
+
             for model, label, cold_limit, warm_limit in (
                 ("qwen3.5:4b", "fast", 30.0, 5.0),
                 ("qwen3.5:9b", "quality", 30.0, 10.0),
@@ -272,7 +279,9 @@ class RealAITest:
         (self.report_directory / "REPORT.md").write_text("\n".join(rows), encoding="utf-8")
         print(f"PixelRPG real AI gate: {'PASS' if not failures else 'FAIL'} ({len(self.checks) - len(failures)}/{len(self.checks)})")
         for failure in failures:
-            print(f"FAIL [{failure.category}] {failure.name}: {failure.details}")
+            message = f"FAIL [{failure.category}] {failure.name}: {failure.details}"
+            encoding = getattr(__import__("sys").stdout, "encoding", None) or "utf-8"
+            print(message.encode(encoding, errors="replace").decode(encoding))
         return 0 if not failures else 1
 
 

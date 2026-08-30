@@ -2,11 +2,11 @@
   {"id":"farm_rank_1","display_name":"荒置農地","rank":1,"cost":0,"materials":{},"unlocks":["8 格農地","手動澆水"]},
   {"id":"farm_rank_2","display_name":"整地擴建","rank":2,"cost":1500,"materials":{"wood":30},"unlocks":["16 格農地","種子箱"]},
   {"id":"farm_rank_3","display_name":"小型雞舍","rank":3,"cost":3500,"materials":{"wood":60,"stone":30},"unlocks":["飼養雞","蛋製品"]},
-  {"id":"farm_rank_4","display_name":"灌溉水槽","rank":4,"cost":6000,"materials":{"stone":60,"copper_ore":20},"unlocks":["基礎灑水器","24 格農地"]},
-  {"id":"farm_rank_5","display_name":"加工工坊","rank":5,"cost":9000,"materials":{"wood":80,"iron_ore":30},"unlocks":["果醬機","乳酪機","高品質收成"]},
+  {"id":"farm_rank_4","display_name":"鐘能灌溉水槽","rank":4,"cost":6000,"materials":{"stone":60,"copper_ore":20},"unlocks":["鐘輪發電機","霧水幫浦","銅軌傳輸帶","田間灑水器","24 格農地"]},
+  {"id":"farm_rank_5","display_name":"半自動加工工坊","rank":5,"cost":9000,"materials":{"wood":80,"iron_ore":30},"unlocks":["播種分配器","霧封加工槽","高品質收成"]},
   {"id":"farm_rank_6","display_name":"鐘乳牛舍","rank":6,"cost":14000,"materials":{"wood":120,"stone":80,"iron_ore":40},"unlocks":["飼養牛","牛奶製品"]},
-  {"id":"farm_rank_7","display_name":"山道索車","rank":7,"cost":22000,"materials":{"iron_ore":80,"mist_shard":20},"unlocks":["村莊快捷移動","洞窟入口捷徑"]},
+  {"id":"farm_rank_7","display_name":"山道索車與收割臂","rank":7,"cost":22000,"materials":{"iron_ore":80,"mist_shard":20},"unlocks":["共振收割臂","村莊快捷移動","洞窟入口捷徑"]},
   {"id":"farm_rank_8","display_name":"霧晶溫室","rank":8,"cost":35000,"materials":{"glass":80,"mist_shard":40},"unlocks":["跨季栽培","稀有作物苗床"],"unlocks_greenhouse":true},
-  {"id":"farm_rank_9","display_name":"自動灌溉網","rank":9,"cost":52000,"materials":{"gold_ore":40,"mist_shard":60},"unlocks":["全農地自動澆水","動物自動餵食"]},
-  {"id":"farm_rank_10","display_name":"四季鐘塔農莊","rank":10,"cost":80000,"materials":{"mist_shard":120,"gold_ore":80},"unlocks":["全農場區域","終局加工設備","農場傳承展覽"]}
+  {"id":"farm_rank_9","display_name":"全農場自動鐘網","rank":9,"cost":52000,"materials":{"gold_ore":40,"mist_shard":60},"unlocks":["畜舍餵食鐘","深潮凝析器","設備優先序控制"]},
+  {"id":"farm_rank_10","display_name":"四季鐘塔農莊","rank":10,"cost":80000,"materials":{"mist_shard":120,"gold_ore":80},"unlocks":["全農場區域","自動化網路最佳化","農場傳承展覽"]}
 ]}

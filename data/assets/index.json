@@ -56,7 +56,7 @@
       "id": "character_atlas",
       "source_path": "res://assets/runtime/sprites/character_atlas_alpha.png",
       "kind": "image",
-      "sha256": "f52124a3d9184388c67474910e97c29d41d2b6cb9f804c36b5d30ef5526fc81a",
+      "sha256": "d767b3a39fdddfe4939b27f07c672630643e32b33d4b6c56e6f8f333387c5ee9",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "characters"],
       "links": ["character:hero", "character:mira", "character:lian", "character:soren", "character:yuna", "character:orin", "character:eira", "character:toma", "character:nori", "character:asha", "character:piko"]
@@ -66,7 +66,7 @@
       "id": "enemy_atlas",
       "source_path": "res://assets/runtime/sprites/enemy_atlas_alpha.png",
       "kind": "image",
-      "sha256": "2cd53a964c0ded6cac4259961751a84f1f83e63a1422ac52e1cad9f9f927c017",
+      "sha256": "6d1d99104c6ffbd6f6ed6ae12b7fca00163c2a29723d4ee90e795d1ae29e41d2",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "enemies", "bosses"],
       "links": ["dungeon:mistfall_depths"]
@@ -76,7 +76,7 @@
       "id": "animal_atlas",
       "source_path": "res://assets/runtime/sprites/animal_atlas_alpha.png",
       "kind": "image",
-      "sha256": "84b17f0b15715904757361e9bddb6ecccb52f71567c94c8dd8141cf6f16ab33f",
+      "sha256": "f8a786c8ce18579cc10e644cbdcb7d2e25c71fa1e075d89e79125e5d30f155b5",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "animals", "farm_products"],
       "links": ["animal:chicken", "animal:cow", "item:egg", "item:milk"]
@@ -86,7 +86,7 @@
       "id": "player_walk_atlas",
       "source_path": "res://assets/runtime/sprites/player_walk_atlas_alpha.png",
       "kind": "image",
-      "sha256": "8d7661f4587abf8dbee7817990aa4ffdc04038c5a3f988c5b1dbcf8361137bf0",
+      "sha256": "ab28e832078a29c01416e2c02c74994cbcae2f4eda0ad4e01cc3f515bf2ddb7d",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "player", "walk_animation", "four_direction"],
       "links": ["character:hero", "animation:idle", "animation:walk"]
@@ -96,10 +96,40 @@
       "id": "eldritch_drowned_dreamer",
       "source_path": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png",
       "kind": "image",
-      "sha256": "ca7e84d589fa0b13992d188b2142b756a2c6dfe0a6065e6f921193c6f9b0fa9d",
+      "sha256": "e7577462d7ee3046d5ec2aa893f2cf51b6e19edf5499b1eec575789418c487cb",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30; deterministic alpha preprocessing", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprite", "eldritch", "boss", "cthulhu_inspired"],
       "links": ["enemy:drowned_dreamer", "quest:whispers_beneath_tide_quest"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_river_background",
+      "source_path": "res://assets/runtime/backgrounds/mistfall_river_commercial.png",
+      "kind": "image",
+      "sha256": "de8d01e7fa14324ddf6f590ddd110b6458e3eceb2f5ef4ca614091340720aafe",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "river", "fishing"],
+      "links": ["map:mistfall_river"]
+    },
+    {
+      "schema_version": 1,
+      "id": "bellwood_grove_background",
+      "source_path": "res://assets/runtime/backgrounds/bellwood_grove_commercial.png",
+      "kind": "image",
+      "sha256": "88a2e99eba5f81683300468c629bce3d10fabcf735ef797674ca9973c87d53a8",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "forest", "relationship_scene"],
+      "links": ["map:bellwood_grove"]
+    },
+    {
+      "schema_version": 1,
+      "id": "clockwork_ruins_background",
+      "source_path": "res://assets/runtime/backgrounds/clockwork_ruins_commercial.png",
+      "kind": "image",
+      "sha256": "f2c9fa4c959ad3f1b4e8029b862732de65ccddb34747baa7dd42913e01d5912b",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "automation", "ruins"],
+      "links": ["map:clockwork_ruins", "system:farm_automation"]
     },
     {
       "schema_version": 1,

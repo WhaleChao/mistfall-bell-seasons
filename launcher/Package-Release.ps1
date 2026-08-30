@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param([string]$GodotPath = '')
+param(
+    [string]$GodotPath = '',
+    [string]$MacOSArchivePath = ''
+)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -60,6 +63,24 @@ $hashLines = @()
 foreach ($path in @((Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.exe'), (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.pck'), $archive)) {
     $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
     $hashLines += "$hash  $([IO.Path]::GetFileName($path))"
+}
+$requireMacOS = [Environment]::GetEnvironmentVariable('PIXELRPG_REQUIRE_MACOS', 'Process') -eq '1'
+if ($MacOSArchivePath) {
+    $resolvedMacOSArchive = (Resolve-Path -LiteralPath $MacOSArchivePath).Path
+    $expectedMacOSName = "Mistfall-Bell-Seasons-v$version-macOS-Universal.zip"
+    $distMacOSArchive = Join-Path $distRoot $expectedMacOSName
+    $venvPython = Join-Path $projectRoot '.venv\Scripts\python.exe'
+    $python = if (Test-Path -LiteralPath $venvPython) { $venvPython } else { (Get-Command python -ErrorAction Stop).Source }
+    & $python (Join-Path $projectRoot 'scripts\audit_macos_archive.py') $resolvedMacOSArchive --version $version --require-licenses --report (Join-Path $projectRoot 'reports\macos_archive\release_input.json')
+    if ($LASTEXITCODE -ne 0) { throw 'macOS 發行候選的 Universal 2／授權／PCK 稽核失敗。' }
+    if ([IO.Path]::GetFileName($resolvedMacOSArchive) -ne $expectedMacOSName) { throw "macOS 發行檔名必須是 $expectedMacOSName。" }
+    if ($resolvedMacOSArchive -ne $distMacOSArchive) {
+        Copy-Item -LiteralPath $resolvedMacOSArchive -Destination $distMacOSArchive -Force
+    }
+    $macOSHash = (Get-FileHash -LiteralPath $distMacOSArchive -Algorithm SHA256).Hash.ToLowerInvariant()
+    $hashLines += "$macOSHash  $expectedMacOSName"
+} elseif ($requireMacOS) {
+    throw '此發行要求 macOS Universal ZIP，但未提供 -MacOSArchivePath。'
 }
 [IO.File]::WriteAllLines((Join-Path $distRoot 'SHA256SUMS.txt'), $hashLines, [Text.UTF8Encoding]::new($false))
 & (Join-Path $PSScriptRoot 'Test-ReleaseArchive.ps1') -ArchivePath $archive

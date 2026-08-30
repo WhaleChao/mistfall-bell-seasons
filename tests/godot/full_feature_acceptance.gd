@@ -39,10 +39,12 @@ func _run() -> void:
 	await _test_movement_and_animation()
 	await _test_combat_and_dungeon()
 	await _test_farming_animals_and_economy()
+	await _test_maps_and_automation()
 	await _test_eldritch_fishing_and_boss()
 	await _test_village_dialogue_and_festival()
 	await _test_menus_relationships_and_settings()
 	await _test_multiplayer_ui()
+	await _test_alpha_matte_contrast()
 	_test_long_term_content_and_migrations()
 	await _capture("12_acceptance_complete")
 	_write_reports()
@@ -298,6 +300,98 @@ func _test_farming_animals_and_economy() -> void:
 	_record("經濟", "出貨箱與隔夜結算", pending > shipping_before and state_store.coins > coins_pre_settlement)
 
 
+func _test_maps_and_automation() -> void:
+	game._travel_to_map(&"mistfall_river")
+	await _frames(6)
+	var river_path := String(game.world_background.texture.resource_path)
+	var river_npcs := 0
+	for sprite: Sprite2D in game.npc_sprites.values():
+		river_npcs += int(sprite.visible)
+	player.global_position = game.RIVER_RESOURCE_POSITION
+	game._interact()
+	var reeds_ok := int(state_store.inventory.get("river_reed", 0)) >= 2
+	var river_fish_before := int(state_store.lifetime_stats.get("fish_caught", 0))
+	for attempt in range(12):
+		state_store.tools.stamina = 100
+		state_store.calendar.day = attempt % 12 + 1
+		state_store.calendar.minute_of_day = 10 * 60
+		state_store.current_weather = "clear"
+		player.global_position = game.RIVER_FISH_POSITION
+		game._interact()
+		if int(state_store.lifetime_stats.get("fish_caught", 0)) > river_fish_before:
+			break
+	_record("新地圖", "鳴鐘河畔可進入、釣魚、採蘆葦並顯示同行村民", game.mode == "river" and "mistfall_river_commercial" in river_path and reeds_ok and river_npcs == 2 and int(state_store.lifetime_stats.get("fish_caught", 0)) > river_fish_before)
+	await _capture("16_mistfall_river_map")
+
+	game._travel_to_map(&"bellwood_grove")
+	await _frames(6)
+	var grove_path := String(game.world_background.texture.resource_path)
+	var grove_npcs := 0
+	for sprite: Sprite2D in game.npc_sprites.values():
+		grove_npcs += int(sprite.visible)
+	player.global_position = game.GROVE_RESOURCE_POSITION
+	game._interact()
+	_record("新地圖", "古鐘林可進入、採藥草並顯示關係角色", game.mode == "grove" and "bellwood_grove_commercial" in grove_path and int(state_store.inventory.get("forest_herb", 0)) >= 2 and grove_npcs == 2)
+	await _capture("17_bellwood_grove_map")
+
+	game._travel_to_map(&"clockwork_ruins")
+	await _frames(6)
+	var ruins_path := String(game.world_background.texture.resource_path)
+	var ruins_npcs := 0
+	for sprite: Sprite2D in game.npc_sprites.values():
+		ruins_npcs += int(sprite.visible)
+	player.global_position = game.RUINS_RESOURCE_POSITION
+	game._interact()
+	_record("新地圖", "古鐘機械遺跡可進入、取得齒輪並呈現自動化線索", game.mode == "ruins" and "clockwork_ruins_commercial" in ruins_path and int(state_store.inventory.get("ancient_gear", 0)) >= 1 and ruins_npcs == 2)
+	await _capture("18_clockwork_ruins_map")
+
+	game._travel_to_map(&"mistfall_farm")
+	state_store.farm.rank = 10
+	state_store.farm.automation_devices.clear()
+	state_store.farm.automation_cycle_count = 0
+	state_store.farm.plots.clear()
+	state_store.farm.seed_stock["spring_turnip"] = 20
+	state_store.coins = 200000
+	for material_id in ["wood", "stone", "copper_ore", "iron_ore", "gold_ore", "glass", "mist_shard"]:
+		state_store.inventory[material_id] = 200
+	var placements := [
+		[Vector2i(0,0),"bell_generator",100],[Vector2i(0,1),"bell_generator",100],
+		[Vector2i(1,0),"mist_pump",90],[Vector2i(2,0),"field_sprinkler",80],
+		[Vector2i(2,1),"seed_distributor",70],[Vector2i(3,1),"crop_harvester",95],
+		[Vector2i(3,0),"preserves_processor",60],[Vector2i(4,0),"animal_feeder",50],
+		[Vector2i(5,0),"tide_condenser",40],
+	]
+	var built := 0
+	for entry: Array in placements:
+		var result: Dictionary = state_store.purchase_automation_device(entry[0], StringName(entry[1]), {"priority":entry[2],"crop_filter":"spring_turnip"})
+		built += int(bool(result.get("ok", false)))
+	state_store.farm.plots["4,1"] = {"tile":[4,1],"tilled":true,"watered":false,"crop_id":"spring_turnip","growth_progress":3,"ready":true,"withered":false}
+	state_store.farm.plots["2,0"] = {"tile":[2,0],"tilled":true,"watered":false,"crop_id":"spring_turnip","growth_progress":0,"ready":false,"withered":false}
+	state_store.farm.produce["spring_turnip"] = 2
+	var tide_fish_id := ""
+	for fish: Dictionary in registry.get_all("fish"):
+		if bool(fish.get("tide_required", false)):
+			tide_fish_id = String(fish.get("id", ""))
+			break
+	state_store.farm.produce[tide_fish_id] = 1
+	state_store.farm.animals.clear()
+	state_store.farm.animals.append({"id":"chicken_1","species":"chicken","name":"鐘網雞","hearts":0,"mood":50,"fed":false,"grazed":false,"product_ready":false,"pregnant_days":0})
+	state_store.inventory["animal_feed"] = 3
+	var day_result: Dictionary = state_store.advance_day(true)
+	var automation_report: Dictionary = day_result.get("automation", {})
+	_record("農場自動化", "九種設備可購買並連成單一鐘能網路", built == 9 and state_store.farm.automation_networks().size() == 1)
+	_record("農場自動化", "供電供水、播種、澆水、收割、餵食與雙加工每日實際運作", int(automation_report.get("stalled", 99)) == 0 and int(automation_report.get("watered", 0)) >= 1 and int(automation_report.get("harvested", 0)) >= 1 and int(automation_report.get("fed", 0)) == 1 and int(automation_report.get("processed", 0)) == 2)
+	_record("農場自動化", "霧封農產與夢潮鹽進入可出貨庫", int(state_store.farm.produce.get("mist_preserves", 0)) >= 1 and int(state_store.farm.produce.get("dream_tide_salt", 0)) >= 1)
+	game.game_menu.open()
+	game.game_menu.tabs.current_tab = 8
+	game.game_menu.refresh()
+	await _frames(5)
+	_record("農場自動化", "可視化 6×4 設計圖、設備選擇、作物篩選、優先序與停機資訊可操作", game.game_menu.automation_tile_buttons.size() == 24 and game.game_menu.automation_device_select.item_count == 9 and "1 網路" in game.game_menu.automation_status_label.text)
+	await _capture("19_automation_network")
+	game.game_menu.close()
+	await _frames(3)
+
+
 func _test_eldritch_fishing_and_boss() -> void:
 	state_store.tools.tool_levels["fishing_rod"] = 4
 	state_store.eldritch.reset()
@@ -324,10 +418,10 @@ func _test_eldritch_fishing_and_boss() -> void:
 	game._set_background_for_mode()
 	game.game_menu.open()
 	await _frames(3)
-	game.game_menu.tabs.current_tab = 8
+	game.game_menu.tabs.current_tab = 10
 	game.game_menu.refresh()
 	await _capture("13_eldritch_journal")
-	_record("異潮手冊", "異魚圖鑑與理智頁可開啟", game.game_menu.tabs.get_tab_count() >= 9 and game.game_menu.tabs.current_tab == 8)
+	_record("異潮手冊", "異魚圖鑑與理智頁可開啟", game.game_menu.tabs.get_tab_count() == 11 and game.game_menu.tabs.current_tab == 10)
 	game.game_menu.close()
 	await _frames(2)
 
@@ -392,13 +486,13 @@ func _test_menus_relationships_and_settings() -> void:
 	game.game_menu.open()
 	await _frames(4)
 	_record("選單", "旅人手冊暫停遊戲", game.game_menu.visible and paused and state_store.calendar.paused)
-	_record("選單", "九個功能分頁", game.game_menu.tabs.get_tab_count() == 9)
+	_record("選單", "十一個功能分頁", game.game_menu.tabs.get_tab_count() == 11)
 	await _capture("11_status_inventory_menu")
 	for tab_index in range(game.game_menu.tabs.get_tab_count()):
 		game.game_menu.tabs.current_tab = tab_index
 		game.game_menu.refresh()
 		await _frames(1)
-	_record("選單", "狀態、背包、關係、日曆、主線、成就、料理、設定、深潮均可切換", game.game_menu.tabs.current_tab == 8)
+	_record("選單", "狀態、背包、關係、日曆、主線、成就、料理、設定、自動化、地圖、深潮均可切換", game.game_menu.tabs.current_tab == 10)
 
 	state_store.social.add_affection(&"mira", 2500)
 	game.game_menu.candidate_select.select(0)
@@ -486,7 +580,7 @@ func _test_menus_relationships_and_settings() -> void:
 	var save_ok: bool = bool(save_manager.save_quick())
 	state_store.coins = 7
 	var load_ok: bool = bool(save_manager.load_quick())
-	_record("存檔", "SaveGame v4 快速存讀", save_ok and load_ok and state_store.coins == 12345)
+	_record("存檔", "SaveGame v5 快速存讀", save_ok and load_ok and state_store.coins == 12345)
 	game.game_menu.close()
 	await _frames(3)
 
@@ -515,6 +609,76 @@ func _test_multiplayer_ui() -> void:
 	_record("連線介面", "離線／關服可安全返回單人", not network.is_online() and not game.multiplayer_menu.visible)
 
 
+func _test_alpha_matte_contrast() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 500
+	root.add_child(layer)
+	var board := Control.new()
+	board.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	board.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(board)
+	var colors := [Color("7b1648"), Color("176b43"), Color("184f91"), Color("9a4b18")]
+	for index in colors.size():
+		var panel := ColorRect.new()
+		panel.position = Vector2(index * 160, 0)
+		panel.size = Vector2(160, 360)
+		panel.color = colors[index]
+		board.add_child(panel)
+	var shade := ColorRect.new()
+	shade.position = Vector2(0, 0)
+	shade.size = Vector2(640, 42)
+	shade.color = Color(0.03, 0.04, 0.06, 0.92)
+	board.add_child(shade)
+	var title := Label.new()
+	title.position = Vector2(18, 8)
+	title.text = "商用 Alpha 對比驗收｜人物・玩家・動物・敵人・異形"
+	title.add_theme_font_size_override("font_size", 18)
+	board.add_child(title)
+	var samples := [
+		{"path":"res://assets/runtime/sprites/character_atlas_alpha.png", "columns":4, "rows":3, "column":0, "row":0, "label":"村民"},
+		{"path":"res://assets/runtime/sprites/player_walk_atlas_alpha.png", "columns":4, "rows":4, "column":2, "row":0, "label":"玩家"},
+		{"path":"res://assets/runtime/sprites/animal_atlas_alpha.png", "columns":4, "rows":2, "column":0, "row":0, "label":"白雞"},
+		{"path":"res://assets/runtime/sprites/enemy_atlas_alpha.png", "columns":4, "rows":4, "column":3, "row":3, "label":"Boss"},
+		{"path":"res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png", "columns":1, "rows":1, "column":0, "row":0, "label":"異形"},
+	]
+	var all_valid := true
+	for index in samples.size():
+		var sample: Dictionary = samples[index]
+		var texture := _atlas_region(String(sample.path), int(sample.columns), int(sample.rows), int(sample.column), int(sample.row))
+		all_valid = all_valid and texture != null
+		var image := TextureRect.new()
+		image.position = Vector2(10 + index * 126, 54)
+		image.size = Vector2(116, 246)
+		image.texture = texture
+		image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		image.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		board.add_child(image)
+		var caption := Label.new()
+		caption.position = Vector2(10 + index * 126, 310)
+		caption.size = Vector2(116, 32)
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		caption.text = String(sample.label)
+		caption.add_theme_font_size_override("font_size", 16)
+		board.add_child(caption)
+	_record("商用圖片", "五類疊加圖集可在高對比底色上以真 Alpha 渲染", all_valid)
+	await _frames(3)
+	await _capture("20_alpha_matte_contrast")
+	layer.queue_free()
+	await _frames(2)
+
+
+func _atlas_region(path: String, columns: int, rows: int, column: int, row: int) -> AtlasTexture:
+	var source: Texture2D = load(path)
+	if source == null:
+		return null
+	var region := AtlasTexture.new()
+	region.atlas = source
+	var cell_size := Vector2(source.get_width() / columns, source.get_height() / rows)
+	region.region = Rect2(Vector2(column, row) * cell_size, cell_size)
+	return region
+
+
 func _test_long_term_content_and_migrations() -> void:
 	var calendar: RefCounted = load("res://runtime/calendar/calendar_system.gd").new()
 	for _day in range(1200):
@@ -538,14 +702,23 @@ func _test_long_term_content_and_migrations() -> void:
 	var story_arc: Dictionary = registry.get_artifact("story_arcs", &"mistfall_three_years")
 	_record("主線", "12 章且沒有期限", Array(story_arc.get("chapters", [])).size() == 12 and story_arc.get("deadline", 1) == null)
 	state_store.story_state = {"chapter":1, "completed_chapters":[], "season_seals":state_store.dungeon.seals.duplicate(), "final_boss_available":true, "final_boss_defeated":true}
-	state_store.lifetime_stats = {"days_played":360,"crops_harvested":1000,"fish_caught":100,"eldritch_fish_caught":8,"resources_gathered":100,"monsters_defeated":100,"bosses_defeated":4,"eldritch_bosses_defeated":1,"festivals_attended":12,"relationship_hearts":20,"marriages":1,"coins_earned":100000,"purchases":50}
+	state_store.lifetime_stats = {"days_played":360,"crops_harvested":1000,"fish_caught":100,"eldritch_fish_caught":8,"resources_gathered":100,"monsters_defeated":100,"bosses_defeated":4,"eldritch_bosses_defeated":1,"festivals_attended":12,"relationship_hearts":80,"marriages":1,"coins_earned":100000,"purchases":50,"automation_cycles":100,"automated_tiles_watered":500,"automated_crops_planted":200,"automated_crops_harvested":200,"automation_animals_fed":100,"automation_items_processed":50}
 	state_store.farm.rank = 10
+	state_store.farm.automation_cycle_count = 100
 	state_store.dungeon.max_reached = 40
 	state_store.dungeon.defeated_bosses.assign([10, 20, 30, 40])
 	state_store.dungeon.seals.assign(["spring", "summer", "autumn", "winter"])
 	state_store.dungeon.final_boss_defeated = true
 	state_store.dungeon.endless_unlocked = true
-	state_store.social.add_affection(&"yuna", 2500)
+	for npc_id in ["mira","lian","soren","yuna","orin","eira","toma","nori","asha","piko"]:
+		state_store.social.add_affection(StringName(npc_id), 500 if npc_id in ["mira","lian","soren","yuna"] else 250)
+	state_store.social.add_affection(&"yuna", 2000)
+	state_store.eldritch.eldritch_catches.clear()
+	for fish: Dictionary in registry.get_all("fish"):
+		if bool(fish.get("tide_required", false)):
+			state_store.eldritch.eldritch_catches[String(fish.get("id", ""))] = 1
+	state_store.eldritch.boss_unlocked = true
+	state_store.eldritch.boss_defeated = true
 	for tool_id in state_store.tools.tool_levels:
 		state_store.tools.tool_levels[tool_id] = 4
 	var story_completed := 0
@@ -556,23 +729,31 @@ func _test_long_term_content_and_migrations() -> void:
 	_record("主線", "三年主線可連續完成", story_completed == 12)
 	state_store._check_achievements()
 	_record("成就", "14 項成就可解鎖", state_store.achievements.unlocked.size() == 14, "%d/14" % state_store.achievements.unlocked.size())
-	var v4: Dictionary = state_store.to_save_data()
-	var v3: Dictionary = v4.duplicate(true)
+	var v5: Dictionary = state_store.to_save_data()
+	var v4: Dictionary = v5.duplicate(true)
+	v4.schema_version = 4
+	var v4_farm: Dictionary = Dictionary(v4.farm).duplicate(true)
+	for key in ["automation_devices","automation_cycle_count","automation_last_report"]:
+		v4_farm.erase(key)
+	v4.farm = v4_farm
+	var v4_ok: bool = bool(state_store.load_save_data(v4))
+	var v3: Dictionary = v5.duplicate(true)
 	v3.schema_version = 3
 	v3.erase("eldritch")
 	var v3_ok: bool = bool(state_store.load_save_data(v3))
-	var v2: Dictionary = v4.duplicate(true)
+	var v2: Dictionary = v5.duplicate(true)
 	v2.schema_version = 2
 	for key in ["tools", "economy", "achievements", "lifetime_stats", "settings", "eldritch"]:
 		v2.erase(key)
 	var v2_ok: bool = bool(state_store.load_save_data(v2))
 	var legacy := {"schema_version":1,"player":{"position":[12,34],"stats":{"max_health":100,"health":80,"attack":16}},"map":"mistfall_farm","flags":{},"quests":{},"inventory":{"health_potion":1},"calendar":{"year":2,"season_index":2,"day":28,"minute_of_day":720,"speed_mode":"relaxed"}}
 	var v1_ok: bool = bool(state_store.load_save_data(legacy))
-	_record("存檔", "v3→v4 異潮資料遷移", v3_ok)
-	_record("存檔", "v2→v4 遷移", v2_ok)
-	_record("存檔", "28 日制 v1→v4 保留日期", v1_ok and state_store.calendar.year == 2 and state_store.calendar.season_index == 2 and state_store.calendar.day == 28)
+	_record("存檔", "v4→v5 自動化資料遷移", v4_ok)
+	_record("存檔", "v3→v5 異潮資料遷移", v3_ok)
+	_record("存檔", "v2→v5 遷移", v2_ok)
+	_record("存檔", "28 日制 v1→v5 保留日期", v1_ok and state_store.calendar.year == 2 and state_store.calendar.season_index == 2 and state_store.calendar.day == 28)
 	_record("內容", "48 作物／20 魚／40 料理", registry.get_all("crops").size() == 48 and registry.get_all("fish").size() == 20 and registry.get_all("recipes").size() == 40)
-	_record("內容", "10 NPC／12 節慶／17+ 洞窟與異潮敵人", registry.get_all("npc_schedules").size() == 10 and registry.get_all("festivals").size() == 12 and registry.get_all("enemies").size() >= 17)
+	_record("內容", "10 NPC／12 節慶／17+ 洞窟與異潮敵人／9 種自動設備", registry.get_all("npc_schedules").size() == 10 and registry.get_all("festivals").size() == 12 and registry.get_all("enemies").size() >= 17 and registry.get_all("automation_devices").size() == 9)
 	_record("離線", "Runtime 場景沒有 HTTPRequest", get_nodes_in_group("http_clients").is_empty())
 
 

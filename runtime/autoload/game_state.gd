@@ -1,6 +1,6 @@
 extends Node
 
-const SAVE_SCHEMA_VERSION := 4
+const SAVE_SCHEMA_VERSION := 5
 const CalendarSystem := preload("res://runtime/calendar/calendar_system.gd")
 const FarmSystem := preload("res://runtime/farming/farm_system.gd")
 const SocialSystem := preload("res://runtime/social/social_system.gd")
@@ -80,7 +80,7 @@ func reset() -> void:
 	eldritch.reset()
 	economy.reset()
 	achievements.reset()
-	lifetime_stats = {"days_played": 0, "crops_harvested": 0, "fish_caught": 0, "eldritch_fish_caught": 0, "resources_gathered": 0, "monsters_defeated": 0, "bosses_defeated": 0, "eldritch_bosses_defeated": 0, "festivals_attended": 0, "relationship_hearts": 0, "marriages": 0, "coins_earned": 0, "purchases": 0}
+	lifetime_stats = {"days_played": 0, "crops_harvested": 0, "fish_caught": 0, "eldritch_fish_caught": 0, "resources_gathered": 0, "monsters_defeated": 0, "bosses_defeated": 0, "eldritch_bosses_defeated": 0, "festivals_attended": 0, "relationship_hearts": 0, "marriages": 0, "coins_earned": 0, "purchases": 0, "automation_cycles": 0, "automated_tiles_watered": 0, "automated_crops_planted": 0, "automated_crops_harvested": 0, "automation_animals_fed": 0, "automation_items_processed": 0}
 	settings = {"master_volume": 0.8, "text_speed": 1.0, "fullscreen": false, "control_prompts": "auto"}
 	current_weather = CalendarSystem.weather_for(calendar.year, calendar.season_index, calendar.day)
 	game_time_running = true
@@ -140,6 +140,15 @@ func advance_day(debug_skip: bool = false) -> Dictionary:
 	lifetime_stats["days_played"] = int(lifetime_stats.get("days_played", 0)) + 1
 	EventBus.day_ended.emit(calendar.year, calendar.season_id(), calendar.day)
 	var elapsed_weather := current_weather
+	var automation_report: Dictionary = farm.run_automation_day(calendar.season_id(), inventory)
+	if int(automation_report.get("devices", 0)) > 0:
+		lifetime_stats["automation_cycles"] = int(lifetime_stats.get("automation_cycles", 0)) + 1
+		lifetime_stats["automated_tiles_watered"] = int(lifetime_stats.get("automated_tiles_watered", 0)) + int(automation_report.get("watered", 0))
+		lifetime_stats["automated_crops_planted"] = int(lifetime_stats.get("automated_crops_planted", 0)) + int(automation_report.get("planted", 0))
+		lifetime_stats["automated_crops_harvested"] = int(lifetime_stats.get("automated_crops_harvested", 0)) + int(automation_report.get("harvested", 0))
+		lifetime_stats["automation_animals_fed"] = int(lifetime_stats.get("automation_animals_fed", 0)) + int(automation_report.get("fed", 0))
+		lifetime_stats["automation_items_processed"] = int(lifetime_stats.get("automation_items_processed", 0)) + int(automation_report.get("processed", 0))
+		lifetime_stats["crops_harvested"] = int(lifetime_stats.get("crops_harvested", 0)) + int(automation_report.get("harvested", 0))
 	var transition: Dictionary = calendar.advance_day()
 	current_weather = CalendarSystem.weather_for(calendar.year, calendar.season_index, calendar.day)
 	var crop_messages: Array = farm.advance_day(calendar.season_id(), elapsed_weather)
@@ -150,6 +159,8 @@ func advance_day(debug_skip: bool = false) -> Dictionary:
 	eldritch.recover_new_day()
 	for message in crop_messages:
 		EventBus.toast(message)
+	if int(automation_report.get("devices", 0)) > 0:
+		EventBus.toast(String(automation_report.get("message", "")))
 	var forecast := CalendarSystem.forecast_for_tomorrow(calendar.year, calendar.season_index, calendar.day)
 	EventBus.weather_changed.emit(current_weather, forecast)
 	EventBus.request_board_changed.emit(request_board.active_requests)
@@ -163,7 +174,7 @@ func advance_day(debug_skip: bool = false) -> Dictionary:
 		EventBus.toast("昨夜出貨收入 %dG" % shipping_coins)
 	_check_achievements()
 	_ending_day = false
-	return {"ended": ended, "transition": transition, "weather": current_weather, "festival": festival}
+	return {"ended": ended, "transition": transition, "weather": current_weather, "festival": festival, "automation": automation_report}
 
 
 func sleep_if_allowed() -> bool:
@@ -194,6 +205,47 @@ func interact_farm_plot(tile: Vector2i, crop_id: StringName) -> Dictionary:
 			lifetime_stats["crops_harvested"] = int(lifetime_stats.get("crops_harvested", 0)) + int(result.get("quantity", 1))
 		_check_achievements()
 		EventBus.farm_changed.emit(StringName(result.get("action", "changed")), result)
+	return result
+
+
+func purchase_automation_device(tile: Vector2i, device_id: StringName, config: Dictionary = {}) -> Dictionary:
+	var definition := ContentRegistry.get_artifact("automation_devices", device_id)
+	if definition.is_empty():
+		return {"ok": false, "message": "找不到自動化設備資料"}
+	if farm.rank < int(definition.get("required_rank", 10)):
+		return {"ok": false, "message": "農場需達 Lv.%d" % definition.get("required_rank", 10)}
+	if farm.automation_devices.has("%d,%d" % [tile.x, tile.y]):
+		return {"ok": false, "message": "這個設計格已有設備"}
+	var cost := int(definition.get("cost", 0))
+	if coins < cost:
+		return {"ok": false, "message": "建造需要 %dG" % cost}
+	var materials: Dictionary = definition.get("materials", {})
+	for material_id: String in materials:
+		if int(inventory.get(material_id, 0)) < int(materials[material_id]):
+			return {"ok": false, "message": "缺少%s %d 個" % [ContentRegistry.get_artifact("items", material_id).get("display_name", material_id), materials[material_id]]}
+	var result: Dictionary = farm.place_automation_device(tile, device_id, config)
+	if not bool(result.get("ok", false)):
+		return result
+	for material_id: String in materials:
+		consume_item(material_id, int(materials[material_id]))
+	coins -= cost
+	economy.record_purchase(String(device_id), cost)
+	lifetime_stats["purchases"] = int(lifetime_stats.get("purchases", 0)) + 1
+	EventBus.farm_changed.emit(&"automation_placed", result)
+	return result
+
+
+func configure_automation_device(tile: Vector2i, config: Dictionary) -> Dictionary:
+	var result: Dictionary = farm.configure_automation_device(tile, config)
+	if bool(result.get("ok", false)):
+		EventBus.farm_changed.emit(&"automation_configured", result)
+	return result
+
+
+func remove_automation_device(tile: Vector2i) -> Dictionary:
+	var result: Dictionary = farm.remove_automation_device(tile)
+	if bool(result.get("ok", false)):
+		EventBus.farm_changed.emit(&"automation_removed", result)
 	return result
 
 
@@ -329,9 +381,20 @@ func try_complete_current_story_chapter() -> Dictionary:
 func story_metrics() -> Dictionary:
 	var metrics := lifetime_stats.duplicate(true)
 	var maximum_hearts := 0
+	var known_villagers := 0
+	var known_candidates := 0
+	var dating_candidates := 0
 	for npc_id: String in social.relationships:
-		maximum_hearts = maxi(maximum_hearts, social.hearts(npc_id))
+		var hearts: int = social.hearts(npc_id)
+		maximum_hearts = maxi(maximum_hearts, hearts)
+		known_villagers += int(hearts >= 1)
+		if npc_id in ["mira", "lian", "soren", "yuna"]:
+			known_candidates += int(hearts >= 2)
+			dating_candidates += int(bool(Dictionary(social.relationships[npc_id]).get("dating", false)))
 	metrics["relationship_max_hearts"] = maximum_hearts
+	metrics["relationship_unique_villagers"] = known_villagers
+	metrics["romance_candidates_known"] = known_candidates
+	metrics["dating_candidates"] = dating_candidates
 	metrics["farm_rank"] = farm.rank
 	metrics["dungeon_floor"] = dungeon.max_reached
 	metrics["bosses_defeated"] = dungeon.defeated_bosses.size()
@@ -339,6 +402,9 @@ func story_metrics() -> Dictionary:
 	metrics["final_boss_defeated"] = 1 if dungeon.final_boss_defeated else 0
 	metrics["eldritch_unique_catches"] = eldritch.eldritch_catches.size()
 	metrics["eldritch_boss_defeated"] = 1 if eldritch.boss_defeated else 0
+	metrics["automation_devices"] = farm.automation_devices.size()
+	metrics["automation_networks"] = farm.automation_networks().size()
+	metrics["automation_cycles"] = farm.automation_cycle_count
 	var upgrade_count := 0
 	for level: Variant in tools.tool_levels.values():
 		upgrade_count += maxi(0, int(level) - 1)
@@ -387,6 +453,28 @@ func gather_resource(node_id: String, resource_kind: String) -> Dictionary:
 	var quantity := 1 + int(tools.tool_levels.get(tool_id, 1))
 	add_item(item_id, quantity)
 	set_flag(flag_id, true)
+	lifetime_stats["resources_gathered"] = int(lifetime_stats.get("resources_gathered", 0)) + quantity
+	return {"ok": true, "item_id": item_id, "quantity": quantity, "message": "取得%s ×%d" % [ContentRegistry.get_artifact("items", item_id).get("display_name", item_id), quantity]}
+
+
+func gather_map_resource(node_id: String) -> Dictionary:
+	var definitions := {
+		"river_reeds": {"item_id": "river_reed", "quantity": 2, "action": "cleared"},
+		"bellwood_herbs": {"item_id": "forest_herb", "quantity": 2, "action": "cleared"},
+		"ruins_gears": {"item_id": "ancient_gear", "quantity": 1, "action": "mining"},
+	}
+	if not definitions.has(node_id):
+		return {"ok": false, "message": "找不到這處地圖資源"}
+	var daily_flag := "map_resource_%d_%s" % [calendar.absolute_day(), node_id]
+	if bool(get_flag(daily_flag, false)):
+		return {"ok": false, "message": "這處資源今天已採集"}
+	var definition: Dictionary = definitions[node_id]
+	if not tools.use_for(String(definition.action)):
+		return {"ok": false, "message": "體力不足，今天無法採集"}
+	var item_id := String(definition.item_id)
+	var quantity := int(definition.quantity)
+	add_item(item_id, quantity)
+	set_flag(daily_flag, true)
 	lifetime_stats["resources_gathered"] = int(lifetime_stats.get("resources_gathered", 0)) + quantity
 	return {"ok": true, "item_id": item_id, "quantity": quantity, "message": "取得%s ×%d" % [ContentRegistry.get_artifact("items", item_id).get("display_name", item_id), quantity]}
 
@@ -523,6 +611,8 @@ func load_save_data(source_data: Dictionary) -> bool:
 		data = _migrate_v2(data)
 	if int(data.get("schema_version", -1)) == 3:
 		data = _migrate_v3(data)
+	if int(data.get("schema_version", -1)) == 4:
+		data = _migrate_v4(data)
 	if int(data.get("schema_version", -1)) != SAVE_SCHEMA_VERSION:
 		return false
 	flags = Dictionary(data.get("flags", {})).duplicate(true)
@@ -594,6 +684,21 @@ func _migrate_v3(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+func _migrate_v4(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["schema_version"] = 5
+	var migrated_farm: Dictionary = Dictionary(migrated.get("farm", {})).duplicate(true)
+	migrated_farm["automation_devices"] = Dictionary(migrated_farm.get("automation_devices", {})).duplicate(true)
+	migrated_farm["automation_cycle_count"] = int(migrated_farm.get("automation_cycle_count", 0))
+	migrated_farm["automation_last_report"] = Dictionary(migrated_farm.get("automation_last_report", {})).duplicate(true)
+	migrated["farm"] = migrated_farm
+	var migrated_stats: Dictionary = Dictionary(migrated.get("lifetime_stats", {})).duplicate(true)
+	for key in ["automation_cycles", "automated_tiles_watered", "automated_crops_planted", "automated_crops_harvested", "automation_animals_fed", "automation_items_processed"]:
+		migrated_stats[key] = int(migrated_stats.get(key, 0))
+	migrated["lifetime_stats"] = migrated_stats
+	return migrated
+
+
 func _farm_action_for(tile: Vector2i) -> String:
 	var key := "%d,%d" % [tile.x, tile.y]
 	var plot: Dictionary = Dictionary(farm.plots.get(key, {}))
@@ -615,7 +720,7 @@ func _sell_price(item_id: String) -> int:
 	var fish_definition := ContentRegistry.get_artifact("fish", item_id)
 	if not fish_definition.is_empty():
 		return int(fish_definition.get("sell_price", 0))
-	return {"egg": 90, "milk": 260}.get(item_id, 0)
+	return {"egg": 90, "milk": 260, "mist_preserves": 420, "dream_tide_salt": 1800}.get(item_id, 0)
 
 
 func _update_relationship_metric() -> void:

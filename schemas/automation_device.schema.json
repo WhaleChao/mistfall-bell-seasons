@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/automation_device.schema.json",
+  "title": "AutomationDevice catalog",
+  "$defs": {
+    "definition": {
+      "type": "object",
+      "required": ["id", "display_name", "symbol", "category", "required_rank", "cost", "materials", "power_generation", "power_use", "water_generation", "water_use", "range", "description"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "symbol": {"type": "string", "minLength": 1, "maxLength": 2},
+        "category": {"enum": ["network", "power", "water", "crop", "animal", "processing", "eldritch"]},
+        "required_rank": {"type": "integer", "minimum": 4, "maximum": 10},
+        "cost": {"type": "integer", "minimum": 0},
+        "materials": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+        "power_generation": {"type": "integer", "minimum": 0},
+        "power_use": {"type": "integer", "minimum": 0},
+        "water_generation": {"type": "integer", "minimum": 0},
+        "water_use": {"type": "integer", "minimum": 0},
+        "range": {"type": "integer", "minimum": 0, "maximum": 4},
+        "description": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/definition"},
+    {
+      "type": "object",
+      "required": ["schema_version", "definitions"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "definitions": {"type": "array", "minItems": 9, "maxItems": 9, "items": {"$ref": "#/$defs/definition"}}
+      },
+      "additionalProperties": false
+    }
+  ]
+}

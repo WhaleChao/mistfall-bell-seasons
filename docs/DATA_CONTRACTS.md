@@ -19,14 +19,15 @@
 | NPCSchedule | `data/npc_schedules/` | `npc_schedule.schema.json` | 時段、天氣、地圖標記 |
 | FestivalDefinition | `data/festivals/` | `festival_definition.schema.json` | 季節 8／18／28 日 |
 | FarmUpgrade | `data/farm_upgrades/` | `farm_upgrade.schema.json` | 農場 Lv.1–10 解鎖 |
+| AutomationDevice | `data/automation_devices/` | `automation_device.schema.json` | 鐘能、水量、設備類別、成本與農場等級 |
 | DungeonDefinition | `data/dungeons/` | `dungeon_definition.schema.json` | 40 層、Boss、電梯、封印 |
 | ProceduralRequestTemplate | `data/request_templates/` | `procedural_request_template.schema.json` | 第 4 年後規則式委託 |
 | StoryArcDefinition | `data/story_arcs/` | `story_arc_definition.schema.json` | 無期限三年主線 |
 | RelationshipEventDefinition | `data/relationship_events/` | `relationship_event_definition.schema.json` | 四候選的心事件 |
-| SaveGame v4 | `user://pixelrpg_quick_save.json` | `save_game.schema.json` | 日曆、農場、家庭、洞窟、故事、工具、經濟、成就、設定與深潮狀態 |
+| SaveGame v5 | `user://pixelrpg_quick_save.json` | `save_game.schema.json` | 日曆、農場、自動化、家庭、洞窟、故事、工具、經濟、成就、設定與深潮狀態 |
 
 共同規則：`schema_version` 必須存在；`id` 符合 `^[a-z][a-z0-9_]*$`；正式內容不得以檔名或顯示名稱作引用。AI、表單與手工修改最後都走相同 schema 驗證。
 
 WorldEvent 的可執行動作固定為：`dialogue`、`set_flag`、`quest`、`give_item`、`take_item`、`change_map`、`spawn_actor`、`remove_actor`、`animation`、`sound`、`cutscene`。未知動作會被 runtime 拒絕。
 
-同類內容可用單筆 JSON，或以 `{ "schema_version": 1, "definitions": [...] }` 保存為 catalog；ContentRegistry 與 Python 驗證器會展開成相同的穩定 ID 索引。Runtime 會把 SaveGame v1、v2、v3 逐版遷移至 v4；原 28 日制日期保留季節與日數，不做比例換算。v4 新增 `eldritch`，保存理智、洞見、異魚紀錄與首領狀態。
+同類內容可用單筆 JSON，或以 `{ "schema_version": 1, "definitions": [...] }` 保存為 catalog；ContentRegistry 與 Python 驗證器會展開成相同的穩定 ID 索引。Runtime 會把 SaveGame v1、v2、v3、v4 逐版遷移至 v5；原 28 日制日期保留季節與日數，不做比例換算。v4 新增 `eldritch`；v5 新增 `automation_devices`、`automation_cycle_count` 與 `automation_last_report`，保存 6×4 設計圖、設備設定、網路與長期運作統計。

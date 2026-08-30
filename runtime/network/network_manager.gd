@@ -7,7 +7,7 @@ signal snapshot_received(players: Dictionary)
 signal world_state_received(world: Dictionary)
 signal action_result_received(action: String, result: Dictionary)
 
-const PROTOCOL_VERSION := "1.1.0"
+const PROTOCOL_VERSION := "1.2.0"
 const DEFAULT_PORT := 27180
 const DEFAULT_MAX_CLIENTS := 8
 const MAX_CLIENTS_LIMIT := 16
@@ -17,8 +17,8 @@ const WORLD_SAVE_INTERVAL := 30.0
 const INPUT_RATE_LIMIT_MSEC := 25
 const ACTION_RATE_LIMIT_MSEC := 150
 const PLAYER_SPEED := 118.0
-const VALID_MAPS := ["mistfall_farm", "mistfall_village", "mistfall_depths", "dreaming_shore"]
-const ALLOWED_ACTIONS := ["farm_plot", "gather", "fish", "ship", "tend_animal", "buy_offer", "farm_upgrade", "cook", "eat", "talk", "court_npc", "propose_npc", "family_event"]
+const VALID_MAPS := ["mistfall_farm", "mistfall_village", "mistfall_river", "bellwood_grove", "clockwork_ruins", "mistfall_depths", "dreaming_shore"]
+const ALLOWED_ACTIONS := ["farm_plot", "gather", "map_resource", "fish", "ship", "tend_animal", "buy_offer", "farm_upgrade", "automation_place", "automation_configure", "automation_remove", "cook", "eat", "talk", "court_npc", "propose_npc", "family_event"]
 
 enum Role { OFFLINE, SERVER, CLIENT }
 
@@ -457,6 +457,8 @@ func _execute_game_state_action(state_store: Node, action: String, payload: Dict
 			return state_store.interact_farm_plot(tile, StringName(String(payload.get("seed_id", ""))))
 		"gather":
 			return state_store.gather_resource(String(payload.get("node_id", "")), String(payload.get("kind", "")))
+		"map_resource":
+			return state_store.gather_map_resource(String(payload.get("node_id", "")))
 		"fish":
 			return state_store.fish_at(String(payload.get("location", "pond")))
 		"ship":
@@ -467,6 +469,15 @@ func _execute_game_state_action(state_store: Node, action: String, payload: Dict
 			return state_store.buy_offer(StringName(String(payload.get("shop_id", ""))), String(payload.get("offer_id", "")))
 		"farm_upgrade":
 			return state_store.purchase_next_farm_upgrade()
+		"automation_place":
+			var automation_tile := Vector2i(clampi(int(payload.get("x", -1)), 0, 5), clampi(int(payload.get("y", -1)), 0, 3))
+			return state_store.purchase_automation_device(automation_tile, StringName(String(payload.get("device_id", ""))), Dictionary(payload.get("config", {})))
+		"automation_configure":
+			var configure_tile := Vector2i(clampi(int(payload.get("x", -1)), 0, 5), clampi(int(payload.get("y", -1)), 0, 3))
+			return state_store.configure_automation_device(configure_tile, Dictionary(payload.get("config", {})))
+		"automation_remove":
+			var remove_tile := Vector2i(clampi(int(payload.get("x", -1)), 0, 5), clampi(int(payload.get("y", -1)), 0, 3))
+			return state_store.remove_automation_device(remove_tile)
 		"cook":
 			return state_store.cook_recipe(StringName(String(payload.get("recipe_id", ""))))
 		"eat":

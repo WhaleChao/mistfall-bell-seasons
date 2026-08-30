@@ -50,10 +50,32 @@ func _run() -> void:
 
 func _test_century_simulation() -> void:
 	game_state.reset()
-	game_state.farm.rank = 6
+	game_state.farm.rank = 10
+	game_state.farm.greenhouse_unlocked = true
 	var chicken: Dictionary = game_state.farm.purchase_animal("chicken")
 	var cow: Dictionary = game_state.farm.purchase_animal("cow")
 	_check(bool(chicken.get("ok", false)) and bool(cow.get("ok", false)), "百年模擬", "初始雞牛狀態建立成功", "")
+	var automation_placements := [
+		[Vector2i(0, 0), "bell_generator", 100], [Vector2i(0, 1), "bell_generator", 100],
+		[Vector2i(1, 0), "mist_pump", 95], [Vector2i(1, 1), "copper_conveyor", 90],
+		[Vector2i(2, 0), "field_sprinkler", 85], [Vector2i(2, 1), "crop_harvester", 80],
+		[Vector2i(2, 2), "seed_distributor", 75], [Vector2i(3, 1), "preserves_processor", 70],
+		[Vector2i(4, 1), "animal_feeder", 65], [Vector2i(5, 1), "tide_condenser", 60],
+	]
+	var automation_installed := true
+	for placement: Array in automation_placements:
+		var placed: Dictionary = game_state.farm.place_automation_device(placement[0], StringName(placement[1]), {"priority":placement[2], "crop_filter":"spring_turnip"})
+		automation_installed = automation_installed and bool(placed.get("ok", false))
+	_check(automation_installed and game_state.farm.automation_devices.size() == 10 and game_state.farm.automation_networks().size() == 1, "百年自動化", "十台設備與銅軌組成單一能源網", "%d devices / %d network" % [game_state.farm.automation_devices.size(), game_state.farm.automation_networks().size()])
+	game_state.farm.seed_stock["spring_turnip"] = SIMULATION_DAYS * 2
+	game_state.inventory["animal_feed"] = SIMULATION_DAYS * 2
+	game_state.inventory["mist_shard"] = SIMULATION_DAYS
+	var tide_fish_id := ""
+	for fish: Dictionary in root.get_node("ContentRegistry").get_all("fish"):
+		if bool(fish.get("tide_required", false)):
+			tide_fish_id = String(fish.get("id", ""))
+			break
+	game_state.farm.produce[tide_fish_id] = SIMULATION_DAYS
 	game_state.social.add_affection(&"mira", 2500)
 	game_state.social.start_dating(&"mira")
 	game_state.social.marry(&"mira", game_state.calendar.absolute_day())
@@ -61,6 +83,8 @@ func _test_century_simulation() -> void:
 	var festivals_seen := 0
 	var severe_forecasts := 0
 	var generated_requests := 0
+	var automation_stalls := 0
+	var automation_roundtrips := 0
 	var allowed_weather := ["clear", "rain", "storm", "fog", "typhoon", "snow", "blizzard"]
 	for elapsed_day in SIMULATION_DAYS:
 		var result: Dictionary = game_state.advance_day(true)
@@ -80,6 +104,8 @@ func _test_century_simulation() -> void:
 			severe_forecasts += 1
 		if game_state.calendar.year >= 4:
 			generated_requests += game_state.request_board.active_requests.size()
+		var automation: Dictionary = result.get("automation", {})
+		automation_stalls += int(automation.get("stalled", 0))
 		if (elapsed_day + 1) % 30 == 0:
 			var before_absolute: int = game_state.calendar.absolute_day()
 			var before_year: int = game_state.calendar.year
@@ -93,6 +119,8 @@ func _test_century_simulation() -> void:
 				_check(false, "百年模擬", "每月讀檔完整保留日期與天氣", "absolute=%d" % before_absolute)
 				break
 			roundtrips += 1
+			if game_state.farm.automation_devices.size() == 10 and game_state.farm.automation_networks().size() == 1:
+				automation_roundtrips += 1
 	_check(game_state.calendar.year == 101 and game_state.calendar.season_index == 0 and game_state.calendar.day == 1, "百年模擬", "12,000 日後準確進入第 101 年春 1 日", game_state.calendar.date_text())
 	_check(int(game_state.lifetime_stats.get("days_played", 0)) == SIMULATION_DAYS, "百年模擬", "遊玩日數統計無漂移", str(game_state.lifetime_stats.get("days_played", 0)))
 	_check(roundtrips == SIMULATION_DAYS / 30, "百年模擬", "400 次每月序列化均成功", "%d/%d" % [roundtrips, SIMULATION_DAYS / 30])
@@ -100,6 +128,12 @@ func _test_century_simulation() -> void:
 	_check(severe_forecasts > 0, "百年模擬", "颱風與暴雪預警在長期模擬中可達", "%d" % severe_forecasts)
 	_check(generated_requests > 0, "百年模擬", "第 4 年後規則式委託持續生成", "%d" % generated_requests)
 	_check(game_state.farm.animals.size() == 2, "百年模擬", "動物資料長期保存且不自行增殖", "%d" % game_state.farm.animals.size())
+	_check(game_state.farm.automation_cycle_count == SIMULATION_DAYS and int(game_state.lifetime_stats.get("automation_cycles", 0)) == SIMULATION_DAYS, "百年自動化", "自動鐘網連續執行 12,000 日無漏週期", "%d/%d" % [game_state.farm.automation_cycle_count, SIMULATION_DAYS])
+	_check(automation_stalls == 0, "百年自動化", "能源與水量預算百年無停機", "%d stalls" % automation_stalls)
+	_check(automation_roundtrips == roundtrips, "百年自動化", "十台設備與單一網路跨 400 次月存檔完整保留", "%d/%d" % [automation_roundtrips, roundtrips])
+	_check(int(game_state.lifetime_stats.get("automated_tiles_planted", game_state.lifetime_stats.get("automated_crops_planted", 0))) > 100 and int(game_state.lifetime_stats.get("automated_tiles_watered", 0)) > 100 and int(game_state.lifetime_stats.get("automated_crops_harvested", 0)) > 100, "百年自動化", "播種、澆水與收割形成長期生產循環", "plant=%d water=%d harvest=%d" % [int(game_state.lifetime_stats.get("automated_crops_planted", 0)), int(game_state.lifetime_stats.get("automated_tiles_watered", 0)), int(game_state.lifetime_stats.get("automated_crops_harvested", 0))])
+	_check(int(game_state.lifetime_stats.get("automation_animals_fed", 0)) == SIMULATION_DAYS * 2, "百年自動化", "雞與牛每日由餵食鐘照料", "%d/%d" % [int(game_state.lifetime_stats.get("automation_animals_fed", 0)), SIMULATION_DAYS * 2])
+	_check(int(game_state.lifetime_stats.get("automation_items_processed", 0)) >= SIMULATION_DAYS and int(game_state.farm.produce.get("dream_tide_salt", 0)) == SIMULATION_DAYS, "百年自動化", "加工槽與深潮凝析器持續產出", "processed=%d salt=%d" % [int(game_state.lifetime_stats.get("automation_items_processed", 0)), int(game_state.farm.produce.get("dream_tide_salt", 0))])
 	var final_payload := JSON.stringify(game_state.to_save_data(), "", false)
 	_check(final_payload.length() < 1024 * 1024, "百年模擬", "百年存檔維持在 1 MiB 內", "%d bytes" % final_payload.length())
 	metrics["simulated_days"] = SIMULATION_DAYS
@@ -107,6 +141,13 @@ func _test_century_simulation() -> void:
 	metrics["festivals_seen"] = festivals_seen
 	metrics["severe_forecasts"] = severe_forecasts
 	metrics["generated_request_instances"] = generated_requests
+	metrics["automation_cycles"] = game_state.farm.automation_cycle_count
+	metrics["automation_stalls"] = automation_stalls
+	metrics["automation_monthly_roundtrips"] = automation_roundtrips
+	metrics["automation_tiles_watered"] = game_state.lifetime_stats.get("automated_tiles_watered", 0)
+	metrics["automation_crops_harvested"] = game_state.lifetime_stats.get("automated_crops_harvested", 0)
+	metrics["automation_animals_fed"] = game_state.lifetime_stats.get("automation_animals_fed", 0)
+	metrics["automation_items_processed"] = game_state.lifetime_stats.get("automation_items_processed", 0)
 	metrics["final_save_bytes"] = final_payload.length()
 
 
@@ -181,7 +222,7 @@ func _write_report() -> void:
 		"",
 		"結果：**%s**　｜　%d 通過／%d 失敗　｜　12,000 遊戲日　｜　250 次磁碟存讀" % ["PASS" if failed == 0 else "FAIL", passed, failed],
 		"",
-		"此測試在隔離的使用者資料目錄執行，覆蓋百年日期／天氣／節慶／委託、每月序列化、磁碟存讀、截斷主檔備份復原、暫存檔復原與未知版本拒絕。",
+		"此測試在隔離的使用者資料目錄執行，覆蓋百年日期／天氣／節慶／委託、十台設備的播種→澆水→收割→加工、每日動物餵食、深潮凝析、400 次自動網月存檔、磁碟存讀、截斷主檔備份復原、暫存檔復原與未知版本拒絕。",
 		"",
 		"| 分類 | 項目 | 結果 | 細節 |",
 		"|---|---|---:|---|",

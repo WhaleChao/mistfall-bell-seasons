@@ -4,12 +4,16 @@ const REPORT_DIRECTORY := "res://reports/image_integrity"
 const REPORT_JSON := REPORT_DIRECTORY + "/report.json"
 const REPORT_MARKDOWN := REPORT_DIRECTORY + "/REPORT.md"
 const CHROMA_THRESHOLD := 0.78
+const MATTE_THRESHOLD := 0.55
 
 const IMAGE_RULES := {
 	"res://assets/runtime/backgrounds/mistfall_farm_title.png": {"role":"background","width":1672,"height":941},
 	"res://assets/runtime/backgrounds/mistfall_farm_commercial.png": {"role":"background","width":1672,"height":941},
 	"res://assets/runtime/backgrounds/mistfall_village_commercial.png": {"role":"background","width":1672,"height":941},
 	"res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png": {"role":"background","width":1672,"height":941},
+	"res://assets/runtime/backgrounds/mistfall_river_commercial.png": {"role":"background","width":1672,"height":941},
+	"res://assets/runtime/backgrounds/bellwood_grove_commercial.png": {"role":"background","width":1672,"height":941},
+	"res://assets/runtime/backgrounds/clockwork_ruins_commercial.png": {"role":"background","width":1672,"height":941},
 	"res://assets/runtime/portraits/romance_candidates_atlas.png": {"role":"opaque_atlas","columns":4,"rows":1,"cells":4},
 	"res://assets/runtime/sprites/character_atlas_alpha.png": {"role":"alpha_atlas","columns":4,"rows":3,"cells":12,"max_remainder":0},
 	"res://assets/runtime/sprites/enemy_atlas_alpha.png": {"role":"alpha_atlas","columns":4,"rows":4,"cells":16,"max_remainder":2},
@@ -35,7 +39,7 @@ const SOURCE_HASHES := {
 }
 
 const EVIDENCE_SETS := {
-	"res://reports/full_feature_acceptance":{"count":15,"width":1280,"height":720},
+	"res://reports/full_feature_acceptance":{"count":20,"width":1280,"height":720},
 	"res://reports/studio_ui":{"count":16,"width":1920,"height":1017},
 	"res://screenshots":{"count":6,"width":1280,"height":720},
 }
@@ -64,6 +68,7 @@ func _run() -> void:
 	_check(runtime_paths.size() == IMAGE_RULES.size(), "清單", "自動盤點的所有 Runtime 點陣圖均有完整性規則", "%d/%d" % [runtime_paths.size(), IMAGE_RULES.size()])
 	_check("res://icon.svg" in manifest_paths, "清單", "應用程式 SVG 圖示已登錄資產與授權", "res://icon.svg")
 	_audit_svg_icon()
+	_audit_preprocessing_policy()
 	for path: String in IMAGE_RULES:
 		_check(path in manifest_paths, "清單", "圖片已登錄資產與授權：%s" % path.get_file(), path)
 		_check(path in runtime_paths, "清單", "圖片由 Runtime 自動盤點發現：%s" % path.get_file(), path)
@@ -387,7 +392,30 @@ func _atlas_preprocessing_entry(path: String) -> Dictionary:
 func _is_chroma_background(color: Color) -> bool:
 	var channel_min := minf(color.r, minf(color.g, color.b))
 	var channel_max := maxf(color.r, maxf(color.g, color.b))
-	return color.a < 0.02 or (channel_min > 0.76 and channel_max - channel_min < 0.14)
+	return color.a < 0.02 or (channel_min > MATTE_THRESHOLD and channel_max - channel_min < 0.14)
+
+
+func _audit_preprocessing_policy() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://reports/atlas_preprocessing/report.json"))
+	_check(parsed is Dictionary, "去背", "可讀取可重現的圖集去背報告", "reports/atlas_preprocessing/report.json")
+	if not parsed is Dictionary:
+		return
+	var report: Dictionary = parsed
+	_check(bool(report.get("passed", false)), "去背", "五張疊加圖集的去背流程全部成功", str(report.get("passed", false)))
+	_check(float(report.get("light_threshold", 1.0)) <= MATTE_THRESHOLD, "去背", "外緣中性淺色去背門檻足以清除灰白光暈", "threshold=%.2f" % float(report.get("light_threshold", 1.0)))
+	_check(String(report.get("algorithm", "")).contains("neutral-matte"), "去背", "預處理明確使用中性底色遮罩政策", String(report.get("algorithm", "")))
+	var entries: Array = report.get("atlases", [])
+	_check(entries.size() == 5, "去背", "所有角色、怪物、玩家、動物與異形圖集均納入去背", "%d/5" % entries.size())
+	var by_name := {}
+	for entry: Dictionary in entries:
+		by_name[String(entry.get("output", "")).get_file()] = entry
+	for file_name in ["character_atlas_alpha.png", "player_walk_atlas_alpha.png", "animal_atlas_alpha.png"]:
+		var entry: Dictionary = by_name.get(file_name, {})
+		_check(String(entry.get("background_neighbourhood", "")) == "four" and int(entry.get("enclosed_neutral_removed_pixels", -1)) == 0, "去背", "%s 保留被輪廓保護的白色內容" % file_name, "four-neighbour, enclosed=%d" % int(entry.get("enclosed_neutral_removed_pixels", -1)))
+	var enemy: Dictionary = by_name.get("enemy_atlas_alpha.png", {})
+	_check(String(enemy.get("background_neighbourhood", "")) == "eight" and int(enemy.get("enclosed_neutral_removed_pixels", 0)) > 0, "去背", "敵人圖集清除肢體凹槽內封閉的白色棋盤底", "enclosed=%d" % int(enemy.get("enclosed_neutral_removed_pixels", 0)))
+	var eldritch: Dictionary = by_name.get("eldritch_drowned_dreamer_alpha.png", {})
+	_check(String(eldritch.get("background_neighbourhood", "")) == "eight" and int(eldritch.get("enclosed_neutral_removed_pixels", 0)) > 0, "去背", "異形 Boss 清除外緣與封閉底色且保留中央亮部", "enclosed=%d" % int(eldritch.get("enclosed_neutral_removed_pixels", 0)))
 
 
 func _audit_all_visual_evidence() -> void:
@@ -396,7 +424,7 @@ func _audit_all_visual_evidence() -> void:
 		var config := Dictionary(EVIDENCE_SETS[directory_path])
 		evidence_count += _audit_evidence_set(directory_path, config)
 	evidence_count += _audit_resolution_evidence()
-	_check(evidence_count == 42, "畫面證據", "所有商業畫面、實機驗收與解析度證據均納入統一閘門", "%d/42" % evidence_count)
+	_check(evidence_count == 47, "畫面證據", "所有商業畫面、實機驗收、去背對比與解析度證據均納入統一閘門", "%d/47" % evidence_count)
 
 
 func _audit_evidence_set(directory_path: String, config: Dictionary) -> int:
@@ -522,7 +550,7 @@ func _write_report() -> void:
 		"",
 		"結果：**%s**　｜　%d 通過／%d 失敗　｜　%d 張 Runtime 圖片" % ["PASS" if failed == 0 else "FAIL", passed, failed, image_metrics.size()],
 		"",
-		"本閘門自動盤點並直接解碼全部 Runtime PNG 與 SVG 圖示，驗證資產登錄、無損匯入、真 alpha、可追溯原稿、前景像素無遺失、格線安全邊界、動畫幀差異，以及 42 張實機／Studio／解析度／商業宣傳畫面。",
+		"本閘門自動盤點並直接解碼全部 Runtime PNG 與 SVG 圖示，驗證資產登錄、無損匯入、真 alpha、可追溯原稿、灰白光暈清除、亮色內容保留、格線安全邊界、動畫幀差異，以及 47 張實機／Studio／解析度／去背對比／商業宣傳畫面。",
 		"",
 		"| 分類 | 項目 | 結果 | 細節 |",
 		"|---|---|---:|---|",

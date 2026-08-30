@@ -31,11 +31,19 @@ const FARM_RESOURCES := {
 }
 const DUNGEON_ORE_POSITION := Vector2(126, 108)
 const VILLAGE_GATE_POSITION := Vector2(24, 224)
+const OUTDOOR_EXIT_POSITION := Vector2(42, 300)
+const RIVER_FISH_POSITION := Vector2(446, 236)
+const RIVER_RESOURCE_POSITION := Vector2(318, 118)
+const GROVE_RESOURCE_POSITION := Vector2(164, 258)
+const RUINS_RESOURCE_POSITION := Vector2(330, 230)
 const NPC_POSITIONS := {
 	"mira": Vector2(110, 115), "lian": Vector2(180, 245), "soren": Vector2(286, 112), "yuna": Vector2(370, 220),
 	"orin": Vector2(455, 112), "eira": Vector2(525, 205), "toma": Vector2(555, 104), "nori": Vector2(305, 252),
 	"asha": Vector2(220, 174), "piko": Vector2(430, 276),
 }
+const RIVER_NPC_POSITIONS := {"lian": Vector2(545, 118), "nori": Vector2(245, 120)}
+const GROVE_NPC_POSITIONS := {"asha": Vector2(505, 150), "piko": Vector2(260, 230)}
+const RUINS_NPC_POSITIONS := {"soren": Vector2(350, 172), "toma": Vector2(180, 246)}
 
 var player: PixelRPGPlayer
 var hud_label: Label
@@ -75,7 +83,7 @@ func _ready() -> void:
 	_apply_launch_display_mode()
 	seed(1337)
 	PixelRPGInputBindings.load_saved()
-	mode = "dungeon" if GameState.current_map_id == &"mistfall_depths" else ("village" if GameState.current_map_id == &"mistfall_village" else ("abyss" if GameState.current_map_id == &"dreaming_shore" else "farm"))
+	mode = _mode_for_map(GameState.current_map_id)
 	_create_background()
 	_create_npc_sprites()
 	_create_world_walls()
@@ -151,6 +159,8 @@ func _process(delta: float) -> void:
 			_leave_dungeon()
 		elif mode == "abyss":
 			_leave_eldritch_shore()
+		elif mode in ["river", "grove", "ruins"]:
+			_travel_to_map(&"mistfall_farm")
 		else:
 			_show_toast("請先由村口返回農場")
 	if Input.is_action_just_pressed("attend_festival") and mode == "farm":
@@ -168,6 +178,12 @@ func _draw() -> void:
 		_draw_village()
 	elif mode == "dungeon":
 		_draw_dungeon()
+	elif mode == "river":
+		_draw_river()
+	elif mode == "grove":
+		_draw_grove()
+	elif mode == "ruins":
+		_draw_ruins()
 	else:
 		_draw_abyss()
 	_draw_weather()
@@ -199,6 +215,24 @@ func _draw_farm() -> void:
 				var size := lerpf(4.0, 11.0, clampf(progress, 0.0, 1.0))
 				draw_line(center + Vector2(0, 7), center - Vector2(0, size), Color("3f6f48"), 3.0)
 				draw_circle(center - Vector2(0, size), size * 0.55, crop_color)
+	# Automation network: adjacent machines are linked visibly on the same farm grid.
+	for key: String in GameState.farm.automation_devices:
+		var device: Dictionary = GameState.farm.automation_devices[key]
+		var tile_data: Array = device.get("tile", [0, 0])
+		var tile := Vector2i(int(tile_data[0]), int(tile_data[1]))
+		var center := _plot_world_position(tile)
+		for offset: Vector2i in [Vector2i.RIGHT, Vector2i.DOWN]:
+			if GameState.farm.automation_devices.has("%d,%d" % [tile.x + offset.x, tile.y + offset.y]):
+				draw_line(center, _plot_world_position(tile + offset), Color(0.94, 0.71, 0.29, 0.78), 3.0)
+	for key: String in GameState.farm.automation_devices:
+		var device: Dictionary = GameState.farm.automation_devices[key]
+		var tile_data: Array = device.get("tile", [0, 0])
+		var center := _plot_world_position(Vector2i(int(tile_data[0]), int(tile_data[1])))
+		var definition := ContentRegistry.get_artifact("automation_devices", StringName(device.get("device_id", "")))
+		var device_color := Color("e8b54b") if bool(device.get("enabled", true)) else Color("6f6b67")
+		draw_circle(center + Vector2(8, -7), 7, Color("171a2b"))
+		draw_circle(center + Vector2(8, -7), 6, device_color, false, 2.0)
+		draw_string(ThemeDB.fallback_font, center + Vector2(4, -3), String(definition.get("symbol", "?")), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("fff1b6"))
 	# NPC and animals.
 	if _mira_is_on_farm():
 		_draw_person(MIRA_POSITION, Color("6b5fa8"), "米拉")
@@ -252,6 +286,31 @@ func _draw_village() -> void:
 	draw_string(ThemeDB.fallback_font, VILLAGE_GATE_POSITION + Vector2(-14, 34), "農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("fff1b6"))
 
 
+func _draw_river() -> void:
+	draw_string(ThemeDB.fallback_font, Vector2(255, 78), "鳴鐘河畔", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
+	draw_circle(RIVER_FISH_POSITION, 13, Color(0.47, 0.86, 0.79, 0.32), false, 2.0)
+	draw_string(ThemeDB.fallback_font, RIVER_FISH_POSITION + Vector2(-35, 30), "E 釣魚", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("b6f3ef"))
+	draw_circle(RIVER_RESOURCE_POSITION, 10, Color("d7c276"), false, 2.0)
+	draw_string(ThemeDB.fallback_font, RIVER_RESOURCE_POSITION + Vector2(-28, 25), "鳴河蘆葦", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	draw_string(ThemeDB.fallback_font, OUTDOOR_EXIT_POSITION + Vector2(-20, 28), "返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+
+
+func _draw_grove() -> void:
+	draw_string(ThemeDB.fallback_font, Vector2(278, 78), "古鐘林", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
+	draw_circle(GROVE_RESOURCE_POSITION, 10, Color("80c981"), false, 2.0)
+	draw_string(ThemeDB.fallback_font, GROVE_RESOURCE_POSITION + Vector2(-28, 25), "鐘林藥草", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	draw_string(ThemeDB.fallback_font, Vector2(450, 112), "裂鐘神龕", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("fff1b6"))
+	draw_string(ThemeDB.fallback_font, OUTDOOR_EXIT_POSITION + Vector2(-20, 28), "返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+
+
+func _draw_ruins() -> void:
+	draw_string(ThemeDB.fallback_font, Vector2(240, 78), "古鐘機械遺跡", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
+	draw_circle(RUINS_RESOURCE_POSITION, 12, Color("e8b54b"), false, 2.0)
+	draw_string(ThemeDB.fallback_font, RUINS_RESOURCE_POSITION + Vector2(-34, 30), "古代鐘齒輪", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	draw_string(ThemeDB.fallback_font, Vector2(448, 306), "深潮封印導管", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("c4a8ff"))
+	draw_string(ThemeDB.fallback_font, OUTDOOR_EXIT_POSITION + Vector2(-20, 28), "返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+
+
 func _draw_person(position: Vector2, color: Color, label: String) -> void:
 	var _unused_color := color
 	draw_string(ThemeDB.fallback_font, position + Vector2(-14, 32), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1b6"))
@@ -296,6 +355,12 @@ func _set_background_for_mode() -> void:
 	var path := "res://assets/runtime/backgrounds/mistfall_farm_commercial.png"
 	if mode == "village":
 		path = "res://assets/runtime/backgrounds/mistfall_village_commercial.png"
+	elif mode == "river":
+		path = "res://assets/runtime/backgrounds/mistfall_river_commercial.png"
+	elif mode == "grove":
+		path = "res://assets/runtime/backgrounds/bellwood_grove_commercial.png"
+	elif mode == "ruins":
+		path = "res://assets/runtime/backgrounds/clockwork_ruins_commercial.png"
 	elif mode in ["dungeon", "abyss"]:
 		path = "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png"
 	world_background.texture = load(path)
@@ -373,6 +438,15 @@ func _update_npc_sprites() -> void:
 		sprite.visible = false
 		if mode == "village":
 			sprite.position = Vector2(NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.visible = true
+		elif mode == "river" and RIVER_NPC_POSITIONS.has(npc_id):
+			sprite.position = Vector2(RIVER_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.visible = true
+		elif mode == "grove" and GROVE_NPC_POSITIONS.has(npc_id):
+			sprite.position = Vector2(GROVE_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.visible = true
+		elif mode == "ruins" and RUINS_NPC_POSITIONS.has(npc_id):
+			sprite.position = Vector2(RUINS_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
 			sprite.visible = true
 		elif mode == "farm" and npc_id == "mira" and _mira_is_on_farm():
 			sprite.position = MIRA_POSITION + Vector2(0, -12)
@@ -528,6 +602,8 @@ func _connect_events() -> void:
 	EventBus.toast_requested.connect(_show_toast)
 	EventBus.day_started.connect(_on_day_started)
 	EventBus.festival_available.connect(_on_festival_available)
+	EventBus.farm_changed.connect(_on_farm_changed)
+	EventBus.map_change_requested.connect(_on_map_change_requested)
 	NetworkManager.snapshot_received.connect(_on_network_snapshot)
 	NetworkManager.action_result_received.connect(_on_network_action_result)
 	NetworkManager.status_changed.connect(_on_network_status_changed)
@@ -545,6 +621,12 @@ func _update_hud() -> void:
 		var tide_text := "異潮" if GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮"
 		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), tide_text]
 		controls_label.text = "E/Y 互動/釣魚　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度　C/D→ 睡覺"
+	elif mode in ["river", "grove", "ruins"]:
+		var map_title: String = {"river":"鳴鐘河畔","grove":"古鐘林","ruins":"古鐘機械遺跡"}.get(mode, mode)
+		var local_hint: String = {"river":"釣魚、蘆葦與河燈線索","grove":"藥草、神龕與同行事件","ruins":"齒輪、鐘能與封印歷史"}.get(mode, "探索")
+		var tide_text := "無星異潮可釣" if mode == "river" and GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮探索"
+		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100\n%s｜%s｜%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, map_title, local_hint, tide_text]
+		controls_label.text = "WASD/搖桿 移動　E/Y 互動／釣魚　Esc/Start 旅行圖　B/RS 返回農場　M/Select 連線"
 	elif mode == "dungeon":
 		hud_label.text = "%s　%s　HP %d/%d　四季鐘窟 %dF　敵人 %d\n封印 %d/4　電梯 %s　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), player.health, player.max_health, GameState.dungeon.current_floor, enemies_remaining, GameState.dungeon.seals.size(), str(GameState.dungeon.available_elevators()), "無限挑戰已開放" if GameState.dungeon.endless_unlocked else "主線無期限"]
 		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　E/Y 下層　B/RS 返回　H/LB 藥水"
@@ -569,6 +651,32 @@ func _interact() -> void:
 			_descend_dungeon()
 		else:
 			_show_toast("清除本層敵人後才能前進")
+		return
+	if mode in ["river", "grove", "ruins"]:
+		if player.global_position.distance_to(OUTDOOR_EXIT_POSITION) <= 48.0:
+			_travel_to_map(&"mistfall_farm")
+			return
+		var map_npc := _nearby_map_npc()
+		if not map_npc.is_empty():
+			_talk_to_npc(map_npc)
+			return
+		if mode == "river" and player.global_position.distance_to(RIVER_FISH_POSITION) <= 52.0:
+			if NetworkManager.is_online():
+				NetworkManager.request_world_action("fish", {"location":"river"})
+			else:
+				var catch_result := GameState.fish_at("river")
+				_show_toast(String(catch_result.get("message", "")))
+			return
+		var resource_id := "river_reeds" if mode == "river" else ("bellwood_herbs" if mode == "grove" else "ruins_gears")
+		var resource_position := RIVER_RESOURCE_POSITION if mode == "river" else (GROVE_RESOURCE_POSITION if mode == "grove" else RUINS_RESOURCE_POSITION)
+		if player.global_position.distance_to(resource_position) <= 48.0:
+			if NetworkManager.is_online():
+				NetworkManager.request_world_action("map_resource", {"node_id":resource_id})
+			else:
+				var gather_result := GameState.gather_map_resource(resource_id)
+				_show_toast(String(gather_result.get("message", "")))
+			return
+		_show_toast("走近發光採集點、釣點、同行村民或出口再互動")
 		return
 	if mode == "village":
 		if player.global_position.distance_to(VILLAGE_GATE_POSITION) <= 44.0:
@@ -718,9 +826,33 @@ func _animate_world_sprites() -> void:
 		var sprite: Sprite2D = npc_sprites[npc_id]
 		if not sprite.visible:
 			continue
-		var anchor := Vector2(NPC_POSITIONS[npc_id]) + Vector2(0, -12) if mode == "village" else MIRA_POSITION + Vector2(0, -12)
+		var anchor := _npc_anchor(npc_id)
 		var phase := float(npc_id.unicode_at(0) % 7)
 		sprite.position = anchor + Vector2(0, sin(ticks * 2.2 + phase) * 1.2)
+
+
+func _npc_anchor(npc_id: String) -> Vector2:
+	if mode == "village":
+		return Vector2(NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+	if mode == "river" and RIVER_NPC_POSITIONS.has(npc_id):
+		return Vector2(RIVER_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+	if mode == "grove" and GROVE_NPC_POSITIONS.has(npc_id):
+		return Vector2(GROVE_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+	if mode == "ruins" and RUINS_NPC_POSITIONS.has(npc_id):
+		return Vector2(RUINS_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+	return MIRA_POSITION + Vector2(0, -12)
+
+
+func _nearby_map_npc() -> String:
+	var positions: Dictionary = RIVER_NPC_POSITIONS if mode == "river" else (GROVE_NPC_POSITIONS if mode == "grove" else RUINS_NPC_POSITIONS)
+	var best_id := ""
+	var best_distance := 46.0
+	for npc_id: String in positions:
+		var distance := player.global_position.distance_to(Vector2(positions[npc_id]))
+		if distance < best_distance:
+			best_id = npc_id
+			best_distance = distance
+	return best_id
 
 
 func _on_network_snapshot(players: Dictionary) -> void:
@@ -818,6 +950,40 @@ func _enter_village() -> void:
 	GameState.current_map_id = &"mistfall_village"
 	player.global_position = Vector2(58, 278)
 	_show_toast("來到霧落村。村民與商店都在這裡。")
+	queue_redraw()
+
+
+func _mode_for_map(map_id: StringName) -> String:
+	return {
+		"mistfall_farm":"farm", "mistfall_village":"village", "mistfall_river":"river",
+		"bellwood_grove":"grove", "clockwork_ruins":"ruins", "mistfall_depths":"dungeon",
+		"dreaming_shore":"abyss",
+	}.get(String(map_id), "farm")
+
+
+func _on_map_change_requested(map_id: StringName, _spawn_id: StringName) -> void:
+	_travel_to_map(map_id)
+
+
+func _travel_to_map(map_id: StringName) -> void:
+	if map_id == &"mistfall_depths":
+		_enter_dungeon()
+		return
+	if map_id == &"dreaming_shore":
+		if GameState.eldritch.can_challenge():
+			_begin_eldritch_challenge()
+		else:
+			_show_toast("釣齊四種異魚後，夢岸才會顯現")
+		return
+	_clear_enemies()
+	mode = _mode_for_map(map_id)
+	GameState.current_map_id = map_id
+	_set_background_for_mode()
+	player.global_position = Vector2(72, 286)
+	GameState.player_position = player.global_position
+	title_label.text = ""
+	var names := {"mistfall_farm":"霧落農場", "mistfall_village":"霧落村", "mistfall_river":"鳴鐘河畔", "bellwood_grove":"古鐘林", "clockwork_ruins":"古鐘機械遺跡"}
+	_show_toast("來到%s" % names.get(String(map_id), String(map_id)))
 	queue_redraw()
 
 
@@ -1089,7 +1255,11 @@ func _on_day_started(_year: int, _season_id: StringName, _day: int, _weather: St
 
 
 func _on_festival_available(festival: Dictionary) -> void:
-	_show_toast("今天是%s，按 F 參加" % festival.get("display_name", "節慶"))
+		_show_toast("今天是%s，按 F 參加" % festival.get("display_name", "節慶"))
+
+
+func _on_farm_changed(_action: StringName, _payload: Dictionary) -> void:
+	queue_redraw()
 
 
 func _show_toast(message: String) -> void:

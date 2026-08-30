@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-08-30T10:57:41.4948487Z",
+  "generated_at": "2026-08-30T13:12:06.3390911Z",
   "result": "PASS",
   "transport": "Godot ENet UDP",
   "topology": "7 dedicated servers + 31 clients across world-mode and player-count scenarios",
@@ -10,23 +10,25 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 2,
-      "port": 28724,
+      "port": 28710,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
         {
           "details": {
+            "automation_isolation_ok": true,
             "claim_persisted": true,
             "farm_mode": "shared",
             "leader_allowed": true,
             "peak_clients": 2,
             "private_farms_ok": true,
             "private_player_worlds": 2,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "relationship_mode": "independent",
             "rival_proposal": {},
             "romance_claims": {},
             "romance_suitors": 2,
+            "shared_automation_devices": 2,
             "shared_plots": 1,
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -40,10 +42,10 @@
             "tie_blocked": true,
             "unique_claim_enforced": true,
             "winning_proposal": {},
-            "world_path": "user://pixelrpg_servers/qa_28724.json"
+            "world_path": "user://pixelrpg_servers/qa_28710.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:56:59",
+          "generated_at": "2026-08-30T13:11:24",
           "passed": true,
           "role": "server"
         },
@@ -53,12 +55,25 @@
               {
                 "action": "tilled",
                 "message": "翻鬆了土地",
-                "ok": true
+                "ok": true,
+                "requested_action": "farm_plot"
+              },
+              {
+                "action": "automation_placed",
+                "device_id": "bell_generator",
+                "message": "已放置鐘輪發電機",
+                "ok": true,
+                "requested_action": "automation_place",
+                "tile": [
+                  0,
+                  0
+                ]
               },
               {
                 "hearts": 0,
                 "message": "與mira交談，好感 0♥",
                 "ok": true,
+                "requested_action": "talk",
                 "romance_board": [
                   {
                     "dating": false,
@@ -72,12 +87,14 @@
                 ]
               }
             ],
+            "automation_action_ok": true,
+            "automation_devices": 2,
             "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 693128224,
-            "protocol": "1.1.0",
+            "peer_id": 1860201785,
+            "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
             "world_rules": {
@@ -100,7 +117,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:56:59",
+          "generated_at": "2026-08-30T13:11:24",
           "passed": true,
           "role": "client"
         },
@@ -110,12 +127,25 @@
               {
                 "action": "planted",
                 "message": "種下了春蕪菁",
-                "ok": true
+                "ok": true,
+                "requested_action": "farm_plot"
+              },
+              {
+                "action": "automation_placed",
+                "device_id": "copper_conveyor",
+                "message": "已放置銅軌傳輸帶",
+                "ok": true,
+                "requested_action": "automation_place",
+                "tile": [
+                  1,
+                  0
+                ]
               },
               {
                 "hearts": 0,
                 "message": "與mira交談，好感 0♥",
                 "ok": true,
+                "requested_action": "talk",
                 "romance_board": [
                   {
                     "dating": false,
@@ -138,12 +168,14 @@
                 ]
               }
             ],
+            "automation_action_ok": true,
+            "automation_devices": 2,
             "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1257988570,
-            "protocol": "1.1.0",
+            "peer_id": 282093161,
+            "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
             "world_rules": {
@@ -166,7 +198,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:56:59",
+          "generated_at": "2026-08-30T13:11:24",
           "passed": true,
           "role": "client"
         }
@@ -177,23 +209,25 @@
       "farm_mode": "private",
       "relationship_mode": "independent",
       "player_count": 2,
-      "port": 28208,
+      "port": 28825,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
         {
           "details": {
+            "automation_isolation_ok": true,
             "claim_persisted": true,
             "farm_mode": "private",
             "leader_allowed": true,
             "peak_clients": 2,
             "private_farms_ok": true,
             "private_player_worlds": 2,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "relationship_mode": "independent",
             "rival_proposal": {},
             "romance_claims": {},
             "romance_suitors": 2,
+            "shared_automation_devices": 0,
             "shared_plots": 0,
             "story_variant": {
               "farm_branch": "每名玩家有獨立農場與經濟；劇情會比較不同生活選擇，但不排名。",
@@ -207,10 +241,10 @@
             "tie_blocked": true,
             "unique_claim_enforced": true,
             "winning_proposal": {},
-            "world_path": "user://pixelrpg_servers/qa_28208.json"
+            "world_path": "user://pixelrpg_servers/qa_28825.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:06",
+          "generated_at": "2026-08-30T13:11:31",
           "passed": true,
           "role": "server"
         },
@@ -220,12 +254,25 @@
               {
                 "action": "tilled",
                 "message": "翻鬆了土地",
-                "ok": true
+                "ok": true,
+                "requested_action": "farm_plot"
+              },
+              {
+                "action": "automation_placed",
+                "device_id": "bell_generator",
+                "message": "已放置鐘輪發電機",
+                "ok": true,
+                "requested_action": "automation_place",
+                "tile": [
+                  0,
+                  0
+                ]
               },
               {
                 "hearts": 0,
                 "message": "與mira交談，好感 0♥",
                 "ok": true,
+                "requested_action": "talk",
                 "romance_board": [
                   {
                     "dating": false,
@@ -234,26 +281,19 @@
                     "player_key": "686e4996097eae59dfa71d69dc76898d",
                     "points": 25,
                     "rank": 1,
-                    "tied_for_lead": true
-                  },
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeB",
-                    "player_key": "194860766f5f162f48b248b847c56bf3",
-                    "points": 25,
-                    "rank": 2,
-                    "tied_for_lead": true
+                    "tied_for_lead": false
                   }
                 ]
               }
             ],
+            "automation_action_ok": true,
+            "automation_devices": 1,
             "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1475316680,
-            "protocol": "1.1.0",
+            "peer_id": 1415015468,
+            "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
             "world_rules": {
@@ -276,7 +316,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:06",
+          "generated_at": "2026-08-30T13:11:31",
           "passed": true,
           "role": "client"
         },
@@ -286,31 +326,55 @@
               {
                 "action": "tilled",
                 "message": "翻鬆了土地",
-                "ok": true
+                "ok": true,
+                "requested_action": "farm_plot"
+              },
+              {
+                "action": "automation_placed",
+                "device_id": "bell_generator",
+                "message": "已放置鐘輪發電機",
+                "ok": true,
+                "requested_action": "automation_place",
+                "tile": [
+                  0,
+                  0
+                ]
               },
               {
                 "hearts": 0,
                 "message": "與mira交談，好感 0♥",
                 "ok": true,
+                "requested_action": "talk",
                 "romance_board": [
+                  {
+                    "dating": false,
+                    "hearts": 0,
+                    "name": "ProbeA",
+                    "player_key": "686e4996097eae59dfa71d69dc76898d",
+                    "points": 25,
+                    "rank": 1,
+                    "tied_for_lead": true
+                  },
                   {
                     "dating": false,
                     "hearts": 0,
                     "name": "ProbeB",
                     "player_key": "194860766f5f162f48b248b847c56bf3",
                     "points": 25,
-                    "rank": 1,
-                    "tied_for_lead": false
+                    "rank": 2,
+                    "tied_for_lead": true
                   }
                 ]
               }
             ],
+            "automation_action_ok": true,
+            "automation_devices": 1,
             "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 2068677861,
-            "protocol": "1.1.0",
+            "peer_id": 1286326452,
+            "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
             "world_rules": {
@@ -333,7 +397,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:06",
+          "generated_at": "2026-08-30T13:11:31",
           "passed": true,
           "role": "client"
         }
@@ -344,19 +408,20 @@
       "farm_mode": "competitive",
       "relationship_mode": "competitive",
       "player_count": 2,
-      "port": 28369,
+      "port": 29446,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
         {
           "details": {
+            "automation_isolation_ok": true,
             "claim_persisted": true,
             "farm_mode": "competitive",
             "leader_allowed": true,
             "peak_clients": 2,
             "private_farms_ok": true,
             "private_player_worlds": 2,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "relationship_mode": "competitive",
             "rival_proposal": {
               "message": "這名角色已與另一位玩家締結婚約",
@@ -366,6 +431,7 @@
               "mira": "d47214623fa12ae7e3e4bb3601184760"
             },
             "romance_suitors": 2,
+            "shared_automation_devices": 0,
             "shared_plots": 0,
             "story_variant": {
               "farm_branch": "每名玩家有獨立農場與季節積分；劇情加入評鑑、領先與逆轉事件。",
@@ -402,10 +468,10 @@
                 }
               ]
             },
-            "world_path": "user://pixelrpg_servers/qa_28369.json"
+            "world_path": "user://pixelrpg_servers/qa_29446.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:12",
+          "generated_at": "2026-08-30T13:11:38",
           "passed": true,
           "role": "server"
         },
@@ -417,28 +483,59 @@
                 "leaderboard": [
                   {
                     "crops": 0,
-                    "farm_rank": 1,
+                    "farm_rank": 10,
                     "name": "ProbeA",
                     "player_key": "d47214623fa12ae7e3e4bb3601184760",
                     "rank": 1,
-                    "score": 510
+                    "score": 5010
                   },
                   {
                     "crops": 0,
-                    "farm_rank": 1,
+                    "farm_rank": 10,
                     "name": "ProbeB",
                     "player_key": "efc26b319546c6e98615c00119384d8d",
                     "rank": 2,
-                    "score": 500
+                    "score": 5000
                   }
                 ],
                 "message": "翻鬆了土地",
-                "ok": true
+                "ok": true,
+                "requested_action": "farm_plot"
+              },
+              {
+                "action": "automation_placed",
+                "device_id": "bell_generator",
+                "leaderboard": [
+                  {
+                    "crops": 0,
+                    "farm_rank": 10,
+                    "name": "ProbeA",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                    "rank": 1,
+                    "score": 5010
+                  },
+                  {
+                    "crops": 0,
+                    "farm_rank": 10,
+                    "name": "ProbeB",
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
+                    "rank": 2,
+                    "score": 5010
+                  }
+                ],
+                "message": "已放置鐘輪發電機",
+                "ok": true,
+                "requested_action": "automation_place",
+                "tile": [
+                  0,
+                  0
+                ]
               },
               {
                 "hearts": 0,
                 "message": "與mira交談，好感 0♥",
                 "ok": true,
+                "requested_action": "talk",
                 "romance_board": [
                   {
                     "dating": false,
@@ -452,31 +549,33 @@
                 ]
               }
             ],
+            "automation_action_ok": true,
+            "automation_devices": 1,
             "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1832990724,
-            "protocol": "1.1.0",
+            "peer_id": 1952221402,
+            "protocol": "1.2.0",
             "romance_suitors": 2,
             "twin_story_seen": true,
             "world_rules": {
               "farm_leaderboard": [
                 {
                   "crops": 0,
-                  "farm_rank": 1,
+                  "farm_rank": 10,
                   "name": "ProbeA",
                   "player_key": "d47214623fa12ae7e3e4bb3601184760",
                   "rank": 1,
-                  "score": 510
+                  "score": 5010
                 },
                 {
                   "crops": 0,
-                  "farm_rank": 1,
+                  "farm_rank": 10,
                   "name": "ProbeB",
                   "player_key": "efc26b319546c6e98615c00119384d8d",
                   "rank": 2,
-                  "score": 510
+                  "score": 5010
                 }
               ],
               "farm_mode": "competitive",
@@ -523,7 +622,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:12",
+          "generated_at": "2026-08-30T13:11:38",
           "passed": true,
           "role": "client"
         },
@@ -535,28 +634,59 @@
                 "leaderboard": [
                   {
                     "crops": 0,
-                    "farm_rank": 1,
+                    "farm_rank": 10,
                     "name": "ProbeA",
                     "player_key": "d47214623fa12ae7e3e4bb3601184760",
                     "rank": 1,
-                    "score": 510
+                    "score": 5010
                   },
                   {
                     "crops": 0,
-                    "farm_rank": 1,
+                    "farm_rank": 10,
                     "name": "ProbeB",
                     "player_key": "efc26b319546c6e98615c00119384d8d",
                     "rank": 2,
-                    "score": 510
+                    "score": 5010
                   }
                 ],
                 "message": "翻鬆了土地",
-                "ok": true
+                "ok": true,
+                "requested_action": "farm_plot"
+              },
+              {
+                "action": "automation_placed",
+                "device_id": "bell_generator",
+                "leaderboard": [
+                  {
+                    "crops": 0,
+                    "farm_rank": 10,
+                    "name": "ProbeA",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                    "rank": 1,
+                    "score": 5010
+                  },
+                  {
+                    "crops": 0,
+                    "farm_rank": 10,
+                    "name": "ProbeB",
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
+                    "rank": 2,
+                    "score": 5010
+                  }
+                ],
+                "message": "已放置鐘輪發電機",
+                "ok": true,
+                "requested_action": "automation_place",
+                "tile": [
+                  0,
+                  0
+                ]
               },
               {
                 "hearts": 0,
                 "message": "與mira交談，好感 0♥｜目前第 2／2 名",
                 "ok": true,
+                "requested_action": "talk",
                 "romance_board": [
                   {
                     "dating": false,
@@ -579,31 +709,33 @@
                 ]
               }
             ],
+            "automation_action_ok": true,
+            "automation_devices": 1,
             "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1727969696,
-            "protocol": "1.1.0",
+            "peer_id": 784089409,
+            "protocol": "1.2.0",
             "romance_suitors": 2,
             "twin_story_seen": true,
             "world_rules": {
               "farm_leaderboard": [
                 {
                   "crops": 0,
-                  "farm_rank": 1,
+                  "farm_rank": 10,
                   "name": "ProbeA",
                   "player_key": "d47214623fa12ae7e3e4bb3601184760",
                   "rank": 1,
-                  "score": 510
+                  "score": 5010
                 },
                 {
                   "crops": 0,
-                  "farm_rank": 1,
+                  "farm_rank": 10,
                   "name": "ProbeB",
                   "player_key": "efc26b319546c6e98615c00119384d8d",
                   "rank": 2,
-                  "score": 510
+                  "score": 5010
                 }
               ],
               "farm_mode": "competitive",
@@ -650,7 +782,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:12",
+          "generated_at": "2026-08-30T13:11:38",
           "passed": true,
           "role": "client"
         }
@@ -663,14 +795,14 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 1,
-      "port": 29320,
+      "port": 28365,
       "topology": "1 dedicated server + 1 clients",
       "probe_mode": "story",
       "processes": [
         {
           "details": {
             "peak_clients": 1,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "solo_bell",
@@ -680,10 +812,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "獨鐘守望"
             },
-            "world_path": "user://pixelrpg_servers/qa_29320.json"
+            "world_path": "user://pixelrpg_servers/qa_28365.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:19",
+          "generated_at": "2026-08-30T13:11:44",
           "passed": true,
           "role": "server"
         },
@@ -693,8 +825,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 1,
-            "peer_id": 336146669,
-            "protocol": "1.1.0",
+            "peer_id": 1566384896,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "solo_bell",
@@ -706,7 +838,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:19",
+          "generated_at": "2026-08-30T13:11:44",
           "passed": true,
           "role": "client"
         }
@@ -717,14 +849,14 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 3,
-      "port": 29509,
+      "port": 29724,
       "topology": "1 dedicated server + 3 clients",
       "probe_mode": "story",
       "processes": [
         {
           "details": {
             "peak_clients": 3,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "four_season_chorus",
@@ -734,10 +866,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "四季合奏"
             },
-            "world_path": "user://pixelrpg_servers/qa_29509.json"
+            "world_path": "user://pixelrpg_servers/qa_29724.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:26",
+          "generated_at": "2026-08-30T13:11:51",
           "passed": true,
           "role": "server"
         },
@@ -747,8 +879,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 1656474972,
-            "protocol": "1.1.0",
+            "peer_id": 183418706,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "four_season_chorus",
@@ -760,7 +892,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:26",
+          "generated_at": "2026-08-30T13:11:51",
           "passed": true,
           "role": "client"
         },
@@ -770,8 +902,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 895752316,
-            "protocol": "1.1.0",
+            "peer_id": 606367926,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "four_season_chorus",
@@ -783,7 +915,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:26",
+          "generated_at": "2026-08-30T13:11:51",
           "passed": true,
           "role": "client"
         },
@@ -793,8 +925,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 847859680,
-            "protocol": "1.1.0",
+            "peer_id": 493698202,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "four_season_chorus",
@@ -806,7 +938,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:26",
+          "generated_at": "2026-08-30T13:11:51",
           "passed": true,
           "role": "client"
         }
@@ -817,14 +949,14 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 5,
-      "port": 28226,
+      "port": 29432,
       "topology": "1 dedicated server + 5 clients",
       "probe_mode": "story",
       "processes": [
         {
           "details": {
             "peak_clients": 5,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -834,10 +966,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "霧落拓荒議會"
             },
-            "world_path": "user://pixelrpg_servers/qa_28226.json"
+            "world_path": "user://pixelrpg_servers/qa_29432.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:32",
+          "generated_at": "2026-08-30T13:11:57",
           "passed": true,
           "role": "server"
         },
@@ -847,8 +979,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 565378604,
-            "protocol": "1.1.0",
+            "peer_id": 2078708641,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -860,7 +992,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:32",
+          "generated_at": "2026-08-30T13:11:57",
           "passed": true,
           "role": "client"
         },
@@ -870,8 +1002,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 415366013,
-            "protocol": "1.1.0",
+            "peer_id": 1750443395,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -883,7 +1015,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:32",
+          "generated_at": "2026-08-30T13:11:57",
           "passed": true,
           "role": "client"
         },
@@ -893,8 +1025,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 1670223065,
-            "protocol": "1.1.0",
+            "peer_id": 918439781,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -906,7 +1038,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:32",
+          "generated_at": "2026-08-30T13:11:57",
           "passed": true,
           "role": "client"
         },
@@ -916,8 +1048,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 1396897549,
-            "protocol": "1.1.0",
+            "peer_id": 1290320098,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -929,7 +1061,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:32",
+          "generated_at": "2026-08-30T13:11:57",
           "passed": true,
           "role": "client"
         },
@@ -939,8 +1071,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 563071735,
-            "protocol": "1.1.0",
+            "peer_id": 486692453,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -952,7 +1084,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:32",
+          "generated_at": "2026-08-30T13:11:57",
           "passed": true,
           "role": "client"
         }
@@ -963,14 +1095,14 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 16,
-      "port": 30168,
+      "port": 29625,
       "topology": "1 dedicated server + 16 clients",
       "probe_mode": "story",
       "processes": [
         {
           "details": {
             "peak_clients": 16,
-            "protocol": "1.1.0",
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -980,10 +1112,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "霧落拓荒議會"
             },
-            "world_path": "user://pixelrpg_servers/qa_30168.json"
+            "world_path": "user://pixelrpg_servers/qa_29625.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "server"
         },
@@ -993,8 +1125,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1625836426,
-            "protocol": "1.1.0",
+            "peer_id": 728413312,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1006,7 +1138,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1016,8 +1148,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1135855817,
-            "protocol": "1.1.0",
+            "peer_id": 20329145,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1029,7 +1161,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1039,8 +1171,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 95113436,
-            "protocol": "1.1.0",
+            "peer_id": 735057596,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1052,7 +1184,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1062,8 +1194,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 235099193,
-            "protocol": "1.1.0",
+            "peer_id": 638225925,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1075,7 +1207,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1085,8 +1217,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1693918808,
-            "protocol": "1.1.0",
+            "peer_id": 1990184959,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1098,7 +1230,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1108,8 +1240,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 760096733,
-            "protocol": "1.1.0",
+            "peer_id": 93602404,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1121,7 +1253,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1131,8 +1263,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 490832662,
-            "protocol": "1.1.0",
+            "peer_id": 1220322780,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1144,7 +1276,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1154,8 +1286,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1595373775,
-            "protocol": "1.1.0",
+            "peer_id": 901513069,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1167,7 +1299,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1177,8 +1309,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1593143828,
-            "protocol": "1.1.0",
+            "peer_id": 1736321615,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1190,7 +1322,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1200,8 +1332,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1237136353,
-            "protocol": "1.1.0",
+            "peer_id": 2031103586,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1213,7 +1345,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1223,8 +1355,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1681692098,
-            "protocol": "1.1.0",
+            "peer_id": 328610204,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1236,7 +1368,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1246,8 +1378,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 2143250530,
-            "protocol": "1.1.0",
+            "peer_id": 1942777012,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1259,7 +1391,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1269,8 +1401,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1232750390,
-            "protocol": "1.1.0",
+            "peer_id": 1793709854,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1282,7 +1414,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1292,8 +1424,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1443861831,
-            "protocol": "1.1.0",
+            "peer_id": 1109036164,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1305,7 +1437,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1315,8 +1447,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1809559149,
-            "protocol": "1.1.0",
+            "peer_id": 782753848,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1328,7 +1460,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         },
@@ -1338,8 +1470,8 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 28747159,
-            "protocol": "1.1.0",
+            "peer_id": 361640069,
+            "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
               "id": "mistfall_council",
@@ -1351,7 +1483,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T10:57:41",
+          "generated_at": "2026-08-30T13:12:06",
           "passed": true,
           "role": "client"
         }

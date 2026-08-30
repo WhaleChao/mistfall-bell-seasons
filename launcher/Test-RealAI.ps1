@@ -101,7 +101,7 @@ try {
     }
     & $python (Join-Path $projectRoot 'scripts\test_real_ai.py') `
         --base-url $baseUrl `
-        --token $token `
+        "--token=$token" `
         --report-directory $reportPath
     if ($LASTEXITCODE -ne 0) { throw '真實本機 AI 驗收失敗。' }
 } finally {

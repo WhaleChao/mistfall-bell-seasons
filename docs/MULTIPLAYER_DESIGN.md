@@ -2,7 +2,7 @@
 
 ## 拓撲
 
-v1.1.3 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，並維持 `1.1.0` 網路協定相容性。一個程序是權威伺服器；其餘程序為客戶端。遊戲內「開設主機」是 listen server，同一個 Windows EXE 加上 `--headless -- --server` 則為專用伺服器。預設 UDP `27180`、最多 16 人、位置快照 20 Hz、世界視圖 2 Hz；最大容量以 1 服 16 客真實程序驗證。
+v1.2.0 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，網路協定為 `1.2.0`。一個程序是權威伺服器；其餘程序為客戶端。遊戲內「開設主機」是 listen server，同一個 Windows／macOS 程序加上 `--headless -- --server` 則為專用伺服器。預設 UDP `27180`、最多 16 人、位置快照 20 Hz、世界視圖 2 Hz；最大容量以 1 服 16 客真實程序驗證。
 
 ## 握手與身份
 
@@ -13,12 +13,12 @@ v1.1.3 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，並維持
 - 客戶端只傳正規化輸入、朝向、地圖與白名單世界動作。
 - 伺服器檢查序號、25ms 輸入速率、150ms 世界操作速率、有限浮點數、向量長度、地圖白名單與 2 KiB payload 上限。
 - 伺服器積分玩家位置並限制在世界邊界；客戶端只做預測與誤差修正。
-- 世界動作僅允許農地、採集、釣魚、出貨、動物、交談、交往、求婚與家庭事件；不接受任意方法名、腳本、物件或檔案路徑。
+- 世界動作僅允許農地、採集、釣魚、出貨、動物、自動化設備放置／設定／移除、交談、交往、求婚與家庭事件；不接受任意方法名、腳本、物件或檔案路徑。
 - 每名客戶端只收到自己的私人農場／關係視圖，以及公開的玩家、排行與競爭摘要。
 
 ## 農場制度
 
-`shared` 直接使用伺服器共同 `GameState`。`private` 與 `competitive` 以玩家識別碼保存獨立的 farm、inventory、coins、tools、economy、lifetime stats、eldritch、flags、quests、relationships、marriage 與 child。伺服器在單一主執行緒中載入玩家 context、執行白名單動作、保存結果並還原基準 context，避免兩名玩家的農地互相覆寫。`competitive` 再依總收入、收成、農場等級與已開墾格計算穩定排行。
+`shared` 直接使用伺服器共同 `GameState`，所有玩家看到同一套自動化網路。`private` 與 `competitive` 以玩家識別碼保存獨立的 farm（含設備）、inventory、coins、tools、economy、lifetime stats、eldritch、flags、quests、relationships、marriage 與 child。伺服器在單一主執行緒中載入玩家 context、執行白名單動作、保存結果並還原基準 context，避免兩名玩家的農地或設備互相覆寫。`competitive` 再依總收入、收成、農場等級與已開墾格計算穩定排行。兩位客戶端的共享整合、私人隔離與伺服器存檔均已由實際 ENet 程序驗證。
 
 ## 關係與劇情
 
@@ -32,4 +32,4 @@ v1.1.3 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，並維持
 
 ## 已知界線
 
-ENet 封包沒有 TLS，v1.1.3 也沒有密碼、公開伺服器清單、NAT 穿透、反作弊服務、聊天、管理員指令或帳號復原。公開營運前應另行加入加密身份層、權限／封禁、DDoS 防護與正式滲透測試；目前 UI、指南與隱私政策皆不把朋友伺服器描述為安全的公網服務。
+ENet 封包沒有 TLS，v1.2.0 也沒有密碼、公開伺服器清單、NAT 穿透、反作弊服務、聊天、管理員指令或帳號復原。公開營運前應另行加入加密身份層、權限／封禁、DDoS 防護與正式滲透測試；目前 UI、指南與隱私政策皆不把朋友伺服器描述為安全的公網服務。

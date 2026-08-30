@@ -18,6 +18,7 @@ const CONTENT_DIRECTORIES := {
 	"npc_dialogues": "res://data/npc_dialogues",
 	"festivals": "res://data/festivals",
 	"farm_upgrades": "res://data/farm_upgrades",
+	"automation_devices": "res://data/automation_devices",
 	"dungeons": "res://data/dungeons",
 	"request_templates": "res://data/request_templates",
 	"recipes": "res://data/recipes",

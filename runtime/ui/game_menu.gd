@@ -18,6 +18,14 @@ var capture_action := StringName()
 var rebind_buttons: Dictionary = {}
 var recipe_select: OptionButton
 var recipe_label: Label
+var automation_grid: GridContainer
+var automation_status_label: Label
+var automation_device_select: OptionButton
+var automation_crop_select: OptionButton
+var automation_priority: SpinBox
+var automation_enabled: CheckButton
+var automation_tile_buttons: Dictionary = {}
+var selected_automation_tile := Vector2i.ZERO
 
 
 func _ready() -> void:
@@ -71,6 +79,7 @@ func refresh() -> void:
 	story_label.text = "《鐘塔之季》\n已完成章節：%d\n下一章：%s\n季節封印：%d/4\n主線與婚姻沒有日期期限。" % [Array(GameState.story_state.get("completed_chapters", [])).size(), next_chapter.get("title", "等待新的線索"), GameState.dungeon.seals.size()]
 	achievements_label.text = _achievement_text()
 	eldritch_label.text = _eldritch_journal_text()
+	_refresh_automation_ui()
 	_refresh_recipe()
 	volume_slider.value = float(GameState.settings.get("master_volume", 0.8))
 	fullscreen_toggle.set_pressed_no_signal(DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN])
@@ -112,6 +121,8 @@ func _build_ui() -> void:
 	achievements_label = _add_text_tab("成就")
 	_add_cooking_tab()
 	_add_settings_tab()
+	_add_automation_tab()
+	_add_map_tab()
 	eldritch_label = _add_text_tab("深潮錄")
 
 
@@ -266,6 +277,208 @@ func _add_cooking_tab() -> void:
 	eat_button.text = "享用（恢復體力）"
 	eat_button.pressed.connect(_on_eat_pressed)
 	action_row.add_child(eat_button)
+
+
+func _add_automation_tab() -> void:
+	var scroll := ScrollContainer.new()
+	scroll.name = "自動化"
+	tabs.add_child(scroll)
+	var root := HBoxContainer.new()
+	root.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(root)
+	var design_box := VBoxContainer.new()
+	design_box.custom_minimum_size = Vector2(280, 0)
+	root.add_child(design_box)
+	var title := Label.new()
+	title.text = "6×4 農田鐘能網路設計圖"
+	title.add_theme_font_size_override("font_size", 15)
+	design_box.add_child(title)
+	automation_grid = GridContainer.new()
+	automation_grid.columns = PixelRPGFarmSystem.AUTOMATION_WIDTH
+	design_box.add_child(automation_grid)
+	for y in range(PixelRPGFarmSystem.AUTOMATION_HEIGHT):
+		for x in range(PixelRPGFarmSystem.AUTOMATION_WIDTH):
+			var tile := Vector2i(x, y)
+			var button := Button.new()
+			button.custom_minimum_size = Vector2(42, 30)
+			button.text = "·"
+			button.tooltip_text = "設計格 %d,%d" % [x + 1, y + 1]
+			button.pressed.connect(_select_automation_tile.bind(tile))
+			automation_grid.add_child(button)
+			automation_tile_buttons["%d,%d" % [x, y]] = button
+	automation_status_label = Label.new()
+	automation_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	automation_status_label.add_theme_font_size_override("font_size", 12)
+	design_box.add_child(automation_status_label)
+	var control_box := VBoxContainer.new()
+	control_box.custom_minimum_size = Vector2(220, 0)
+	root.add_child(control_box)
+	var selected_label := Label.new()
+	selected_label.text = "設備／作物篩選／優先序"
+	control_box.add_child(selected_label)
+	automation_device_select = OptionButton.new()
+	var devices := ContentRegistry.get_all("automation_devices")
+	devices.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a.get("required_rank", 10)) < int(b.get("required_rank", 10)) if int(a.get("required_rank", 10)) != int(b.get("required_rank", 10)) else String(a.get("id", "")) < String(b.get("id", ""))
+	)
+	for device: Dictionary in devices:
+		automation_device_select.add_item("Lv.%d %s（%dG）" % [device.get("required_rank", 10), device.get("display_name", device.get("id", "")), device.get("cost", 0)])
+		automation_device_select.set_item_metadata(automation_device_select.item_count - 1, String(device.get("id", "")))
+	control_box.add_child(automation_device_select)
+	automation_crop_select = OptionButton.new()
+	var crops := ContentRegistry.get_all("crops")
+	crops.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return String(a.get("id", "")) < String(b.get("id", "")))
+	for crop: Dictionary in crops:
+		automation_crop_select.add_item("播種：%s" % crop.get("display_name", crop.get("id", "")))
+		automation_crop_select.set_item_metadata(automation_crop_select.item_count - 1, String(crop.get("id", "")))
+	control_box.add_child(automation_crop_select)
+	automation_priority = SpinBox.new()
+	automation_priority.min_value = 0
+	automation_priority.max_value = 100
+	automation_priority.step = 10
+	automation_priority.value = 50
+	automation_priority.prefix = "優先序 "
+	control_box.add_child(automation_priority)
+	automation_enabled = CheckButton.new()
+	automation_enabled.text = "設備啟用"
+	automation_enabled.button_pressed = true
+	control_box.add_child(automation_enabled)
+	var buttons := HBoxContainer.new()
+	control_box.add_child(buttons)
+	var place_button := Button.new()
+	place_button.text = "建造"
+	place_button.pressed.connect(_on_automation_place)
+	buttons.add_child(place_button)
+	var configure_button := Button.new()
+	configure_button.text = "套用"
+	configure_button.pressed.connect(_on_automation_configure)
+	buttons.add_child(configure_button)
+	var remove_button := Button.new()
+	remove_button.text = "拆除"
+	remove_button.pressed.connect(_on_automation_remove)
+	buttons.add_child(remove_button)
+	var explanation := Label.new()
+	explanation.text = "相鄰設備會形成網路。先放發電機與幫浦，再用銅軌連接灑水、播種、收割、加工或餵食設備。每天睡前依優先序自動運作。"
+	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	explanation.add_theme_font_size_override("font_size", 11)
+	control_box.add_child(explanation)
+	_select_automation_tile(Vector2i.ZERO)
+
+
+func _add_map_tab() -> void:
+	var box := VBoxContainer.new()
+	box.name = "地圖"
+	tabs.add_child(box)
+	var heading := Label.new()
+	heading.text = "霧落地區旅行圖（地圖切換時時間暫停）"
+	heading.add_theme_font_size_override("font_size", 16)
+	box.add_child(heading)
+	var description := Label.new()
+	description.text = "農場與村莊之外，河畔可釣季節魚與異潮魚；鐘林有關係事件與藥草；機械遺跡連接自動化研究和鐘窟真相。"
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(description)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	box.add_child(grid)
+	var destinations := [
+		["mistfall_farm", "霧落農場｜種植、畜牧、自動化"],
+		["mistfall_village", "霧落村｜十名村民、商店、戀愛"],
+		["mistfall_river", "鳴鐘河畔｜釣魚、蘆葦、河燈線索"],
+		["bellwood_grove", "鐘林｜採集、神龕、關係事件"],
+		["clockwork_ruins", "古鐘機械遺跡｜齒輪、自動化史"],
+		["mistfall_depths", "四季鐘窟｜40 層戰鬥與封印"],
+	]
+	for destination: Array in destinations:
+		var button := Button.new()
+		button.text = String(destination[1])
+		button.custom_minimum_size = Vector2(245, 42)
+		button.pressed.connect(_on_travel_pressed.bind(StringName(destination[0])))
+		grid.add_child(button)
+	var note := Label.new()
+	note.text = "夢岸需先釣齊四種異魚才會在異潮池邊顯現；它不是一般快速旅行地點。"
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(note)
+
+
+func _on_travel_pressed(map_id: StringName) -> void:
+	EventBus.map_change_requested.emit(map_id, &"travel")
+	close()
+
+
+func _refresh_automation_ui() -> void:
+	if not is_instance_valid(automation_status_label):
+		return
+	var networks: Array[Dictionary] = GameState.farm.automation_networks()
+	for key: String in automation_tile_buttons:
+		var button: Button = automation_tile_buttons[key]
+		var device: Dictionary = Dictionary(GameState.farm.automation_devices.get(key, {}))
+		if device.is_empty():
+			button.text = "·"
+			button.tooltip_text = "空設計格 %s" % key
+			continue
+		var definition := ContentRegistry.get_artifact("automation_devices", StringName(device.get("device_id", "")))
+		button.text = String(definition.get("symbol", "?"))
+		button.tooltip_text = "%s｜%s｜優先 %d｜%s" % [definition.get("display_name", device.get("device_id", "")), device.get("network_id", "未連線"), device.get("priority", 50), "啟用" if bool(device.get("enabled", true)) else "停用"]
+	var network_lines := PackedStringArray()
+	for network: Dictionary in networks:
+		network_lines.append("%s：%d 台｜電 %d/%d｜水 %d/%d｜%s" % [network.get("id", "網路"), network.get("device_count", 0), network.get("power_generation", 0), network.get("power_demand", 0), network.get("water_generation", 0), network.get("water_demand", 0), "平衡" if bool(network.get("balanced", false)) else "待調整"])
+	var last: Dictionary = GameState.farm.automation_last_report
+	automation_status_label.text = "選取：%d,%d　設備 %d／網路 %d\n%s\n上次：%s" % [selected_automation_tile.x + 1, selected_automation_tile.y + 1, GameState.farm.automation_devices.size(), networks.size(), "\n".join(network_lines) if not network_lines.is_empty() else "尚未配置網路", last.get("message", "尚未運作")]
+
+
+func _select_automation_tile(tile: Vector2i) -> void:
+	selected_automation_tile = tile
+	var device: Dictionary = Dictionary(GameState.farm.automation_devices.get("%d,%d" % [tile.x, tile.y], {}))
+	if not device.is_empty():
+		for index in range(automation_device_select.item_count):
+			if String(automation_device_select.get_item_metadata(index)) == String(device.get("device_id", "")):
+				automation_device_select.select(index)
+				break
+		for index in range(automation_crop_select.item_count):
+			if String(automation_crop_select.get_item_metadata(index)) == String(device.get("crop_filter", "")):
+				automation_crop_select.select(index)
+				break
+		automation_priority.value = int(device.get("priority", 50))
+		automation_enabled.set_pressed_no_signal(bool(device.get("enabled", true)))
+	_refresh_automation_ui()
+
+
+func _automation_config() -> Dictionary:
+	var crop_filter := ""
+	if automation_crop_select.item_count > 0:
+		crop_filter = String(automation_crop_select.get_item_metadata(automation_crop_select.selected))
+	return {"enabled": automation_enabled.button_pressed, "priority": int(automation_priority.value), "crop_filter": crop_filter}
+
+
+func _on_automation_place() -> void:
+	if automation_device_select.item_count == 0:
+		return
+	var device_id := String(automation_device_select.get_item_metadata(automation_device_select.selected))
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("automation_place", {"x": selected_automation_tile.x, "y": selected_automation_tile.y, "device_id": device_id, "config": _automation_config()})
+		return
+	var result: Dictionary = GameState.purchase_automation_device(selected_automation_tile, StringName(device_id), _automation_config())
+	EventBus.toast(String(result.get("message", "")))
+	refresh()
+
+
+func _on_automation_configure() -> void:
+	var config := _automation_config()
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("automation_configure", {"x": selected_automation_tile.x, "y": selected_automation_tile.y, "config": config})
+		return
+	var result: Dictionary = GameState.configure_automation_device(selected_automation_tile, config)
+	EventBus.toast(String(result.get("message", "")))
+	refresh()
+
+
+func _on_automation_remove() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("automation_remove", {"x": selected_automation_tile.x, "y": selected_automation_tile.y})
+		return
+	var result: Dictionary = GameState.remove_automation_device(selected_automation_tile)
+	EventBus.toast(String(result.get("message", "")))
+	refresh()
 
 
 func _dictionary_lines(source: Dictionary, empty_text: String) -> String:

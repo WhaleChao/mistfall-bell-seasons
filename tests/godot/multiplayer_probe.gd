@@ -91,6 +91,7 @@ func _run_server() -> void:
 		_write_report({"peak_clients":peak_clients, "world_path":network.server_world_path(), "story_variant":story_at_peak, "protocol":PixelRPGNetworkManager.PROTOCOL_VERSION})
 		quit(0 if failures.is_empty() else 1)
 		return
+	_prepare_automation_test_world()
 	var action_deadline := Time.get_ticks_msec() + 3500
 	while Time.get_ticks_msec() < action_deadline:
 		peak_clients = maxi(peak_clients, network.server_players.size())
@@ -99,15 +100,23 @@ func _run_server() -> void:
 	var player_worlds: Dictionary = network.shared_world.get("player_worlds", {})
 	var private_farms_ok := true
 	var shared_plots: Dictionary = Dictionary(network.shared_world.get("farm", {})).get("plots", {})
+	var shared_automation: Dictionary = Dictionary(network.shared_world.get("farm", {})).get("automation_devices", {})
+	var automation_isolation_ok := true
 	if farm_mode_arg == "shared":
 		if shared_plots.is_empty():
 			failures.append("Shared farm action was not integrated into the common farm")
+		if shared_automation.size() != expected_clients:
+			failures.append("Shared automation expected %d devices, got %d" % [expected_clients, shared_automation.size()])
 	else:
 		private_farms_ok = player_worlds.size() == expected_clients
 		for context: Dictionary in player_worlds.values():
-			private_farms_ok = private_farms_ok and not Dictionary(Dictionary(context.get("farm", {})).get("plots", {})).is_empty()
+			var context_farm: Dictionary = context.get("farm", {})
+			private_farms_ok = private_farms_ok and not Dictionary(context_farm.get("plots", {})).is_empty()
+			automation_isolation_ok = automation_isolation_ok and Dictionary(context_farm.get("automation_devices", {})).size() == 1
 		if not private_farms_ok:
 			failures.append("Private farms were not isolated per player")
+		if not automation_isolation_ok:
+			failures.append("Private automation devices were not isolated per player")
 	var story: Dictionary = story_at_peak
 	if String(story.get("id", "")) != "twin_bell_pact" or int(story.get("player_count", 0)) != 2:
 		failures.append("Two-player adaptive story branch was not selected")
@@ -169,10 +178,48 @@ func _run_server() -> void:
 		var saved_world: Variant = JSON.parse_string(FileAccess.get_file_as_string(world_path))
 		if saved_world is Dictionary:
 			claim_persisted = relationship_mode_arg != "competitive" or String(Dictionary(Dictionary(saved_world).get("romance_claims", {})).get("mira", "")) == claimed_player_key
+			if farm_mode_arg == "shared":
+				var saved_devices: Dictionary = Dictionary(Dictionary(saved_world).get("farm", {})).get("automation_devices", {})
+				if saved_devices.size() != expected_clients:
+					failures.append("Shared automation devices were not persisted in the server world")
+			else:
+				var saved_player_worlds: Dictionary = Dictionary(saved_world).get("player_worlds", {})
+				for saved_context: Dictionary in saved_player_worlds.values():
+					var saved_context_devices: Dictionary = Dictionary(Dictionary(saved_context.get("farm", {})).get("automation_devices", {}))
+					if saved_context_devices.size() != 1:
+						failures.append("Private automation isolation was not persisted in the server world")
+						break
 	if relationship_mode_arg == "competitive" and not claim_persisted:
 		failures.append("Competitive romance claim was not persisted in the server world")
-	_write_report({"peak_clients": peak_clients, "world_path": network.server_world_path(), "farm_mode":farm_mode_arg, "relationship_mode":relationship_mode_arg, "shared_plots":shared_plots.size(), "private_player_worlds": player_worlds.size(), "private_farms_ok":private_farms_ok, "story_variant": story, "romance_suitors": romance_board.size(), "tie_blocked":tie_blocked, "leader_allowed":leader_allowed, "winning_proposal":winning_proposal_result, "rival_proposal":rival_proposal_result, "romance_claims":network.shared_world.get("romance_claims", {}), "unique_claim_enforced":unique_claim_enforced, "claim_persisted":claim_persisted, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION})
+	_write_report({"peak_clients": peak_clients, "world_path": network.server_world_path(), "farm_mode":farm_mode_arg, "relationship_mode":relationship_mode_arg, "shared_plots":shared_plots.size(), "shared_automation_devices":shared_automation.size(), "private_player_worlds": player_worlds.size(), "private_farms_ok":private_farms_ok, "automation_isolation_ok":automation_isolation_ok, "story_variant": story, "romance_suitors": romance_board.size(), "tie_blocked":tie_blocked, "leader_allowed":leader_allowed, "winning_proposal":winning_proposal_result, "rival_proposal":rival_proposal_result, "romance_claims":network.shared_world.get("romance_claims", {}), "unique_claim_enforced":unique_claim_enforced, "claim_persisted":claim_persisted, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION})
 	quit(0 if failures.is_empty() else 1)
+
+
+func _prepare_automation_test_world() -> void:
+	var materials := {"copper_ore":999, "stone":999, "wood":999, "iron_ore":999, "gold_ore":999, "glass":999, "mist_shard":999}
+	if farm_mode_arg == "shared":
+		var state_store := root.get_node("GameState")
+		state_store.farm.rank = 10
+		state_store.coins = 100_000
+		for item_id: String in materials:
+			state_store.inventory[item_id] = materials[item_id]
+		network._capture_shared_world()
+	else:
+		for peer_id: int in network.server_players:
+			var context: Dictionary = network._ensure_player_context(peer_id)
+			var context_farm: Dictionary = Dictionary(context.get("farm", {})).duplicate(true)
+			context_farm["rank"] = 10
+			context["farm"] = context_farm
+			context["coins"] = 100_000
+			var context_inventory: Dictionary = Dictionary(context.get("inventory", {})).duplicate(true)
+			for item_id: String in materials:
+				context_inventory[item_id] = materials[item_id]
+			context["inventory"] = context_inventory
+			var player_key := String(Dictionary(network.server_players[peer_id]).get("player_key", ""))
+			var player_worlds: Dictionary = Dictionary(network.shared_world.get("player_worlds", {})).duplicate(true)
+			player_worlds[player_key] = context
+			network.shared_world["player_worlds"] = player_worlds
+	network._broadcast_world()
 
 
 func _run_client() -> void:
@@ -219,6 +266,13 @@ func _run_client() -> void:
 		while Time.get_ticks_msec() < action_gap:
 			peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
 			await process_frame
+		var automation_x := 0 if farm_mode_arg != "shared" or player_name.ends_with("A") else 1
+		var automation_device := "bell_generator" if farm_mode_arg != "shared" or player_name.ends_with("A") else "copper_conveyor"
+		network.request_world_action("automation_place", {"x":automation_x, "y":0, "device_id":automation_device, "config":{"priority":25 if player_name.ends_with("A") else 75}})
+		var automation_gap := Time.get_ticks_msec() + 500
+		while Time.get_ticks_msec() < automation_gap:
+			peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
+			await process_frame
 		network.request_world_action("talk", {"npc_id":"mira"})
 		var sync_deadline := Time.get_ticks_msec() + 1200
 		while Time.get_ticks_msec() < sync_deadline:
@@ -241,20 +295,30 @@ func _run_client() -> void:
 		failures.append("Client did not receive both player snapshots")
 	if action_results.is_empty() or not bool(action_results[-1].get("ok", false)):
 		failures.append("Shared world action did not return success")
+	var automation_action_ok := false
+	for action_result: Dictionary in action_results:
+		if String(action_result.get("requested_action", "")) == "automation_place" and bool(action_result.get("ok", false)):
+			automation_action_ok = true
+	if not automation_action_ok:
+		failures.append("Automation placement did not return success")
 	var local_world: Dictionary = network.shared_world
 	var multiplayer_data: Dictionary = local_world.get("multiplayer", {})
 	var own_plots: Dictionary = Dictionary(local_world.get("farm", {})).get("plots", {})
+	var own_automation: Dictionary = Dictionary(local_world.get("farm", {})).get("automation_devices", {})
 	var client_romance_board: Array = Dictionary(multiplayer_data.get("romance_boards", {})).get("mira", [])
 	var twin_story_seen := _world_observed_story(local_world, "twin_bell_pact", 2)
 	if String(multiplayer_data.get("farm_mode", "")) != farm_mode_arg or String(multiplayer_data.get("relationship_mode", "")) != relationship_mode_arg or not twin_story_seen:
 		failures.append("Client did not receive selected world rules and adaptive story")
 	if own_plots.is_empty():
 		failures.append("Client view did not contain the selected shared/private farm")
+	var expected_automation_devices := expected_clients if farm_mode_arg == "shared" else 1
+	if own_automation.size() != expected_automation_devices:
+		failures.append("Client view expected %d automation devices, got %d" % [expected_automation_devices, own_automation.size()])
 	if relationship_mode_arg == "competitive" and client_romance_board.size() < 2:
 		failures.append("Client view did not contain romance rivals")
 	if relationship_mode_arg == "independent" and not Dictionary(local_world.get("relationships", {})).has("mira"):
 		failures.append("Client view did not contain its independent relationship progress")
-	var details := {"peer_id": own_id, "peak_snapshot_players": peak_snapshot_players, "final_snapshot_players": network.latest_snapshot.size(), "moved": moved, "own_private_plots":own_plots.size(), "romance_suitors":client_romance_board.size(), "twin_story_seen":twin_story_seen, "world_rules":multiplayer_data, "action_results": action_results, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION}
+	var details := {"peer_id": own_id, "peak_snapshot_players": peak_snapshot_players, "final_snapshot_players": network.latest_snapshot.size(), "moved": moved, "own_private_plots":own_plots.size(), "automation_devices":own_automation.size(), "automation_action_ok":automation_action_ok, "romance_suitors":client_romance_board.size(), "twin_story_seen":twin_story_seen, "world_rules":multiplayer_data, "action_results": action_results, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION}
 	await _write_client_report_and_wait(details)
 
 
@@ -310,8 +374,10 @@ func _write_client_report_and_wait(details: Dictionary) -> void:
 	quit(0 if failures.is_empty() else 1)
 
 
-func _on_action_result(_action: String, result: Dictionary) -> void:
-	action_results.append(result.duplicate(true))
+func _on_action_result(action: String, result: Dictionary) -> void:
+	var recorded := result.duplicate(true)
+	recorded["requested_action"] = action
+	action_results.append(recorded)
 
 
 func _write_report(details: Dictionary) -> void:

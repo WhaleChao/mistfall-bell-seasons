@@ -34,11 +34,6 @@ func _run() -> void:
 	if studio == null:
 		_finish()
 		return
-	studio.editor_plugin.get_editor_interface().set_main_screen_editor("PixelRPG")
-	for _frame in range(10):
-		await process_frame
-	_check(studio.is_visible_in_tree(), "啟動", "Godot 主畫面實際切換到 PixelRPG")
-
 	_check(studio.pages.size() == 15, "導覽", "15 個製作頁面完整", "%d" % studio.pages.size())
 	_check(studio.PAGE_NAMES.size() == 15, "導覽", "頁面名稱契約完整")
 	_check(studio.manifest_editor != null and not studio.manifest_editor.text.is_empty(), "專案", "Manifest 已載入編輯器")
@@ -136,6 +131,12 @@ func _run() -> void:
 			if page.visible:
 				visible_count += 1
 		var page: Control = studio.pages[page_index]
+		if page_index == 0:
+			# Check the switch after editor startup/import work has settled and at
+			# the exact frame captured below. This avoids Godot's late workspace
+			# restore racing an earlier check while still requiring the plugin's
+			# visibility callback and a real non-zero rendered surface.
+			_check(studio.is_visible_in_tree() and studio.get_viewport() != null and page.size.x >= 500 and page.size.y >= 300, "啟動", "Godot 主畫面實際切換到 PixelRPG")
 		_check(visible_count == 1 and page.visible and page.size.x >= 500 and page.size.y >= 300, "版面", "%02d %s 可顯示且沒有零尺寸" % [page_index + 1, studio.PAGE_NAMES[page_index]], "%sx%s" % [int(page.size.x), int(page.size.y)])
 		await _capture("%02d_%s" % [page_index + 1, PAGE_SLUGS[page_index]])
 	_check(screenshot_hashes.size() == screenshots.size(), "畫面", "15 個製作頁面像素內容互異", "%d/%d" % [screenshot_hashes.size(), screenshots.size()])

@@ -23,13 +23,13 @@ def test_release_content_validation() -> None:
 def test_save_fixture_matches_schema() -> None:
     schema = json.loads((ROOT / "schemas/save_game.schema.json").read_text(encoding="utf-8"))
     fixture = {
-        "schema_version": 4,
+        "schema_version": 5,
         "player": {"name": "旅人", "appearance": {"body": "neutral"}, "position": [320.0, 180.0], "stats": {"health": 72, "max_health": 100, "attack": 16}, "coins": 500},
         "map": "mistfall_farm", "flags": {"gate_open": True},
         "quests": {"silence_the_warden": "active"}, "inventory": {"health_potion": 2},
         "calendar": {"year": 1, "season_index": 0, "season": "spring", "day": 30, "minute_of_day": 360, "speed_mode": "standard"},
         "weather": {"current": "clear", "forecast": {}},
-        "farm": {"rank": 1, "plots": {}, "seed_stock": {}, "produce": {}, "animals": [], "greenhouse_unlocked": False, "unlocked_upgrades": []},
+        "farm": {"rank": 1, "plots": {}, "seed_stock": {}, "produce": {}, "animals": [], "greenhouse_unlocked": False, "unlocked_upgrades": [], "automation_devices": {}, "automation_cycle_count": 0, "automation_last_report": {}},
         "relationships": {}, "marriage": {"spouse_id": "", "married_absolute_day": 0, "family_talk_seen": False},
         "child": {"exists": False, "name": "", "born_absolute_day": 0, "stage": "none"},
         "festivals": {"attended": {}}, "dungeon": {},

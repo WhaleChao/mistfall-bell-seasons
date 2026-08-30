@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T10:56:47",
+	"generated_at": "2026-08-30T13:15:38",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -11,8 +11,8 @@
 		"timestamp": 0,
 		"string": "4.7.2-stable (official)"
 	},
-	"checks": 13,
-	"passed": 13,
+	"checks": 20,
+	"passed": 20,
 	"failed": 0,
 	"metrics": {
 		"simulated_days": 12000,
@@ -20,9 +20,16 @@
 		"festivals_seen": 1200,
 		"severe_forecasts": 600,
 		"generated_request_instances": 34923,
-		"final_save_bytes": 3222,
+		"automation_cycles": 12000,
+		"automation_stalls": 0,
+		"automation_monthly_roundtrips": 400,
+		"automation_tiles_watered": 11999.0,
+		"automation_crops_harvested": 7594.0,
+		"automation_animals_fed": 24000.0,
+		"automation_items_processed": 15797.0,
+		"final_save_bytes": 6192,
 		"disk_save_cycles": 250,
-		"elapsed_seconds": 5.203
+		"elapsed_seconds": 9.663
 	},
 	"cases": [
 		{
@@ -30,6 +37,12 @@
 			"name": "初始雞牛狀態建立成功",
 			"passed": true,
 			"detail": ""
+		},
+		{
+			"category": "百年自動化",
+			"name": "十台設備與銅軌組成單一能源網",
+			"passed": true,
+			"detail": "10 devices / 1 network"
 		},
 		{
 			"category": "百年模擬",
@@ -74,10 +87,46 @@
 			"detail": "2"
 		},
 		{
+			"category": "百年自動化",
+			"name": "自動鐘網連續執行 12,000 日無漏週期",
+			"passed": true,
+			"detail": "12000/12000"
+		},
+		{
+			"category": "百年自動化",
+			"name": "能源與水量預算百年無停機",
+			"passed": true,
+			"detail": "0 stalls"
+		},
+		{
+			"category": "百年自動化",
+			"name": "十台設備與單一網路跨 400 次月存檔完整保留",
+			"passed": true,
+			"detail": "400/400"
+		},
+		{
+			"category": "百年自動化",
+			"name": "播種、澆水與收割形成長期生產循環",
+			"passed": true,
+			"detail": "plant=4362 water=11999 harvest=7594"
+		},
+		{
+			"category": "百年自動化",
+			"name": "雞與牛每日由餵食鐘照料",
+			"passed": true,
+			"detail": "24000/24000"
+		},
+		{
+			"category": "百年自動化",
+			"name": "加工槽與深潮凝析器持續產出",
+			"passed": true,
+			"detail": "processed=15797 salt=12000"
+		},
+		{
 			"category": "百年模擬",
 			"name": "百年存檔維持在 1 MiB 內",
 			"passed": true,
-			"detail": "3222 bytes"
+			"detail": "6192 bytes"
 		},
 		{
 			"category": "存檔壓力",

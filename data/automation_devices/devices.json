@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "definitions": [
+    {"id":"bell_generator","display_name":"鐘輪發電機","symbol":"電","category":"power","required_rank":4,"cost":800,"materials":{"copper_ore":10,"stone":10},"power_generation":18,"power_use":0,"water_generation":0,"water_use":0,"range":0,"description":"為相連設備供應 18 點鐘能；每個網路至少需要一台。"},
+    {"id":"mist_pump","display_name":"霧水幫浦","symbol":"水","category":"water","required_rank":4,"cost":600,"materials":{"copper_ore":8,"stone":12},"power_generation":0,"power_use":2,"water_generation":16,"water_use":0,"range":0,"description":"消耗鐘能，抽取 16 點灌溉用水。"},
+    {"id":"copper_conveyor","display_name":"銅軌傳輸帶","symbol":"軌","category":"network","required_rank":4,"cost":150,"materials":{"wood":4,"copper_ore":2},"power_generation":0,"power_use":0,"water_generation":0,"water_use":0,"range":0,"description":"跨越田地連接設備；本身不消耗電力。"},
+    {"id":"field_sprinkler","display_name":"田間灑水器","symbol":"灑","category":"water","required_rank":4,"cost":500,"materials":{"copper_ore":6,"stone":6},"power_generation":0,"power_use":2,"water_generation":0,"water_use":4,"range":1,"description":"每日為相鄰一格內的作物澆水。"},
+    {"id":"seed_distributor","display_name":"播種分配器","symbol":"播","category":"crop","required_rank":5,"cost":900,"materials":{"iron_ore":8,"wood":10},"power_generation":0,"power_use":3,"water_generation":0,"water_use":0,"range":1,"description":"依作物篩選，自動整地並播種相鄰空田。"},
+    {"id":"crop_harvester","display_name":"共振收割臂","symbol":"收","category":"crop","required_rank":7,"cost":1800,"materials":{"iron_ore":15,"gold_ore":4},"power_generation":0,"power_use":5,"water_generation":0,"water_use":0,"range":1,"description":"自動收取相鄰成熟作物，支援重複收成。"},
+    {"id":"preserves_processor","display_name":"霧封加工槽","symbol":"釀","category":"processing","required_rank":5,"cost":1200,"materials":{"iron_ore":10,"glass":4},"power_generation":0,"power_use":4,"water_generation":0,"water_use":0,"range":0,"description":"每日將兩份一般作物加工為一罐霧封農產。"},
+    {"id":"animal_feeder","display_name":"畜舍餵食鐘","symbol":"餵","category":"animal","required_rank":9,"cost":1600,"materials":{"gold_ore":8,"iron_ore":12},"power_generation":0,"power_use":4,"water_generation":0,"water_use":0,"range":0,"description":"從背包逐隻消耗飼料，照料尚未餵食的動物。"},
+    {"id":"tide_condenser","display_name":"深潮凝析器","symbol":"潮","category":"eldritch","required_rank":9,"cost":3500,"materials":{"gold_ore":15,"mist_shard":20},"power_generation":0,"power_use":7,"water_generation":0,"water_use":0,"range":0,"description":"將一尾異潮魚與霧晶碎片安全凝析為可出貨的夢潮鹽。"}
+  ]
+}

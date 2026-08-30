@@ -29,6 +29,7 @@ TYPE_SCHEMAS = {
     "npc_dialogues": "npc_dialogue_bank.schema.json",
     "festivals": "festival_definition.schema.json",
     "farm_upgrades": "farm_upgrade.schema.json",
+    "automation_devices": "automation_device.schema.json",
     "dungeons": "dungeon_definition.schema.json",
     "request_templates": "procedural_request_template.schema.json",
     "recipes": "recipe_definition.schema.json",
@@ -144,6 +145,17 @@ def check_references(content: dict[str, dict[str, dict[str, Any]]], errors: list
         for offer in shop.get("offers", []):
             if offer.get("kind") == "item" and offer.get("target_id") not in items:
                 errors.append(f"shop {shop['id']}: missing item {offer.get('target_id')}")
+    for device in content["automation_devices"].values():
+        for material_id in device.get("materials", {}):
+            if material_id not in items:
+                errors.append(f"automation device {device['id']}: missing material {material_id}")
+    expected_devices = {
+        "bell_generator", "mist_pump", "copper_conveyor", "field_sprinkler",
+        "seed_distributor", "crop_harvester", "preserves_processor",
+        "animal_feeder", "tide_condenser",
+    }
+    if set(content["automation_devices"]) != expected_devices:
+        errors.append("automation catalog must define the nine commercial devices")
     if set(content["tools"]) != {"hoe", "watering_can", "axe", "pickaxe", "fishing_rod", "sickle"}:
         errors.append("tool catalog must define the six commercial tool types")
     npc_ids = {npc_id for npc_id in content["characters"] if npc_id != "hero"}
@@ -155,6 +167,36 @@ def check_references(content: dict[str, dict[str, dict[str, Any]]], errors: list
         heart_levels = sorted(event.get("hearts") for event in content["relationship_events"].values() if event.get("npc_id") == candidate)
         if heart_levels != [2, 4, 6, 8, 10]:
             errors.append(f"romance candidate {candidate}: expected heart events at 2/4/6/8/10")
+    required_story_pillars = {"farm", "village", "romance", "dungeon", "fishing", "eldritch", "automation", "multiplayer"}
+    required_story_metrics = {"dungeon_floor", "eldritch_fish_caught", "eldritch_unique_catches", "eldritch_boss_defeated", "automation_devices", "automation_networks", "automation_cycles", "automation_items_processed", "romance_candidates_known", "relationship_unique_villagers"}
+    for arc in content["story_arcs"].values():
+        featured: set[str] = set()
+        pillars: set[str] = set()
+        metrics: set[str] = set()
+        chapters = arc.get("chapters", [])
+        if len(chapters) != 12:
+            errors.append(f"story arc {arc['id']}: expected exactly twelve chapters")
+        for chapter in chapters:
+            chapter_id = str(chapter.get("id", ""))
+            chapter_npcs = set(chapter.get("featured_npcs", []))
+            chapter_pillars = set(chapter.get("pillars", []))
+            featured.update(chapter_npcs)
+            pillars.update(chapter_pillars)
+            metrics.update(condition.get("metric", "") for condition in chapter.get("completion_conditions", []))
+            if len(chapter_pillars) < 2:
+                errors.append(f"story chapter {chapter_id}: must connect at least two gameplay pillars")
+            if not chapter_npcs <= npc_ids:
+                errors.append(f"story chapter {chapter_id}: unknown featured NPCs {sorted(chapter_npcs - npc_ids)}")
+            dialogue = dialogues.get(f"{chapter_id}_dialogue", {})
+            dialogue_characters = set(dialogue.get("characters", []))
+            if not chapter_npcs <= dialogue_characters:
+                errors.append(f"story chapter {chapter_id}: featured NPCs missing from dialogue")
+        if featured != npc_ids:
+            errors.append(f"story arc {arc['id']}: must feature all ten villagers; missing {sorted(npc_ids - featured)}")
+        if not required_story_pillars <= pillars:
+            errors.append(f"story arc {arc['id']}: missing pillars {sorted(required_story_pillars - pillars)}")
+        if not required_story_metrics <= metrics:
+            errors.append(f"story arc {arc['id']}: missing integrated metrics {sorted(required_story_metrics - metrics)}")
 
 
 def check_assets(release: bool, errors: list[str], warnings: list[str]) -> None:
