@@ -14,4 +14,6 @@
 
 Windows 執行檔目前未購買程式碼簽章，因此 SmartScreen 可能提示未知發行者；請使用同頁 `SHA256SUMS.txt` 核對下載內容。
 
+發布後驗證：GitHub 的全新 Windows 11 VM 已直接下載公開 ZIP、核對 digest、解壓並啟動成功；遊戲執行期間 23 次 TCP／UDP 觀測皆為零端點。[查看驗證流程](https://github.com/WhaleChao/mistfall-bell-seasons/actions/runs/33289543994)
+
 Windows ZIP SHA-256：`1dfcd68064f6d00aaff21e0dcfd3c98d769d5c07633bbbf8bdbe22fba00762b9`

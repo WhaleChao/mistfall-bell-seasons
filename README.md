@@ -44,9 +44,11 @@
 .\launcher\Test-RenderPerformance.ps1
 .\launcher\Run-FullAcceptance.ps1
 .\launcher\Package-Release.ps1
+.\launcher\Test-PublishedRelease.ps1 -Tag v1.0.2
+.\launcher\Test-CodeSigningPipeline.ps1
 ```
 
-發行閘門會驗證 269 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、217 項圖片／圖集規則、Save v1→v2→v3、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、離線 PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，119 項通過並保存 12 張畫面證據。RTX 3060 的 1080p／20 敵人測試遠高於 60 FPS 容量；正式遊玩鎖定 60 FPS。
+發行閘門會驗證 269 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、217 項圖片／圖集規則、Save v1→v2→v3、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、離線 PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，119 項通過並保存 12 張畫面證據。公開 v1.0.2 亦由[全新 Windows 11 VM](reports/CLEAN_WINDOWS_RELEASE.md)重新下載與啟動，23 次執行期 TCP／UDP 觀測為零端點。RTX 3060 的 1080p／20 敵人測試遠高於 60 FPS 容量；正式遊玩鎖定 60 FPS。
 
 ## PixelRPG Studio 與本機 AI
 

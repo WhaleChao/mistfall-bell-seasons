@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- 加入公開 GitHub Release 的乾淨 Windows VM 驗證，涵蓋遠端下載 digest、ZIP 內容、法律文件、PCK 邊界、解壓啟動與執行期零網路端點。
+- 加入正式 PFX／時間戳 Authenticode 管線與隔離複本測試；私鑰檔案由 Git 及 release audit 阻擋。
+
 ## 1.0.2 — 2026-08-30
 
 - 新增 217 項圖片完整性閘門，逐格驗證 9 張 Runtime 圖片、圖集餘邊、空白／重複格與四方向四幀動畫；改用整數圖集切片，避免像素邊界取樣串色。
