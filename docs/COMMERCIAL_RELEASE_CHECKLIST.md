@@ -16,8 +16,8 @@ Steam 僅作輸入、Big Picture、解析度與商店宣稱的品質基準；本
 - [x] RTX 3060、1920×1080、20 敵人實測遠高於 60 FPS 容量。
 - [x] Windows x64 release export、PCK 邊界、可執行檔啟動、正式 ZIP 精確檔案清單、解壓後啟動與 SHA-256 通過。
 - [x] Windows 上交叉匯出的 macOS ZIP 為 Universal 2（x86_64＋arm64）、bundle ID／可執行權限／PCK 邊界均通過。
-- [x] GitHub macOS runner 上完成 Universal 2、ad-hoc 簽章、實際啟動、零網路端點與授權封裝；workflow `33315320403` 全部成功，候選 ZIP 下載後 SHA-256 與本機複驗亦通過。
-- [ ] v1.2.0 發布後由全新 Windows／macOS runner 從公開 Release 重新下載、核對 SHA-256、解壓、啟動並觀測零網路端點。
+- [x] GitHub macOS runner 上完成 Universal 2、ad-hoc 簽章、實際啟動、零網路端點與授權封裝；最終 tag workflow `33316079744` 全部成功，ZIP 下載後 SHA-256 與本機複驗亦通過。
+- [x] v1.2.0 發布後由全新 Windows／macOS runner 從公開 Release 重新下載、核對 SHA-256、解壓、啟動並觀測零網路端點；workflow `33316678467` 全部成功，Windows 25 次、macOS 200 次網路取樣均為 0 端點。
 - [x] 640×360、1280×720、1280×800、1920×1080、2560×1440 實際 Windows 視窗、GPU 內容與 1×–4× 整數縮放通過；1280×800 為 1280×720 內容加上下各 40px 留邊。
 - [x] Steam 品質基準 51/51：Big Picture 全螢幕、兩個啟動項、功能勾選契約、18 組鍵盤／XInput 映射、0 支手把的證據限制及 1280×800 最小 30px 有效字級通過；未上傳 Steam。
 - [x] v1.2.0 正式 EXE 的 `SteamTenfoot=1` 視窗覆蓋與正常退出通過；視窗 1920×1082，覆蓋 1920×1080 螢幕。

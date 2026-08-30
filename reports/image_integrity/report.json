@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T14:02:48",
+	"generated_at": "2026-08-30T14:16:05",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -4678,7 +4678,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1280x720.png",
 			"passed": true,
-			"detail": "variance=0.02237"
+			"detail": "variance=0.02239"
 		},
 		{
 			"category": "畫面證據",
@@ -4720,13 +4720,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1280x800.png",
 			"passed": true,
-			"detail": "variance=0.02121"
+			"detail": "variance=0.02116"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：1280x800.png",
 			"passed": true,
-			"detail": "453 sampled colors"
+			"detail": "454 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -4762,7 +4762,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1920x1080.png",
 			"passed": true,
-			"detail": "variance=0.02327"
+			"detail": "variance=0.02332"
 		},
 		{
 			"category": "畫面證據",
@@ -4804,13 +4804,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：2560x1440.png",
 			"passed": true,
-			"detail": "variance=0.02323"
+			"detail": "variance=0.02322"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：2560x1440.png",
 			"passed": true,
-			"detail": "491 sampled colors"
+			"detail": "492 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -4846,13 +4846,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：640x360.png",
 			"passed": true,
-			"detail": "variance=0.02078"
+			"detail": "variance=0.02077"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：640x360.png",
 			"passed": true,
-			"detail": "517 sampled colors"
+			"detail": "516 sampled colors"
 		},
 		{
 			"category": "畫面證據",

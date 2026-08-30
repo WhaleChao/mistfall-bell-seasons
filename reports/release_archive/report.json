@@ -2,7 +2,7 @@
   "passed": true,
   "version": "1.2.0",
   "archive": "Mistfall-Bell-Seasons-v1.2.0-Windows-x64.zip",
-  "archive_bytes": 60906310,
+  "archive_bytes": 60906545,
   "files": [
     "ASSET_LICENSES.md",
     "GODOT_ENGINE_COPYRIGHT.txt",
@@ -18,6 +18,6 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "exe_sha256": "1ae493f4a71e8ea80a5e3243c0da947c98d8bf11870e75f60a32c141bd748afe",
-  "pck_sha256": "18397fab600155d0e9cbfd48e5987f4026340efeafdc3a6b1cebc1a1fc271894",
+  "pck_sha256": "bb7d6f8a411f4681e2abb6580a480fd946e7793343fe65bea897d9c87c78a4c2",
   "extracted_launch": true
 }
