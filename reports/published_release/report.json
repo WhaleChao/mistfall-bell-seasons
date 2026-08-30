@@ -1,13 +1,13 @@
 {
   "passed": true,
-  "verified_at": "2026-08-30T09:09:42.8425615+00:00",
+  "verified_at": "2026-08-30T10:00:30.3535876+00:00",
   "repository": "WhaleChao/mistfall-bell-seasons",
-  "tag": "v1.1.0",
-  "release_url": "https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.1.0",
-  "github_asset_digest": "sha256:ac8aa7398d6769f08e77ffce33809530a3398cb723a0d7ac24522e94e87a0b4f",
-  "archive_sha256": "ac8aa7398d6769f08e77ffce33809530a3398cb723a0d7ac24522e94e87a0b4f",
-  "archive_bytes": 53367836,
-  "extracted_package_root": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\pixelrpg-published-1.1.0-c76c91f4f39241f5887a2ce1c021bfd2\\expanded\\Mistfall-Bell-Seasons-v1.1.0-Windows-x64",
+  "tag": "v1.1.1",
+  "release_url": "https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.1.1",
+  "github_asset_digest": "sha256:ec21a7861bc43f94ccdd0eb5a6f59543452fa6d63919ae0eb4aa5a0e51fb50f8",
+  "archive_sha256": "ec21a7861bc43f94ccdd0eb5a6f59543452fa6d63919ae0eb4aa5a0e51fb50f8",
+  "archive_bytes": 53368524,
+  "extracted_package_root": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\pixelrpg-published-1.1.1-ef8f14c0e7c94085bd03a90057b34532\\expanded\\Mistfall-Bell-Seasons-v1.1.1-Windows-x64",
   "files": [
     "ASSET_LICENSES.md",
     "GODOT_ENGINE_COPYRIGHT.txt",
@@ -22,11 +22,11 @@
     "SUPPORT.md",
     "THIRD_PARTY_NOTICES.md"
   ],
-  "exe_sha256": "0f7a9fc6bde95d9f57338102aaa545b752490ec3f38397a2b1074ae150380d40",
-  "pck_sha256": "1b165a02118a23c00c35df8cdf39ed9ab444ed28cc1f10e8e2fb7b4f83b6be2e",
+  "exe_sha256": "1dd8feedbf3e3e52a1bff7825df0ced2c29072b220ba41202fb45994017f47ec",
+  "pck_sha256": "c632c60cfbb3719a5639ec48133b6d52c97cbac7274004f4cd0b38820f09afa7",
   "executable_signature": "NotSigned",
   "runtime_exit_code": 0,
-  "runtime_network_samples": 25,
+  "runtime_network_samples": 22,
   "runtime_network_endpoints": [],
   "os": "Microsoft Windows NT 10.0.26100.0"
 }

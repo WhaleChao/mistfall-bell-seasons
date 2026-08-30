@@ -21,7 +21,7 @@
 | 玩家自行開服與 IP 直連 | 已證明 | 共同、私人、競賽農場及 1／2／3／5 人劇情拓撲由 6 服 15 客真實程序完成版本握手、多人移動快照、農場整合／隔離、四種篇章、戀愛平手／領先／唯一婚約與世界保存；合計 21 個程序 |
 | 正式 ZIP、公開下載與乾淨 Windows 啟動 | 已證明 | GitHub Actions Windows 11 build 26100 從公開 Release 下載、驗證、解壓與啟動通過 |
 | 授權、供應鏈與惡意程式檢查 | 已證明 | 素材雜湊／授權閘門、Godot 官方法律原文、138 套件 0 已知漏洞、Microsoft Defender 0 偵測 |
-| 公開 GitHub Release | 部分完成 | v1.1.0 已公開並通過乾淨 Windows 驗證；v1.1.1 將在 21 程序多人與完整封裝回歸後發布、重新下載及再次驗證 |
+| 公開 GitHub Release | 已證明 | v1.1.1 已公開；ZIP 的本機、GitHub asset 與重新下載 SHA-256 均為 `ec21a7861bc43f94ccdd0eb5a6f59543452fa6d63919ae0eb4aa5a0e51fb50f8`，公開下載及 GitHub Actions Windows 11 驗證皆通過（run 33305388849） |
 
 ## 製作工具與本機 AI 門檻
 
