@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dtqfdtw4th1kv"
-path="res://.godot/imported/enemy_atlas.png-1af850705b2254bc20b64d8e68a022b9.ctex"
+uid="uid://cy0vg3ynfbdel"
+path="res://.godot/imported/animal_atlas_checkerboard_source.png-44cfe51b3820c70ad1d43e0e6d4cce56.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/runtime/sprites/enemy_atlas.png"
-dest_files=["res://.godot/imported/enemy_atlas.png-1af850705b2254bc20b64d8e68a022b9.ctex"]
+source_file="res://assets/source/generated_atlases/animal_atlas_checkerboard_source.png"
+dest_files=["res://.godot/imported/animal_atlas_checkerboard_source.png-44cfe51b3820c70ad1d43e0e6d4cce56.ctex"]
 
 [params]
 

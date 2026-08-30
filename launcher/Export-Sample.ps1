@@ -3,6 +3,7 @@ param([string]$GodotPath = '')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+. (Join-Path $PSScriptRoot 'GodotGate.ps1')
 $python = Join-Path $projectRoot '.venv\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $python)) {
     & (Join-Path $PSScriptRoot 'Setup-PixelRPG.ps1')
@@ -28,8 +29,7 @@ if ($LASTEXITCODE -ne 0) { throw '離線／匯出邊界稽核失敗，已停止�
 New-Item -ItemType Directory -Path (Join-Path $projectRoot 'build') -Force | Out-Null
 Push-Location $projectRoot
 try {
-    & $godot --headless --path . --export-release 'Windows Desktop' 'build\Mistfall-Bell-Seasons.exe'
-    if ($LASTEXITCODE -ne 0) { throw 'Godot 匯出失敗；請確認已安裝 4.7.2 export templates。' }
+    Invoke-GodotGate -GodotPath $godot -Label 'Godot Windows release 匯出' -Arguments @('--headless', '--path', '.', '--export-release', 'Windows Desktop', 'build\Mistfall-Bell-Seasons.exe')
 } finally {
     Pop-Location
 }

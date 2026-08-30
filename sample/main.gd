@@ -293,12 +293,10 @@ func _draw_weather() -> void:
 
 
 func _create_npc_sprites() -> void:
-	var atlas: Texture2D = load("res://assets/runtime/sprites/character_atlas.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/character_atlas_alpha.png")
 	if atlas == null:
 		return
 	var atlas_indices := {"mira":1,"lian":2,"soren":3,"yuna":4,"orin":5,"eira":6,"toma":7,"nori":8,"asha":9,"piko":10}
-	var chroma := ShaderMaterial.new()
-	chroma.shader = load("res://assets/shaders/chroma_transparency.gdshader")
 	for npc_id: String in atlas_indices:
 		var index: int = int(atlas_indices[npc_id])
 		var region := AtlasTexture.new()
@@ -310,7 +308,6 @@ func _create_npc_sprites() -> void:
 		sprite.texture = region
 		sprite.scale = Vector2(0.145, 0.145)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		sprite.material = chroma
 		sprite.z_index = 2
 		add_child(sprite)
 		npc_sprites[npc_id] = sprite
@@ -640,7 +637,7 @@ func _animate_world_sprites() -> void:
 
 func _update_animal_sprites() -> void:
 	var live_ids: Dictionary = {}
-	var atlas: Texture2D = load("res://assets/runtime/sprites/animal_atlas.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/animal_atlas_alpha.png")
 	if atlas == null:
 		return
 	for index in range(GameState.farm.animals.size()):
@@ -659,9 +656,6 @@ func _update_animal_sprites() -> void:
 			sprite.texture = region
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			sprite.scale = Vector2(0.105, 0.105) if String(animal.get("species", "")) == "chicken" else Vector2(0.13, 0.13)
-			var chroma := ShaderMaterial.new()
-			chroma.shader = load("res://assets/shaders/chroma_transparency.gdshader")
-			sprite.material = chroma
 			sprite.z_index = 3
 			add_child(sprite)
 			animal_sprites[animal_id] = sprite

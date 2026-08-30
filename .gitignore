@@ -18,6 +18,7 @@ creator_service/build/
 creator_service/dist/
 /exports/
 /tools/
-/work/
+/work/*
+!/work/.gdignore
 /reports/**/*.png.import
 creator_service/session.json

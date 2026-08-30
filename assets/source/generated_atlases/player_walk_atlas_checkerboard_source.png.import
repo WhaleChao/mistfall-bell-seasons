@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://neq6e36gcjo7"
-path="res://.godot/imported/character_atlas.png-bdb9883cf130cf6b83982c2f4c6cbd01.ctex"
+uid="uid://g2muerew78oy"
+path="res://.godot/imported/player_walk_atlas_checkerboard_source.png-3b4e592bd10981d1f441a61e629d93ea.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/runtime/sprites/character_atlas.png"
-dest_files=["res://.godot/imported/character_atlas.png-bdb9883cf130cf6b83982c2f4c6cbd01.ctex"]
+source_file="res://assets/source/generated_atlases/player_walk_atlas_checkerboard_source.png"
+dest_files=["res://.godot/imported/player_walk_atlas_checkerboard_source.png-3b4e592bd10981d1f441a61e629d93ea.ctex"]
 
 [params]
 

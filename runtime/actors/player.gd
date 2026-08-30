@@ -249,7 +249,7 @@ func restore_from_game_state() -> void:
 
 
 func _create_visual_sprite() -> void:
-	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas_alpha.png")
 	if atlas == null:
 		return
 	var frame_width := floori(atlas.get_width() / 4.0)
@@ -263,9 +263,6 @@ func _create_visual_sprite() -> void:
 	visual_sprite.scale = Vector2(0.15, 0.15)
 	visual_sprite.z_index = -1
 	visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	var chroma := ShaderMaterial.new()
-	chroma.shader = load("res://assets/shaders/chroma_transparency.gdshader")
-	visual_sprite.material = chroma
 	add_child(visual_sprite)
 
 

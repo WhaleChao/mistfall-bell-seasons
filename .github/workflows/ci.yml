@@ -26,8 +26,27 @@ jobs:
       PIXELRPG_TEST_ISOLATED: '1'
     steps:
       - uses: actions/checkout@v7
-      - run: godot --headless --path . --editor --quit
-      - run: godot --headless --path . --script res://tests/godot/smoke_test.gd
-      - run: godot --headless --path . --script res://tests/godot/image_integrity_test.gd
-      - run: godot --headless --path . --script res://tests/godot/commercial_stress_test.gd
-      - run: godot --headless --path . --script res://tests/godot/performance_test.gd
+      - name: Run Godot gates and reject engine error output
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_godot_gate() {
+            local label="$1"
+            shift
+            local output
+            local status
+            set +e
+            output="$(godot "$@" 2>&1)"
+            status=$?
+            set -e
+            printf '%s\n' "$output"
+            if [[ $status -ne 0 ]] || printf '%s\n' "$output" | grep -Eqi '^\s*(SCRIPT ERROR:|ERROR:)|Parse Error|Compile Error|Failed to load script|Failed to load resource'; then
+              printf 'Godot gate failed: %s (exit %s)\n' "$label" "$status" >&2
+              exit 1
+            fi
+          }
+          run_godot_gate editor --headless --path . --editor --quit
+          run_godot_gate smoke --headless --path . --script res://tests/godot/smoke_test.gd
+          run_godot_gate images --headless --path . --script res://tests/godot/image_integrity_test.gd
+          run_godot_gate stress --headless --path . --script res://tests/godot/commercial_stress_test.gd
+          run_godot_gate performance --headless --path . --script res://tests/godot/performance_test.gd

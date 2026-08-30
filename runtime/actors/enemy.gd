@@ -188,7 +188,7 @@ func _create_visual_sprite() -> void:
 	var index := ids.find(String(enemy_id))
 	if index < 0:
 		return
-	var atlas: Texture2D = load("res://assets/runtime/sprites/enemy_atlas.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/enemy_atlas_alpha.png")
 	if atlas == null:
 		return
 	var region := AtlasTexture.new()
@@ -202,9 +202,6 @@ func _create_visual_sprite() -> void:
 	visual_sprite.scale = Vector2(0.18, 0.18) if is_boss else Vector2(0.145, 0.145)
 	visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	visual_sprite.z_index = -1
-	var chroma := ShaderMaterial.new()
-	chroma.shader = load("res://assets/shaders/chroma_transparency.gdshader")
-	visual_sprite.material = chroma
 	add_child(visual_sprite)
 
 

@@ -54,7 +54,7 @@
 			"category": "素材",
 			"name": "素材庫 UI 與索引數量一致",
 			"passed": true,
-			"details": "11"
+			"details": "10"
 		},
 		{
 			"category": "素材",
@@ -126,7 +126,7 @@
 			"category": "畫面",
 			"name": "01_project 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜63 sampled colors｜8d79fa1789e0"
+			"details": "1920x1017｜63 sampled colors｜595ddac537d7"
 		},
 		{
 			"category": "版面",
@@ -138,7 +138,7 @@
 			"category": "畫面",
 			"name": "02_assets 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜84 sampled colors｜6d0f641e21e4"
+			"details": "1920x1017｜84 sampled colors｜6e5fbb3e62ff"
 		},
 		{
 			"category": "版面",
@@ -150,7 +150,7 @@
 			"category": "畫面",
 			"name": "03_world 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜74 sampled colors｜431276e310a3"
+			"details": "1920x1017｜74 sampled colors｜860b2aaf62c7"
 		},
 		{
 			"category": "版面",
@@ -162,7 +162,7 @@
 			"category": "畫面",
 			"name": "04_database 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜64 sampled colors｜14e0a79dc728"
+			"details": "1920x1017｜64 sampled colors｜a21668a0dbeb"
 		},
 		{
 			"category": "版面",
@@ -174,7 +174,7 @@
 			"category": "畫面",
 			"name": "05_calendar 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜102 sampled colors｜6d33f38f2b41"
+			"details": "1920x1017｜102 sampled colors｜32d9c3fc0a5b"
 		},
 		{
 			"category": "版面",
@@ -186,7 +186,7 @@
 			"category": "畫面",
 			"name": "06_npc_schedules 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜132 sampled colors｜79363207d8c4"
+			"details": "1920x1017｜132 sampled colors｜ea6ca656c44a"
 		},
 		{
 			"category": "版面",
@@ -198,7 +198,7 @@
 			"category": "畫面",
 			"name": "07_crops 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜114 sampled colors｜1ee460230665"
+			"details": "1920x1017｜114 sampled colors｜8ac116d7e4a8"
 		},
 		{
 			"category": "版面",
@@ -210,7 +210,7 @@
 			"category": "畫面",
 			"name": "08_festivals 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜107 sampled colors｜c9fad435e51d"
+			"details": "1920x1017｜107 sampled colors｜af2b05516e3e"
 		},
 		{
 			"category": "版面",
@@ -222,7 +222,7 @@
 			"category": "畫面",
 			"name": "09_farm_upgrades 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜108 sampled colors｜97c9da1fff00"
+			"details": "1920x1017｜108 sampled colors｜f0b8e7871788"
 		},
 		{
 			"category": "版面",
@@ -234,7 +234,7 @@
 			"category": "畫面",
 			"name": "10_family 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜73 sampled colors｜dbe9af0c18fa"
+			"details": "1920x1017｜73 sampled colors｜00fc5e9c3296"
 		},
 		{
 			"category": "版面",
@@ -246,7 +246,7 @@
 			"category": "畫面",
 			"name": "11_dungeon 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜81 sampled colors｜f6a1b41f061a"
+			"details": "1920x1017｜81 sampled colors｜447bdef2cd65"
 		},
 		{
 			"category": "版面",
@@ -258,7 +258,7 @@
 			"category": "畫面",
 			"name": "12_story 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜91 sampled colors｜e35d6fbef2aa"
+			"details": "1920x1017｜91 sampled colors｜6a0a4da42fe4"
 		},
 		{
 			"category": "版面",
@@ -270,7 +270,7 @@
 			"category": "畫面",
 			"name": "13_ai 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜71 sampled colors｜6c25f0d1d1ed"
+			"details": "1920x1017｜71 sampled colors｜f95903f73426"
 		},
 		{
 			"category": "版面",
@@ -282,7 +282,7 @@
 			"category": "畫面",
 			"name": "14_tests 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜63 sampled colors｜3dfc44660e74"
+			"details": "1920x1017｜63 sampled colors｜a9f5029b6a0b"
 		},
 		{
 			"category": "版面",
@@ -294,7 +294,7 @@
 			"category": "畫面",
 			"name": "15_export 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜68 sampled colors｜66750d3f5378"
+			"details": "1920x1017｜68 sampled colors｜98a32397f26e"
 		},
 		{
 			"category": "畫面",
@@ -336,7 +336,7 @@
 			"category": "畫面",
 			"name": "13_ai_completed 截圖可解碼且非空白",
 			"passed": true,
-			"details": "1920x1017｜72 sampled colors｜9766b5e3fc8a"
+			"details": "1920x1017｜72 sampled colors｜46d320621a3b"
 		},
 		{
 			"category": "畫面",
@@ -363,7 +363,7 @@
 		"res://reports/studio_ui/15_export.png",
 		"res://reports/studio_ui/13_ai_completed.png"
 	],
-	"elapsed_seconds": 30.755,
+	"elapsed_seconds": 26.875,
 	"renderer": "NVIDIA GeForce RTX 3060",
 	"godot": {
 		"major": 4,

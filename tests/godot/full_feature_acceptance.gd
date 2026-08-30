@@ -169,6 +169,9 @@ func _test_combat_and_dungeon() -> void:
 		if floor_number % 10 == 0:
 			_record("Boss", "%dF 守護者生成" % floor_number, boss_count == 1)
 		if floor_number == 40:
+			# HUD 以 0.25 秒節流更新；驗收截圖前強制同步，避免留下前一層的標示。
+			game._update_hud()
+			await _frames(2)
 			await _capture("04_floor_40_boss")
 		for enemy_node: Node in floor_enemies.duplicate():
 			var enemy: Node = enemy_node

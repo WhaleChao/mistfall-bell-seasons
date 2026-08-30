@@ -123,9 +123,14 @@ func _run() -> void:
 	_check("Release Gate 通過" in studio.export_output.text, "匯出", "Studio Release Gate 通過")
 
 	for page_index in range(mini(studio.pages.size(), PAGE_SLUGS.size())):
+		# The editor restores its previously selected main screen asynchronously
+		# after startup. Keep the evidence capture on PixelRPG instead of allowing
+		# a late Asset Library restore to replace the tested surface.
+		studio.editor_plugin.get_editor_interface().set_main_screen_editor("PixelRPG")
 		studio._show_page(page_index)
-		await process_frame
-		await process_frame
+		studio.move_to_front()
+		for _frame in range(4):
+			await process_frame
 		var visible_count := 0
 		for page in studio.pages:
 			if page.visible:
@@ -223,4 +228,14 @@ func _finish() -> void:
 	if markdown_file:
 		markdown_file.store_string(markdown)
 	print("PixelRPG Studio UI gate: %s (%d/%d, %d screenshots)" % ["PASS" if failed == 0 else "FAIL", checks.size() - failed, checks.size(), screenshots.size()])
-	quit(0 if failed == 0 else 1)
+	call_deferred("_close_editor_cleanly", 0 if failed == 0 else 1)
+
+
+func _close_editor_cleanly(exit_code: int) -> void:
+	# Give EditorFileSystem time to finish importing the evidence images, then
+	# exercise the editor's normal close path so renderer/UI resources teardown
+	# in dependency order. The final quit is only a timeout fallback.
+	await create_timer(2.0).timeout
+	root.close_requested.emit()
+	await create_timer(5.0).timeout
+	quit(exit_code)

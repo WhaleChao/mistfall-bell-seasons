@@ -3,6 +3,7 @@ param([string]$GodotPath = '')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+. (Join-Path $PSScriptRoot 'GodotGate.ps1')
 if ($GodotPath) {
     $godot = (Resolve-Path -LiteralPath $GodotPath).Path
 } else {
@@ -13,6 +14,8 @@ if ($GodotPath) {
 
 $qaAppData = Join-Path $projectRoot 'work\full-acceptance-appdata'
 New-Item -ItemType Directory -Path $qaAppData -Force | Out-Null
+$godotOut = Join-Path $qaAppData 'godot.stdout.txt'
+$godotErr = Join-Path $qaAppData 'godot.stderr.txt'
 $report = Join-Path $projectRoot 'reports\full_feature_acceptance\report.json'
 $arguments = @(
     '--path', $projectRoot,
@@ -23,15 +26,18 @@ $arguments = @(
 $process = Start-Process -FilePath $godot -ArgumentList $arguments -PassThru -Environment @{
     APPDATA = $qaAppData
     LOCALAPPDATA = $qaAppData
-}
+} -RedirectStandardOutput $godotOut -RedirectStandardError $godotErr
 if (-not $process.WaitForExit(180000)) {
     $process.Kill()
     $process.WaitForExit()
     throw '全功能實機驗收超過 180 秒。'
 }
-if ($process.ExitCode -ne 0) {
-    throw "全功能實機驗收失敗，Godot exit code $($process.ExitCode)。"
-}
+$output = @(
+    if (Test-Path -LiteralPath $godotOut) { Get-Content -LiteralPath $godotOut -Raw }
+    if (Test-Path -LiteralPath $godotErr) { Get-Content -LiteralPath $godotErr -Raw }
+) -join "`n"
+if ($output) { Write-Host $output }
+Assert-GodotGateResult -Label '全功能實機驗收' -ExitCode $process.ExitCode -Output $output
 if (-not (Test-Path -LiteralPath $report)) {
     throw '全功能實機驗收沒有產生報告。'
 }

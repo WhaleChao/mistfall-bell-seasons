@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T05:36:22",
+	"generated_at": "2026-08-30T07:18:13",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -21,32 +21,32 @@
 			"width": 640,
 			"height": 360,
 			"integer_scale": 1,
-			"variance": 0.0202970309204263,
-			"black_ratio": 0.0021875
+			"variance": 0.0203477951532666,
+			"black_ratio": 0.00145833333333333
 		},
 		{
 			"file": "1280x720.png",
 			"width": 1280,
 			"height": 720,
 			"integer_scale": 2,
-			"variance": 0.0205971225549119,
-			"black_ratio": 0.00210069444444444
+			"variance": 0.0206450534285079,
+			"black_ratio": 0.00152777777777778
 		},
 		{
 			"file": "1920x1080.png",
 			"width": 1920,
 			"height": 1080,
 			"integer_scale": 3,
-			"variance": 0.0209534977034665,
-			"black_ratio": 0.00220486111111111
+			"variance": 0.0209965777492729,
+			"black_ratio": 0.00166666666666667
 		},
 		{
 			"file": "2560x1440.png",
 			"width": 2560,
 			"height": 1440,
 			"integer_scale": 4,
-			"variance": 0.0213017518305154,
-			"black_ratio": 0.0021875
+			"variance": 0.0213446827445813,
+			"black_ratio": 0.00170138888888889
 		}
 	],
 	"cases": [
@@ -66,13 +66,13 @@
 			"category": "畫面",
 			"name": "640x360.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02030"
+			"detail": "variance=0.02035"
 		},
 		{
 			"category": "畫面",
 			"name": "640x360.png 沒有異常大面積黑屏",
 			"passed": true,
-			"detail": "black=0.22%"
+			"detail": "black=0.15%"
 		},
 		{
 			"category": "整數縮放",
@@ -96,13 +96,13 @@
 			"category": "畫面",
 			"name": "1280x720.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02060"
+			"detail": "variance=0.02065"
 		},
 		{
 			"category": "畫面",
 			"name": "1280x720.png 沒有異常大面積黑屏",
 			"passed": true,
-			"detail": "black=0.21%"
+			"detail": "black=0.15%"
 		},
 		{
 			"category": "整數縮放",
@@ -126,13 +126,13 @@
 			"category": "畫面",
 			"name": "1920x1080.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02095"
+			"detail": "variance=0.02100"
 		},
 		{
 			"category": "畫面",
 			"name": "1920x1080.png 沒有異常大面積黑屏",
 			"passed": true,
-			"detail": "black=0.22%"
+			"detail": "black=0.17%"
 		},
 		{
 			"category": "整數縮放",
@@ -156,13 +156,13 @@
 			"category": "畫面",
 			"name": "2560x1440.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02130"
+			"detail": "variance=0.02134"
 		},
 		{
 			"category": "畫面",
 			"name": "2560x1440.png 沒有異常大面積黑屏",
 			"passed": true,
-			"detail": "black=0.22%"
+			"detail": "black=0.17%"
 		},
 		{
 			"category": "整數縮放",

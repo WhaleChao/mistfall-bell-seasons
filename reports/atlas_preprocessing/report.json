@@ -1,0 +1,413 @@
+{
+	"generated_at": "2026-08-30T06:29:50",
+	"algorithm": "cell-bounded four-neighbour background flood fill, then lossless connected-component repack with 16px minimum padding",
+	"light_threshold": 0.76,
+	"neutral_spread": 0.14,
+	"passed": true,
+	"atlases": [
+		{
+			"passed": true,
+			"source": "res://assets/source/generated_atlases/character_atlas_checkerboard_source.png",
+			"output": "res://assets/runtime/sprites/character_atlas_alpha.png",
+			"width": 1448,
+			"height": 1086,
+			"columns": 4,
+			"rows": 3,
+			"removed_pixels": 1212407,
+			"transparent_pixels": 1212407,
+			"preserved_pixels": 360121,
+			"transparent_ratio": 0.770992313014458,
+			"removed_per_cell": [
+				101578,
+				102961,
+				97958,
+				100694,
+				95866,
+				96022,
+				101412,
+				98170,
+				100656,
+				98064,
+				108139,
+				110887
+			],
+			"component_count": 12,
+			"cell_components": [
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1
+			],
+			"cell_bounds": [
+				{
+					"width": 146,
+					"height": 273
+				},
+				{
+					"width": 142,
+					"height": 256
+				},
+				{
+					"width": 166,
+					"height": 270
+				},
+				{
+					"width": 157,
+					"height": 270
+				},
+				{
+					"width": 170,
+					"height": 282
+				},
+				{
+					"width": 165,
+					"height": 282
+				},
+				{
+					"width": 142,
+					"height": 290
+				},
+				{
+					"width": 154,
+					"height": 284
+				},
+				{
+					"width": 147,
+					"height": 283
+				},
+				{
+					"width": 159,
+					"height": 299
+				},
+				{
+					"width": 131,
+					"height": 243
+				},
+				{
+					"width": 121,
+					"height": 227
+				}
+			],
+			"foreground_pixels_before_repack": 360121,
+			"foreground_pixels_after_repack": 360121,
+			"save_error": "OK"
+		},
+		{
+			"passed": true,
+			"source": "res://assets/source/generated_atlases/enemy_atlas_checkerboard_source.png",
+			"output": "res://assets/runtime/sprites/enemy_atlas_alpha.png",
+			"width": 1332,
+			"height": 1416,
+			"columns": 4,
+			"rows": 4,
+			"removed_pixels": 1040212,
+			"transparent_pixels": 1353808,
+			"preserved_pixels": 532304,
+			"transparent_ratio": 0.717777099133031,
+			"removed_per_cell": [
+				72236,
+				69801,
+				85114,
+				74391,
+				77791,
+				67970,
+				75752,
+				62319,
+				75029,
+				71134,
+				63411,
+				52831,
+				46516,
+				51192,
+				49109,
+				45616
+			],
+			"component_count": 61,
+			"cell_components": [
+				1,
+				2,
+				31,
+				6,
+				1,
+				1,
+				7,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				4
+			],
+			"cell_bounds": [
+				{
+					"width": 208,
+					"height": 171
+				},
+				{
+					"width": 233,
+					"height": 208
+				},
+				{
+					"width": 144,
+					"height": 228
+				},
+				{
+					"width": 207,
+					"height": 217
+				},
+				{
+					"width": 294,
+					"height": 180
+				},
+				{
+					"width": 235,
+					"height": 205
+				},
+				{
+					"width": 191,
+					"height": 189
+				},
+				{
+					"width": 251,
+					"height": 217
+				},
+				{
+					"width": 164,
+					"height": 228
+				},
+				{
+					"width": 203,
+					"height": 192
+				},
+				{
+					"width": 229,
+					"height": 219
+				},
+				{
+					"width": 254,
+					"height": 250
+				},
+				{
+					"width": 253,
+					"height": 300
+				},
+				{
+					"width": 301,
+					"height": 267
+				},
+				{
+					"width": 264,
+					"height": 285
+				},
+				{
+					"width": 283,
+					"height": 322
+				}
+			],
+			"foreground_pixels_before_repack": 532304,
+			"foreground_pixels_after_repack": 532304,
+			"save_error": "OK"
+		},
+		{
+			"passed": true,
+			"source": "res://assets/source/generated_atlases/animal_atlas_checkerboard_source.png",
+			"output": "res://assets/runtime/sprites/animal_atlas_alpha.png",
+			"width": 1776,
+			"height": 888,
+			"columns": 4,
+			"rows": 2,
+			"removed_pixels": 1145431,
+			"transparent_pixels": 1148981,
+			"preserved_pixels": 428107,
+			"transparent_ratio": 0.72854590232124,
+			"removed_per_cell": [
+				144489,
+				147415,
+				129563,
+				130010,
+				179138,
+				143421,
+				109090,
+				162305
+			],
+			"component_count": 8,
+			"cell_components": [
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1
+			],
+			"cell_bounds": [
+				{
+					"width": 272,
+					"height": 324
+				},
+				{
+					"width": 263,
+					"height": 313
+				},
+				{
+					"width": 361,
+					"height": 349
+				},
+				{
+					"width": 353,
+					"height": 349
+				},
+				{
+					"width": 151,
+					"height": 167
+				},
+				{
+					"width": 319,
+					"height": 302
+				},
+				{
+					"width": 330,
+					"height": 339
+				},
+				{
+					"width": 155,
+					"height": 272
+				}
+			],
+			"foreground_pixels_before_repack": 428107,
+			"foreground_pixels_after_repack": 428107,
+			"save_error": "OK"
+		},
+		{
+			"passed": true,
+			"source": "res://assets/source/generated_atlases/player_walk_atlas_checkerboard_source.png",
+			"output": "res://assets/runtime/sprites/player_walk_atlas_alpha.png",
+			"width": 1256,
+			"height": 1256,
+			"columns": 4,
+			"rows": 4,
+			"removed_pixels": 1241502,
+			"transparent_pixels": 1246522,
+			"preserved_pixels": 331014,
+			"transparent_ratio": 0.790170240172015,
+			"removed_per_cell": [
+				75214,
+				75060,
+				74540,
+				75208,
+				78446,
+				77895,
+				78310,
+				79140,
+				76360,
+				76354,
+				76216,
+				77054,
+				80206,
+				80313,
+				80333,
+				80853
+			],
+			"component_count": 16,
+			"cell_components": [
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1
+			],
+			"cell_bounds": [
+				{
+					"width": 124,
+					"height": 250
+				},
+				{
+					"width": 127,
+					"height": 250
+				},
+				{
+					"width": 134,
+					"height": 250
+				},
+				{
+					"width": 133,
+					"height": 249
+				},
+				{
+					"width": 116,
+					"height": 239
+				},
+				{
+					"width": 119,
+					"height": 235
+				},
+				{
+					"width": 119,
+					"height": 239
+				},
+				{
+					"width": 117,
+					"height": 238
+				},
+				{
+					"width": 116,
+					"height": 237
+				},
+				{
+					"width": 117,
+					"height": 239
+				},
+				{
+					"width": 118,
+					"height": 240
+				},
+				{
+					"width": 117,
+					"height": 239
+				},
+				{
+					"width": 123,
+					"height": 242
+				},
+				{
+					"width": 124,
+					"height": 242
+				},
+				{
+					"width": 125,
+					"height": 242
+				},
+				{
+					"width": 125,
+					"height": 242
+				}
+			],
+			"foreground_pixels_before_repack": 331014,
+			"foreground_pixels_after_repack": 331014,
+			"save_error": "OK"
+		}
+	]
+}

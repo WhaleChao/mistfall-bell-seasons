@@ -3,6 +3,7 @@ param([string]$GodotPath = '')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+. (Join-Path $PSScriptRoot 'GodotGate.ps1')
 if ($GodotPath) {
     $godot = (Resolve-Path -LiteralPath $GodotPath).Path
 } else {
@@ -12,8 +13,7 @@ if ($GodotPath) {
 }
 Push-Location $projectRoot
 try {
-    & $godot --path . --rendering-method gl_compatibility --resolution 1920x1080 --script res://tests/godot/render_performance_test.gd
-    if ($LASTEXITCODE -ne 0) { throw '1080p／20 敵人 render gate 失敗。' }
+    Invoke-GodotGate -GodotPath $godot -Label '1080p／20 敵人 render gate' -Arguments @('--path', '.', '--rendering-method', 'gl_compatibility', '--resolution', '1920x1080', '--script', 'res://tests/godot/render_performance_test.gd')
 } finally {
     Pop-Location
 }

@@ -3,6 +3,7 @@ param([string]$GodotPath = '')
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+. (Join-Path $PSScriptRoot 'GodotGate.ps1')
 if ($GodotPath) {
     $godot = (Resolve-Path -LiteralPath $GodotPath).Path
 } else {
@@ -12,8 +13,7 @@ if ($GodotPath) {
 }
 Push-Location $projectRoot
 try {
-    & $godot --path . --rendering-method gl_compatibility --position 4000,4000 --script res://tests/godot/resolution_layout_test.gd
-    if ($LASTEXITCODE -ne 0) { throw '多解析度畫面閘門失敗。' }
+    Invoke-GodotGate -GodotPath $godot -Label '多解析度畫面閘門' -Arguments @('--path', '.', '--rendering-method', 'gl_compatibility', '--position', '4000,4000', '--script', 'res://tests/godot/resolution_layout_test.gd')
 } finally {
     Pop-Location
 }

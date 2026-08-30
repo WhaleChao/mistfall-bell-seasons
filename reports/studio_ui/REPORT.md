@@ -12,7 +12,7 @@
 | 專案 | Manifest JSON 合法 | 通過 |  |
 | UndoRedo | Studio 保存動作實際寫入 | 通過 |  |
 | UndoRedo | Ctrl+Z 路徑逐位元還原原檔 | 通過 |  |
-| 素材 | 素材庫 UI 與索引數量一致 | 通過 | 11 |
+| 素材 | 素材庫 UI 與索引數量一致 | 通過 | 10 |
 | 素材 | 精靈切割預設值可用 | 通過 |  |
 | 資料庫 | 16 種資料均可載入並產生合法新建草稿 | 通過 | {"NPC 排程":1,"世界事件":1,"任務":13,"作物":1,"動物":1,"委託模板":1,"對話":13,"技能":1,"敵人":19,"料理":1,"洞窟":1,"物品":13,"節慶":1,"角色":11,"農場升級":1,"魚類":1} |
 | 長期系統 | 日曆、排程、作物、節慶、升級、家庭、洞窟頁均載入合法 JSON | 通過 | 7 |
@@ -24,40 +24,40 @@
 | 測試 | Studio 內容與授權檢查通過 | 通過 |  |
 | 匯出 | Studio Release Gate 通過 | 通過 |  |
 | 版面 | 01 專案 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 01_project 截圖可解碼且非空白 | 通過 | 1920x1017｜63 sampled colors｜8d79fa1789e0 |
+| 畫面 | 01_project 截圖可解碼且非空白 | 通過 | 1920x1017｜63 sampled colors｜595ddac537d7 |
 | 版面 | 02 素材／參考庫 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 02_assets 截圖可解碼且非空白 | 通過 | 1920x1017｜84 sampled colors｜6d0f641e21e4 |
+| 畫面 | 02_assets 截圖可解碼且非空白 | 通過 | 1920x1017｜84 sampled colors｜6e5fbb3e62ff |
 | 版面 | 03 世界 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 03_world 截圖可解碼且非空白 | 通過 | 1920x1017｜74 sampled colors｜431276e310a3 |
+| 畫面 | 03_world 截圖可解碼且非空白 | 通過 | 1920x1017｜74 sampled colors｜860b2aaf62c7 |
 | 版面 | 04 資料庫 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 04_database 截圖可解碼且非空白 | 通過 | 1920x1017｜64 sampled colors｜14e0a79dc728 |
+| 畫面 | 04_database 截圖可解碼且非空白 | 通過 | 1920x1017｜64 sampled colors｜a21668a0dbeb |
 | 版面 | 05 日曆 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 05_calendar 截圖可解碼且非空白 | 通過 | 1920x1017｜102 sampled colors｜6d33f38f2b41 |
+| 畫面 | 05_calendar 截圖可解碼且非空白 | 通過 | 1920x1017｜102 sampled colors｜32d9c3fc0a5b |
 | 版面 | 06 NPC 排程 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 06_npc_schedules 截圖可解碼且非空白 | 通過 | 1920x1017｜132 sampled colors｜79363207d8c4 |
+| 畫面 | 06_npc_schedules 截圖可解碼且非空白 | 通過 | 1920x1017｜132 sampled colors｜ea6ca656c44a |
 | 版面 | 07 農作 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 07_crops 截圖可解碼且非空白 | 通過 | 1920x1017｜114 sampled colors｜1ee460230665 |
+| 畫面 | 07_crops 截圖可解碼且非空白 | 通過 | 1920x1017｜114 sampled colors｜8ac116d7e4a8 |
 | 版面 | 08 節慶 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 08_festivals 截圖可解碼且非空白 | 通過 | 1920x1017｜107 sampled colors｜c9fad435e51d |
+| 畫面 | 08_festivals 截圖可解碼且非空白 | 通過 | 1920x1017｜107 sampled colors｜af2b05516e3e |
 | 版面 | 09 農場升級 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 09_farm_upgrades 截圖可解碼且非空白 | 通過 | 1920x1017｜108 sampled colors｜97c9da1fff00 |
+| 畫面 | 09_farm_upgrades 截圖可解碼且非空白 | 通過 | 1920x1017｜108 sampled colors｜f0b8e7871788 |
 | 版面 | 10 家庭 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 10_family 截圖可解碼且非空白 | 通過 | 1920x1017｜73 sampled colors｜dbe9af0c18fa |
+| 畫面 | 10_family 截圖可解碼且非空白 | 通過 | 1920x1017｜73 sampled colors｜00fc5e9c3296 |
 | 版面 | 11 洞窟 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 11_dungeon 截圖可解碼且非空白 | 通過 | 1920x1017｜81 sampled colors｜f6a1b41f061a |
+| 畫面 | 11_dungeon 截圖可解碼且非空白 | 通過 | 1920x1017｜81 sampled colors｜447bdef2cd65 |
 | 版面 | 12 劇情 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 12_story 截圖可解碼且非空白 | 通過 | 1920x1017｜91 sampled colors｜e35d6fbef2aa |
+| 畫面 | 12_story 截圖可解碼且非空白 | 通過 | 1920x1017｜91 sampled colors｜6a0a4da42fe4 |
 | 版面 | 13 AI 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 13_ai 截圖可解碼且非空白 | 通過 | 1920x1017｜71 sampled colors｜6c25f0d1d1ed |
+| 畫面 | 13_ai 截圖可解碼且非空白 | 通過 | 1920x1017｜71 sampled colors｜f95903f73426 |
 | 版面 | 14 測試 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 14_tests 截圖可解碼且非空白 | 通過 | 1920x1017｜63 sampled colors｜3dfc44660e74 |
+| 畫面 | 14_tests 截圖可解碼且非空白 | 通過 | 1920x1017｜63 sampled colors｜a9f5029b6a0b |
 | 版面 | 15 匯出 可顯示且沒有零尺寸 | 通過 | 1118x685 |
-| 畫面 | 15_export 截圖可解碼且非空白 | 通過 | 1920x1017｜68 sampled colors｜66750d3f5378 |
+| 畫面 | 15_export 截圖可解碼且非空白 | 通過 | 1920x1017｜68 sampled colors｜98a32397f26e |
 | 畫面 | 15 個製作頁面像素內容互異 | 通過 | 15/15 |
 | AI UI | GDScript client 連接 localhost Creator Service | 通過 |  |
 | AI UI | Studio UI 收到完整 WebSocket 草稿 | 通過 | 草稿完成；請檢查引用與差異後再套用。 |
 | AI UI | Studio UI 草稿為合法 JSON | 通過 |  |
 | AI UI | 引用來源與差異面板有內容 | 通過 |  |
 | AI UI | 套用前本機驗證通過 | 通過 |  |
-| 畫面 | 13_ai_completed 截圖可解碼且非空白 | 通過 | 1920x1017｜72 sampled colors｜9766b5e3fc8a |
+| 畫面 | 13_ai_completed 截圖可解碼且非空白 | 通過 | 1920x1017｜72 sampled colors｜46d320621a3b |
 | 畫面 | AI 完成畫面與其他頁面像素互異 | 通過 | 16/16 |

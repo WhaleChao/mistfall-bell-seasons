@@ -3,6 +3,7 @@ param([int]$Port = 8765)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+. (Join-Path $PSScriptRoot 'GodotGate.ps1')
 $godot = Join-Path $projectRoot 'tools\Godot_v4.7.2-stable_win64.exe'
 $godotConsole = Join-Path $projectRoot 'tools\Godot_v4.7.2-stable_win64_console.exe'
 $creator = Join-Path $projectRoot 'creator_service\dist\PixelRPGCreatorService.exe'
@@ -59,13 +60,40 @@ try {
         $godotProcess.WaitForExit()
         throw 'Studio UI 驗收超過 7 分鐘。'
     }
-    if ($godotProcess.ExitCode -ne 0) {
-        throw "Studio UI 驗收失敗，Godot exit code $($godotProcess.ExitCode)：`n$(Get-Content -LiteralPath $godotOut -Raw)`n$(Get-Content -LiteralPath $godotErr -Raw)"
-    }
+    $godotOutput = @(
+        if (Test-Path -LiteralPath $godotOut) { Get-Content -LiteralPath $godotOut -Raw }
+        if (Test-Path -LiteralPath $godotErr) { Get-Content -LiteralPath $godotErr -Raw }
+    ) -join "`n"
+    if ($godotOutput) { Write-Host $godotOutput }
     $reportPath = Join-Path $projectRoot 'reports\studio_ui\report.json'
     if (-not (Test-Path -LiteralPath $reportPath)) { throw 'Studio UI 驗收沒有產生報告。' }
     $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
     if ($report.failed -ne 0) { throw "Studio UI 驗收有 $($report.failed) 項失敗。" }
+
+    # Godot Editor itself currently emits renderer/UI leak diagnostics during a
+    # scripted Windows editor shutdown (upstream examples: godotengine/godot
+    # #120035 and #84839). Keep the test strict before its PASS marker, then
+    # allow only the three exact teardown-only forms below. Any other ERROR,
+    # including plugin/script/resource errors, still fails this gate.
+    $passMarker = 'PixelRPG Studio UI gate: PASS'
+    $markerIndex = $godotOutput.LastIndexOf($passMarker, [StringComparison]::Ordinal)
+    if ($markerIndex -lt 0) { throw 'Studio UI 驗收沒有輸出成功標記。' }
+    $preShutdownOutput = $godotOutput.Substring(0, $markerIndex + $passMarker.Length)
+    $shutdownOutput = $godotOutput.Substring($markerIndex + $passMarker.Length)
+    Assert-GodotGateResult -Label 'Studio UI 功能與渲染' -ExitCode $godotProcess.ExitCode -Output $preShutdownOutput
+    $unknownShutdownOutput = $shutdownOutput
+    $knownShutdownPatterns = @(
+        '(?m)^ERROR: \d+ RID allocations of type ''[^'']+'' were leaked at exit\.\r?\n?',
+        '(?m)^ERROR: Parameter "current_window" is null\.\r?\n?',
+        '(?m)^ERROR: Texture with GL ID of \d+: leaked \d+ bytes\.\r?\n?'
+    )
+    foreach ($pattern in $knownShutdownPatterns) {
+        $unknownShutdownOutput = [regex]::Replace($unknownShutdownOutput, $pattern, '')
+    }
+    Assert-GodotGateResult -Label 'Studio UI 關閉' -ExitCode $godotProcess.ExitCode -Output $unknownShutdownOutput
+    if ($shutdownOutput -match '(?m)^ERROR:') {
+        Write-Host 'Godot Editor 已知的關閉階段 RID／視窗診斷已隔離；未忽略任何執行期或插件 ERROR。'
+    }
     Write-Host "Studio UI 驗收通過：$($report.passed) 項，$($report.screenshots.Count) 張截圖。"
 } finally {
     if ($serviceListenerProcessId -and $serviceListenerProcessId -ne $service.Id) {

@@ -54,9 +54,9 @@
     {
       "schema_version": 1,
       "id": "character_atlas",
-      "source_path": "res://assets/runtime/sprites/character_atlas.png",
+      "source_path": "res://assets/runtime/sprites/character_atlas_alpha.png",
       "kind": "image",
-      "sha256": "7354dbd9a0ed60dedb8de633820bc394769f080fd9ef59fcdcf7a2797e33ab02",
+      "sha256": "f52124a3d9184388c67474910e97c29d41d2b6cb9f804c36b5d30ef5526fc81a",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "characters"],
       "links": ["character:hero", "character:mira", "character:lian", "character:soren", "character:yuna", "character:orin", "character:eira", "character:toma", "character:nori", "character:asha", "character:piko"]
@@ -64,9 +64,9 @@
     {
       "schema_version": 1,
       "id": "enemy_atlas",
-      "source_path": "res://assets/runtime/sprites/enemy_atlas.png",
+      "source_path": "res://assets/runtime/sprites/enemy_atlas_alpha.png",
       "kind": "image",
-      "sha256": "917759e5fcbbe7df435b3c38a61e9e2dbd5b3b4047efc341dfe416ef10990a65",
+      "sha256": "2cd53a964c0ded6cac4259961751a84f1f83e63a1422ac52e1cad9f9f927c017",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "enemies", "bosses"],
       "links": ["dungeon:mistfall_depths"]
@@ -74,9 +74,9 @@
     {
       "schema_version": 1,
       "id": "animal_atlas",
-      "source_path": "res://assets/runtime/sprites/animal_atlas.png",
+      "source_path": "res://assets/runtime/sprites/animal_atlas_alpha.png",
       "kind": "image",
-      "sha256": "6bdba66c0b8593c8891b3d8a3d5bd14adcc917d1ae0c9d9d4bfc3ab8ba05a725",
+      "sha256": "84b17f0b15715904757361e9bddb6ecccb52f71567c94c8dd8141cf6f16ab33f",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "animals", "farm_products"],
       "links": ["animal:chicken", "animal:cow", "item:egg", "item:milk"]
@@ -84,9 +84,9 @@
     {
       "schema_version": 1,
       "id": "player_walk_atlas",
-      "source_path": "res://assets/runtime/sprites/player_walk_atlas.png",
+      "source_path": "res://assets/runtime/sprites/player_walk_atlas_alpha.png",
       "kind": "image",
-      "sha256": "ff38826d3054d98b41f16c515e77b7ef493365a465baf10935ffe6b848046c85",
+      "sha256": "8d7661f4587abf8dbee7817990aa4ffdc04038c5a3f988c5b1dbcf8361137bf0",
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
       "tags": ["original", "pixel_art", "sprites", "player", "walk_animation", "four_direction"],
       "links": ["character:hero", "animation:idle", "animation:walk"]
@@ -100,16 +100,6 @@
       "license": {"spdx": "MIT", "source": "Original PixelRPG Studio vector artwork, 2026-08-30", "author": "PixelRPG Studio contributors"},
       "tags": ["original", "vector", "application_icon", "bell", "leaf"],
       "links": ["project:mistfall_bell_seasons"]
-    },
-    {
-      "schema_version": 1,
-      "id": "chroma_transparency_shader",
-      "source_path": "res://assets/shaders/chroma_transparency.gdshader",
-      "kind": "other",
-      "sha256": "f38509508a25900e904a9c280c1444408686065afa6345fe8e14155fe6c2d745",
-      "license": {"spdx": "MIT", "source": "Original PixelRPG Studio shader, 2026-08-30", "author": "PixelRPG Studio contributors"},
-      "tags": ["original", "shader", "runtime", "transparency"],
-      "links": ["asset:character_atlas", "asset:enemy_atlas", "asset:animal_atlas", "asset:player_walk_atlas"]
     }
   ]
 }

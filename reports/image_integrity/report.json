@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T05:36:03",
+	"generated_at": "2026-08-30T07:21:15",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -11,8 +11,8 @@
 		"timestamp": 0,
 		"string": "4.7.2-stable (official)"
 	},
-	"checks": 217,
-	"passed": 217,
+	"checks": 654,
+	"passed": 654,
 	"failed": 0,
 	"images": [
 		{
@@ -51,44 +51,92 @@
 			"has_mipmaps": false
 		},
 		{
-			"path": "res://assets/runtime/sprites/character_atlas.png",
+			"path": "res://assets/runtime/sprites/character_atlas_alpha.png",
 			"width": 1448,
 			"height": 1086,
-			"format": 4,
+			"format": 5,
 			"has_mipmaps": false
 		},
 		{
-			"path": "res://assets/runtime/sprites/enemy_atlas.png",
-			"width": 1254,
-			"height": 1254,
-			"format": 4,
+			"path": "res://assets/runtime/sprites/enemy_atlas_alpha.png",
+			"width": 1332,
+			"height": 1416,
+			"format": 5,
 			"has_mipmaps": false
 		},
 		{
-			"path": "res://assets/runtime/sprites/animal_atlas.png",
-			"width": 1774,
-			"height": 887,
-			"format": 4,
+			"path": "res://assets/runtime/sprites/animal_atlas_alpha.png",
+			"width": 1776,
+			"height": 888,
+			"format": 5,
 			"has_mipmaps": false
 		},
 		{
-			"path": "res://assets/runtime/sprites/player_walk_atlas.png",
-			"width": 1254,
-			"height": 1254,
-			"format": 4,
+			"path": "res://assets/runtime/sprites/player_walk_atlas_alpha.png",
+			"width": 1256,
+			"height": 1256,
+			"format": 5,
 			"has_mipmaps": false
 		}
 	],
 	"cases": [
 		{
 			"category": "清單",
-			"name": "所有 Runtime 點陣圖均有完整性規則",
+			"name": "所有 Runtime 圖片與應用程式圖示均已登錄",
+			"passed": true,
+			"detail": "10/10"
+		},
+		{
+			"category": "清單",
+			"name": "自動盤點的所有 Runtime 點陣圖均有完整性規則",
 			"passed": true,
 			"detail": "9/9"
 		},
 		{
 			"category": "清單",
+			"name": "應用程式 SVG 圖示已登錄資產與授權",
+			"passed": true,
+			"detail": "res://icon.svg"
+		},
+		{
+			"category": "圖示",
+			"name": "SVG 應用程式圖示可讀取",
+			"passed": true,
+			"detail": "823 bytes"
+		},
+		{
+			"category": "圖示",
+			"name": "SVG 具有根節點與 viewBox",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "圖示",
+			"name": "SVG 不含可執行腳本",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "圖示",
+			"name": "SVG 不依賴外部或內嵌遠端資源",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "圖示",
+			"name": "Godot 可匯入並解碼 SVG 圖示",
+			"passed": true,
+			"detail": "128x128"
+		},
+		{
+			"category": "清單",
 			"name": "圖片已登錄資產與授權：mistfall_farm_title.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_farm_title.png"
+		},
+		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：mistfall_farm_title.png",
 			"passed": true,
 			"detail": "res://assets/runtime/backgrounds/mistfall_farm_title.png"
 		},
@@ -107,6 +155,36 @@
 		{
 			"category": "格式",
 			"name": "來源 PNG 不攜帶意外 mipmap：mistfall_farm_title.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：mistfall_farm_title.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_farm_title.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：mistfall_farm_title.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：mistfall_farm_title.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：mistfall_farm_title.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：mistfall_farm_title.png",
 			"passed": true,
 			"detail": ""
 		},
@@ -141,6 +219,12 @@
 			"detail": "res://assets/runtime/backgrounds/mistfall_farm_commercial.png"
 		},
 		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：mistfall_farm_commercial.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_farm_commercial.png"
+		},
+		{
 			"category": "解碼",
 			"name": "PNG 可完整解碼：mistfall_farm_commercial.png",
 			"passed": true,
@@ -155,6 +239,36 @@
 		{
 			"category": "格式",
 			"name": "來源 PNG 不攜帶意外 mipmap：mistfall_farm_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：mistfall_farm_commercial.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_farm_commercial.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：mistfall_farm_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：mistfall_farm_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：mistfall_farm_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：mistfall_farm_commercial.png",
 			"passed": true,
 			"detail": ""
 		},
@@ -189,6 +303,12 @@
 			"detail": "res://assets/runtime/backgrounds/mistfall_village_commercial.png"
 		},
 		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：mistfall_village_commercial.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_village_commercial.png"
+		},
+		{
 			"category": "解碼",
 			"name": "PNG 可完整解碼：mistfall_village_commercial.png",
 			"passed": true,
@@ -203,6 +323,36 @@
 		{
 			"category": "格式",
 			"name": "來源 PNG 不攜帶意外 mipmap：mistfall_village_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：mistfall_village_commercial.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_village_commercial.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：mistfall_village_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：mistfall_village_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：mistfall_village_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：mistfall_village_commercial.png",
 			"passed": true,
 			"detail": ""
 		},
@@ -237,6 +387,12 @@
 			"detail": "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png"
 		},
 		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：mistfall_dungeon_commercial.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png"
+		},
+		{
 			"category": "解碼",
 			"name": "PNG 可完整解碼：mistfall_dungeon_commercial.png",
 			"passed": true,
@@ -251,6 +407,36 @@
 		{
 			"category": "格式",
 			"name": "來源 PNG 不攜帶意外 mipmap：mistfall_dungeon_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：mistfall_dungeon_commercial.png",
+			"passed": true,
+			"detail": "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：mistfall_dungeon_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：mistfall_dungeon_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：mistfall_dungeon_commercial.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：mistfall_dungeon_commercial.png",
 			"passed": true,
 			"detail": ""
 		},
@@ -285,6 +471,12 @@
 			"detail": "res://assets/runtime/portraits/romance_candidates_atlas.png"
 		},
 		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：romance_candidates_atlas.png",
+			"passed": true,
+			"detail": "res://assets/runtime/portraits/romance_candidates_atlas.png"
+		},
+		{
 			"category": "解碼",
 			"name": "PNG 可完整解碼：romance_candidates_atlas.png",
 			"passed": true,
@@ -299,6 +491,36 @@
 		{
 			"category": "格式",
 			"name": "來源 PNG 不攜帶意外 mipmap：romance_candidates_atlas.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：romance_candidates_atlas.png",
+			"passed": true,
+			"detail": "res://assets/runtime/portraits/romance_candidates_atlas.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：romance_candidates_atlas.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：romance_candidates_atlas.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：romance_candidates_atlas.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：romance_candidates_atlas.png",
 			"passed": true,
 			"detail": ""
 		},
@@ -322,21 +544,9 @@
 		},
 		{
 			"category": "圖集",
-			"name": "romance_candidates_atlas.png 格 0,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
 			"name": "romance_candidates_atlas.png 格 1,0 含有效且有邊界的圖像",
 			"passed": true,
 			"detail": "foreground=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "romance_candidates_atlas.png 格 1,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
 		},
 		{
 			"category": "圖集",
@@ -346,21 +556,9 @@
 		},
 		{
 			"category": "圖集",
-			"name": "romance_candidates_atlas.png 格 2,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
 			"name": "romance_candidates_atlas.png 格 3,0 含有效且有邊界的圖像",
 			"passed": true,
 			"detail": "foreground=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "romance_candidates_atlas.png 格 3,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
 		},
 		{
 			"category": "圖集",
@@ -376,835 +574,1897 @@
 		},
 		{
 			"category": "清單",
-			"name": "圖片已登錄資產與授權：character_atlas.png",
+			"name": "圖片已登錄資產與授權：character_atlas_alpha.png",
 			"passed": true,
-			"detail": "res://assets/runtime/sprites/character_atlas.png"
+			"detail": "res://assets/runtime/sprites/character_atlas_alpha.png"
+		},
+		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/character_atlas_alpha.png"
 		},
 		{
 			"category": "解碼",
-			"name": "PNG 可完整解碼：character_atlas.png",
+			"name": "PNG 可完整解碼：character_atlas_alpha.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "尺寸",
-			"name": "圖片尺寸在商業發行限制內：character_atlas.png",
+			"name": "圖片尺寸在商業發行限制內：character_atlas_alpha.png",
 			"passed": true,
 			"detail": "1448x1086"
 		},
 		{
 			"category": "格式",
-			"name": "來源 PNG 不攜帶意外 mipmap：character_atlas.png",
+			"name": "來源 PNG 不攜帶意外 mipmap：character_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/character_atlas_alpha.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：character_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：character_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：character_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：character_atlas_alpha.png",
 			"passed": true,
 			"detail": ""
 		},
 		{
 			"category": "圖集",
-			"name": "圖集切格餘數受控：character_atlas.png",
+			"name": "圖集切格餘數受控：character_atlas_alpha.png",
 			"passed": true,
 			"detail": "cell=362x362 remainder=0x0"
 		},
 		{
 			"category": "圖集",
-			"name": "圖集每格解析度足夠：character_atlas.png",
+			"name": "圖集每格解析度足夠：character_atlas_alpha.png",
 			"passed": true,
 			"detail": "362x362"
 		},
 		{
 			"category": "圖集",
-			"name": "character_atlas.png 格 0,0 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 0,0 含有效且有邊界的圖像",
 			"passed": true,
 			"detail": "foreground=22.27%"
 		},
 		{
 			"category": "圖集",
-			"name": "character_atlas.png 格 0,0 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 0,0 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "character_atlas.png 格 1,0 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 0,0 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=21.39%"
+			"detail": "transparent=100.00%"
 		},
 		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 1,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 2,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=25.59%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 2,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 3,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=22.95%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 3,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 0,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=26.95%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 0,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 1,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=26.86%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 1,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 2,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=21.97%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 2,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 3,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=25.59%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 3,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 0,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=23.24%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 0,2 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 1,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=25.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 1,2 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 2,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=17.19%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 2,2 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 3,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=15.33%"
-		},
-		{
-			"category": "圖集",
-			"name": "character_atlas.png 格 3,2 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "所有預期圖格均非空白：character_atlas.png",
-			"passed": true,
-			"detail": "12/12"
-		},
-		{
-			"category": "圖集",
-			"name": "所有圖格內容可區分：character_atlas.png",
-			"passed": true,
-			"detail": "12/12 unique"
-		},
-		{
-			"category": "清單",
-			"name": "圖片已登錄資產與授權：enemy_atlas.png",
-			"passed": true,
-			"detail": "res://assets/runtime/sprites/enemy_atlas.png"
-		},
-		{
-			"category": "解碼",
-			"name": "PNG 可完整解碼：enemy_atlas.png",
-			"passed": true,
-			"detail": "OK"
-		},
-		{
-			"category": "尺寸",
-			"name": "圖片尺寸在商業發行限制內：enemy_atlas.png",
-			"passed": true,
-			"detail": "1254x1254"
-		},
-		{
-			"category": "格式",
-			"name": "來源 PNG 不攜帶意外 mipmap：enemy_atlas.png",
-			"passed": true,
-			"detail": ""
-		},
-		{
-			"category": "圖集",
-			"name": "圖集切格餘數受控：enemy_atlas.png",
-			"passed": true,
-			"detail": "cell=313x313 remainder=2x2"
-		},
-		{
-			"category": "圖集",
-			"name": "圖集每格解析度足夠：enemy_atlas.png",
-			"passed": true,
-			"detail": "313x313"
-		},
-		{
-			"category": "圖集",
-			"name": "未使用餘邊只有可移除背景：enemy_atlas.png",
-			"passed": true,
-			"detail": "100.000%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=26.17%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=28.91%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=12.70%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=24.22%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=20.61%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=30.47%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=22.85%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,1 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=37.11%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,1 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=23.24%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,2 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=27.05%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,2 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,2 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=33.69%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,2 四角不含切格溢出",
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 0,0 不含不確定半透明棋盤殘影",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,2 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 1,0 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=45.70%"
+			"detail": "foreground=21.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,2 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 1,0 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,3 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 1,0 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=52.54%"
+			"detail": "transparent=100.00%"
 		},
 		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 0,3 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,3 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=47.36%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 1,3 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,3 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=49.80%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 2,3 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,3 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=52.05%"
-		},
-		{
-			"category": "圖集",
-			"name": "enemy_atlas.png 格 3,3 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
-			"category": "圖集",
-			"name": "所有預期圖格均非空白：enemy_atlas.png",
-			"passed": true,
-			"detail": "16/16"
-		},
-		{
-			"category": "圖集",
-			"name": "所有圖格內容可區分：enemy_atlas.png",
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 1,0 不含不確定半透明棋盤殘影",
 			"passed": true,
-			"detail": "16/16 unique"
+			"detail": "0"
 		},
 		{
-			"category": "清單",
-			"name": "圖片已登錄資產與授權：animal_atlas.png",
-			"passed": true,
-			"detail": "res://assets/runtime/sprites/animal_atlas.png"
-		},
-		{
-			"category": "解碼",
-			"name": "PNG 可完整解碼：animal_atlas.png",
-			"passed": true,
-			"detail": "OK"
-		},
-		{
-			"category": "尺寸",
-			"name": "圖片尺寸在商業發行限制內：animal_atlas.png",
-			"passed": true,
-			"detail": "1774x887"
-		},
-		{
-			"category": "格式",
-			"name": "來源 PNG 不攜帶意外 mipmap：animal_atlas.png",
-			"passed": true,
-			"detail": ""
-		},
-		{
-			"category": "圖集",
-			"name": "圖集切格餘數受控：animal_atlas.png",
-			"passed": true,
-			"detail": "cell=443x443 remainder=2x1"
-		},
-		{
-			"category": "圖集",
-			"name": "圖集每格解析度足夠：animal_atlas.png",
-			"passed": true,
-			"detail": "443x443"
-		},
-		{
-			"category": "圖集",
-			"name": "未使用餘邊只有可移除背景：animal_atlas.png",
-			"passed": true,
-			"detail": "100.000%"
-		},
-		{
-			"category": "圖集",
-			"name": "animal_atlas.png 格 0,0 含有效且有邊界的圖像",
-			"passed": true,
-			"detail": "foreground=17.29%"
-		},
-		{
-			"category": "圖集",
-			"name": "animal_atlas.png 格 0,0 四角不含切格溢出",
-			"passed": true,
-			"detail": "background=100.00%"
-		},
-		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 1,0 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 2,0 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=24.41%"
+			"detail": "foreground=25.39%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 1,0 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 2,0 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 2,0 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 2,0 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=30.66%"
+			"detail": "transparent=100.00%"
 		},
 		{
-			"category": "圖集",
-			"name": "animal_atlas.png 格 2,0 四角不含切格溢出",
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 2,0 不含不確定半透明棋盤殘影",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 3,0 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 3,0 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=33.79%"
+			"detail": "foreground=22.46%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 3,0 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 3,0 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 0,1 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 3,0 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=9.08%"
+			"detail": "transparent=100.00%"
 		},
 		{
-			"category": "圖集",
-			"name": "animal_atlas.png 格 0,1 四角不含切格溢出",
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 3,0 不含不確定半透明棋盤殘影",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 1,1 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 0,1 含有效且有邊界的圖像",
 			"passed": true,
 			"detail": "foreground=26.37%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 1,1 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 0,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 2,1 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 0,1 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=40.72%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 0,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 2,1 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 1,1 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "foreground=25.68%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 3,1 含有效且有邊界的圖像",
+			"name": "character_atlas_alpha.png 格 1,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "foreground=16.41%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "animal_atlas.png 格 3,1 四角不含切格溢出",
+			"name": "character_atlas_alpha.png 格 1,1 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 1,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "所有預期圖格均非空白：animal_atlas.png",
+			"name": "character_atlas_alpha.png 格 2,1 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "8/8"
+			"detail": "foreground=22.36%"
 		},
 		{
 			"category": "圖集",
-			"name": "所有圖格內容可區分：animal_atlas.png",
+			"name": "character_atlas_alpha.png 格 2,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "8/8 unique"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 2,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 2,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 3,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=25.39%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 3,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 3,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 3,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 0,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=23.34%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 0,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 0,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 0,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 1,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=26.07%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 1,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 1,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 1,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 2,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=17.38%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 2,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 2,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 2,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 3,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=15.04%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 3,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "character_atlas_alpha.png 格 3,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "character_atlas_alpha.png 格 3,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "所有預期圖格均非空白：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "12/12"
+		},
+		{
+			"category": "透明",
+			"name": "圖集使用真正 alpha 而非烘焙棋盤格：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "9495 sampled transparent pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集 alpha 為確定的像素級遮罩：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "0 sampled partial pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集仍保留不應被色鍵移除的亮色前景：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "1 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "所有圖格內容可區分：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "12/12 unique"
+		},
+		{
+			"category": "來源",
+			"name": "透明圖集保留可追溯原稿：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/source/generated_atlases/character_atlas_checkerboard_source.png"
+		},
+		{
+			"category": "來源",
+			"name": "原稿 SHA-256 與來源證據一致：character_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "7354dbd9a0ed60dedb8de633820bc394769f080fd9ef59fcdcf7a2797e33ab02"
+		},
+		{
+			"category": "來源",
+			"name": "棋盤格原稿可完整解碼：character_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖只增加安全留白、不縮小原稿畫布：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1448, 1086) -> (1448, 1086)"
+		},
+		{
+			"category": "來源",
+			"name": "重新排格後仍在商業紋理限制內：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1448, 1086)"
+		},
+		{
+			"category": "來源",
+			"name": "所有明確非背景像素均保留：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "360121 >= 359680"
+		},
+		{
+			"category": "來源",
+			"name": "透明化確實移除與外緣連通的棋盤背景：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "1212407 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明化保留被輪廓包住的白色內容：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "441 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖具有成功的可重現預處理紀錄：character_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "來源",
+			"name": "重新排格沒有遺失任何前景像素：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "360121 -> 360121"
+		},
+		{
+			"category": "來源",
+			"name": "預處理紀錄與成品前景像素數一致：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "360121/360121"
+		},
+		{
+			"category": "來源",
+			"name": "每個圖格均取得至少一個連通前景元件：character_atlas_alpha.png",
+			"passed": true,
+			"detail": "[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]"
 		},
 		{
 			"category": "清單",
-			"name": "圖片已登錄資產與授權：player_walk_atlas.png",
+			"name": "圖片已登錄資產與授權：enemy_atlas_alpha.png",
 			"passed": true,
-			"detail": "res://assets/runtime/sprites/player_walk_atlas.png"
+			"detail": "res://assets/runtime/sprites/enemy_atlas_alpha.png"
+		},
+		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/enemy_atlas_alpha.png"
 		},
 		{
 			"category": "解碼",
-			"name": "PNG 可完整解碼：player_walk_atlas.png",
+			"name": "PNG 可完整解碼：enemy_atlas_alpha.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "尺寸",
-			"name": "圖片尺寸在商業發行限制內：player_walk_atlas.png",
+			"name": "圖片尺寸在商業發行限制內：enemy_atlas_alpha.png",
 			"passed": true,
-			"detail": "1254x1254"
+			"detail": "1332x1416"
 		},
 		{
 			"category": "格式",
-			"name": "來源 PNG 不攜帶意外 mipmap：player_walk_atlas.png",
+			"name": "來源 PNG 不攜帶意外 mipmap：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/enemy_atlas_alpha.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：enemy_atlas_alpha.png",
 			"passed": true,
 			"detail": ""
 		},
 		{
 			"category": "圖集",
-			"name": "圖集切格餘數受控：player_walk_atlas.png",
+			"name": "圖集切格餘數受控：enemy_atlas_alpha.png",
 			"passed": true,
-			"detail": "cell=313x313 remainder=2x2"
+			"detail": "cell=333x354 remainder=0x0"
 		},
 		{
 			"category": "圖集",
-			"name": "圖集每格解析度足夠：player_walk_atlas.png",
+			"name": "圖集每格解析度足夠：enemy_atlas_alpha.png",
 			"passed": true,
-			"detail": "313x313"
+			"detail": "333x354"
 		},
 		{
 			"category": "圖集",
-			"name": "未使用餘邊只有可移除背景：player_walk_atlas.png",
+			"name": "enemy_atlas_alpha.png 格 0,0 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "100.000%"
+			"detail": "foreground=22.17%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,0 含有效且有邊界的圖像",
+			"name": "enemy_atlas_alpha.png 格 0,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 0,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=23.24%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 1,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=11.13%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 2,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=20.70%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 3,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=16.99%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 0,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=25.29%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 1,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=18.36%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 2,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=29.79%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 3,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=15.43%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 0,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=19.43%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 1,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=24.32%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 2,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,2 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=35.84%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,2 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,2 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 3,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=48.73%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 0,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 0,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=43.75%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 1,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 1,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=46.19%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 2,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 2,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=49.61%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "enemy_atlas_alpha.png 格 3,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "enemy_atlas_alpha.png 格 3,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "所有預期圖格均非空白：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "16/16"
+		},
+		{
+			"category": "透明",
+			"name": "圖集使用真正 alpha 而非烘焙棋盤格：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "11766 sampled transparent pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集 alpha 為確定的像素級遮罩：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "0 sampled partial pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集仍保留不應被色鍵移除的亮色前景：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "85 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "所有圖格內容可區分：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "16/16 unique"
+		},
+		{
+			"category": "來源",
+			"name": "透明圖集保留可追溯原稿：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/source/generated_atlases/enemy_atlas_checkerboard_source.png"
+		},
+		{
+			"category": "來源",
+			"name": "原稿 SHA-256 與來源證據一致：enemy_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "917759e5fcbbe7df435b3c38a61e9e2dbd5b3b4047efc341dfe416ef10990a65"
+		},
+		{
+			"category": "來源",
+			"name": "棋盤格原稿可完整解碼：enemy_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖只增加安全留白、不縮小原稿畫布：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1254, 1254) -> (1332, 1416)"
+		},
+		{
+			"category": "來源",
+			"name": "重新排格後仍在商業紋理限制內：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1332, 1416)"
+		},
+		{
+			"category": "來源",
+			"name": "所有明確非背景像素均保留：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "532304 >= 521306"
+		},
+		{
+			"category": "來源",
+			"name": "透明化確實移除與外緣連通的棋盤背景：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "1353808 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明化保留被輪廓包住的白色內容：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "10998 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖具有成功的可重現預處理紀錄：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "來源",
+			"name": "重新排格沒有遺失任何前景像素：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "532304 -> 532304"
+		},
+		{
+			"category": "來源",
+			"name": "預處理紀錄與成品前景像素數一致：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "532304/532304"
+		},
+		{
+			"category": "來源",
+			"name": "每個圖格均取得至少一個連通前景元件：enemy_atlas_alpha.png",
+			"passed": true,
+			"detail": "[1.0, 2.0, 31.0, 6.0, 1.0, 1.0, 7.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 4.0]"
+		},
+		{
+			"category": "清單",
+			"name": "圖片已登錄資產與授權：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/animal_atlas_alpha.png"
+		},
+		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/animal_atlas_alpha.png"
+		},
+		{
+			"category": "解碼",
+			"name": "PNG 可完整解碼：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "尺寸",
+			"name": "圖片尺寸在商業發行限制內：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "1776x888"
+		},
+		{
+			"category": "格式",
+			"name": "來源 PNG 不攜帶意外 mipmap：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/animal_atlas_alpha.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "圖集",
+			"name": "圖集切格餘數受控：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "cell=444x444 remainder=0x0"
+		},
+		{
+			"category": "圖集",
+			"name": "圖集每格解析度足夠：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "444x444"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 0,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=26.27%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 0,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 0,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 0,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 0,0 保留白色動物／產物內容",
+			"passed": true,
+			"detail": "76 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 1,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=24.80%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 1,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 1,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 1,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 2,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=34.28%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 2,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 2,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 2,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 2,0 保留白色動物／產物內容",
+			"passed": true,
+			"detail": "34 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 3,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=34.57%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 3,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 3,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 3,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 0,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=8.79%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 0,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 0,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 0,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 1,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=26.76%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 1,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 1,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 1,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 2,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=44.24%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 2,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 2,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 2,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 2,1 保留白色動物／產物內容",
+			"passed": true,
+			"detail": "36 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 3,1 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=19.14%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 3,1 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "animal_atlas_alpha.png 格 3,1 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 3,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "透明",
+			"name": "animal_atlas_alpha.png 格 3,1 保留白色動物／產物內容",
+			"passed": true,
+			"detail": "24 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "所有預期圖格均非空白：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "8/8"
+		},
+		{
+			"category": "透明",
+			"name": "圖集使用真正 alpha 而非烘焙棋盤格：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "5951 sampled transparent pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集 alpha 為確定的像素級遮罩：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "0 sampled partial pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集仍保留不應被色鍵移除的亮色前景：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "178 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "所有圖格內容可區分：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "8/8 unique"
+		},
+		{
+			"category": "來源",
+			"name": "透明圖集保留可追溯原稿：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/source/generated_atlases/animal_atlas_checkerboard_source.png"
+		},
+		{
+			"category": "來源",
+			"name": "原稿 SHA-256 與來源證據一致：animal_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "6bdba66c0b8593c8891b3d8a3d5bd14adcc917d1ae0c9d9d4bfc3ab8ba05a725"
+		},
+		{
+			"category": "來源",
+			"name": "棋盤格原稿可完整解碼：animal_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖只增加安全留白、不縮小原稿畫布：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1774, 887) -> (1776, 888)"
+		},
+		{
+			"category": "來源",
+			"name": "重新排格後仍在商業紋理限制內：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1776, 888)"
+		},
+		{
+			"category": "來源",
+			"name": "所有明確非背景像素均保留：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "428107 >= 387572"
+		},
+		{
+			"category": "來源",
+			"name": "透明化確實移除與外緣連通的棋盤背景：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "1148981 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明化保留被輪廓包住的白色內容：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "40535 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖具有成功的可重現預處理紀錄：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "來源",
+			"name": "重新排格沒有遺失任何前景像素：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "428107 -> 428107"
+		},
+		{
+			"category": "來源",
+			"name": "預處理紀錄與成品前景像素數一致：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "428107/428107"
+		},
+		{
+			"category": "來源",
+			"name": "每個圖格均取得至少一個連通前景元件：animal_atlas_alpha.png",
+			"passed": true,
+			"detail": "[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]"
+		},
+		{
+			"category": "清單",
+			"name": "圖片已登錄資產與授權：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/player_walk_atlas_alpha.png"
+		},
+		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/player_walk_atlas_alpha.png"
+		},
+		{
+			"category": "解碼",
+			"name": "PNG 可完整解碼：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "尺寸",
+			"name": "圖片尺寸在商業發行限制內：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "1256x1256"
+		},
+		{
+			"category": "格式",
+			"name": "來源 PNG 不攜帶意外 mipmap：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/player_walk_atlas_alpha.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "圖集",
+			"name": "圖集切格餘數受控：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "cell=314x314 remainder=0x0"
+		},
+		{
+			"category": "圖集",
+			"name": "圖集每格解析度足夠：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "314x314"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 0,0 含有效且有邊界的圖像",
 			"passed": true,
 			"detail": "foreground=23.34%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,0 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,0 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,0 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 0,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 0,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 1,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=23.14%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 1,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 1,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 1,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 2,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=24.12%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 2,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 2,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 2,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 3,0 含有效且有邊界的圖像",
 			"passed": true,
 			"detail": "foreground=23.63%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,0 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 3,0 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,0 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 3,0 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=23.34%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 3,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,0 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,1 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "foreground=19.14%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,0 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 0,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "foreground=23.93%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,0 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,1 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 0,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,1 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 1,1 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=20.21%"
+			"detail": "foreground=19.53%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,1 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 1,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,1 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 1,1 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=20.02%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 1,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,1 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 2,1 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "foreground=19.43%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,1 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 2,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "foreground=19.82%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,1 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 2,1 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 2,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,1 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 3,1 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=20.12%"
+			"detail": "foreground=18.95%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,1 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 3,1 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,2 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 3,1 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=21.88%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 3,1 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,2 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,2 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "foreground=19.43%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,2 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 0,2 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "foreground=21.58%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,2 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,2 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 0,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,2 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 1,2 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=22.56%"
+			"detail": "foreground=19.43%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,2 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 1,2 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,2 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 1,2 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=21.97%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 1,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,2 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 2,2 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "foreground=19.43%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,3 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 2,2 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "foreground=18.55%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 0,3 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 2,2 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 2,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,3 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 3,2 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "foreground=18.65%"
+			"detail": "foreground=19.43%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 1,3 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 3,2 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,3 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 3,2 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "foreground=18.55%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 3,2 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 2,3 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,3 含有效且有邊界的圖像",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "foreground=21.39%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,3 含有效且有邊界的圖像",
+			"name": "player_walk_atlas_alpha.png 格 0,3 四角為真透明且沒有切格溢出",
 			"passed": true,
-			"detail": "foreground=18.55%"
+			"detail": "transparent=100.00%"
 		},
 		{
 			"category": "圖集",
-			"name": "player_walk_atlas.png 格 3,3 四角不含切格溢出",
+			"name": "player_walk_atlas_alpha.png 格 0,3 四邊保留透明安全距離",
 			"passed": true,
-			"detail": "background=100.00%"
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 0,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
 		},
 		{
 			"category": "圖集",
-			"name": "所有預期圖格均非空白：player_walk_atlas.png",
+			"name": "player_walk_atlas_alpha.png 格 1,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=21.48%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 1,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 1,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 1,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 2,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=21.29%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 2,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 2,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 2,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 3,3 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=21.68%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 3,3 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "player_walk_atlas_alpha.png 格 3,3 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "player_walk_atlas_alpha.png 格 3,3 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "所有預期圖格均非空白：player_walk_atlas_alpha.png",
 			"passed": true,
 			"detail": "16/16"
 		},
 		{
+			"category": "透明",
+			"name": "圖集使用真正 alpha 而非烘焙棋盤格：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "12955 sampled transparent pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集 alpha 為確定的像素級遮罩：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "0 sampled partial pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集仍保留不應被色鍵移除的亮色前景：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "7 sampled pixels"
+		},
+		{
 			"category": "圖集",
-			"name": "所有圖格內容可區分：player_walk_atlas.png",
+			"name": "所有圖格內容可區分：player_walk_atlas_alpha.png",
 			"passed": true,
 			"detail": "16/16 unique"
 		},
@@ -1233,154 +2493,1516 @@
 			"detail": "4/4 unique"
 		},
 		{
-			"category": "畫面證據",
-			"name": "全功能驗收保留 12 張畫面",
+			"category": "來源",
+			"name": "透明圖集保留可追溯原稿：player_walk_atlas_alpha.png",
 			"passed": true,
-			"detail": "12"
+			"detail": "res://assets/source/generated_atlases/player_walk_atlas_checkerboard_source.png"
+		},
+		{
+			"category": "來源",
+			"name": "原稿 SHA-256 與來源證據一致：player_walk_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "ff38826d3054d98b41f16c515e77b7ef493365a465baf10935ffe6b848046c85"
+		},
+		{
+			"category": "來源",
+			"name": "棋盤格原稿可完整解碼：player_walk_atlas_checkerboard_source.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖只增加安全留白、不縮小原稿畫布：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1254, 1254) -> (1256, 1256)"
+		},
+		{
+			"category": "來源",
+			"name": "重新排格後仍在商業紋理限制內：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "(1256, 1256)"
+		},
+		{
+			"category": "來源",
+			"name": "所有明確非背景像素均保留：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "331014 >= 330592"
+		},
+		{
+			"category": "來源",
+			"name": "透明化確實移除與外緣連通的棋盤背景：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "1246522 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明化保留被輪廓包住的白色內容：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "422 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖具有成功的可重現預處理紀錄：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "來源",
+			"name": "重新排格沒有遺失任何前景像素：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "331014 -> 331014"
+		},
+		{
+			"category": "來源",
+			"name": "預處理紀錄與成品前景像素數一致：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "331014/331014"
+		},
+		{
+			"category": "來源",
+			"name": "每個圖格均取得至少一個連通前景元件：player_walk_atlas_alpha.png",
+			"passed": true,
+			"detail": "[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：01_title_and_profile.png",
+			"name": "畫面集合數量完整：res://reports/full_feature_acceptance",
+			"passed": true,
+			"detail": "12/12"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：01_title_and_profile.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：01_title_and_profile.png",
+			"name": "畫面解析度正確：01_title_and_profile.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：02_four_frame_walk.png",
+			"name": "畫面不是空白或單色：01_title_and_profile.png",
+			"passed": true,
+			"detail": "variance=0.01958"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：01_title_and_profile.png",
+			"passed": true,
+			"detail": "247 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：01_title_and_profile.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：01_title_and_profile.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：02_four_frame_walk.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：02_four_frame_walk.png",
+			"name": "畫面解析度正確：02_four_frame_walk.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：03_dungeon_combat.png",
+			"name": "畫面不是空白或單色：02_four_frame_walk.png",
+			"passed": true,
+			"detail": "variance=0.02288"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：02_four_frame_walk.png",
+			"passed": true,
+			"detail": "513 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：02_four_frame_walk.png",
+			"passed": true,
+			"detail": "dark=0.2% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：02_four_frame_walk.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：03_dungeon_combat.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：03_dungeon_combat.png",
+			"name": "畫面解析度正確：03_dungeon_combat.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：04_floor_40_boss.png",
+			"name": "畫面不是空白或單色：03_dungeon_combat.png",
+			"passed": true,
+			"detail": "variance=0.01724"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：03_dungeon_combat.png",
+			"passed": true,
+			"detail": "463 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：03_dungeon_combat.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：03_dungeon_combat.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：04_floor_40_boss.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：04_floor_40_boss.png",
+			"name": "畫面解析度正確：04_floor_40_boss.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：05_final_boss.png",
+			"name": "畫面不是空白或單色：04_floor_40_boss.png",
+			"passed": true,
+			"detail": "variance=0.02031"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：04_floor_40_boss.png",
+			"passed": true,
+			"detail": "469 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：04_floor_40_boss.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：04_floor_40_boss.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：05_final_boss.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：05_final_boss.png",
+			"name": "畫面解析度正確：05_final_boss.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：06_mature_crop_and_weather.png",
+			"name": "畫面不是空白或單色：05_final_boss.png",
+			"passed": true,
+			"detail": "variance=0.02896"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：05_final_boss.png",
+			"passed": true,
+			"detail": "477 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：05_final_boss.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：05_final_boss.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：06_mature_crop_and_weather.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：06_mature_crop_and_weather.png",
+			"name": "畫面解析度正確：06_mature_crop_and_weather.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：07_animals_and_farm.png",
+			"name": "畫面不是空白或單色：06_mature_crop_and_weather.png",
+			"passed": true,
+			"detail": "variance=0.02840"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：06_mature_crop_and_weather.png",
+			"passed": true,
+			"detail": "537 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：06_mature_crop_and_weather.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：06_mature_crop_and_weather.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：07_animals_and_farm.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：07_animals_and_farm.png",
+			"name": "畫面解析度正確：07_animals_and_farm.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：08_shop_purchase.png",
+			"name": "畫面不是空白或單色：07_animals_and_farm.png",
+			"passed": true,
+			"detail": "variance=0.02823"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：07_animals_and_farm.png",
+			"passed": true,
+			"detail": "553 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：07_animals_and_farm.png",
+			"passed": true,
+			"detail": "dark=0.2% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：07_animals_and_farm.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：08_shop_purchase.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：08_shop_purchase.png",
+			"name": "畫面解析度正確：08_shop_purchase.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：09_village_dialogue.png",
+			"name": "畫面不是空白或單色：08_shop_purchase.png",
+			"passed": true,
+			"detail": "variance=0.01385"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：08_shop_purchase.png",
+			"passed": true,
+			"detail": "85 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：08_shop_purchase.png",
+			"passed": true,
+			"detail": "dark=11.7% bright=0.4%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：08_shop_purchase.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：09_village_dialogue.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：09_village_dialogue.png",
+			"name": "畫面解析度正確：09_village_dialogue.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：10_interactive_festival.png",
+			"name": "畫面不是空白或單色：09_village_dialogue.png",
+			"passed": true,
+			"detail": "variance=0.02672"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：09_village_dialogue.png",
+			"passed": true,
+			"detail": "280 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：09_village_dialogue.png",
+			"passed": true,
+			"detail": "dark=0.3% bright=0.6%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：09_village_dialogue.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：10_interactive_festival.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：10_interactive_festival.png",
+			"name": "畫面解析度正確：10_interactive_festival.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：11_status_inventory_menu.png",
+			"name": "畫面不是空白或單色：10_interactive_festival.png",
+			"passed": true,
+			"detail": "variance=0.01972"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：10_interactive_festival.png",
+			"passed": true,
+			"detail": "89 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：10_interactive_festival.png",
+			"passed": true,
+			"detail": "dark=7.1% bright=0.7%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：10_interactive_festival.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：11_status_inventory_menu.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：11_status_inventory_menu.png",
+			"name": "畫面解析度正確：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面可完整解碼：12_acceptance_complete.png",
+			"name": "畫面不是空白或單色：11_status_inventory_menu.png",
+			"passed": true,
+			"detail": "variance=0.02526"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：11_status_inventory_menu.png",
+			"passed": true,
+			"detail": "51 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：11_status_inventory_menu.png",
+			"passed": true,
+			"detail": "dark=17.9% bright=1.7%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：11_status_inventory_menu.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：12_acceptance_complete.png",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "畫面證據",
-			"name": "驗收畫面解析度正確：12_acceptance_complete.png",
+			"name": "畫面解析度正確：12_acceptance_complete.png",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：12_acceptance_complete.png",
+			"passed": true,
+			"detail": "variance=0.03078"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：12_acceptance_complete.png",
+			"passed": true,
+			"detail": "532 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：12_acceptance_complete.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：12_acceptance_complete.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "同一集合的每張畫面內容均可區分：res://reports/full_feature_acceptance",
+			"passed": true,
+			"detail": "12/12 unique"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面集合數量完整：res://reports/studio_ui",
+			"passed": true,
+			"detail": "16/16"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：01_project.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：01_project.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：01_project.png",
+			"passed": true,
+			"detail": "variance=0.00524"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：01_project.png",
+			"passed": true,
+			"detail": "25 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：01_project.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：01_project.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：02_assets.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：02_assets.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：02_assets.png",
+			"passed": true,
+			"detail": "variance=0.00495"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：02_assets.png",
+			"passed": true,
+			"detail": "25 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：02_assets.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：02_assets.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：03_world.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：03_world.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：03_world.png",
+			"passed": true,
+			"detail": "variance=0.00434"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：03_world.png",
+			"passed": true,
+			"detail": "24 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：03_world.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：03_world.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：04_database.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：04_database.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：04_database.png",
+			"passed": true,
+			"detail": "variance=0.00466"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：04_database.png",
+			"passed": true,
+			"detail": "25 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：04_database.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：04_database.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：05_calendar.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：05_calendar.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：05_calendar.png",
+			"passed": true,
+			"detail": "variance=0.00529"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：05_calendar.png",
+			"passed": true,
+			"detail": "31 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：05_calendar.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：05_calendar.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：06_npc_schedules.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：06_npc_schedules.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：06_npc_schedules.png",
+			"passed": true,
+			"detail": "variance=0.00819"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：06_npc_schedules.png",
+			"passed": true,
+			"detail": "32 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：06_npc_schedules.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：06_npc_schedules.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：07_crops.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：07_crops.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：07_crops.png",
+			"passed": true,
+			"detail": "variance=0.01005"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：07_crops.png",
+			"passed": true,
+			"detail": "32 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：07_crops.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：07_crops.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：08_festivals.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：08_festivals.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：08_festivals.png",
+			"passed": true,
+			"detail": "variance=0.00903"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：08_festivals.png",
+			"passed": true,
+			"detail": "30 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：08_festivals.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：08_festivals.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：09_farm_upgrades.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：09_farm_upgrades.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：09_farm_upgrades.png",
+			"passed": true,
+			"detail": "variance=0.00858"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：09_farm_upgrades.png",
+			"passed": true,
+			"detail": "34 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：09_farm_upgrades.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：09_farm_upgrades.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：10_family.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：10_family.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：10_family.png",
+			"passed": true,
+			"detail": "variance=0.00551"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：10_family.png",
+			"passed": true,
+			"detail": "27 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：10_family.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：10_family.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：11_dungeon.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：11_dungeon.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：11_dungeon.png",
+			"passed": true,
+			"detail": "variance=0.00442"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：11_dungeon.png",
+			"passed": true,
+			"detail": "24 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：11_dungeon.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：11_dungeon.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：12_story.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：12_story.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：12_story.png",
+			"passed": true,
+			"detail": "variance=0.00694"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：12_story.png",
+			"passed": true,
+			"detail": "34 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：12_story.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：12_story.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：13_ai.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：13_ai.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：13_ai.png",
+			"passed": true,
+			"detail": "variance=0.00446"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：13_ai.png",
+			"passed": true,
+			"detail": "24 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：13_ai.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：13_ai.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：13_ai_completed.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：13_ai_completed.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：13_ai_completed.png",
+			"passed": true,
+			"detail": "variance=0.00674"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：13_ai_completed.png",
+			"passed": true,
+			"detail": "28 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：13_ai_completed.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：13_ai_completed.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：14_tests.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：14_tests.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：14_tests.png",
+			"passed": true,
+			"detail": "variance=0.00383"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：14_tests.png",
+			"passed": true,
+			"detail": "24 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：14_tests.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：14_tests.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：15_export.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：15_export.png",
+			"passed": true,
+			"detail": "(1920, 1017)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：15_export.png",
+			"passed": true,
+			"detail": "variance=0.00390"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：15_export.png",
+			"passed": true,
+			"detail": "21 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：15_export.png",
+			"passed": true,
+			"detail": "dark=0.0% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：15_export.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "同一集合的每張畫面內容均可區分：res://reports/studio_ui",
+			"passed": true,
+			"detail": "16/16 unique"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面集合數量完整：res://screenshots",
+			"passed": true,
+			"detail": "6/6"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：commercial_dialogue.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：commercial_dialogue.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：commercial_dialogue.png",
+			"passed": true,
+			"detail": "variance=0.02387"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：commercial_dialogue.png",
+			"passed": true,
+			"detail": "271 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：commercial_dialogue.png",
+			"passed": true,
+			"detail": "dark=0.6% bright=0.3%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：commercial_dialogue.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：commercial_dungeon.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：commercial_dungeon.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：commercial_dungeon.png",
+			"passed": true,
+			"detail": "variance=0.01784"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：commercial_dungeon.png",
+			"passed": true,
+			"detail": "465 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：commercial_dungeon.png",
+			"passed": true,
+			"detail": "dark=0.4% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：commercial_dungeon.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：commercial_farm.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：commercial_farm.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：commercial_farm.png",
+			"passed": true,
+			"detail": "variance=0.02047"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：commercial_farm.png",
+			"passed": true,
+			"detail": "508 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：commercial_farm.png",
+			"passed": true,
+			"detail": "dark=0.2% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：commercial_farm.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：commercial_festival.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：commercial_festival.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：commercial_festival.png",
+			"passed": true,
+			"detail": "variance=0.01905"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：commercial_festival.png",
+			"passed": true,
+			"detail": "81 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：commercial_festival.png",
+			"passed": true,
+			"detail": "dark=7.1% bright=0.7%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：commercial_festival.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：commercial_menu.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：commercial_menu.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：commercial_menu.png",
+			"passed": true,
+			"detail": "variance=0.02486"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：commercial_menu.png",
+			"passed": true,
+			"detail": "51 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：commercial_menu.png",
+			"passed": true,
+			"detail": "dark=18.5% bright=1.7%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：commercial_menu.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：commercial_village.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：commercial_village.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：commercial_village.png",
+			"passed": true,
+			"detail": "variance=0.02386"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：commercial_village.png",
+			"passed": true,
+			"detail": "552 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：commercial_village.png",
+			"passed": true,
+			"detail": "dark=0.7% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：commercial_village.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "同一集合的每張畫面內容均可區分：res://screenshots",
+			"passed": true,
+			"detail": "6/6 unique"
+		},
+		{
+			"category": "畫面證據",
+			"name": "四種整數縮放解析度畫面齊全",
+			"passed": true,
+			"detail": "4/4"
+		},
+		{
+			"category": "畫面證據",
+			"name": "解析度畫面檔名受契約約束：1280x720.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：1280x720.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：1280x720.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：1280x720.png",
+			"passed": true,
+			"detail": "variance=0.02038"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：1280x720.png",
+			"passed": true,
+			"detail": "508 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：1280x720.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：1280x720.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "解析度畫面檔名受契約約束：1920x1080.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：1920x1080.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：1920x1080.png",
+			"passed": true,
+			"detail": "(1920, 1080)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：1920x1080.png",
+			"passed": true,
+			"detail": "variance=0.02074"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：1920x1080.png",
+			"passed": true,
+			"detail": "507 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：1920x1080.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：1920x1080.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "解析度畫面檔名受契約約束：2560x1440.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：2560x1440.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：2560x1440.png",
+			"passed": true,
+			"detail": "(2560, 1440)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：2560x1440.png",
+			"passed": true,
+			"detail": "variance=0.02052"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：2560x1440.png",
+			"passed": true,
+			"detail": "496 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：2560x1440.png",
+			"passed": true,
+			"detail": "dark=0.1% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：2560x1440.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "解析度畫面檔名受契約約束：640x360.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：640x360.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：640x360.png",
+			"passed": true,
+			"detail": "(640, 360)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：640x360.png",
+			"passed": true,
+			"detail": "variance=0.01849"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：640x360.png",
+			"passed": true,
+			"detail": "519 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：640x360.png",
+			"passed": true,
+			"detail": "dark=0.2% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：640x360.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "所有商業畫面、實機驗收與解析度證據均納入統一閘門",
+			"passed": true,
+			"detail": "38/38"
 		}
 	]
 }

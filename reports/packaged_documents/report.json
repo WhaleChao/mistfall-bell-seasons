@@ -1,7 +1,7 @@
 {
   "passed": true,
-  "started_at": "2026-08-30T13:40:25.9507257+08:00",
-  "elapsed_seconds": 79.518,
+  "started_at": "2026-08-30T14:56:33.9980640+08:00",
+  "elapsed_seconds": 78.416,
   "executable": {
     "path": "creator_service/dist/PixelRPGCreatorService.exe",
     "bytes": 390035505,
@@ -48,7 +48,7 @@
     "service": "ok",
     "project_root": "<isolated-project-root>",
     "ollama": true,
-    "gpu": null,
+    "gpu": "Q4_K_M",
     "index_chunks": 0,
     "models": [
       "qwen3.5:9b",
@@ -72,8 +72,8 @@
     ],
     "warnings": []
   },
-  "network_samples": 40,
+  "network_samples": 52,
   "external_connections": [],
   "fixture_source": "work/document-formats-df8080f8912447db885c2cbc9ed3dccd",
-  "isolated_project_root": "work/packaged-documents-f00c67f0f069415490f65ca391868a0c"
+  "isolated_project_root": "work/packaged-documents-0999b874e4da41d1a198908c3b8209be"
 }
