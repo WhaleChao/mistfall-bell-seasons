@@ -1,5 +1,9 @@
 [CmdletBinding()]
-param([string]$BuildDirectory = '')
+param(
+    [string]$BuildDirectory = '',
+    [ValidateRange(300, 3600)][int]$QuitAfterFrames = 600,
+    [string]$ReportPath = ''
+)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -14,6 +18,8 @@ New-Item -ItemType Directory -Path $smokeRoot -Force | Out-Null
 $runId = [Guid]::NewGuid().ToString('N')
 $stdoutPath = Join-Path $smokeRoot "$runId.stdout.txt"
 $stderrPath = Join-Path $smokeRoot "$runId.stderr.txt"
+$networkConnections = @()
+$networkSamples = 0
 $previousAppData = $env:APPDATA
 $previousLocalAppData = $env:LOCALAPPDATA
 $isolatedUserRoot = Join-Path $smokeRoot 'appdata'
@@ -22,12 +28,22 @@ $env:APPDATA = $isolatedUserRoot
 $env:LOCALAPPDATA = $isolatedUserRoot
 try {
     $process = Start-Process -FilePath $game `
-        -ArgumentList @('--headless', '--quit-after', '120') `
+        -ArgumentList @('--headless', '--quit-after', "$QuitAfterFrames") `
         -PassThru `
         -WindowStyle Hidden `
         -RedirectStandardOutput $stdoutPath `
         -RedirectStandardError $stderrPath
-    if (-not $process.WaitForExit(15000)) {
+    while (-not $process.HasExited -and $networkSamples -lt 100) {
+        $networkSamples += 1
+        $networkConnections += @(Get-NetTCPConnection -OwningProcess $process.Id -ErrorAction SilentlyContinue | ForEach-Object {
+            [ordered]@{ protocol = 'TCP'; state = [string]$_.State; local = "$($_.LocalAddress):$($_.LocalPort)"; remote = "$($_.RemoteAddress):$($_.RemotePort)" }
+        })
+        $networkConnections += @(Get-NetUDPEndpoint -OwningProcess $process.Id -ErrorAction SilentlyContinue | ForEach-Object {
+            [ordered]@{ protocol = 'UDP'; state = ''; local = "$($_.LocalAddress):$($_.LocalPort)"; remote = '' }
+        })
+        Start-Sleep -Milliseconds 100
+    }
+    if (-not $process.HasExited -and -not $process.WaitForExit(15000)) {
         $process.Kill()
         $process.WaitForExit()
         throw '匯出的遊戲啟動 smoke test 逾時。'
@@ -44,7 +60,29 @@ $joined = $output -join "`n"
 if ($process.ExitCode -ne 0 -or $joined -match 'SCRIPT ERROR|Parse Error|Compile Error|Failed to load|ERROR:') {
     throw '匯出的遊戲啟動 smoke test 失敗。'
 }
-$python = Join-Path $projectRoot '.venv\Scripts\python.exe'
+$uniqueConnections = @($networkConnections | ForEach-Object { $_ | ConvertTo-Json -Compress -Depth 5 } | Sort-Object -Unique | ForEach-Object { $_ | ConvertFrom-Json })
+if ($networkSamples -lt 3) { throw "執行期網路觀測樣本不足：$networkSamples" }
+if ($uniqueConnections.Count -gt 0) {
+    throw "正式遊戲執行時建立了網路端點：$($uniqueConnections | ConvertTo-Json -Compress -Depth 5)"
+}
+$venvPython = Join-Path $projectRoot '.venv\Scripts\python.exe'
+$python = if (Test-Path -LiteralPath $venvPython) { $venvPython } else { (Get-Command python -ErrorAction Stop).Source }
 & $python (Join-Path $projectRoot 'scripts\audit_release.py') --build-dir $buildRoot
 if ($LASTEXITCODE -ne 0) { throw '匯出成品稽核失敗。' }
-Write-Host '匯出遊戲啟動與離線邊界驗證通過。'
+$resolvedReportPath = if ($ReportPath) { $ReportPath } else { Join-Path $projectRoot 'reports\exported_build_runtime.json' }
+$reportParent = Split-Path -Parent $resolvedReportPath
+if ($reportParent) { New-Item -ItemType Directory -Path $reportParent -Force | Out-Null }
+$report = [ordered]@{
+    passed = $true
+    tested_at = (Get-Date).ToString('o')
+    os = [Environment]::OSVersion.VersionString
+    build_directory = $buildRoot
+    quit_after_frames = $QuitAfterFrames
+    exit_code = $process.ExitCode
+    network_samples = $networkSamples
+    network_endpoints = @($uniqueConnections)
+    exe_sha256 = (Get-FileHash -LiteralPath $game -Algorithm SHA256).Hash.ToLowerInvariant()
+    pck_sha256 = (Get-FileHash -LiteralPath $pck -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+$report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $resolvedReportPath -Encoding utf8NoBOM
+Write-Host "匯出遊戲啟動、PCK 邊界與執行期零網路端點驗證通過（$networkSamples 個觀測樣本）。"

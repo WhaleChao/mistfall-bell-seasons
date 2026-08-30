@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "tested_at": "2026-08-30T11:05:04.3867845+08:00",
+  "original_signature_status": "NotSigned",
+  "original_exe_unchanged": true,
+  "test_copy_signature_status": "UnknownError",
+  "test_copy_has_authenticode_signer": true,
+  "production_pfx_path_exercised": true,
+  "ephemeral_certificate_removed_after_test": true,
+  "production_certificate_supplied": false
+}

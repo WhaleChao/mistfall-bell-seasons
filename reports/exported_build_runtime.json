@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "tested_at": "2026-08-30T11:03:44.7159362+08:00",
+  "os": "Microsoft Windows NT 10.0.19045.0",
+  "build_directory": "C:\\Users\\lumi6\\Documents\\Codex\\2026-08-29\\new-chat\\outputs\\PixelRPG-Studio\\work\\release-archive-test\\Mistfall-Bell-Seasons-v1.0.2-Windows-x64",
+  "quit_after_frames": 600,
+  "exit_code": 0,
+  "network_samples": 15,
+  "network_endpoints": [],
+  "exe_sha256": "2dcc94bdca8eb45fe800a96ad9320b68714a458baa3e88725b3d397a87650cf3",
+  "pck_sha256": "50dbd2268c3533b3a0dc860b7737105ebdb492f5af42dfa2580825aa1c29562b"
+}

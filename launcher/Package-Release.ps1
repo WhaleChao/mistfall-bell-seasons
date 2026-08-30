@@ -14,6 +14,15 @@ if ($LASTEXITCODE -ne 0) { throw '1080p 效能測試未通過。' }
 if ($LASTEXITCODE -ne 0) { throw '多解析度畫面測試未通過。' }
 & (Join-Path $PSScriptRoot 'Export-Sample.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw 'Windows 匯出失敗。' }
+$signingPfx = [Environment]::GetEnvironmentVariable('PIXELRPG_SIGNING_PFX', 'Process')
+$requireSigning = [Environment]::GetEnvironmentVariable('PIXELRPG_REQUIRE_SIGNING', 'Process') -eq '1'
+if ($signingPfx) {
+    & (Join-Path $PSScriptRoot 'Sign-WindowsRelease.ps1') `
+        -ExecutablePath (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.exe') `
+        -PfxPath $signingPfx
+} elseif ($requireSigning) {
+    throw '此發行要求 Authenticode 簽章，但未設定 PIXELRPG_SIGNING_PFX。'
+}
 & (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1')
 if ($LASTEXITCODE -ne 0) { throw '匯出遊戲 smoke test 失敗。' }
 

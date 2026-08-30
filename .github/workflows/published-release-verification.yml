@@ -1,0 +1,55 @@
+name: Published Release Verification
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Public GitHub release tag to verify
+        required: true
+        default: v1.0.2
+      expected_sha256:
+        description: Optional expected SHA-256 for the Windows ZIP
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  clean-windows-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Download and verify the public Windows release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEST_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+        run: |
+          ./launcher/Test-PublishedRelease.ps1 `
+            -Repository '${{ github.repository }}' `
+            -Tag $env:TEST_TAG `
+            -ExpectedSha256 $env:EXPECTED_SHA256 `
+            -ReportDirectory 'reports/published_release'
+          Get-Content reports/published_release/report.json | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Exercise Authenticode signing pipeline on an isolated copy
+        shell: pwsh
+        run: |
+          $releaseReport = Get-Content reports/published_release/report.json -Raw | ConvertFrom-Json
+          $publishedExe = Join-Path $releaseReport.extracted_package_root 'Mistfall-Bell-Seasons.exe'
+          ./launcher/Test-CodeSigningPipeline.ps1 `
+            -SourceExecutable $publishedExe `
+            -ReportPath 'reports/published_release/code_signing_pipeline.json'
+      - name: Upload clean-Windows evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: published-release-${{ inputs.tag || github.event.release.tag_name }}-windows-evidence
+          path: reports/published_release/
+          if-no-files-found: error

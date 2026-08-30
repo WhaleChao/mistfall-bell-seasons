@@ -42,6 +42,7 @@ SECRET_PATTERNS = {
     "private key": re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----"),
 }
 SECRET_SCAN_EXCLUDES = {".git", ".godot", ".venv", "build", "dist", "tools", "work"}
+PRIVATE_KEY_SUFFIXES = {".pfx", ".p12", ".key", ".pem"}
 LEGAL_NOTICE_HASHES = {
     "GODOT_ENGINE_LICENSE.txt": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80",
     "GODOT_ENGINE_COPYRIGHT.txt": "cb1980c88089573bcacd7221d777c689bb8bbd778799f24c27fca0fe5f774d6d",
@@ -78,6 +79,9 @@ def audit_export_boundary(errors: list[str]) -> None:
 def audit_repository_secrets(errors: list[str]) -> None:
     for path in ROOT.rglob("*"):
         if not path.is_file() or any(part in SECRET_SCAN_EXCLUDES for part in path.relative_to(ROOT).parts):
+            continue
+        if path.suffix.lower() in PRIVATE_KEY_SUFFIXES:
+            errors.append(f"{path.relative_to(ROOT)}: private signing/key material must not be stored in the repository")
             continue
         if path.stat().st_size > 2 * 1024 * 1024:
             continue
