@@ -24,14 +24,16 @@ jobs:
         run: |
           set -euo pipefail
           release='https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable'
-          curl -fL "$release/Godot_v4.7.2-stable_macos.universal.zip" -o godot-editor.zip
-          curl -fL "$release/Godot_v4.7.2-stable_export_templates.tpz" -o export-templates.tpz
+          editor_archive='Godot_v4.7.2-stable_macos.universal.zip'
+          template_archive='Godot_v4.7.2-stable_export_templates.tpz'
+          curl -fL "$release/$editor_archive" -o "$editor_archive"
+          curl -fL "$release/$template_archive" -o "$template_archive"
           curl -fL "$release/SHA512-SUMS.txt" -o SHA512-SUMS.txt
           grep -E 'Godot_v4\.7\.2-stable_(macos\.universal\.zip|export_templates\.tpz)$' SHA512-SUMS.txt > selected-SHA512-SUMS.txt
           test "$(wc -l < selected-SHA512-SUMS.txt | tr -d ' ')" -eq 2
           shasum -a 512 -c selected-SHA512-SUMS.txt
-          unzip -q godot-editor.zip -d godot-editor
-          unzip -q export-templates.tpz -d export-templates
+          unzip -q "$editor_archive" -d godot-editor
+          unzip -q "$template_archive" -d export-templates
           template_root="$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable"
           mkdir -p "$template_root"
           cp -R export-templates/templates/. "$template_root/"
