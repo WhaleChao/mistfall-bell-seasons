@@ -2,6 +2,12 @@ class_name PixelRPGInputBindings
 extends RefCounted
 
 const SETTINGS_PATH := "user://pixelrpg_input.json"
+const PERSISTED_ACTIONS: Array[StringName] = [
+	&"move_left", &"move_right", &"move_up", &"move_down",
+	&"attack", &"dodge", &"active_skill", &"interact", &"use_potion",
+	&"cycle_seed", &"sleep_day", &"time_speed", &"toggle_cave", &"attend_festival",
+	&"pause_menu", &"multiplayer_menu", &"quick_save", &"quick_load",
+]
 
 
 static func rebind(action: StringName, event: InputEvent, replace_existing: bool = true) -> bool:
@@ -34,8 +40,8 @@ static func reset_to_project_defaults() -> void:
 
 static func save() -> bool:
 	var actions: Dictionary = {}
-	for action: StringName in InputMap.get_actions():
-		if not String(action).begins_with("move_") and action not in [&"attack", &"dodge", &"active_skill", &"use_potion", &"quick_save", &"quick_load"]:
+	for action: StringName in PERSISTED_ACTIONS:
+		if not InputMap.has_action(action):
 			continue
 		var serialized: Array[Dictionary] = []
 		for event: InputEvent in InputMap.action_get_events(action):

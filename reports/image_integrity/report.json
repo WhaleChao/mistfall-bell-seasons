@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T07:21:15",
+	"generated_at": "2026-08-30T09:02:03",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -11,8 +11,8 @@
 		"timestamp": 0,
 		"string": "4.7.2-stable (official)"
 	},
-	"checks": 654,
-	"passed": 654,
+	"checks": 705,
+	"passed": 705,
 	"failed": 0,
 	"images": [
 		{
@@ -77,6 +77,13 @@
 			"height": 1256,
 			"format": 5,
 			"has_mipmaps": false
+		},
+		{
+			"path": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png",
+			"width": 1254,
+			"height": 1254,
+			"format": 5,
+			"has_mipmaps": false
 		}
 	],
 	"cases": [
@@ -84,13 +91,13 @@
 			"category": "清單",
 			"name": "所有 Runtime 圖片與應用程式圖示均已登錄",
 			"passed": true,
-			"detail": "10/10"
+			"detail": "11/11"
 		},
 		{
 			"category": "清單",
 			"name": "自動盤點的所有 Runtime 點陣圖均有完整性規則",
 			"passed": true,
-			"detail": "9/9"
+			"detail": "10/10"
 		},
 		{
 			"category": "清單",
@@ -2565,10 +2572,208 @@
 			"detail": "[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]"
 		},
 		{
+			"category": "清單",
+			"name": "圖片已登錄資產與授權：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png"
+		},
+		{
+			"category": "清單",
+			"name": "圖片由 Runtime 自動盤點發現：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png"
+		},
+		{
+			"category": "解碼",
+			"name": "PNG 可完整解碼：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "尺寸",
+			"name": "圖片尺寸在商業發行限制內：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "1254x1254"
+		},
+		{
+			"category": "格式",
+			"name": "來源 PNG 不攜帶意外 mipmap：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "Godot 圖片匯入設定存在：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png.import"
+		},
+		{
+			"category": "匯入",
+			"name": "圖片使用 Godot texture importer：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "圖片採無損匯入：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "像素圖片不產生 mipmap：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "匯入",
+			"name": "透明邊緣色彩修正啟用：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "圖集",
+			"name": "圖集切格餘數受控：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "cell=1254x1254 remainder=0x0"
+		},
+		{
+			"category": "圖集",
+			"name": "圖集每格解析度足夠：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "1254x1254"
+		},
+		{
+			"category": "圖集",
+			"name": "eldritch_drowned_dreamer_alpha.png 格 0,0 含有效且有邊界的圖像",
+			"passed": true,
+			"detail": "foreground=46.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "eldritch_drowned_dreamer_alpha.png 格 0,0 四角為真透明且沒有切格溢出",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "圖集",
+			"name": "eldritch_drowned_dreamer_alpha.png 格 0,0 四邊保留透明安全距離",
+			"passed": true,
+			"detail": "transparent=100.00%"
+		},
+		{
+			"category": "透明",
+			"name": "eldritch_drowned_dreamer_alpha.png 格 0,0 不含不確定半透明棋盤殘影",
+			"passed": true,
+			"detail": "0"
+		},
+		{
+			"category": "圖集",
+			"name": "所有預期圖格均非空白：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "1/1"
+		},
+		{
+			"category": "透明",
+			"name": "圖集使用真正 alpha 而非烘焙棋盤格：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "553 sampled transparent pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集 alpha 為確定的像素級遮罩：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "0 sampled partial pixels"
+		},
+		{
+			"category": "透明",
+			"name": "圖集仍保留不應被色鍵移除的亮色前景：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "2 sampled pixels"
+		},
+		{
+			"category": "圖集",
+			"name": "所有圖格內容可區分：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "1/1 unique"
+		},
+		{
+			"category": "來源",
+			"name": "透明圖集保留可追溯原稿：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "res://assets/source/generated_atlases/eldritch_drowned_dreamer_source.png"
+		},
+		{
+			"category": "來源",
+			"name": "原稿 SHA-256 與來源證據一致：eldritch_drowned_dreamer_source.png",
+			"passed": true,
+			"detail": "5b363d03bd422b136295d220c8a9d9634fab025ec59540cf0fc12f592196b4c9"
+		},
+		{
+			"category": "來源",
+			"name": "棋盤格原稿可完整解碼：eldritch_drowned_dreamer_source.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖只增加安全留白、不縮小原稿畫布：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "(1254, 1254) -> (1254, 1254)"
+		},
+		{
+			"category": "來源",
+			"name": "重新排格後仍在商業紋理限制內：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "(1254, 1254)"
+		},
+		{
+			"category": "來源",
+			"name": "所有明確非背景像素均保留：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "726397 >= 725629"
+		},
+		{
+			"category": "來源",
+			"name": "透明化確實移除與外緣連通的棋盤背景：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "846119 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明化保留被輪廓包住的白色內容：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "768 pixels"
+		},
+		{
+			"category": "來源",
+			"name": "透明衍生圖具有成功的可重現預處理紀錄：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "來源",
+			"name": "重新排格沒有遺失任何前景像素：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "726397 -> 726397"
+		},
+		{
+			"category": "來源",
+			"name": "預處理紀錄與成品前景像素數一致：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "726397/726397"
+		},
+		{
+			"category": "來源",
+			"name": "每個圖格均取得至少一個連通前景元件：eldritch_drowned_dreamer_alpha.png",
+			"passed": true,
+			"detail": "[1.0]"
+		},
+		{
 			"category": "畫面證據",
 			"name": "畫面集合數量完整：res://reports/full_feature_acceptance",
 			"passed": true,
-			"detail": "12/12"
+			"detail": "15/15"
 		},
 		{
 			"category": "畫面證據",
@@ -2586,13 +2791,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：01_title_and_profile.png",
 			"passed": true,
-			"detail": "variance=0.01958"
+			"detail": "variance=0.01953"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：01_title_and_profile.png",
 			"passed": true,
-			"detail": "247 sampled colors"
+			"detail": "248 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -2622,13 +2827,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：02_four_frame_walk.png",
 			"passed": true,
-			"detail": "variance=0.02288"
+			"detail": "variance=0.02456"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：02_four_frame_walk.png",
 			"passed": true,
-			"detail": "513 sampled colors"
+			"detail": "512 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -2658,7 +2863,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：03_dungeon_combat.png",
 			"passed": true,
-			"detail": "variance=0.01724"
+			"detail": "variance=0.01734"
 		},
 		{
 			"category": "畫面證據",
@@ -2694,13 +2899,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：04_floor_40_boss.png",
 			"passed": true,
-			"detail": "variance=0.02031"
+			"detail": "variance=0.02046"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：04_floor_40_boss.png",
 			"passed": true,
-			"detail": "469 sampled colors"
+			"detail": "465 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -2730,19 +2935,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：05_final_boss.png",
 			"passed": true,
-			"detail": "variance=0.02896"
+			"detail": "variance=0.02855"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：05_final_boss.png",
 			"passed": true,
-			"detail": "477 sampled colors"
+			"detail": "478 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：05_final_boss.png",
 			"passed": true,
-			"detail": "dark=0.1% bright=0.0%"
+			"detail": "dark=0.2% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -2766,19 +2971,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：06_mature_crop_and_weather.png",
 			"passed": true,
-			"detail": "variance=0.02840"
+			"detail": "variance=0.03021"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：06_mature_crop_and_weather.png",
 			"passed": true,
-			"detail": "537 sampled colors"
+			"detail": "535 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：06_mature_crop_and_weather.png",
 			"passed": true,
-			"detail": "dark=0.1% bright=0.0%"
+			"detail": "dark=0.2% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -2802,13 +3007,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：07_animals_and_farm.png",
 			"passed": true,
-			"detail": "variance=0.02823"
+			"detail": "variance=0.03042"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：07_animals_and_farm.png",
 			"passed": true,
-			"detail": "553 sampled colors"
+			"detail": "540 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -2838,19 +3043,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：08_shop_purchase.png",
 			"passed": true,
-			"detail": "variance=0.01385"
+			"detail": "variance=0.01394"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：08_shop_purchase.png",
 			"passed": true,
-			"detail": "85 sampled colors"
+			"detail": "83 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：08_shop_purchase.png",
 			"passed": true,
-			"detail": "dark=11.7% bright=0.4%"
+			"detail": "dark=11.6% bright=0.4%"
 		},
 		{
 			"category": "畫面證據",
@@ -2874,13 +3079,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：09_village_dialogue.png",
 			"passed": true,
-			"detail": "variance=0.02672"
+			"detail": "variance=0.02695"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：09_village_dialogue.png",
 			"passed": true,
-			"detail": "280 sampled colors"
+			"detail": "242 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -2910,19 +3115,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：10_interactive_festival.png",
 			"passed": true,
-			"detail": "variance=0.01972"
+			"detail": "variance=0.01997"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：10_interactive_festival.png",
 			"passed": true,
-			"detail": "89 sampled colors"
+			"detail": "69 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：10_interactive_festival.png",
 			"passed": true,
-			"detail": "dark=7.1% bright=0.7%"
+			"detail": "dark=12.6% bright=0.7%"
 		},
 		{
 			"category": "畫面證據",
@@ -2946,19 +3151,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "variance=0.02526"
+			"detail": "variance=0.04536"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "51 sampled colors"
+			"detail": "53 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "dark=17.9% bright=1.7%"
+			"detail": "dark=16.8% bright=3.8%"
 		},
 		{
 			"category": "畫面證據",
@@ -2982,19 +3187,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：12_acceptance_complete.png",
 			"passed": true,
-			"detail": "variance=0.03078"
+			"detail": "variance=0.02641"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：12_acceptance_complete.png",
 			"passed": true,
-			"detail": "532 sampled colors"
+			"detail": "425 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：12_acceptance_complete.png",
 			"passed": true,
-			"detail": "dark=0.1% bright=0.0%"
+			"detail": "dark=0.3% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -3004,9 +3209,117 @@
 		},
 		{
 			"category": "畫面證據",
+			"name": "PNG 可完整解碼：13_eldritch_journal.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：13_eldritch_journal.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：13_eldritch_journal.png",
+			"passed": true,
+			"detail": "variance=0.04790"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：13_eldritch_journal.png",
+			"passed": true,
+			"detail": "51 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：13_eldritch_journal.png",
+			"passed": true,
+			"detail": "dark=17.0% bright=4.1%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：13_eldritch_journal.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：14_drowned_dreamer_boss.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：14_drowned_dreamer_boss.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：14_drowned_dreamer_boss.png",
+			"passed": true,
+			"detail": "variance=0.02554"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：14_drowned_dreamer_boss.png",
+			"passed": true,
+			"detail": "223 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：14_drowned_dreamer_boss.png",
+			"passed": true,
+			"detail": "dark=15.9% bright=0.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：14_drowned_dreamer_boss.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
+			"name": "PNG 可完整解碼：15_multiplayer_host_ui.png",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面解析度正確：15_multiplayer_host_ui.png",
+			"passed": true,
+			"detail": "(1280, 720)"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面不是空白或單色：15_multiplayer_host_ui.png",
+			"passed": true,
+			"detail": "variance=0.03821"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面具有足夠視覺內容：15_multiplayer_host_ui.png",
+			"passed": true,
+			"detail": "63 sampled colors"
+		},
+		{
+			"category": "畫面證據",
+			"name": "畫面未全黑或全白：15_multiplayer_host_ui.png",
+			"passed": true,
+			"detail": "dark=22.7% bright=2.0%"
+		},
+		{
+			"category": "畫面證據",
+			"name": "商業截圖為完整不透明畫面：15_multiplayer_host_ui.png",
+			"passed": true,
+			"detail": "0 sampled transparent pixels"
+		},
+		{
+			"category": "畫面證據",
 			"name": "同一集合的每張畫面內容均可區分：res://reports/full_feature_acceptance",
 			"passed": true,
-			"detail": "12/12 unique"
+			"detail": "15/15 unique"
 		},
 		{
 			"category": "畫面證據",
@@ -3852,7 +4165,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1280x720.png",
 			"passed": true,
-			"detail": "variance=0.02038"
+			"detail": "variance=0.02238"
 		},
 		{
 			"category": "畫面證據",
@@ -3864,7 +4177,7 @@
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：1280x720.png",
 			"passed": true,
-			"detail": "dark=0.1% bright=0.0%"
+			"detail": "dark=0.2% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -3894,13 +4207,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1920x1080.png",
 			"passed": true,
-			"detail": "variance=0.02074"
+			"detail": "variance=0.02319"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：1920x1080.png",
 			"passed": true,
-			"detail": "507 sampled colors"
+			"detail": "500 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -3936,13 +4249,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：2560x1440.png",
 			"passed": true,
-			"detail": "variance=0.02052"
+			"detail": "variance=0.02302"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：2560x1440.png",
 			"passed": true,
-			"detail": "496 sampled colors"
+			"detail": "492 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -3978,13 +4291,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：640x360.png",
 			"passed": true,
-			"detail": "variance=0.01849"
+			"detail": "variance=0.02079"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：640x360.png",
 			"passed": true,
-			"detail": "519 sampled colors"
+			"detail": "517 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -4002,7 +4315,7 @@
 			"category": "畫面證據",
 			"name": "所有商業畫面、實機驗收與解析度證據均納入統一閘門",
 			"passed": true,
-			"detail": "38/38"
+			"detail": "41/41"
 		}
 	]
 }

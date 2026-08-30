@@ -1,6 +1,6 @@
 extends Node
 
-const SAVE_SCHEMA_VERSION := 3
+const SAVE_SCHEMA_VERSION := 4
 const CalendarSystem := preload("res://runtime/calendar/calendar_system.gd")
 const FarmSystem := preload("res://runtime/farming/farm_system.gd")
 const SocialSystem := preload("res://runtime/social/social_system.gd")
@@ -9,6 +9,7 @@ const DungeonSystem := preload("res://runtime/dungeon/dungeon_system.gd")
 const RequestBoardSystem := preload("res://runtime/procedural/request_board.gd")
 const NPCScheduleSystem := preload("res://runtime/world/npc_schedule_system.gd")
 const FishingSystem := preload("res://runtime/farming/fishing_system.gd")
+const EldritchTideSystem := preload("res://runtime/farming/eldritch_tide_system.gd")
 const CookingSystem := preload("res://runtime/farming/cooking_system.gd")
 const StoryProgressSystem := preload("res://runtime/world/story_progress_system.gd")
 const ToolSystem := preload("res://runtime/economy/tool_system.gd")
@@ -35,6 +36,7 @@ var dungeon: RefCounted = DungeonSystem.new()
 var request_board: RefCounted = RequestBoardSystem.new()
 var npc_schedules: RefCounted = NPCScheduleSystem.new()
 var fishing: RefCounted = FishingSystem.new()
+var eldritch: RefCounted = EldritchTideSystem.new()
 var cooking: RefCounted = CookingSystem.new()
 var story_progress: RefCounted = StoryProgressSystem.new()
 var tools: RefCounted = ToolSystem.new()
@@ -75,9 +77,10 @@ func reset() -> void:
 	request_board.active_requests.clear()
 	request_board.completed_request_ids.clear()
 	tools.reset()
+	eldritch.reset()
 	economy.reset()
 	achievements.reset()
-	lifetime_stats = {"days_played": 0, "crops_harvested": 0, "fish_caught": 0, "resources_gathered": 0, "monsters_defeated": 0, "bosses_defeated": 0, "festivals_attended": 0, "relationship_hearts": 0, "marriages": 0, "coins_earned": 0, "purchases": 0}
+	lifetime_stats = {"days_played": 0, "crops_harvested": 0, "fish_caught": 0, "eldritch_fish_caught": 0, "resources_gathered": 0, "monsters_defeated": 0, "bosses_defeated": 0, "eldritch_bosses_defeated": 0, "festivals_attended": 0, "relationship_hearts": 0, "marriages": 0, "coins_earned": 0, "purchases": 0}
 	settings = {"master_volume": 0.8, "text_speed": 1.0, "fullscreen": false, "control_prompts": "auto"}
 	current_weather = CalendarSystem.weather_for(calendar.year, calendar.season_index, calendar.day)
 	game_time_running = true
@@ -144,6 +147,7 @@ func advance_day(debug_skip: bool = false) -> Dictionary:
 	request_board.generate_for_day(calendar.year, calendar.season_id(), calendar.day)
 	player_stats["health"] = int(player_stats.get("max_health", 100))
 	tools.restore_for_new_day()
+	eldritch.recover_new_day()
 	for message in crop_messages:
 		EventBus.toast(message)
 	var forecast := CalendarSystem.forecast_for_tomorrow(calendar.year, calendar.season_index, calendar.day)
@@ -221,16 +225,39 @@ func attend_today_festival(score: int = 0) -> Dictionary:
 
 
 func fish_at(location: String) -> Dictionary:
+	var tide_active: bool = eldritch.is_tide_active(calendar.day, calendar.minute_of_day, current_weather)
+	if tide_active and eldritch.sanity <= 0:
+		return {"ok": false, "message": "你的理智已抵達極限；睡一晚，讓鐘聲把名字帶回來"}
 	if not tools.use_for("fishing"):
 		return {"ok": false, "message": "體力不足，今天無法再拋竿"}
-	var result: Dictionary = fishing.catch_fish(calendar.season_id(), calendar.minute_of_day, current_weather, location, calendar.absolute_day())
+	var rod_level := int(tools.tool_levels.get("fishing_rod", 1))
+	var result: Dictionary = fishing.catch_fish(calendar.season_id(), calendar.minute_of_day, current_weather, location, calendar.absolute_day(), tide_active, rod_level)
 	if bool(result.get("ok", false)):
 		var fish_id := String(result.get("fish_id", ""))
 		farm.produce[fish_id] = int(farm.produce.get(fish_id, 0)) + 1
 		lifetime_stats["fish_caught"] = int(lifetime_stats.get("fish_caught", 0)) + 1
+		if bool(result.get("eldritch", false)):
+			var fish_definition := ContentRegistry.get_artifact("fish", fish_id)
+			var tide_result: Dictionary = eldritch.apply_catch(fish_definition, int(result.get("quality", 1)))
+			lifetime_stats["eldritch_fish_caught"] = int(lifetime_stats.get("eldritch_fish_caught", 0)) + 1
+			result["tide"] = tide_result
+			result["message"] = "%s 理智 -%d（%d/%d）" % [result.get("message", ""), tide_result.get("sanity_cost", 0), eldritch.sanity, EldritchTideSystem.MAX_SANITY]
+			if bool(tide_result.get("first_catch", false)) and String(quest_states.get("whispers_beneath_tide_quest", "inactive")) == "inactive":
+				set_quest_state(&"whispers_beneath_tide_quest", &"active")
 		_check_achievements()
 		EventBus.farm_changed.emit(&"fish_caught", result)
 	return result
+
+
+func defeat_eldritch_boss() -> Dictionary:
+	if not eldritch.defeat_boss():
+		return {"ok": false, "message": "異潮尚未顯現，或深海夢行者已被平息"}
+	lifetime_stats["eldritch_bosses_defeated"] = int(lifetime_stats.get("eldritch_bosses_defeated", 0)) + 1
+	set_quest_state(&"whispers_beneath_tide_quest", &"completed")
+	add_item(&"abyssal_relic", 1)
+	set_flag(&"eldritch_tide_silenced", true)
+	_check_achievements()
+	return {"ok": true, "message": "克蘇魯之影沉回無星之海；異潮仍會來，但不再奪走你的名字"}
 
 
 func cook_recipe(recipe_id: StringName) -> Dictionary:
@@ -310,6 +337,8 @@ func story_metrics() -> Dictionary:
 	metrics["bosses_defeated"] = dungeon.defeated_bosses.size()
 	metrics["season_seals"] = dungeon.seals.size()
 	metrics["final_boss_defeated"] = 1 if dungeon.final_boss_defeated else 0
+	metrics["eldritch_unique_catches"] = eldritch.eldritch_catches.size()
+	metrics["eldritch_boss_defeated"] = 1 if eldritch.boss_defeated else 0
 	var upgrade_count := 0
 	for level: Variant in tools.tool_levels.values():
 		upgrade_count += maxi(0, int(level) - 1)
@@ -476,6 +505,7 @@ func to_save_data() -> Dictionary:
 		"child": social.child.duplicate(true),
 		"festivals": festivals.to_data(),
 		"dungeon": dungeon.to_data(),
+		"eldritch": eldritch.to_data(),
 		"story": story_state.duplicate(true),
 		"procedural": request_board.to_data(),
 		"tools": tools.to_data(),
@@ -491,6 +521,8 @@ func load_save_data(source_data: Dictionary) -> bool:
 	var data := _migrate_v1(source_data) if version == 1 else source_data.duplicate(true)
 	if int(data.get("schema_version", -1)) == 2:
 		data = _migrate_v2(data)
+	if int(data.get("schema_version", -1)) == 3:
+		data = _migrate_v3(data)
 	if int(data.get("schema_version", -1)) != SAVE_SCHEMA_VERSION:
 		return false
 	flags = Dictionary(data.get("flags", {})).duplicate(true)
@@ -510,6 +542,7 @@ func load_save_data(source_data: Dictionary) -> bool:
 	social.load_data({"relationships": data.get("relationships", {}), "marriage": data.get("marriage", {}), "child": data.get("child", {})})
 	festivals.load_data(Dictionary(data.get("festivals", {})))
 	dungeon.load_data(Dictionary(data.get("dungeon", {})))
+	eldritch.load_data(Dictionary(data.get("eldritch", {})))
 	story_state = Dictionary(data.get("story", {})).duplicate(true)
 	request_board.load_data(Dictionary(data.get("procedural", {})))
 	tools.load_data(Dictionary(data.get("tools", {})))
@@ -547,6 +580,17 @@ func _migrate_v2(data: Dictionary) -> Dictionary:
 	migrated["achievements"] = {"unlocked": []}
 	migrated["lifetime_stats"] = {"days_played": 0, "crops_harvested": 0, "fish_caught": 0, "resources_gathered": 0, "monsters_defeated": 0, "bosses_defeated": 0, "festivals_attended": 0, "relationship_hearts": 0, "marriages": 0, "coins_earned": 0, "purchases": 0}
 	migrated["settings"] = {"master_volume": 0.8, "text_speed": 1.0, "fullscreen": false, "control_prompts": "auto"}
+	return migrated
+
+
+func _migrate_v3(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["schema_version"] = 4
+	migrated["eldritch"] = {"sanity": EldritchTideSystem.MAX_SANITY, "insight": 0, "eldritch_catches": {}, "whispers_seen": [], "boss_unlocked": false, "boss_defeated": false}
+	var migrated_stats: Dictionary = Dictionary(migrated.get("lifetime_stats", {})).duplicate(true)
+	migrated_stats["eldritch_fish_caught"] = int(migrated_stats.get("eldritch_fish_caught", 0))
+	migrated_stats["eldritch_bosses_defeated"] = int(migrated_stats.get("eldritch_bosses_defeated", 0))
+	migrated["lifetime_stats"] = migrated_stats
 	return migrated
 
 

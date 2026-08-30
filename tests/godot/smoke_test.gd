@@ -21,6 +21,8 @@ func _run() -> void:
 	_assert_farming(failures)
 	_assert_social(failures)
 	_assert_dungeon(failures)
+	_assert_eldritch_fishing(registry, state_store, failures)
+	_assert_multiplayer_rules(failures)
 	_assert_story(registry, state_store, failures)
 	_assert_commercial_systems(state_store, failures)
 	_assert_save_migration(state_store, failures)
@@ -51,9 +53,11 @@ func _assert_content(registry: Node, failures: PackedStringArray) -> void:
 		failures.append("Expected ten long-form NPC dialogue banks")
 	if registry.get_all("recipes").size() != 40:
 		failures.append("Expected 40 recipes")
-	if registry.get_all("tools").size() != 6 or registry.get_all("shops").size() != 4 or registry.get_all("achievements").size() != 12:
+	if registry.get_all("fish").size() != 20:
+		failures.append("Expected 12 seasonal fish and eight eldritch fish")
+	if registry.get_all("tools").size() != 6 or registry.get_all("shops").size() != 4 or registry.get_all("achievements").size() != 14:
 		failures.append("Commercial economy catalogs are incomplete")
-	if registry.get_all("quests").size() < 13 or registry.get_all("dialogues").size() < 13:
+	if registry.get_all("quests").size() < 14 or registry.get_all("dialogues").size() < 14:
 		failures.append("Three-year playable narrative content is incomplete")
 	var dungeon_definition: Dictionary = registry.get_artifact("dungeons", &"mistfall_depths")
 	if Array(dungeon_definition.get("enemy_ids", [])).size() != 12 or Array(dungeon_definition.get("boss_ids", [])).size() != 4:
@@ -159,11 +163,66 @@ func _assert_dungeon(failures: PackedStringArray) -> void:
 		failures.append("Clinic rescue must charge rounded-up 10 percent")
 
 
+func _assert_eldritch_fishing(registry: Node, state_store: Node, failures: PackedStringArray) -> void:
+	state_store.reset()
+	state_store.tools.tool_levels["fishing_rod"] = 4
+	for season_index in range(4):
+		state_store.calendar.season_index = season_index
+		state_store.calendar.day = 13
+		state_store.calendar.minute_of_day = 19 * 60
+		state_store.current_weather = "clear"
+		var catch_result: Dictionary = state_store.fish_at("pond")
+		if not bool(catch_result.get("ok", false)) or not bool(catch_result.get("eldritch", false)):
+			failures.append("Eldritch tide fishing failed in season %d" % season_index)
+	if state_store.eldritch.eldritch_catches.size() != 4 or not state_store.eldritch.can_challenge():
+		failures.append("Four seasonal eldritch catches did not unlock the drowned dreamer")
+	if state_store.eldritch.sanity >= 100 or int(state_store.lifetime_stats.get("eldritch_fish_caught", 0)) != 4:
+		failures.append("Eldritch catches did not update sanity and lifetime metrics")
+	var sanity_before: int = state_store.eldritch.sanity
+	state_store.eldritch.recover_new_day()
+	if state_store.eldritch.sanity <= sanity_before:
+		failures.append("Sleeping did not recover eldritch sanity")
+	var boss: Dictionary = registry.get_artifact("enemies", &"drowned_dreamer")
+	if boss.is_empty() or not bool(boss.get("is_boss", false)) or String(boss.get("sprite", "")).is_empty():
+		failures.append("Drowned dreamer boss definition or sprite contract is incomplete")
+	var boss_result: Dictionary = state_store.defeat_eldritch_boss()
+	if not bool(boss_result.get("ok", false)) or not state_store.eldritch.boss_defeated or int(state_store.inventory.get("abyssal_relic", 0)) != 1:
+		failures.append("Eldritch boss completion did not persist its quest relic")
+
+
+func _assert_multiplayer_rules(failures: PackedStringArray) -> void:
+	var variants := [PixelRPGMultiplayerNarrativeSystem.story_variant(1, "shared", "independent").id, PixelRPGMultiplayerNarrativeSystem.story_variant(2, "private", "competitive").id, PixelRPGMultiplayerNarrativeSystem.story_variant(4, "competitive", "competitive").id, PixelRPGMultiplayerNarrativeSystem.story_variant(5, "shared", "independent").id]
+	if variants != ["solo_bell", "twin_bell_pact", "four_season_chorus", "mistfall_council"]:
+		failures.append("Multiplayer player-count story variants are incomplete")
+	var worlds := {
+		"a":{"farm":{"rank":2,"plots":{"0:0":{"state":"tilled"}}},"economy":{"total_earned":100},"lifetime_stats":{"crops_harvested":2},"relationships":{"mira":{"friendship":2500,"dating":true}}},
+		"b":{"farm":{"rank":1,"plots":{"0:0":{"state":"tilled"}}},"economy":{"total_earned":50},"lifetime_stats":{"crops_harvested":1},"relationships":{"mira":{"friendship":2500,"dating":true}}},
+	}
+	var leaderboard := PixelRPGMultiplayerNarrativeSystem.farm_leaderboard(worlds, {"a":"甲","b":"乙"})
+	if leaderboard.size() != 2 or String(leaderboard[0].player_key) != "a":
+		failures.append("Competitive private farm leaderboard is not deterministic")
+	var tie := PixelRPGMultiplayerNarrativeSystem.proposal_verdict("a", "mira", worlds, {}, true)
+	if bool(tie.get("ok", false)) or "平手" not in String(tie.get("message", "")):
+		failures.append("Competitive romance tie should block proposal")
+	worlds["a"]["relationships"]["mira"]["friendship"] = 2501
+	if not bool(PixelRPGMultiplayerNarrativeSystem.proposal_verdict("a", "mira", worlds, {}, true).get("ok", false)):
+		failures.append("Leading romance competitor should be allowed to propose")
+
+
 func _assert_save_migration(state_store: Node, failures: PackedStringArray) -> void:
 	state_store.reset()
 	var save_data: Dictionary = state_store.to_save_data()
-	if int(save_data.get("schema_version", 0)) != 3 or not save_data.has("calendar") or not save_data.has("farm") or not save_data.has("dungeon") or not save_data.has("economy") or not save_data.has("tools"):
-		failures.append("SaveGame v3 contract is incomplete")
+	if int(save_data.get("schema_version", 0)) != 4 or not save_data.has("calendar") or not save_data.has("farm") or not save_data.has("dungeon") or not save_data.has("eldritch") or not save_data.has("economy") or not save_data.has("tools"):
+		failures.append("SaveGame v4 contract is incomplete")
+	var v3_save := save_data.duplicate(true)
+	v3_save["schema_version"] = 3
+	v3_save.erase("eldritch")
+	var v3_stats: Dictionary = Dictionary(v3_save.get("lifetime_stats", {})).duplicate(true)
+	v3_stats.erase("eldritch_fish_caught")
+	v3_stats.erase("eldritch_bosses_defeated")
+	v3_save["lifetime_stats"] = v3_stats
+	if not state_store.load_save_data(v3_save) or state_store.eldritch.sanity != 100:
+		failures.append("SaveGame v3 migration failed")
 	var v2_save := save_data.duplicate(true)
 	v2_save["schema_version"] = 2
 	for key in ["tools", "economy", "achievements", "lifetime_stats", "settings"]:

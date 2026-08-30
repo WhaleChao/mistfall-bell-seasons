@@ -15,6 +15,7 @@ const IMAGE_RULES := {
 	"res://assets/runtime/sprites/enemy_atlas_alpha.png": {"role":"alpha_atlas","columns":4,"rows":4,"cells":16,"max_remainder":2},
 	"res://assets/runtime/sprites/animal_atlas_alpha.png": {"role":"alpha_atlas","columns":4,"rows":2,"cells":8,"max_remainder":2,"required_light_cells":[0,2,6,7]},
 	"res://assets/runtime/sprites/player_walk_atlas_alpha.png": {"role":"alpha_atlas","columns":4,"rows":4,"cells":16,"max_remainder":2,"unique_rows":true},
+	"res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png": {"role":"alpha_atlas","columns":1,"rows":1,"cells":1,"max_remainder":0},
 }
 
 const SOURCE_ATLASES := {
@@ -22,6 +23,7 @@ const SOURCE_ATLASES := {
 	"res://assets/runtime/sprites/enemy_atlas_alpha.png":"res://assets/source/generated_atlases/enemy_atlas_checkerboard_source.png",
 	"res://assets/runtime/sprites/animal_atlas_alpha.png":"res://assets/source/generated_atlases/animal_atlas_checkerboard_source.png",
 	"res://assets/runtime/sprites/player_walk_atlas_alpha.png":"res://assets/source/generated_atlases/player_walk_atlas_checkerboard_source.png",
+	"res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png":"res://assets/source/generated_atlases/eldritch_drowned_dreamer_source.png",
 }
 
 const SOURCE_HASHES := {
@@ -29,10 +31,11 @@ const SOURCE_HASHES := {
 	"res://assets/source/generated_atlases/enemy_atlas_checkerboard_source.png":"917759e5fcbbe7df435b3c38a61e9e2dbd5b3b4047efc341dfe416ef10990a65",
 	"res://assets/source/generated_atlases/animal_atlas_checkerboard_source.png":"6bdba66c0b8593c8891b3d8a3d5bd14adcc917d1ae0c9d9d4bfc3ab8ba05a725",
 	"res://assets/source/generated_atlases/player_walk_atlas_checkerboard_source.png":"ff38826d3054d98b41f16c515e77b7ef493365a465baf10935ffe6b848046c85",
+	"res://assets/source/generated_atlases/eldritch_drowned_dreamer_source.png":"5b363d03bd422b136295d220c8a9d9634fab025ec59540cf0fc12f592196b4c9",
 }
 
 const EVIDENCE_SETS := {
-	"res://reports/full_feature_acceptance":{"count":12,"width":1280,"height":720},
+	"res://reports/full_feature_acceptance":{"count":15,"width":1280,"height":720},
 	"res://reports/studio_ui":{"count":16,"width":1920,"height":1017},
 	"res://screenshots":{"count":6,"width":1280,"height":720},
 }
@@ -392,7 +395,7 @@ func _audit_all_visual_evidence() -> void:
 		var config := Dictionary(EVIDENCE_SETS[directory_path])
 		evidence_count += _audit_evidence_set(directory_path, config)
 	evidence_count += _audit_resolution_evidence()
-	_check(evidence_count == 38, "畫面證據", "所有商業畫面、實機驗收與解析度證據均納入統一閘門", "%d/38" % evidence_count)
+	_check(evidence_count == 41, "畫面證據", "所有商業畫面、實機驗收與解析度證據均納入統一閘門", "%d/41" % evidence_count)
 
 
 func _audit_evidence_set(directory_path: String, config: Dictionary) -> int:
@@ -518,7 +521,7 @@ func _write_report() -> void:
 		"",
 		"結果：**%s**　｜　%d 通過／%d 失敗　｜　%d 張 Runtime 圖片" % ["PASS" if failed == 0 else "FAIL", passed, failed, image_metrics.size()],
 		"",
-		"本閘門自動盤點並直接解碼全部 Runtime PNG 與 SVG 圖示，驗證資產登錄、無損匯入、真 alpha、可追溯原稿、前景像素無遺失、格線安全邊界、動畫幀差異，以及 38 張實機／Studio／解析度／商業宣傳畫面。",
+		"本閘門自動盤點並直接解碼全部 Runtime PNG 與 SVG 圖示，驗證資產登錄、無損匯入、真 alpha、可追溯原稿、前景像素無遺失、格線安全邊界、動畫幀差異，以及 41 張實機／Studio／解析度／商業宣傳畫面。",
 		"",
 		"| 分類 | 項目 | 結果 | 細節 |",
 		"|---|---|---:|---|",

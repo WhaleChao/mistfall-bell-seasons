@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "whispers_beneath_tide_quest",
+  "title": "潮下的低語",
+  "summary": "在無星異潮中記錄四種異魚，守住理智，並讓克蘇魯之影沉回深海。任務沒有日期期限。",
+  "prerequisites": [],
+  "objectives": [
+    {"id": "catalogue_eldritch_fish", "type": "collect", "target": "eldritch_unique_catches", "count": 4},
+    {"id": "silence_dreamer", "type": "defeat", "target": "drowned_dreamer", "count": 1}
+  ],
+  "rewards": [{"type": "item", "id": "abyssal_relic", "count": 1}],
+  "dialogue_refs": ["whispers_beneath_tide_dialogue"]
+}

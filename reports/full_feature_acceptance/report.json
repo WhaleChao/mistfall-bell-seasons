@@ -523,6 +523,66 @@
       "passed": true
     },
     {
+      "category": "異潮釣魚",
+      "detail": "spring, summer, autumn, winter",
+      "name": "四季皆可釣起異魚",
+      "passed": true
+    },
+    {
+      "category": "異潮釣魚",
+      "detail": "",
+      "name": "四種異魚解鎖夢岸挑戰",
+      "passed": true
+    },
+    {
+      "category": "理智",
+      "detail": "",
+      "name": "異魚降低理智並產生洞見",
+      "passed": true
+    },
+    {
+      "category": "異潮任務",
+      "detail": "",
+      "name": "首次異魚啟動無期限任務",
+      "passed": true
+    },
+    {
+      "category": "異潮任務",
+      "detail": "",
+      "name": "任務不含日期期限",
+      "passed": true
+    },
+    {
+      "category": "異潮手冊",
+      "detail": "",
+      "name": "異魚圖鑑與理智頁可開啟",
+      "passed": true
+    },
+    {
+      "category": "古神首領",
+      "detail": "",
+      "name": "夢岸生成克蘇魯之影",
+      "passed": true
+    },
+    {
+      "category": "古神首領",
+      "detail": "",
+      "name": "擊敗首領並完成無期限任務",
+      "passed": true
+    },
+    {
+      "category": "古神首領",
+      "detail": "",
+      "name": "深潮夢核獎勵與理智恢復",
+      "passed": true
+    },
+    {
+      "category": "古神首領",
+      "detail": "",
+      "name": "異潮成就解鎖",
+      "passed": true
+    },
+    {
       "category": "村莊",
       "detail": "",
       "name": "10 名 NPC 可見與排程",
@@ -567,13 +627,13 @@
     {
       "category": "選單",
       "detail": "",
-      "name": "八個功能分頁",
+      "name": "九個功能分頁",
       "passed": true
     },
     {
       "category": "選單",
       "detail": "",
-      "name": "狀態、背包、關係、日曆、主線、成就、料理、設定均可切換",
+      "name": "狀態、背包、關係、日曆、主線、成就、料理、設定、深潮均可切換",
       "passed": true
     },
     {
@@ -633,13 +693,55 @@
     {
       "category": "手把",
       "detail": "",
-      "name": "戰鬥按鈕映射",
+      "name": "14 項完整 XInput 按鈕映射",
+      "passed": true
+    },
+    {
+      "category": "設定",
+      "detail": "",
+      "name": "所有遊戲操作重綁可跨重啟保存",
       "passed": true
     },
     {
       "category": "存檔",
       "detail": "",
-      "name": "SaveGame v3 快速存讀",
+      "name": "SaveGame v4 快速存讀",
+      "passed": true
+    },
+    {
+      "category": "連線介面",
+      "detail": "",
+      "name": "自行開服／IP 加入表單",
+      "passed": true
+    },
+    {
+      "category": "連線規則",
+      "detail": "",
+      "name": "共同／私人／競賽農場與獨立／競爭關係可選",
+      "passed": true
+    },
+    {
+      "category": "連線介面",
+      "detail": "",
+      "name": "遊戲內 ENet 主機可啟動",
+      "passed": true
+    },
+    {
+      "category": "連線規則",
+      "detail": "",
+      "name": "開服選項寫入世界契約",
+      "passed": true
+    },
+    {
+      "category": "多人劇情",
+      "detail": "",
+      "name": "1／2／3–4／5+ 人使用四種劇情分支",
+      "passed": true
+    },
+    {
+      "category": "連線介面",
+      "detail": "",
+      "name": "離線／關服可安全返回單人",
       "passed": true
     },
     {
@@ -680,32 +782,38 @@
     },
     {
       "category": "成就",
-      "detail": "12/12",
-      "name": "12 項成就可解鎖",
+      "detail": "14/14",
+      "name": "14 項成就可解鎖",
       "passed": true
     },
     {
       "category": "存檔",
       "detail": "",
-      "name": "v2→v3 遷移",
+      "name": "v3→v4 異潮資料遷移",
       "passed": true
     },
     {
       "category": "存檔",
       "detail": "",
-      "name": "28 日制 v1→v3 保留日期",
+      "name": "v2→v4 遷移",
+      "passed": true
+    },
+    {
+      "category": "存檔",
+      "detail": "",
+      "name": "28 日制 v1→v4 保留日期",
       "passed": true
     },
     {
       "category": "內容",
       "detail": "",
-      "name": "48 作物／12 魚／40 料理",
+      "name": "48 作物／20 魚／40 料理",
       "passed": true
     },
     {
       "category": "內容",
       "detail": "",
-      "name": "10 NPC／12 節慶／16 洞窟敵人",
+      "name": "10 NPC／12 節慶／17+ 洞窟與異潮敵人",
       "passed": true
     },
     {
@@ -715,8 +823,8 @@
       "passed": true
     }
   ],
-  "checks": 119,
-  "elapsed_seconds": 21.35,
+  "checks": 137,
+  "elapsed_seconds": 24.07,
   "engine": {
     "build": "official",
     "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
@@ -729,8 +837,8 @@
     "timestamp": 0
   },
   "failed": 0,
-  "generated_at": "2026-08-30T06:42:23",
-  "passed": 119,
+  "generated_at": "2026-08-30T08:48:21",
+  "passed": 137,
   "renderer": "NVIDIA GeForce RTX 3060",
   "schema_version": 1,
   "screenshots": [
@@ -742,9 +850,12 @@
     "res://reports/full_feature_acceptance/06_mature_crop_and_weather.png",
     "res://reports/full_feature_acceptance/07_animals_and_farm.png",
     "res://reports/full_feature_acceptance/08_shop_purchase.png",
+    "res://reports/full_feature_acceptance/13_eldritch_journal.png",
+    "res://reports/full_feature_acceptance/14_drowned_dreamer_boss.png",
     "res://reports/full_feature_acceptance/09_village_dialogue.png",
     "res://reports/full_feature_acceptance/10_interactive_festival.png",
     "res://reports/full_feature_acceptance/11_status_inventory_menu.png",
+    "res://reports/full_feature_acceptance/15_multiplayer_host_ui.png",
     "res://reports/full_feature_acceptance/12_acceptance_complete.png"
   ],
   "viewport": [

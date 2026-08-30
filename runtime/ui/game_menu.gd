@@ -9,6 +9,7 @@ var relationships_label: Label
 var calendar_label: Label
 var story_label: Label
 var achievements_label: Label
+var eldritch_label: Label
 var volume_slider: HSlider
 var fullscreen_toggle: CheckButton
 var farm_upgrade_button: Button
@@ -24,6 +25,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_WHEN_PAUSED
 	_build_ui()
 	visible = false
+	NetworkManager.world_state_received.connect(_on_network_world_received)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -61,13 +63,14 @@ func close() -> void:
 
 
 func refresh() -> void:
-	status_label.text = "%s\n%s　%s　%dG\nHP %d/%d　體力 %d/100\n農場 Lv.%d　鐘窟最深 %dF\n工具：%s" % [GameState.player_profile.get("name", "旅人"), GameState.calendar.date_text(), GameState.calendar.time_text(), GameState.coins, GameState.player_stats.get("health", 100), GameState.player_stats.get("max_health", 100), GameState.tools.stamina, GameState.farm.rank, GameState.dungeon.max_reached, _tool_summary()]
+	status_label.text = "%s\n%s　%s　%dG\nHP %d/%d　體力 %d/100　理智 %d/100\n農場 Lv.%d　鐘窟最深 %dF\n工具：%s" % [GameState.player_profile.get("name", "旅人"), GameState.calendar.date_text(), GameState.calendar.time_text(), GameState.coins, GameState.player_stats.get("health", 100), GameState.player_stats.get("max_health", 100), GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, GameState.dungeon.max_reached, _tool_summary()]
 	inventory_label.text = "隨身背包\n%s\n\n收成與料理庫\n%s" % [_dictionary_lines(GameState.inventory, "目前沒有物品"), _dictionary_lines(GameState.farm.produce, "目前沒有收成")]
 	calendar_label.text = "%s\n本季節慶：8、18、28 日\n今日天氣：%s\n明日預報：%s\n第 29、30 日保留給整理與特殊事件。" % [GameState.calendar.date_text(), GameState.current_weather, PixelRPGCalendarSystem.forecast_for_tomorrow(GameState.calendar.year, GameState.calendar.season_index, GameState.calendar.day).get("weather", "clear")]
 	relationships_label.text = _relationship_text()
 	var next_chapter: Dictionary = GameState.next_story_chapter()
 	story_label.text = "《鐘塔之季》\n已完成章節：%d\n下一章：%s\n季節封印：%d/4\n主線與婚姻沒有日期期限。" % [Array(GameState.story_state.get("completed_chapters", [])).size(), next_chapter.get("title", "等待新的線索"), GameState.dungeon.seals.size()]
 	achievements_label.text = _achievement_text()
+	eldritch_label.text = _eldritch_journal_text()
 	_refresh_recipe()
 	volume_slider.value = float(GameState.settings.get("master_volume", 0.8))
 	fullscreen_toggle.button_pressed = bool(GameState.settings.get("fullscreen", false))
@@ -109,6 +112,7 @@ func _build_ui() -> void:
 	achievements_label = _add_text_tab("成就")
 	_add_cooking_tab()
 	_add_settings_tab()
+	eldritch_label = _add_text_tab("深潮錄")
 
 
 func _add_text_tab(tab_name: String) -> Label:
@@ -212,9 +216,14 @@ func _add_settings_tab() -> void:
 	var control_grid := GridContainer.new()
 	control_grid.columns = 2
 	box.add_child(control_grid)
-	for action_id in ["attack", "dodge", "active_skill", "interact", "use_potion", "pause_menu"]:
+	var configurable_actions := {
+		"attack":"攻擊", "dodge":"翻滾", "active_skill":"技能", "interact":"互動", "use_potion":"藥水",
+		"cycle_seed":"換種子", "sleep_day":"睡覺", "time_speed":"時間速度", "toggle_cave":"洞窟",
+		"attend_festival":"節慶", "pause_menu":"手冊", "multiplayer_menu":"連線", "quick_save":"快速存檔", "quick_load":"快速讀檔",
+	}
+	for action_id: String in configurable_actions:
 		var action_label := Label.new()
-		action_label.text = {"attack":"攻擊","dodge":"翻滾","active_skill":"技能","interact":"互動","use_potion":"藥水","pause_menu":"手冊"}.get(action_id, action_id)
+		action_label.text = configurable_actions[action_id]
 		control_grid.add_child(action_label)
 		var rebind_button := Button.new()
 		rebind_button.pressed.connect(_begin_rebind.bind(StringName(action_id)))
@@ -274,7 +283,22 @@ func _relationship_text() -> String:
 	var parts: PackedStringArray = []
 	for candidate in ["mira", "lian", "soren", "yuna"]:
 		parts.append("%s %d♥" % [ContentRegistry.get_artifact("characters", candidate).get("display_name", candidate), GameState.social.hearts(candidate)])
-	return "　".join(parts)
+	var lines := PackedStringArray(["　".join(parts)])
+	if NetworkManager.is_online():
+		var multiplayer_data: Dictionary = NetworkManager.local_world_view().get("multiplayer", {})
+		if String(multiplayer_data.get("relationship_mode", "independent")) == "competitive":
+			var player_key := String(multiplayer_data.get("local_player_key", ""))
+			var competition := PackedStringArray()
+			for candidate: String in ["mira", "lian", "soren", "yuna"]:
+				var board: Array = Dictionary(multiplayer_data.get("romance_boards", {})).get(candidate, [])
+				for entry: Dictionary in board:
+					if String(entry.get("player_key", "")) == player_key:
+						competition.append("%s 第%d/%d" % [ContentRegistry.get_artifact("characters", candidate).get("display_name", candidate), entry.get("rank", 0), board.size()])
+			if not competition.is_empty():
+				lines.append("競爭追求：%s" % "　".join(competition))
+			else:
+				lines.append("競爭追求：和候選人交談後，追求排行會出現在這裡。")
+	return "\n".join(lines)
 
 
 func _achievement_text() -> String:
@@ -284,6 +308,33 @@ func _achievement_text() -> String:
 	if GameState.achievements.unlocked.is_empty():
 		lines.append("遊玩、收成、探索與交友即可逐步解鎖。")
 	return "\n".join(lines)
+
+
+func _eldritch_journal_text() -> String:
+	var tide_active: bool = GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather)
+	var lines := PackedStringArray([
+		"《無星異潮觀測錄》",
+		"目前：%s　理智 %d/100　洞見 %d" % ["異潮湧現" if tide_active else "潮聲平穩", GameState.eldritch.sanity, GameState.eldritch.insight],
+		"異魚圖鑑：%d/8　古神：%s" % [GameState.eldritch.eldritch_catches.size(), "已沉睡" if GameState.eldritch.boss_defeated else ("可於異潮池塘挑戰" if GameState.eldritch.boss_unlocked else "尚未顯形")],
+		"異潮在每季 13、23、30 日 18:00 後，或霧暴夜出現；睡眠恢復理智，事件沒有期限。",
+		"",
+	])
+	var eldritch_fish: Array[Dictionary] = []
+	for fish: Dictionary in ContentRegistry.get_all("fish"):
+		if bool(fish.get("tide_required", false)):
+			eldritch_fish.append(fish)
+	eldritch_fish.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return String(a.get("id", "")) < String(b.get("id", "")))
+	for fish: Dictionary in eldritch_fish:
+		var fish_id := String(fish.get("id", ""))
+		if GameState.eldritch.eldritch_catches.has(fish_id):
+			lines.append("◆ %s ×%d：%s" % [fish.get("display_name", fish_id), GameState.eldritch.eldritch_catches.get(fish_id, 0), fish.get("lore", "")])
+		else:
+			lines.append("◇ 未知異魚（%s）" % _season_name(Array(fish.get("seasons", ["?"]))[0]))
+	return "\n".join(lines)
+
+
+func _season_name(season_id: Variant) -> String:
+	return {"spring":"春","summer":"夏","autumn":"秋","winter":"冬"}.get(String(season_id), String(season_id))
 
 
 func _tool_summary() -> String:
@@ -314,6 +365,9 @@ func _load_and_refresh() -> void:
 
 
 func _on_farm_upgrade_pressed() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("farm_upgrade")
+		return
 	var result := GameState.purchase_next_farm_upgrade()
 	EventBus.toast(String(result.get("message", "")))
 	refresh()
@@ -324,21 +378,35 @@ func _selected_candidate() -> StringName:
 
 
 func _on_date_pressed() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("court_npc", {"npc_id":String(_selected_candidate())})
+		return
 	var result := GameState.start_dating_candidate(_selected_candidate())
 	EventBus.toast(String(result.get("message", "")))
 	refresh()
 
 
 func _on_propose_pressed() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("propose_npc", {"npc_id":String(_selected_candidate())})
+		return
 	var result := GameState.propose_to_candidate(_selected_candidate())
 	EventBus.toast(String(result.get("message", "")))
 	refresh()
 
 
 func _on_family_pressed() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("family_event")
+		return
 	var result := GameState.advance_family()
 	EventBus.toast(String(result.get("message", "")))
 	refresh()
+
+
+func _on_network_world_received(_world: Dictionary) -> void:
+	if visible:
+		refresh()
 
 
 func _begin_rebind(action_id: StringName) -> void:
@@ -384,12 +452,18 @@ func _on_recipe_selected(_index: int) -> void:
 
 
 func _on_cook_pressed() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("cook", {"recipe_id":String(_selected_recipe())})
+		return
 	var result := GameState.cook_recipe(_selected_recipe())
 	EventBus.toast(String(result.get("message", "")))
 	refresh()
 
 
 func _on_eat_pressed() -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("eat", {"recipe_id":String(_selected_recipe())})
+		return
 	var result := GameState.eat_dish(_selected_recipe())
 	EventBus.toast(String(result.get("message", "")))
 	refresh()

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "abyssal_relic",
+  "display_name": "深潮夢核",
+  "icon": "",
+  "category": "quest",
+  "description": "從克蘇魯之影胸口取出的古鐘結晶。貼近耳邊時，能聽見海底有人倒數尚未發生的潮汐。",
+  "stack_limit": 1,
+  "effects": [],
+  "obtain_conditions": [{"flag": "eldritch_tide_silenced"}]
+}

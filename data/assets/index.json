@@ -93,6 +93,16 @@
     },
     {
       "schema_version": 1,
+      "id": "eldritch_drowned_dreamer",
+      "source_path": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png",
+      "kind": "image",
+      "sha256": "ca7e84d589fa0b13992d188b2142b756a2c6dfe0a6065e6f921193c6f9b0fa9d",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30; deterministic alpha preprocessing", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "sprite", "eldritch", "boss", "cthulhu_inspired"],
+      "links": ["enemy:drowned_dreamer", "quest:whispers_beneath_tide_quest"]
+    },
+    {
+      "schema_version": 1,
       "id": "mistfall_application_icon",
       "source_path": "res://icon.svg",
       "kind": "image",

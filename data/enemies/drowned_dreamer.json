@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "id": "drowned_dreamer",
+  "display_name": "克蘇魯之影・溺夢古神",
+  "sprite": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png",
+  "sprite_scale": 0.105,
+  "max_health": 1500,
+  "damage": 38,
+  "move_speed": 44,
+  "behavior": "boss",
+  "is_boss": true,
+  "color": "397f91",
+  "detection_radius": 360,
+  "attack_radius": 78,
+  "projectile_speed": 230,
+  "attack_cooldown": 0.46,
+  "drops": [{"item_id": "mist_shard", "chance": 1.0, "count": 12}]
+}

@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://pixelrpg.local/schemas/save_game.schema.json",
-  "title": "SaveGame v3",
+  "title": "SaveGame v4",
   "type": "object",
-  "required": ["schema_version", "player", "map", "flags", "quests", "inventory", "calendar", "weather", "farm", "relationships", "marriage", "child", "festivals", "dungeon", "story", "procedural", "tools", "economy", "achievements", "lifetime_stats", "settings"],
+  "required": ["schema_version", "player", "map", "flags", "quests", "inventory", "calendar", "weather", "farm", "relationships", "marriage", "child", "festivals", "dungeon", "eldritch", "story", "procedural", "tools", "economy", "achievements", "lifetime_stats", "settings"],
   "properties": {
-    "schema_version": {"const": 3},
+    "schema_version": {"const": 4},
     "player": {"type": "object", "required": ["name", "appearance", "position", "stats", "coins"], "properties": {"name": {"type": "string", "minLength": 1}, "appearance": {"type": "object"}, "position": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "items": false}, "stats": {"type": "object"}, "coins": {"type": "integer", "minimum": 0}}, "additionalProperties": false},
     "map": {"type": "string"},
     "flags": {"type": "object"},
@@ -19,6 +19,7 @@
     "child": {"type": "object", "required": ["exists", "name", "born_absolute_day", "stage"], "properties": {"exists": {"type": "boolean"}, "name": {"type": "string"}, "born_absolute_day": {"type": "integer", "minimum": 0}, "stage": {"enum": ["none", "baby", "toddler", "child", "teen"]}}, "additionalProperties": false},
     "festivals": {"type": "object"},
     "dungeon": {"type": "object"},
+    "eldritch": {"type": "object", "required": ["sanity", "insight", "eldritch_catches", "whispers_seen", "boss_unlocked", "boss_defeated"], "properties": {"sanity": {"type": "integer", "minimum": 0, "maximum": 100}, "insight": {"type": "integer", "minimum": 0}, "eldritch_catches": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}, "whispers_seen": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "boss_unlocked": {"type": "boolean"}, "boss_defeated": {"type": "boolean"}}, "additionalProperties": false},
     "story": {"type": "object"},
     "procedural": {"type": "object"},
     "tools": {"type": "object", "required": ["stamina", "tool_levels", "equipped_tool"], "properties": {"stamina": {"type": "integer", "minimum": 0, "maximum": 100}, "tool_levels": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 4}}, "equipped_tool": {"type": "string"}}, "additionalProperties": false},

@@ -7,6 +7,7 @@ var screenshots: Array[String] = []
 var state_store: Node
 var registry: Node
 var save_manager: Node
+var network: Node
 var game: Node
 var player: Node
 var started_usec := 0
@@ -27,6 +28,7 @@ func _run() -> void:
 	state_store = root.get_node("GameState")
 	registry = root.get_node("ContentRegistry")
 	save_manager = root.get_node("SaveManager")
+	network = root.get_node("NetworkManager")
 	state_store.reset()
 	game = load("res://sample/main.tscn").instantiate()
 	root.add_child(game)
@@ -37,8 +39,10 @@ func _run() -> void:
 	await _test_movement_and_animation()
 	await _test_combat_and_dungeon()
 	await _test_farming_animals_and_economy()
+	await _test_eldritch_fishing_and_boss()
 	await _test_village_dialogue_and_festival()
 	await _test_menus_relationships_and_settings()
+	await _test_multiplayer_ui()
 	_test_long_term_content_and_migrations()
 	await _capture("12_acceptance_complete")
 	_write_reports()
@@ -294,6 +298,59 @@ func _test_farming_animals_and_economy() -> void:
 	_record("經濟", "出貨箱與隔夜結算", pending > shipping_before and state_store.coins > coins_pre_settlement)
 
 
+func _test_eldritch_fishing_and_boss() -> void:
+	state_store.tools.tool_levels["fishing_rod"] = 4
+	state_store.eldritch.reset()
+	state_store.quest_states["whispers_beneath_tide_quest"] = "inactive"
+	var sanity_before: int = state_store.eldritch.sanity
+	var caught_seasons: Array[String] = []
+	for season_index in range(4):
+		state_store.calendar.season_index = season_index
+		state_store.calendar.day = 13
+		state_store.calendar.minute_of_day = 19 * 60
+		state_store.current_weather = "clear"
+		state_store.tools.stamina = 100
+		var result: Dictionary = state_store.fish_at("pond")
+		if bool(result.get("ok", false)) and bool(result.get("eldritch", false)):
+			caught_seasons.append(String(state_store.calendar.season_id()))
+	_record("異潮釣魚", "四季皆可釣起異魚", caught_seasons.size() == 4, ", ".join(caught_seasons))
+	_record("異潮釣魚", "四種異魚解鎖夢岸挑戰", state_store.eldritch.eldritch_catches.size() == 4 and state_store.eldritch.can_challenge())
+	_record("理智", "異魚降低理智並產生洞見", state_store.eldritch.sanity < sanity_before and state_store.eldritch.insight > 0)
+	_record("異潮任務", "首次異魚啟動無期限任務", String(state_store.quest_states.get("whispers_beneath_tide_quest", "")) == "active")
+	var tide_quest: Dictionary = registry.get_artifact("quests", &"whispers_beneath_tide_quest")
+	_record("異潮任務", "任務不含日期期限", not tide_quest.has("deadline") and "沒有日期期限" in String(tide_quest.get("summary", "")))
+
+	game.mode = "farm"
+	game._set_background_for_mode()
+	game.game_menu.open()
+	await _frames(3)
+	game.game_menu.tabs.current_tab = 8
+	game.game_menu.refresh()
+	await _capture("13_eldritch_journal")
+	_record("異潮手冊", "異魚圖鑑與理智頁可開啟", game.game_menu.tabs.get_tab_count() >= 9 and game.game_menu.tabs.current_tab == 8)
+	game.game_menu.close()
+	await _frames(2)
+
+	game._begin_eldritch_challenge()
+	await _frames(10)
+	var abyss_enemies := get_nodes_in_group("enemies")
+	var boss: Node = abyss_enemies[0] if abyss_enemies.size() == 1 else null
+	var boss_visual_ok := false
+	if is_instance_valid(boss):
+		boss_visual_ok = boss.enemy_id == &"drowned_dreamer" and is_instance_valid(boss.visual_sprite) and boss.visual_sprite.texture != null
+		boss.set_physics_process(false)
+	_record("古神首領", "夢岸生成克蘇魯之影", game.mode == "abyss" and boss_visual_ok)
+	await _capture("14_drowned_dreamer_boss")
+	if is_instance_valid(boss):
+		boss.take_damage(99999, player)
+	await _frames(18)
+	_record("古神首領", "擊敗首領並完成無期限任務", state_store.eldritch.boss_defeated and String(state_store.quest_states.get("whispers_beneath_tide_quest", "")) == "completed")
+	_record("古神首領", "深潮夢核獎勵與理智恢復", int(state_store.inventory.get("abyssal_relic", 0)) >= 1 and state_store.eldritch.sanity == PixelRPGEldritchTideSystem.MAX_SANITY)
+	_record("古神首領", "異潮成就解鎖", "dreamer_silenced" in state_store.achievements.unlocked)
+	game._leave_eldritch_shore()
+	await _frames(3)
+
+
 func _test_village_dialogue_and_festival() -> void:
 	game._enter_village()
 	await _frames(5)
@@ -335,13 +392,13 @@ func _test_menus_relationships_and_settings() -> void:
 	game.game_menu.open()
 	await _frames(4)
 	_record("選單", "旅人手冊暫停遊戲", game.game_menu.visible and paused and state_store.calendar.paused)
-	_record("選單", "八個功能分頁", game.game_menu.tabs.get_tab_count() == 8)
+	_record("選單", "九個功能分頁", game.game_menu.tabs.get_tab_count() == 9)
 	await _capture("11_status_inventory_menu")
 	for tab_index in range(game.game_menu.tabs.get_tab_count()):
 		game.game_menu.tabs.current_tab = tab_index
 		game.game_menu.refresh()
 		await _frames(1)
-	_record("選單", "狀態、背包、關係、日曆、主線、成就、料理、設定均可切換", game.game_menu.tabs.current_tab == 7)
+	_record("選單", "狀態、背包、關係、日曆、主線、成就、料理、設定、深潮均可切換", game.game_menu.tabs.current_tab == 8)
 
 	state_store.social.add_affection(&"mira", 2500)
 	game.game_menu.candidate_select.select(0)
@@ -399,21 +456,63 @@ func _test_menus_relationships_and_settings() -> void:
 			rebound = true
 	game.game_menu._reset_controls()
 	var restored := false
-	var controller_mapped := false
 	for event: InputEvent in InputMap.action_get_events("attack"):
 		if event is InputEventKey and event.physical_keycode == KEY_J:
 			restored = true
-		if event is InputEventJoypadButton:
-			controller_mapped = true
 	_record("設定", "按鍵重新綁定與還原", rebound and restored)
-	_record("手把", "戰鬥按鈕映射", controller_mapped)
+	var expected_buttons := {"attack":0,"dodge":1,"active_skill":2,"interact":3,"multiplayer_menu":4,"pause_menu":6,"attend_festival":7,"toggle_cave":8,"use_potion":9,"cycle_seed":10,"quick_save":11,"quick_load":12,"time_speed":13,"sleep_day":14}
+	var controller_mapped := true
+	for action_id: String in expected_buttons:
+		var found := false
+		for event: InputEvent in InputMap.action_get_events(action_id):
+			if event is InputEventJoypadButton and event.button_index == int(expected_buttons[action_id]):
+				found = true
+		controller_mapped = controller_mapped and found
+	_record("手把", "14 項完整 XInput 按鈕映射", controller_mapped)
+	var persist_event := InputEventKey.new()
+	persist_event.physical_keycode = KEY_U
+	PixelRPGInputBindings.rebind_device(&"interact", persist_event)
+	var persisted := PixelRPGInputBindings.save()
+	InputMap.action_erase_events(&"interact")
+	var loaded_bindings := PixelRPGInputBindings.load_saved()
+	var interact_restored := false
+	for event: InputEvent in InputMap.action_get_events("interact"):
+		if event is InputEventKey and event.physical_keycode == KEY_U:
+			interact_restored = true
+	PixelRPGInputBindings.reset_to_project_defaults()
+	PixelRPGInputBindings.save()
+	_record("設定", "所有遊戲操作重綁可跨重啟保存", persisted and loaded_bindings and interact_restored)
 	state_store.coins = 12345
 	var save_ok: bool = bool(save_manager.save_quick())
 	state_store.coins = 7
 	var load_ok: bool = bool(save_manager.load_quick())
-	_record("存檔", "SaveGame v3 快速存讀", save_ok and load_ok and state_store.coins == 12345)
+	_record("存檔", "SaveGame v4 快速存讀", save_ok and load_ok and state_store.coins == 12345)
 	game.game_menu.close()
 	await _frames(3)
+
+
+func _test_multiplayer_ui() -> void:
+	game.multiplayer_menu.open()
+	await _frames(3)
+	_record("連線介面", "自行開服／IP 加入表單", game.multiplayer_menu.visible and is_instance_valid(game.multiplayer_menu.host_button) and is_instance_valid(game.multiplayer_menu.join_button) and int(game.multiplayer_menu.port_input.value) == PixelRPGNetworkManager.DEFAULT_PORT)
+	_record("連線規則", "共同／私人／競賽農場與獨立／競爭關係可選", game.multiplayer_menu.farm_mode_input.item_count == 3 and game.multiplayer_menu.relationship_mode_input.item_count == 2)
+	game.multiplayer_menu.name_input.text = "可視主機"
+	game.multiplayer_menu.server_name_input.text = "霧落驗收世界"
+	game.multiplayer_menu.world_input.text = "visible_qa_competitive"
+	game.multiplayer_menu.port_input.value = 29381
+	game.multiplayer_menu.farm_mode_input.select(2)
+	game.multiplayer_menu.relationship_mode_input.select(1)
+	game.multiplayer_menu.host_button.pressed.emit()
+	await _frames(6)
+	_record("連線介面", "遊戲內 ENet 主機可啟動", network.is_server() and network.server_players.size() == 1 and "主機" in network.connection_summary())
+	_record("連線規則", "開服選項寫入世界契約", network.farm_mode == "competitive" and network.relationship_mode == "competitive" and String(Dictionary(network.shared_world.get("story_variant", {})).get("id", "")) == "solo_bell")
+	var variants := [PixelRPGMultiplayerNarrativeSystem.story_variant(1, "shared", "independent").id, PixelRPGMultiplayerNarrativeSystem.story_variant(2, "private", "competitive").id, PixelRPGMultiplayerNarrativeSystem.story_variant(4, "competitive", "competitive").id, PixelRPGMultiplayerNarrativeSystem.story_variant(5, "shared", "independent").id]
+	_record("多人劇情", "1／2／3–4／5+ 人使用四種劇情分支", variants == ["solo_bell", "twin_bell_pact", "four_season_chorus", "mistfall_council"])
+	await _capture("15_multiplayer_host_ui")
+	network.stop()
+	game.multiplayer_menu.close()
+	await _frames(3)
+	_record("連線介面", "離線／關服可安全返回單人", not network.is_online() and not game.multiplayer_menu.visible)
 
 
 func _test_long_term_content_and_migrations() -> void:
@@ -439,7 +538,7 @@ func _test_long_term_content_and_migrations() -> void:
 	var story_arc: Dictionary = registry.get_artifact("story_arcs", &"mistfall_three_years")
 	_record("主線", "12 章且沒有期限", Array(story_arc.get("chapters", [])).size() == 12 and story_arc.get("deadline", 1) == null)
 	state_store.story_state = {"chapter":1, "completed_chapters":[], "season_seals":state_store.dungeon.seals.duplicate(), "final_boss_available":true, "final_boss_defeated":true}
-	state_store.lifetime_stats = {"days_played":360,"crops_harvested":1000,"fish_caught":100,"resources_gathered":100,"monsters_defeated":100,"bosses_defeated":4,"festivals_attended":12,"relationship_hearts":20,"marriages":1,"coins_earned":100000,"purchases":50}
+	state_store.lifetime_stats = {"days_played":360,"crops_harvested":1000,"fish_caught":100,"eldritch_fish_caught":8,"resources_gathered":100,"monsters_defeated":100,"bosses_defeated":4,"eldritch_bosses_defeated":1,"festivals_attended":12,"relationship_hearts":20,"marriages":1,"coins_earned":100000,"purchases":50}
 	state_store.farm.rank = 10
 	state_store.dungeon.max_reached = 40
 	state_store.dungeon.defeated_bosses.assign([10, 20, 30, 40])
@@ -456,19 +555,24 @@ func _test_long_term_content_and_migrations() -> void:
 			story_completed += 1
 	_record("主線", "三年主線可連續完成", story_completed == 12)
 	state_store._check_achievements()
-	_record("成就", "12 項成就可解鎖", state_store.achievements.unlocked.size() == 12, "%d/12" % state_store.achievements.unlocked.size())
-	var v3: Dictionary = state_store.to_save_data()
-	var v2: Dictionary = v3.duplicate(true)
+	_record("成就", "14 項成就可解鎖", state_store.achievements.unlocked.size() == 14, "%d/14" % state_store.achievements.unlocked.size())
+	var v4: Dictionary = state_store.to_save_data()
+	var v3: Dictionary = v4.duplicate(true)
+	v3.schema_version = 3
+	v3.erase("eldritch")
+	var v3_ok: bool = bool(state_store.load_save_data(v3))
+	var v2: Dictionary = v4.duplicate(true)
 	v2.schema_version = 2
-	for key in ["tools", "economy", "achievements", "lifetime_stats", "settings"]:
+	for key in ["tools", "economy", "achievements", "lifetime_stats", "settings", "eldritch"]:
 		v2.erase(key)
 	var v2_ok: bool = bool(state_store.load_save_data(v2))
 	var legacy := {"schema_version":1,"player":{"position":[12,34],"stats":{"max_health":100,"health":80,"attack":16}},"map":"mistfall_farm","flags":{},"quests":{},"inventory":{"health_potion":1},"calendar":{"year":2,"season_index":2,"day":28,"minute_of_day":720,"speed_mode":"relaxed"}}
 	var v1_ok: bool = bool(state_store.load_save_data(legacy))
-	_record("存檔", "v2→v3 遷移", v2_ok)
-	_record("存檔", "28 日制 v1→v3 保留日期", v1_ok and state_store.calendar.year == 2 and state_store.calendar.season_index == 2 and state_store.calendar.day == 28)
-	_record("內容", "48 作物／12 魚／40 料理", registry.get_all("crops").size() == 48 and registry.get_all("fish").size() == 12 and registry.get_all("recipes").size() == 40)
-	_record("內容", "10 NPC／12 節慶／16 洞窟敵人", registry.get_all("npc_schedules").size() == 10 and registry.get_all("festivals").size() == 12 and registry.get_all("enemies").size() >= 16)
+	_record("存檔", "v3→v4 異潮資料遷移", v3_ok)
+	_record("存檔", "v2→v4 遷移", v2_ok)
+	_record("存檔", "28 日制 v1→v4 保留日期", v1_ok and state_store.calendar.year == 2 and state_store.calendar.season_index == 2 and state_store.calendar.day == 28)
+	_record("內容", "48 作物／20 魚／40 料理", registry.get_all("crops").size() == 48 and registry.get_all("fish").size() == 20 and registry.get_all("recipes").size() == 40)
+	_record("內容", "10 NPC／12 節慶／17+ 洞窟與異潮敵人", registry.get_all("npc_schedules").size() == 10 and registry.get_all("festivals").size() == 12 and registry.get_all("enemies").size() >= 17)
 	_record("離線", "Runtime 場景沒有 HTTPRequest", get_nodes_in_group("http_clients").is_empty())
 
 

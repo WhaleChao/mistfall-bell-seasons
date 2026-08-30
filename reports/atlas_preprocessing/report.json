@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T06:29:50",
+	"generated_at": "2026-08-30T07:48:29",
 	"algorithm": "cell-bounded four-neighbour background flood fill, then lossless connected-component repack with 16px minimum padding",
 	"light_threshold": 0.76,
 	"neutral_spread": 0.14,
@@ -407,6 +407,35 @@
 			],
 			"foreground_pixels_before_repack": 331014,
 			"foreground_pixels_after_repack": 331014,
+			"save_error": "OK"
+		},
+		{
+			"passed": true,
+			"source": "res://assets/source/generated_atlases/eldritch_drowned_dreamer_source.png",
+			"output": "res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png",
+			"width": 1254,
+			"height": 1254,
+			"columns": 1,
+			"rows": 1,
+			"removed_pixels": 846119,
+			"transparent_pixels": 846119,
+			"preserved_pixels": 726397,
+			"transparent_ratio": 0.538067021257653,
+			"removed_per_cell": [
+				846119
+			],
+			"component_count": 1,
+			"cell_components": [
+				1
+			],
+			"cell_bounds": [
+				{
+					"width": 1039,
+					"height": 1177
+				}
+			],
+			"foreground_pixels_before_repack": 726397,
+			"foreground_pixels_after_repack": 726397,
 			"save_error": "OK"
 		}
 	]

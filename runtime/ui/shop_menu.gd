@@ -12,6 +12,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_WHEN_PAUSED
 	_build_ui()
 	visible = false
+	NetworkManager.world_state_received.connect(_on_network_world_received)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -58,9 +59,17 @@ func refresh() -> void:
 
 
 func _purchase(offer_id: String) -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("buy_offer", {"shop_id":String(active_shop_id), "offer_id":offer_id})
+		return
 	var result := GameState.buy_offer(active_shop_id, offer_id)
 	EventBus.toast(String(result.get("message", "")))
 	refresh()
+
+
+func _on_network_world_received(_world: Dictionary) -> void:
+	if visible:
+		refresh()
 
 
 func _build_ui() -> void:

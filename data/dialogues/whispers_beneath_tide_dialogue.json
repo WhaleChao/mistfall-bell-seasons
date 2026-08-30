@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "whispers_beneath_tide_dialogue",
+  "title": "無星異潮",
+  "start_node": "start",
+  "characters": ["hero", "lian"],
+  "nodes": [
+    {"id": "start", "type": "line", "speaker": "lian", "text": "那不是普通的魚。每逢 13、23、30 日入夜，或霧暴壓上海岸，無星異潮就會把深海的夢推進池塘。", "next": "choice"},
+    {"id": "choice", "type": "choice", "options": [{"text": "我會記錄異魚，也會記住自己的名字。", "next": "accept"}, {"text": "今晚先遠離水邊。", "next": "later"}]},
+    {"id": "accept", "type": "action", "actions": [{"type": "quest", "quest_id": "whispers_beneath_tide_quest", "state": "active"}], "next": "end"},
+    {"id": "later", "type": "line", "speaker": "lian", "text": "退後不是膽怯。理智會在睡眠中恢復，異潮也沒有日期期限。", "next": "end"},
+    {"id": "end", "type": "end"}
+  ]
+}

@@ -30,6 +30,15 @@ const ATLASES := [
 		"columns":4,
 		"rows":4,
 	},
+	{
+		"source":"res://assets/source/generated_atlases/eldritch_drowned_dreamer_source.png",
+		"output":"res://assets/runtime/sprites/eldritch_drowned_dreamer_alpha.png",
+		"columns":1,
+		"rows":1,
+		"diagonal_background":true,
+		"clear_enclosed_neutral_min_pixels":20,
+		"preserve_light_rect":Rect2(520, 200, 220, 650),
+	},
 ]
 
 var results: Array[Dictionary] = []
@@ -91,7 +100,10 @@ func _convert_atlas(config: Dictionary) -> Dictionary:
 			var top: int = row * cell_height
 			var right: int = width if column == columns - 1 else (column + 1) * cell_width
 			var bottom: int = height if row == rows - 1 else (row + 1) * cell_height
-			var cell_removed := _clear_connected_background(output, left, top, right, bottom)
+			var cell_removed := _clear_connected_background(output, left, top, right, bottom, bool(config.get("diagonal_background", false)))
+			var enclosed_threshold := int(config.get("clear_enclosed_neutral_min_pixels", 0))
+			if enclosed_threshold > 0:
+				cell_removed += _clear_large_neutral_components(output, left, top, right, bottom, enclosed_threshold, Rect2(config.get("preserve_light_rect", Rect2())))
 			removed += cell_removed
 			removed_per_cell.append(cell_removed)
 	var repacked: Dictionary = _repack_components(output, columns, rows)
@@ -231,7 +243,7 @@ func _repack_components(source: Image, columns: int, rows: int) -> Dictionary:
 	}
 
 
-func _clear_connected_background(image: Image, left: int, top: int, right: int, bottom: int) -> int:
+func _clear_connected_background(image: Image, left: int, top: int, right: int, bottom: int, diagonal_background: bool = false) -> int:
 	var width := image.get_width()
 	var visited := PackedByteArray()
 	visited.resize(width * image.get_height())
@@ -248,10 +260,13 @@ func _clear_connected_background(image: Image, left: int, top: int, right: int, 
 		cursor += 1
 		var x := packed % width
 		var y: int = packed / width
-		_try_enqueue_bounded(image, x - 1, y, left, top, right, bottom, visited, queue)
-		_try_enqueue_bounded(image, x + 1, y, left, top, right, bottom, visited, queue)
-		_try_enqueue_bounded(image, x, y - 1, left, top, right, bottom, visited, queue)
-		_try_enqueue_bounded(image, x, y + 1, left, top, right, bottom, visited, queue)
+		for offset_y in range(-1, 2):
+			for offset_x in range(-1, 2):
+				if offset_x == 0 and offset_y == 0:
+					continue
+				if not diagonal_background and offset_x != 0 and offset_y != 0:
+					continue
+				_try_enqueue_bounded(image, x + offset_x, y + offset_y, left, top, right, bottom, visited, queue)
 	for packed in queue:
 		var x := packed % width
 		var y: int = packed / width
@@ -259,6 +274,58 @@ func _clear_connected_background(image: Image, left: int, top: int, right: int, 
 		color.a = 0.0
 		image.set_pixel(x, y, color)
 	return queue.size()
+
+
+func _clear_large_neutral_components(image: Image, left: int, top: int, right: int, bottom: int, minimum_pixels: int, preserve_light_rect: Rect2) -> int:
+	var width := image.get_width()
+	var visited := PackedByteArray()
+	visited.resize(width * image.get_height())
+	var removed := 0
+	for start_y in range(top, bottom):
+		for start_x in range(left, right):
+			var start := start_y * width + start_x
+			if visited[start] != 0:
+				continue
+			visited[start] = 1
+			if not _is_background_candidate(image.get_pixel(start_x, start_y)):
+				continue
+			var component := PackedInt32Array([start])
+			var cursor := 0
+			while cursor < component.size():
+				var packed := component[cursor]
+				cursor += 1
+				var x := packed % width
+				var y: int = packed / width
+				for offset_y in range(-1, 2):
+					for offset_x in range(-1, 2):
+						if offset_x == 0 and offset_y == 0:
+							continue
+						var next_x := x + offset_x
+						var next_y := y + offset_y
+						if next_x < left or next_x >= right or next_y < top or next_y >= bottom:
+							continue
+						var next := next_y * width + next_x
+						if visited[next] != 0:
+							continue
+						visited[next] = 1
+						if _is_background_candidate(image.get_pixel(next_x, next_y)):
+							component.append(next)
+			if component.size() < minimum_pixels:
+				continue
+			var center := Vector2.ZERO
+			for packed in component:
+				center += Vector2(packed % width, packed / width)
+			center /= float(component.size())
+			if preserve_light_rect.has_area() and preserve_light_rect.has_point(center):
+				continue
+			for packed in component:
+				var x := packed % width
+				var y: int = packed / width
+				var color := image.get_pixel(x, y)
+				color.a = 0.0
+				image.set_pixel(x, y, color)
+			removed += component.size()
+	return removed
 
 
 func _try_enqueue_bounded(image: Image, x: int, y: int, left: int, top: int, right: int, bottom: int, visited: PackedByteArray, queue: PackedInt32Array) -> void:

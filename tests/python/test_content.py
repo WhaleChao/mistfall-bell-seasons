@@ -23,7 +23,7 @@ def test_release_content_validation() -> None:
 def test_save_fixture_matches_schema() -> None:
     schema = json.loads((ROOT / "schemas/save_game.schema.json").read_text(encoding="utf-8"))
     fixture = {
-        "schema_version": 3,
+        "schema_version": 4,
         "player": {"name": "旅人", "appearance": {"body": "neutral"}, "position": [320.0, 180.0], "stats": {"health": 72, "max_health": 100, "attack": 16}, "coins": 500},
         "map": "mistfall_farm", "flags": {"gate_open": True},
         "quests": {"silence_the_warden": "active"}, "inventory": {"health_potion": 2},
@@ -32,7 +32,9 @@ def test_save_fixture_matches_schema() -> None:
         "farm": {"rank": 1, "plots": {}, "seed_stock": {}, "produce": {}, "animals": [], "greenhouse_unlocked": False, "unlocked_upgrades": []},
         "relationships": {}, "marriage": {"spouse_id": "", "married_absolute_day": 0, "family_talk_seen": False},
         "child": {"exists": False, "name": "", "born_absolute_day": 0, "stage": "none"},
-        "festivals": {"attended": {}}, "dungeon": {}, "story": {}, "procedural": {},
+        "festivals": {"attended": {}}, "dungeon": {},
+        "eldritch": {"sanity": 100, "insight": 0, "eldritch_catches": {}, "whispers_seen": [], "boss_unlocked": False, "boss_defeated": False},
+        "story": {}, "procedural": {},
         "tools": {"stamina": 80, "tool_levels": {"hoe": 2, "watering_can": 1, "axe": 1, "pickaxe": 1, "fishing_rod": 1, "sickle": 1}, "equipped_tool": "hoe"},
         "economy": {"shipping_bin": {}, "total_earned": 500, "total_spent": 100, "purchase_counts": {}, "last_shipping_total": 0},
         "achievements": {"unlocked": ["first_harvest"]},

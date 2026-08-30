@@ -18,6 +18,8 @@ var behavior := "melee"
 var projectile_speed := 140.0
 var attack_interval := 0.9
 var body_color := Color("db5a6b")
+var sprite_path := ""
+var visual_base_scale := 0.145
 var drops: Array = []
 var state := State.PATROL
 var state_timer := 0.0
@@ -40,6 +42,8 @@ func configure(definition: Dictionary) -> void:
 	is_boss = bool(definition.get("is_boss", false))
 	behavior = String(definition.get("behavior", "melee"))
 	body_color = Color(String(definition.get("color", "db5a6b")))
+	sprite_path = String(definition.get("sprite", ""))
+	visual_base_scale = float(definition.get("sprite_scale", 0.18 if is_boss else 0.145))
 	detection_radius = float(definition.get("detection_radius", 260.0 if is_boss else 175.0))
 	attack_radius = float(definition.get("attack_radius", 54.0 if is_boss else (145.0 if behavior == "ranged" else 31.0)))
 	projectile_speed = float(definition.get("projectile_speed", 150.0))
@@ -125,8 +129,7 @@ func _update_visual() -> void:
 		visual_sprite.flip_h = player.global_position.x < global_position.x
 	visual_sprite.modulate = Color(1.5, 1.5, 1.5) if hurt_flash_timer > 0.0 else Color.WHITE
 	var pulse := 1.0 + sin(ticks * 3.0 + phase) * (0.025 if is_boss else 0.012)
-	var base_scale := 0.18 if is_boss else 0.145
-	visual_sprite.scale = Vector2(base_scale * pulse, base_scale / pulse)
+	visual_sprite.scale = Vector2(visual_base_scale * pulse, visual_base_scale / pulse)
 
 
 func _patrol(_delta: float) -> void:
@@ -161,6 +164,15 @@ func _perform_attack() -> void:
 				for shot_index in range(12):
 					_spawn_projectile(Vector2.RIGHT.rotated(offset + TAU * float(shot_index) / 12.0))
 				return
+			"drowned_dreamer":
+				var spiral_offset := float(attack_counter % 8) * 0.11
+				for shot_index in range(16):
+					_spawn_projectile(Vector2.RIGHT.rotated(spiral_offset + TAU * float(shot_index) / 16.0))
+				if attack_counter % 2 == 0:
+					var dream_aim := global_position.direction_to(player.global_position)
+					for angle in [-0.36, -0.18, 0.0, 0.18, 0.36]:
+						_spawn_projectile(dream_aim.rotated(float(angle)))
+				return
 	if behavior == "ranged":
 		_spawn_projectile(global_position.direction_to(player.global_position))
 		return
@@ -184,6 +196,17 @@ func _spawn_projectile(travel_direction: Vector2) -> void:
 
 
 func _create_visual_sprite() -> void:
+	if not sprite_path.is_empty():
+		var custom_texture: Texture2D = load(sprite_path)
+		if custom_texture != null:
+			visual_sprite = Sprite2D.new()
+			visual_sprite.texture = custom_texture
+			visual_sprite.position = Vector2(0, -7)
+			visual_sprite.scale = Vector2(visual_base_scale, visual_base_scale)
+			visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			visual_sprite.z_index = -1
+			add_child(visual_sprite)
+			return
 	var ids := ["moss_slime","thorn_rat","pollen_wisp","ember_slime","cave_bat","magma_beetle","amber_slime","stone_boar","fog_wisp","ice_slime","frost_wolf","bell_guardian","spring_root_guardian","summer_forge_drake","autumn_harvest_golem","winter_bell_warden"]
 	var index := ids.find(String(enemy_id))
 	if index < 0:
@@ -199,7 +222,7 @@ func _create_visual_sprite() -> void:
 	visual_sprite = Sprite2D.new()
 	visual_sprite.texture = region
 	visual_sprite.position = Vector2(0, -7)
-	visual_sprite.scale = Vector2(0.18, 0.18) if is_boss else Vector2(0.145, 0.145)
+	visual_sprite.scale = Vector2(visual_base_scale, visual_base_scale)
 	visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	visual_sprite.z_index = -1
 	add_child(visual_sprite)

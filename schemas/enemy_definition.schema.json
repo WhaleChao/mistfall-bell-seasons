@@ -9,6 +9,7 @@
     "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
     "display_name": {"type": "string", "minLength": 1},
     "sprite": {"type": "string"},
+    "sprite_scale": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
     "max_health": {"type": "integer", "minimum": 1},
     "damage": {"type": "integer", "minimum": 0},
     "move_speed": {"type": "number", "exclusiveMinimum": 0},

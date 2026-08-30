@@ -8,6 +8,8 @@ if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "VERSION 格式錯誤：$versi
 
 & (Join-Path $PSScriptRoot 'Test-PixelRPG.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw '自動測試未通過。' }
+& (Join-Path $PSScriptRoot 'Test-Multiplayer.ps1') -GodotPath $GodotPath
+if ($LASTEXITCODE -ne 0) { throw '多人連線全情境測試未通過。' }
 & (Join-Path $PSScriptRoot 'Test-RenderPerformance.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw '1080p 效能測試未通過。' }
 & (Join-Path $PSScriptRoot 'Test-ResolutionLayout.ps1') -GodotPath $GodotPath
@@ -48,6 +50,8 @@ Copy-Item -LiteralPath (Join-Path $projectRoot 'THIRD_PARTY.md') -Destination (J
 Copy-Item -LiteralPath (Join-Path $projectRoot '.creator\ASSET_LICENSES.md') -Destination (Join-Path $packageRoot 'ASSET_LICENSES.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'PRIVACY.md') -Destination (Join-Path $packageRoot 'PRIVACY.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'SUPPORT.md') -Destination (Join-Path $packageRoot 'SUPPORT.md')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'SERVER_GUIDE.md') -Destination (Join-Path $packageRoot 'SERVER_GUIDE.md')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'Start Dedicated Server.cmd') -Destination (Join-Path $packageRoot 'Start Dedicated Server.cmd')
 Compress-Archive -LiteralPath $packageRoot -DestinationPath $archive -CompressionLevel Optimal
 
 $hashLines = @()

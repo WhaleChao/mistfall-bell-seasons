@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "version": "1.0.4",
-  "archive": "Mistfall-Bell-Seasons-v1.0.4-Windows-x64.zip",
-  "archive_bytes": 52451417,
+  "version": "1.1.0",
+  "archive": "Mistfall-Bell-Seasons-v1.1.0-Windows-x64.zip",
+  "archive_bytes": 53367836,
   "files": [
     "ASSET_LICENSES.md",
     "GODOT_ENGINE_COPYRIGHT.txt",
@@ -12,10 +12,12 @@
     "Mistfall-Bell-Seasons.pck",
     "PRIVACY.md",
     "README.md",
+    "SERVER_GUIDE.md",
+    "Start Dedicated Server.cmd",
     "SUPPORT.md",
     "THIRD_PARTY_NOTICES.md"
   ],
-  "exe_sha256": "996f6585d22a84747a28a87c4ff0bfbd13777a6047f171d0777dc990592970b2",
-  "pck_sha256": "bcf3b224fb5257df2bc53b01dad0bd328b84cc7650f710943370124735b193af",
+  "exe_sha256": "0f7a9fc6bde95d9f57338102aaa545b752490ec3f38397a2b1074ae150380d40",
+  "pck_sha256": "1b165a02118a23c00c35df8cdf39ed9ab444ed28cc1f10e8e2fb7b4f83b6be2e",
   "extracted_launch": true
 }

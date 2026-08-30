@@ -29,6 +29,8 @@ $expectedFiles = @(
     'Mistfall-Bell-Seasons.pck',
     'PRIVACY.md',
     'README.md',
+    'SERVER_GUIDE.md',
+    'Start Dedicated Server.cmd',
     'SUPPORT.md',
     'THIRD_PARTY_NOTICES.md'
 )

@@ -130,7 +130,11 @@ def audit_build(build_dir: Path, errors: list[str]) -> None:
 def audit_pck_strings(build_dir: Path, errors: list[str]) -> None:
     for pck in build_dir.glob("*.pck"):
         payload = pck.read_bytes().lower()
-        for marker in (b"creator_service", b"creator_client", b"ollama", b"httprequest", b"127.0.0.1", b"/api/v1/assist", b".gguf", b"res://knowledge/", b"res://screenshots/", b"res://reports/", b"res://tests/", b"res://launcher/", b"res://scripts/", b"res://tools/", b"res://work/", b"res://schemas/", b"res://assets/source/", b"res://.creator/", b"res://.venv/"):
+        # 127.0.0.1 is an intentional default for the optional player-hosted
+        # ENet server. Keep auditing the specific Creator Service / AI markers
+        # so multiplayer support cannot hide an accidental authoring-runtime
+        # dependency in the commercial game package.
+        for marker in (b"creator_service", b"creator_client", b"ollama", b"httprequest", b"/api/v1/assist", b".gguf", b"res://knowledge/", b"res://screenshots/", b"res://reports/", b"res://tests/", b"res://launcher/", b"res://scripts/", b"res://tools/", b"res://work/", b"res://schemas/", b"res://assets/source/", b"res://.creator/", b"res://.venv/"):
             if marker in payload:
                 errors.append(f"release PCK contains forbidden marker {marker.decode(errors='replace')}")
         for marker in (b"project.binary", b"res://sample/main", b"res://runtime/autoload/game_state", b"res://assets/runtime/backgrounds/mistfall_farm_commercial"):
@@ -139,7 +143,7 @@ def audit_pck_strings(build_dir: Path, errors: list[str]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Audit PixelRPG's offline runtime and export boundary")
+    parser = argparse.ArgumentParser(description="Audit PixelRPG's cloud-free runtime and export boundary")
     parser.add_argument("--build-dir", type=Path, help="also verify an exported Windows build")
     args = parser.parse_args()
     errors: list[str] = []
@@ -155,7 +159,7 @@ def main() -> int:
             print(f"ERROR: {error}")
         print(f"Release audit failed with {len(errors)} error(s).")
         return 1
-    print("Release audit passed: runtime is offline-only and AI/design sources are excluded.")
+    print("Release audit passed: runtime has no cloud/AI clients; optional player-hosted ENet is allowed; AI/design sources are excluded.")
     return 0
 
 

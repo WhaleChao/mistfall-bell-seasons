@@ -6,6 +6,8 @@ const GameMenuScript := preload("res://runtime/ui/game_menu.gd")
 const ShopMenuScript := preload("res://runtime/ui/shop_menu.gd")
 const DialogueOverlayScript := preload("res://runtime/ui/dialogue_overlay.gd")
 const FestivalOverlayScript := preload("res://runtime/ui/festival_overlay.gd")
+const MultiplayerMenuScript := preload("res://runtime/ui/multiplayer_menu.gd")
+const RemotePlayerScript := preload("res://runtime/network/remote_player.gd")
 
 const PLOT_ORIGIN := Vector2(221, 159)
 const PLOT_SPACING := Vector2(36, 26)
@@ -48,6 +50,7 @@ var enemies_remaining := 0
 var hit_stop_active := false
 var floor_cleared := false
 var final_challenge_active := false
+var eldritch_challenge_active := false
 var toast_tween: Tween
 var name_input: LineEdit
 var appearance_input: OptionButton
@@ -55,17 +58,23 @@ var game_menu: PixelRPGGameMenu
 var shop_menu: PixelRPGShopMenu
 var dialogue_overlay: PixelRPGDialogueOverlay
 var festival_overlay: PixelRPGFestivalOverlay
+var multiplayer_menu: PixelRPGMultiplayerMenu
 var world_background: Sprite2D
 var npc_sprites: Dictionary = {}
 var animal_sprites: Dictionary = {}
 var ui_refresh_timer := 0.0
 var weather_refresh_timer := 0.0
+var remote_players: Dictionary = {}
 
 
 func _ready() -> void:
+	if "--server" in OS.get_cmdline_user_args():
+		hide()
+		set_process(false)
+		return
 	seed(1337)
 	PixelRPGInputBindings.load_saved()
-	mode = "dungeon" if GameState.current_map_id == &"mistfall_depths" else ("village" if GameState.current_map_id == &"mistfall_village" else "farm")
+	mode = "dungeon" if GameState.current_map_id == &"mistfall_depths" else ("village" if GameState.current_map_id == &"mistfall_village" else ("abyss" if GameState.current_map_id == &"dreaming_shore" else "farm"))
 	_create_background()
 	_create_npc_sprites()
 	_create_world_walls()
@@ -76,6 +85,8 @@ func _ready() -> void:
 	_connect_events()
 	if mode == "dungeon":
 		_enter_dungeon(false)
+	elif mode == "abyss":
+		_begin_eldritch_challenge(false)
 	elif not bool(GameState.get_flag(&"title_seen", false)):
 		_create_title_screen()
 	queue_redraw()
@@ -86,6 +97,9 @@ func _exit_tree() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("multiplayer_menu"):
+		multiplayer_menu.toggle()
+		return
 	if is_instance_valid(title_overlay):
 		if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("interact"):
 			_close_title_screen()
@@ -110,14 +124,22 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("cycle_seed") and mode == "farm":
 		_cycle_seed()
 	if Input.is_action_just_pressed("time_speed"):
-		GameState.cycle_time_speed()
+		if NetworkManager.is_client():
+			_show_toast("連線世界的時間速度由主機決定")
+		else:
+			GameState.cycle_time_speed()
 	if Input.is_action_just_pressed("sleep_day") and mode == "farm":
-		GameState.sleep_if_allowed()
+		if NetworkManager.is_client():
+			_show_toast("連線世界由主機決定何時結束今日")
+		else:
+			GameState.sleep_if_allowed()
 	if Input.is_action_just_pressed("toggle_cave"):
 		if mode == "farm":
 			_enter_dungeon()
 		elif mode == "dungeon":
 			_leave_dungeon()
+		elif mode == "abyss":
+			_leave_eldritch_shore()
 		else:
 			_show_toast("請先由村口返回農場")
 	if Input.is_action_just_pressed("attend_festival") and mode == "farm":
@@ -133,8 +155,10 @@ func _draw() -> void:
 		_draw_farm()
 	elif mode == "village":
 		_draw_village()
-	else:
+	elif mode == "dungeon":
 		_draw_dungeon()
+	else:
+		_draw_abyss()
 	_draw_weather()
 
 
@@ -177,6 +201,8 @@ func _draw_farm() -> void:
 	var festival: Dictionary = GameState.festivals.festival_on(GameState.calendar.season_id(), GameState.calendar.day)
 	if not festival.is_empty():
 		draw_string(ThemeDB.fallback_font, Vector2(242, 86), "★ 今日：%s（F 參加）" % festival.get("display_name"), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("fff1b6"))
+	var tide_active: bool = GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather)
+	draw_string(ThemeDB.fallback_font, Vector2(25, 322), "池塘 E/Y・%s" % ("無星異潮" if tide_active else "四季釣場"), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("b6f3ef") if tide_active else Color("dce5ee"))
 
 
 func _draw_dungeon() -> void:
@@ -190,6 +216,16 @@ func _draw_dungeon() -> void:
 	var ore_id := "ore_%d" % floor_number
 	if not bool(GameState.get_flag("gathered_%d_%s" % [GameState.calendar.absolute_day(), ore_id], false)):
 		_draw_resource(DUNGEON_ORE_POSITION, "ore")
+
+
+func _draw_abyss() -> void:
+	draw_rect(Rect2(18, 52, 604, 286), Color("34265e"), false, 3.0)
+	for ring in range(5):
+		draw_arc(Vector2(320, 196), 44.0 + ring * 21.0, 0.0, TAU, 48, Color(0.29, 0.84, 0.78, 0.16), 2.0)
+	if floor_cleared:
+		draw_circle(Vector2(570, 292), 22, Color("78dcca"))
+		draw_circle(Vector2(570, 292), 13, Color("171a2b"))
+		draw_string(ThemeDB.fallback_font, Vector2(510, 328), "E/Y 返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1b6"))
 
 
 func _draw_village() -> void:
@@ -231,6 +267,7 @@ func _create_player() -> void:
 	player.name = "Player"
 	player.global_position = GameState.player_position
 	add_child(player)
+	NetworkManager.set_local_player_node(player)
 
 
 func _create_background() -> void:
@@ -248,7 +285,7 @@ func _set_background_for_mode() -> void:
 	var path := "res://assets/runtime/backgrounds/mistfall_farm_commercial.png"
 	if mode == "village":
 		path = "res://assets/runtime/backgrounds/mistfall_village_commercial.png"
-	elif mode == "dungeon":
+	elif mode in ["dungeon", "abyss"]:
 		path = "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png"
 	world_background.texture = load(path)
 	if world_background.texture != null:
@@ -262,6 +299,9 @@ func _update_environment_tint() -> void:
 		return
 	var season_tints := [Color("f0fff1"), Color("fff4d8"), Color("ffd9b2"), Color("dceeff")]
 	var tint: Color = season_tints[GameState.calendar.season_index]
+	if mode == "abyss":
+		world_background.modulate = Color("51427e")
+		return
 	var hour: float = float(GameState.calendar.minute_of_day) / 60.0
 	if hour >= 20.0:
 		tint = tint * Color(0.48, 0.55, 0.78)
@@ -272,7 +312,7 @@ func _update_environment_tint() -> void:
 
 
 func _draw_weather() -> void:
-	if mode == "dungeon":
+	if mode in ["dungeon", "abyss"]:
 		return
 	var motion := int(Time.get_ticks_msec() / 28)
 	match GameState.current_weather:
@@ -399,6 +439,8 @@ func _create_commercial_menus() -> void:
 	add_child(dialogue_overlay)
 	festival_overlay = FestivalOverlayScript.new() as PixelRPGFestivalOverlay
 	add_child(festival_overlay)
+	multiplayer_menu = MultiplayerMenuScript.new() as PixelRPGMultiplayerMenu
+	add_child(multiplayer_menu)
 
 
 func _create_title_screen() -> void:
@@ -444,7 +486,7 @@ func _create_title_screen() -> void:
 	appearance_input.selected = int(Dictionary(GameState.player_profile.get("appearance", {})).get("outfit", 0))
 	profile_box.add_child(appearance_input)
 	var subtitle := Label.new()
-	subtitle.text = "30 日 × 四季 × 無限年份　｜　按 Enter／手把 A 開始"
+	subtitle.text = "30 日 × 四季 × 無限年份　｜　Enter／A 開始　M／Select 連線"
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	subtitle.position = Vector2(90, 292)
 	subtitle.size = Vector2(460, 35)
@@ -475,6 +517,9 @@ func _connect_events() -> void:
 	EventBus.toast_requested.connect(_show_toast)
 	EventBus.day_started.connect(_on_day_started)
 	EventBus.festival_available.connect(_on_festival_available)
+	NetworkManager.snapshot_received.connect(_on_network_snapshot)
+	NetworkManager.action_result_received.connect(_on_network_action_result)
+	NetworkManager.status_changed.connect(_on_network_status_changed)
 
 
 func _update_hud() -> void:
@@ -486,14 +531,24 @@ func _update_hud() -> void:
 		var seed_id := _selected_seed_id()
 		var crop := ContentRegistry.get_artifact("crops", seed_id)
 		var animal_products := int(GameState.farm.produce.get("egg", 0)) + int(GameState.farm.produce.get("milk", 0))
-		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　米拉 %d♥" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), GameState.social.hearts(&"mira")]
-		controls_label.text = "E/Y 互動　Q/RB 換種子　Esc/Start 手冊　T 速度　C 睡覺　B 洞窟　F 節慶　F5/F9 存讀"
-	else:
+		var tide_text := "異潮" if GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮"
+		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), tide_text]
+		controls_label.text = "E/Y 互動/釣魚　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度　C/D→ 睡覺"
+	elif mode == "dungeon":
 		hud_label.text = "%s　%s　HP %d/%d　四季鐘窟 %dF　敵人 %d\n封印 %d/4　電梯 %s　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), player.health, player.max_health, GameState.dungeon.current_floor, enemies_remaining, GameState.dungeon.seals.size(), str(GameState.dungeon.available_elevators()), "無限挑戰已開放" if GameState.dungeon.endless_unlocked else "主線無期限"]
-		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　E/Y 下層　B 返回農場　H 藥水"
+		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　E/Y 下層　B/RS 返回　H/LB 藥水"
+	else:
+		hud_label.text = "%s　%s　HP %d/%d　夢岸敵影 %d\n理智 %d/100　異魚 %d/8　洞見 %d　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), player.health, player.max_health, enemies_remaining, GameState.eldritch.sanity, GameState.eldritch.eldritch_catches.size(), GameState.eldritch.insight, "古神已沉睡" if GameState.eldritch.boss_defeated else "克蘇魯之影正在凝視"]
+		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　H/LB 藥水　B/RS 撤退"
 
 
 func _interact() -> void:
+	if mode == "abyss":
+		if floor_cleared:
+			_leave_eldritch_shore()
+		else:
+			_show_toast("深潮尚未平息")
+		return
 	if mode == "dungeon":
 		if player.global_position.distance_to(DUNGEON_ORE_POSITION) <= 38.0:
 			var ore_result := GameState.gather_resource("ore_%d" % GameState.dungeon.current_floor, "ore")
@@ -523,6 +578,9 @@ func _interact() -> void:
 		for node_id: String in FARM_RESOURCES:
 			var resource: Dictionary = FARM_RESOURCES[node_id]
 			if player.global_position.distance_to(Vector2(resource.position)) <= 36.0:
+				if NetworkManager.is_online():
+					NetworkManager.request_world_action("gather", {"node_id": node_id, "kind": String(resource.kind)})
+					return
 				var gather_result := GameState.gather_resource(node_id, String(resource.kind))
 				_show_toast(String(gather_result.get("message", "")))
 				return
@@ -530,6 +588,9 @@ func _interact() -> void:
 		_show_toast("走近村民、商店招牌或村口再互動")
 		return
 	if player.global_position.distance_to(SHIPPING_POSITION) <= 42.0:
+		if NetworkManager.is_online():
+			NetworkManager.request_world_action("ship")
+			return
 		var shipping_result := GameState.ship_all_produce()
 		_show_toast(String(shipping_result.get("message", "")))
 		return
@@ -537,11 +598,20 @@ func _interact() -> void:
 		_talk_to_npc("mira")
 		return
 	if player.global_position.distance_to(Vector2(52, 292)) <= 48.0:
+		if GameState.eldritch.can_challenge() and GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather):
+			_begin_eldritch_challenge()
+			return
+		if NetworkManager.is_online():
+			NetworkManager.request_world_action("fish", {"location": "pond"})
+			return
 		var catch_result := GameState.fish_at("pond")
 		_show_toast(String(catch_result.get("message", "")))
 		return
 	var nearby_animal := _nearby_animal()
 	if not nearby_animal.is_empty():
+		if NetworkManager.is_online():
+			NetworkManager.request_world_action("tend_animal", {"animal_id": nearby_animal})
+			return
 		_interact_animal(nearby_animal)
 		return
 	if player.global_position.distance_to(CAVE_POSITION) <= 48.0:
@@ -550,6 +620,9 @@ func _interact() -> void:
 	var tile := _nearest_plot()
 	if tile.x < 0:
 		_show_toast("走近農地、村民、動物或洞窟再互動")
+		return
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("farm_plot", {"x": tile.x, "y": tile.y, "seed_id": String(_selected_seed_id())})
 		return
 	var result := GameState.interact_farm_plot(tile, _selected_seed_id())
 	_show_toast(String(result.get("message", "")))
@@ -579,6 +652,10 @@ func _nearby_npc() -> String:
 
 
 func _talk_to_npc(npc_id: String) -> void:
+	if NetworkManager.is_online():
+		NetworkManager.request_world_action("talk", {"npc_id": npc_id})
+		dialogue_overlay.open_line(StringName(npc_id), _npc_dialogue_line(npc_id, GameState.social.hearts(StringName(npc_id))))
+		return
 	var hearts := GameState.talk_to(StringName(npc_id))
 	if npc_id == "mira":
 		var chapter := GameState.next_story_chapter()
@@ -633,6 +710,43 @@ func _animate_world_sprites() -> void:
 		var anchor := Vector2(NPC_POSITIONS[npc_id]) + Vector2(0, -12) if mode == "village" else MIRA_POSITION + Vector2(0, -12)
 		var phase := float(npc_id.unicode_at(0) % 7)
 		sprite.position = anchor + Vector2(0, sin(ticks * 2.2 + phase) * 1.2)
+
+
+func _on_network_snapshot(players: Dictionary) -> void:
+	var local_peer_id := multiplayer.get_unique_id() if NetworkManager.is_online() else -1
+	var present: Dictionary = {}
+	for key: Variant in players:
+		var peer_id := int(key)
+		if peer_id == local_peer_id:
+			continue
+		var state: Dictionary = players[key]
+		present[peer_id] = true
+		var remote: PixelRPGRemotePlayer = remote_players.get(peer_id)
+		if not is_instance_valid(remote):
+			var initial := Vector2(320, 205)
+			var position_data: Array = state.get("position", [320.0, 205.0])
+			if position_data.size() >= 2:
+				initial = Vector2(float(position_data[0]), float(position_data[1]))
+			remote = RemotePlayerScript.new() as PixelRPGRemotePlayer
+			remote.configure(peer_id, String(state.get("name", "旅人")), initial)
+			add_child(remote)
+			remote_players[peer_id] = remote
+		remote.apply_snapshot(state)
+	for peer_id: int in remote_players.keys():
+		if not present.has(peer_id):
+			var stale: Node = remote_players[peer_id]
+			if is_instance_valid(stale):
+				stale.queue_free()
+			remote_players.erase(peer_id)
+
+
+func _on_network_action_result(_action: String, result: Dictionary) -> void:
+	_show_toast(String(result.get("message", "共同世界操作完成")))
+
+
+func _on_network_status_changed(message: String) -> void:
+	if not message.is_empty() and not NetworkManager.is_dedicated_server:
+		_show_toast(message)
 
 
 func _update_animal_sprites() -> void:
@@ -781,6 +895,43 @@ func _leave_dungeon() -> void:
 	queue_redraw()
 
 
+func _begin_eldritch_challenge(reset_position: bool = true) -> void:
+	mode = "abyss"
+	GameState.current_map_id = &"dreaming_shore"
+	_clear_enemies()
+	_set_background_for_mode()
+	if reset_position:
+		player.global_position = Vector2(84, 285)
+	var definition := ContentRegistry.get_artifact("enemies", &"drowned_dreamer")
+	var enemy := EnemySceneScript.new() as PixelRPGEnemy
+	enemy.configure(definition)
+	enemy.global_position = Vector2(430, 178)
+	add_child(enemy)
+	enemies_remaining = 1
+	floor_cleared = false
+	final_challenge_active = false
+	eldritch_challenge_active = true
+	title_label.position = Vector2(76, 126)
+	title_label.size = Vector2(330, 85)
+	title_label.text = "無星異潮翻過池岸\n克蘇魯之影・溺夢古神"
+	_show_toast("守住名字與理智，讓深海的夢退潮。這場挑戰沒有日期期限。")
+	queue_redraw()
+
+
+func _leave_eldritch_shore() -> void:
+	_clear_enemies()
+	eldritch_challenge_active = false
+	mode = "farm"
+	GameState.current_map_id = &"mistfall_farm"
+	_set_background_for_mode()
+	title_label.position = Vector2(135, 125)
+	title_label.size = Vector2(370, 85)
+	player.global_position = Vector2(82, 288)
+	_refresh_seasonal_seeds()
+	_show_toast("你循著鐘聲返回霧落農場")
+	queue_redraw()
+
+
 func _spawn_dungeon_floor() -> void:
 	floor_cleared = false
 	final_challenge_active = false
@@ -832,6 +983,8 @@ func _descend_dungeon() -> void:
 
 func _begin_final_challenge() -> void:
 	_clear_enemies()
+	title_label.position = Vector2(135, 125)
+	title_label.size = Vector2(370, 85)
 	var definition: Dictionary = ContentRegistry.get_artifact("enemies", &"winter_bell_warden").duplicate(true)
 	definition["display_name"] = "霧鐘核心・終曲"
 	definition["max_health"] = int(definition.get("max_health", 960)) * 2
@@ -866,6 +1019,14 @@ func _on_enemy_defeated(enemy_id: StringName, _position: Vector2) -> void:
 	GameState.record_enemy_defeat(enemy_id)
 	enemies_remaining = maxi(0, enemies_remaining - 1)
 	if enemies_remaining > 0:
+		return
+	if eldritch_challenge_active and enemy_id == &"drowned_dreamer":
+		eldritch_challenge_active = false
+		floor_cleared = true
+		var result := GameState.defeat_eldritch_boss()
+		title_label.text = "無星異潮退去\n深潮夢核回應了鐘聲"
+		_show_toast(String(result.get("message", "克蘇魯之影沉回深海")))
+		queue_redraw()
 		return
 	if final_challenge_active:
 		final_challenge_active = false
