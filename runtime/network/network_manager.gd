@@ -190,7 +190,7 @@ func request_world_action(action: String, payload: Dictionary = {}) -> bool:
 		_capture_shared_world()
 		_broadcast_world()
 		return true
-	if role == Role.CLIENT and handshake_complete:
+	if role == Role.CLIENT and handshake_complete and peer != null and peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
 		_request_world_action.rpc_id(1, action, payload)
 		return true
 	return false
@@ -222,7 +222,10 @@ func _server_process(delta: float) -> void:
 	if _snapshot_accumulator >= SNAPSHOT_INTERVAL:
 		_snapshot_accumulator = 0.0
 		latest_snapshot = server_players.duplicate(true)
-		_receive_snapshot.rpc(Time.get_ticks_msec() - _server_started_msec, latest_snapshot)
+		var server_tick := Time.get_ticks_msec() - _server_started_msec
+		for remote_peer_id: int in server_players:
+			if remote_peer_id != 1 and _can_send_to_peer(remote_peer_id):
+				_receive_snapshot.rpc_id(remote_peer_id, server_tick, latest_snapshot)
 		snapshot_received.emit(latest_snapshot)
 	_world_sync_accumulator += delta
 	if _world_sync_accumulator >= WORLD_SYNC_INTERVAL:
@@ -236,6 +239,8 @@ func _server_process(delta: float) -> void:
 
 
 func _client_process(delta: float) -> void:
+	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		return
 	_input_accumulator += delta
 	if _input_accumulator < SNAPSHOT_INTERVAL:
 		return
@@ -408,11 +413,13 @@ func _request_world_action(action: String, payload: Dictionary) -> void:
 		return
 	var now := Time.get_ticks_msec()
 	if now - int(_last_action_msec.get(peer_id, 0)) < ACTION_RATE_LIMIT_MSEC:
-		_receive_action_result.rpc_id(peer_id, action, {"ok": false, "message": "操作過快，請稍候"})
+		if _can_send_to_peer(peer_id):
+			_receive_action_result.rpc_id(peer_id, action, {"ok": false, "message": "操作過快，請稍候"})
 		return
 	_last_action_msec[peer_id] = now
 	var result := _execute_world_action(peer_id, action, payload)
-	_receive_action_result.rpc_id(peer_id, action, result)
+	if _can_send_to_peer(peer_id):
+		_receive_action_result.rpc_id(peer_id, action, result)
 	_capture_shared_world()
 	_broadcast_world()
 
@@ -523,7 +530,7 @@ func _apply_shared_world(world: Dictionary) -> void:
 func _broadcast_world() -> void:
 	if role == Role.SERVER and not shared_world.is_empty():
 		for peer_id: int in server_players:
-			if peer_id != 1:
+			if peer_id != 1 and _can_send_to_peer(peer_id):
 				_receive_world_state.rpc_id(peer_id, _world_view_for_peer(peer_id))
 		if not is_dedicated_server and server_players.has(1):
 			_apply_shared_world(_world_view_for_peer(1))
@@ -780,6 +787,13 @@ func _disconnect_later(peer_id: int) -> void:
 	await get_tree().create_timer(0.15, true).timeout
 	if role == Role.SERVER and peer != null:
 		peer.disconnect_peer(peer_id)
+
+
+func _can_send_to_peer(peer_id: int) -> bool:
+	if role != Role.SERVER or peer == null or peer_id <= 1:
+		return false
+	var packet_peer := peer.get_peer(peer_id)
+	return packet_peer != null and packet_peer.get_state() == ENetPacketPeer.STATE_CONNECTED
 
 
 func _local_facing() -> Vector2:

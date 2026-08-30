@@ -1,19 +1,22 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-08-30T09:06:02.2336462Z",
+  "schema_version": 2,
+  "generated_at": "2026-08-30T09:52:36.5491768Z",
   "result": "PASS",
   "transport": "Godot ENet UDP",
-  "topology": "3 scenarios × (1 dedicated server + 2 clients)",
-  "scenarios": [
+  "topology": "6 dedicated servers + 15 clients across world-mode and player-count scenarios",
+  "world_mode_scenarios": [
     {
       "id": "shared",
       "farm_mode": "shared",
       "relationship_mode": "independent",
-      "port": 29199,
+      "player_count": 2,
+      "port": 28450,
       "topology": "1 dedicated server + 2 clients",
+      "probe_mode": "world",
       "processes": [
         {
           "details": {
+            "claim_persisted": true,
             "farm_mode": "shared",
             "leader_allowed": true,
             "peak_clients": 2,
@@ -21,6 +24,8 @@
             "private_player_worlds": 2,
             "protocol": "1.1.0",
             "relationship_mode": "independent",
+            "rival_proposal": {},
+            "romance_claims": {},
             "romance_suitors": 2,
             "shared_plots": 1,
             "story_variant": {
@@ -33,68 +38,14 @@
               "title": "雙鐘盟約"
             },
             "tie_blocked": true,
-            "world_path": "user://pixelrpg_servers/qa_29199.json"
+            "unique_claim_enforced": true,
+            "winning_proposal": {},
+            "world_path": "user://pixelrpg_servers/qa_28450.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:05:51",
+          "generated_at": "2026-08-30T09:52:03",
           "passed": true,
           "role": "server"
-        },
-        {
-          "details": {
-            "action_results": [
-              {
-                "action": "tilled",
-                "message": "翻鬆了土地",
-                "ok": true
-              },
-              {
-                "hearts": 0,
-                "message": "與mira交談，好感 0♥",
-                "ok": true,
-                "romance_board": [
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeA",
-                    "player_key": "8f5f15f88758f4be53de7ff65d57fb4d",
-                    "points": 25,
-                    "rank": 1,
-                    "tied_for_lead": false
-                  }
-                ]
-              }
-            ],
-            "final_snapshot_players": 2,
-            "moved": true,
-            "own_private_plots": 1,
-            "peak_snapshot_players": 2,
-            "peer_id": 2143775636,
-            "protocol": "1.1.0",
-            "romance_suitors": 0,
-            "world_rules": {
-              "farm_leaderboard": [],
-              "farm_mode": "shared",
-              "local_player_key": "8f5f15f88758f4be53de7ff65d57fb4d",
-              "player_count": 2,
-              "relationship_mode": "independent",
-              "romance_boards": {},
-              "romance_claims": {},
-              "story_variant": {
-                "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
-                "id": "twin_bell_pact",
-                "intro": "兩名旅人的鐘聲彼此回應，新的選擇也開始分岔。",
-                "objective": "決定共享收成，或以兩座農場證明各自的道路。",
-                "player_count": 2,
-                "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
-                "title": "雙鐘盟約"
-              }
-            }
-          },
-          "failures": [],
-          "generated_at": "2026-08-30T09:05:50",
-          "passed": true,
-          "role": "client"
         },
         {
           "details": {
@@ -113,7 +64,7 @@
                     "dating": false,
                     "hearts": 0,
                     "name": "ProbeA",
-                    "player_key": "8f5f15f88758f4be53de7ff65d57fb4d",
+                    "player_key": "2fdfac768116f983d959da0e18389d64",
                     "points": 25,
                     "rank": 1,
                     "tied_for_lead": true
@@ -122,7 +73,7 @@
                     "dating": false,
                     "hearts": 0,
                     "name": "ProbeB",
-                    "player_key": "d77c5a9628b79854993ceeeae521b936",
+                    "player_key": "0a9996fc18e525ab8861e57b26d5e1b1",
                     "points": 25,
                     "rank": 2,
                     "tied_for_lead": true
@@ -130,17 +81,18 @@
                 ]
               }
             ],
-            "final_snapshot_players": 1,
+            "final_snapshot_players": 2,
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 662138007,
+            "peer_id": 1472463938,
             "protocol": "1.1.0",
             "romance_suitors": 0,
+            "twin_story_seen": true,
             "world_rules": {
               "farm_leaderboard": [],
               "farm_mode": "shared",
-              "local_player_key": "d77c5a9628b79854993ceeeae521b936",
+              "local_player_key": "2fdfac768116f983d959da0e18389d64",
               "player_count": 2,
               "relationship_mode": "independent",
               "romance_boards": {},
@@ -157,7 +109,64 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:05:50",
+          "generated_at": "2026-08-30T09:52:03",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "action_results": [
+              {
+                "action": "tilled",
+                "message": "翻鬆了土地",
+                "ok": true
+              },
+              {
+                "hearts": 0,
+                "message": "與mira交談，好感 0♥",
+                "ok": true,
+                "romance_board": [
+                  {
+                    "dating": false,
+                    "hearts": 0,
+                    "name": "ProbeB",
+                    "player_key": "0a9996fc18e525ab8861e57b26d5e1b1",
+                    "points": 25,
+                    "rank": 1,
+                    "tied_for_lead": false
+                  }
+                ]
+              }
+            ],
+            "final_snapshot_players": 2,
+            "moved": true,
+            "own_private_plots": 1,
+            "peak_snapshot_players": 2,
+            "peer_id": 1421893798,
+            "protocol": "1.1.0",
+            "romance_suitors": 0,
+            "twin_story_seen": true,
+            "world_rules": {
+              "farm_leaderboard": [],
+              "farm_mode": "shared",
+              "local_player_key": "0a9996fc18e525ab8861e57b26d5e1b1",
+              "player_count": 2,
+              "relationship_mode": "independent",
+              "romance_boards": {},
+              "romance_claims": {},
+              "story_variant": {
+                "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+                "id": "twin_bell_pact",
+                "intro": "兩名旅人的鐘聲彼此回應，新的選擇也開始分岔。",
+                "objective": "決定共享收成，或以兩座農場證明各自的道路。",
+                "player_count": 2,
+                "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+                "title": "雙鐘盟約"
+              }
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:03",
           "passed": true,
           "role": "client"
         }
@@ -167,11 +176,14 @@
       "id": "private",
       "farm_mode": "private",
       "relationship_mode": "independent",
-      "port": 29932,
+      "player_count": 2,
+      "port": 28473,
       "topology": "1 dedicated server + 2 clients",
+      "probe_mode": "world",
       "processes": [
         {
           "details": {
+            "claim_persisted": true,
             "farm_mode": "private",
             "leader_allowed": true,
             "peak_clients": 2,
@@ -179,6 +191,8 @@
             "private_player_worlds": 2,
             "protocol": "1.1.0",
             "relationship_mode": "independent",
+            "rival_proposal": {},
+            "romance_claims": {},
             "romance_suitors": 2,
             "shared_plots": 0,
             "story_variant": {
@@ -191,10 +205,12 @@
               "title": "雙鐘盟約"
             },
             "tie_blocked": true,
-            "world_path": "user://pixelrpg_servers/qa_29932.json"
+            "unique_claim_enforced": true,
+            "winning_proposal": {},
+            "world_path": "user://pixelrpg_servers/qa_28473.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:05:57",
+          "generated_at": "2026-08-30T09:52:09",
           "passed": true,
           "role": "server"
         },
@@ -215,7 +231,7 @@
                     "dating": false,
                     "hearts": 0,
                     "name": "ProbeA",
-                    "player_key": "73aab176602c9ff65416f1ca583954bd",
+                    "player_key": "686e4996097eae59dfa71d69dc76898d",
                     "points": 25,
                     "rank": 1,
                     "tied_for_lead": false
@@ -227,13 +243,14 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 59352811,
+            "peer_id": 244721439,
             "protocol": "1.1.0",
             "romance_suitors": 0,
+            "twin_story_seen": true,
             "world_rules": {
               "farm_leaderboard": [],
               "farm_mode": "private",
-              "local_player_key": "73aab176602c9ff65416f1ca583954bd",
+              "local_player_key": "686e4996097eae59dfa71d69dc76898d",
               "player_count": 2,
               "relationship_mode": "independent",
               "romance_boards": {},
@@ -250,7 +267,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:05:56",
+          "generated_at": "2026-08-30T09:52:09",
           "passed": true,
           "role": "client"
         },
@@ -271,7 +288,7 @@
                     "dating": false,
                     "hearts": 0,
                     "name": "ProbeA",
-                    "player_key": "73aab176602c9ff65416f1ca583954bd",
+                    "player_key": "686e4996097eae59dfa71d69dc76898d",
                     "points": 25,
                     "rank": 1,
                     "tied_for_lead": true
@@ -280,7 +297,7 @@
                     "dating": false,
                     "hearts": 0,
                     "name": "ProbeB",
-                    "player_key": "5ff9e0e8f1b01ca64d4647df44a504e2",
+                    "player_key": "194860766f5f162f48b248b847c56bf3",
                     "points": 25,
                     "rank": 2,
                     "tied_for_lead": true
@@ -292,13 +309,14 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1280556998,
+            "peer_id": 1045802959,
             "protocol": "1.1.0",
             "romance_suitors": 0,
+            "twin_story_seen": true,
             "world_rules": {
               "farm_leaderboard": [],
               "farm_mode": "private",
-              "local_player_key": "5ff9e0e8f1b01ca64d4647df44a504e2",
+              "local_player_key": "194860766f5f162f48b248b847c56bf3",
               "player_count": 2,
               "relationship_mode": "independent",
               "romance_boards": {},
@@ -315,7 +333,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:05:56",
+          "generated_at": "2026-08-30T09:52:09",
           "passed": true,
           "role": "client"
         }
@@ -325,11 +343,14 @@
       "id": "competitive",
       "farm_mode": "competitive",
       "relationship_mode": "competitive",
-      "port": 28457,
+      "player_count": 2,
+      "port": 29438,
       "topology": "1 dedicated server + 2 clients",
+      "probe_mode": "world",
       "processes": [
         {
           "details": {
+            "claim_persisted": true,
             "farm_mode": "competitive",
             "leader_allowed": true,
             "peak_clients": 2,
@@ -337,6 +358,13 @@
             "private_player_worlds": 2,
             "protocol": "1.1.0",
             "relationship_mode": "competitive",
+            "rival_proposal": {
+              "message": "這名角色已與另一位玩家締結婚約",
+              "ok": false
+            },
+            "romance_claims": {
+              "mira": "d47214623fa12ae7e3e4bb3601184760"
+            },
             "romance_suitors": 2,
             "shared_plots": 0,
             "story_variant": {
@@ -349,10 +377,35 @@
               "title": "雙鐘盟約"
             },
             "tie_blocked": true,
-            "world_path": "user://pixelrpg_servers/qa_28457.json"
+            "unique_claim_enforced": true,
+            "winning_proposal": {
+              "message": "你在追求競爭中領先，鐘聲接受了這份婚約｜目前第 1／2 名",
+              "ok": true,
+              "romance_board": [
+                {
+                  "dating": true,
+                  "hearts": 10,
+                  "name": "ProbeA",
+                  "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                  "points": 2501,
+                  "rank": 1,
+                  "tied_for_lead": true
+                },
+                {
+                  "dating": true,
+                  "hearts": 10,
+                  "name": "ProbeB",
+                  "player_key": "efc26b319546c6e98615c00119384d8d",
+                  "points": 2500,
+                  "rank": 2,
+                  "tied_for_lead": false
+                }
+              ]
+            },
+            "world_path": "user://pixelrpg_servers/qa_29438.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:06:02",
+          "generated_at": "2026-08-30T09:52:16",
           "passed": true,
           "role": "server"
         },
@@ -366,7 +419,7 @@
                     "crops": 0,
                     "farm_rank": 1,
                     "name": "ProbeA",
-                    "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
                     "rank": 1,
                     "score": 510
                   },
@@ -374,131 +427,7 @@
                     "crops": 0,
                     "farm_rank": 1,
                     "name": "ProbeB",
-                    "player_key": "e0d90e43f4027834798079cdee81bedf",
-                    "rank": 2,
-                    "score": 510
-                  }
-                ],
-                "message": "翻鬆了土地",
-                "ok": true
-              },
-              {
-                "hearts": 0,
-                "message": "與mira交談，好感 0♥｜目前第 1／2 名",
-                "ok": true,
-                "romance_board": [
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeA",
-                    "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
-                    "points": 25,
-                    "rank": 1,
-                    "tied_for_lead": true
-                  },
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeB",
-                    "player_key": "e0d90e43f4027834798079cdee81bedf",
-                    "points": 25,
-                    "rank": 2,
-                    "tied_for_lead": true
-                  }
-                ]
-              }
-            ],
-            "final_snapshot_players": 2,
-            "moved": true,
-            "own_private_plots": 1,
-            "peak_snapshot_players": 2,
-            "peer_id": 1648253213,
-            "protocol": "1.1.0",
-            "romance_suitors": 2,
-            "world_rules": {
-              "farm_leaderboard": [
-                {
-                  "crops": 0,
-                  "farm_rank": 1,
-                  "name": "ProbeA",
-                  "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
-                  "rank": 1,
-                  "score": 510
-                },
-                {
-                  "crops": 0,
-                  "farm_rank": 1,
-                  "name": "ProbeB",
-                  "player_key": "e0d90e43f4027834798079cdee81bedf",
-                  "rank": 2,
-                  "score": 510
-                }
-              ],
-              "farm_mode": "competitive",
-              "local_player_key": "55dfeb0f2632d1f10ce6297ab120b931",
-              "player_count": 2,
-              "relationship_mode": "competitive",
-              "romance_boards": {
-                "lian": [],
-                "mira": [
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeA",
-                    "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
-                    "points": 25,
-                    "rank": 1,
-                    "tied_for_lead": true
-                  },
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeB",
-                    "player_key": "e0d90e43f4027834798079cdee81bedf",
-                    "points": 25,
-                    "rank": 2,
-                    "tied_for_lead": true
-                  }
-                ],
-                "soren": [],
-                "yuna": []
-              },
-              "romance_claims": {},
-              "story_variant": {
-                "farm_branch": "每名玩家有獨立農場與季節積分；劇情加入評鑑、領先與逆轉事件。",
-                "id": "twin_bell_pact",
-                "intro": "兩名旅人的鐘聲彼此回應，新的選擇也開始分岔。",
-                "objective": "決定共享收成，或以兩座農場證明各自的道路。",
-                "player_count": 2,
-                "relationship_branch": "戀愛候選人的追求者會互相成為情敵；平手時需等待下一次村莊事件決勝。",
-                "title": "雙鐘盟約"
-              }
-            }
-          },
-          "failures": [],
-          "generated_at": "2026-08-30T09:06:01",
-          "passed": true,
-          "role": "client"
-        },
-        {
-          "details": {
-            "action_results": [
-              {
-                "action": "tilled",
-                "leaderboard": [
-                  {
-                    "crops": 0,
-                    "farm_rank": 1,
-                    "name": "ProbeB",
-                    "player_key": "e0d90e43f4027834798079cdee81bedf",
-                    "rank": 1,
-                    "score": 510
-                  },
-                  {
-                    "crops": 0,
-                    "farm_rank": 1,
-                    "name": "ProbeA",
-                    "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
                     "rank": 2,
                     "score": 500
                   }
@@ -514,8 +443,8 @@
                   {
                     "dating": false,
                     "hearts": 0,
-                    "name": "ProbeB",
-                    "player_key": "e0d90e43f4027834798079cdee81bedf",
+                    "name": "ProbeA",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
                     "points": 25,
                     "rank": 1,
                     "tied_for_lead": false
@@ -527,16 +456,17 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1042111560,
+            "peer_id": 1224497331,
             "protocol": "1.1.0",
             "romance_suitors": 2,
+            "twin_story_seen": true,
             "world_rules": {
               "farm_leaderboard": [
                 {
                   "crops": 0,
                   "farm_rank": 1,
                   "name": "ProbeA",
-                  "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
+                  "player_key": "d47214623fa12ae7e3e4bb3601184760",
                   "rank": 1,
                   "score": 510
                 },
@@ -544,41 +474,43 @@
                   "crops": 0,
                   "farm_rank": 1,
                   "name": "ProbeB",
-                  "player_key": "e0d90e43f4027834798079cdee81bedf",
+                  "player_key": "efc26b319546c6e98615c00119384d8d",
                   "rank": 2,
                   "score": 510
                 }
               ],
               "farm_mode": "competitive",
-              "local_player_key": "e0d90e43f4027834798079cdee81bedf",
+              "local_player_key": "d47214623fa12ae7e3e4bb3601184760",
               "player_count": 2,
               "relationship_mode": "competitive",
               "romance_boards": {
                 "lian": [],
                 "mira": [
                   {
-                    "dating": false,
-                    "hearts": 0,
+                    "dating": true,
+                    "hearts": 10,
                     "name": "ProbeA",
-                    "player_key": "55dfeb0f2632d1f10ce6297ab120b931",
-                    "points": 25,
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                    "points": 2501,
                     "rank": 1,
                     "tied_for_lead": true
                   },
                   {
-                    "dating": false,
-                    "hearts": 0,
+                    "dating": true,
+                    "hearts": 10,
                     "name": "ProbeB",
-                    "player_key": "e0d90e43f4027834798079cdee81bedf",
-                    "points": 25,
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
+                    "points": 2500,
                     "rank": 2,
-                    "tied_for_lead": true
+                    "tied_for_lead": false
                   }
                 ],
                 "soren": [],
                 "yuna": []
               },
-              "romance_claims": {},
+              "romance_claims": {
+                "mira": "d47214623fa12ae7e3e4bb3601184760"
+              },
               "story_variant": {
                 "farm_branch": "每名玩家有獨立農場與季節積分；劇情加入評鑑、領先與逆轉事件。",
                 "id": "twin_bell_pact",
@@ -591,7 +523,436 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:06:01",
+          "generated_at": "2026-08-30T09:52:16",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "action_results": [
+              {
+                "action": "tilled",
+                "leaderboard": [
+                  {
+                    "crops": 0,
+                    "farm_rank": 1,
+                    "name": "ProbeA",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                    "rank": 1,
+                    "score": 510
+                  },
+                  {
+                    "crops": 0,
+                    "farm_rank": 1,
+                    "name": "ProbeB",
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
+                    "rank": 2,
+                    "score": 510
+                  }
+                ],
+                "message": "翻鬆了土地",
+                "ok": true
+              },
+              {
+                "hearts": 0,
+                "message": "與mira交談，好感 0♥｜目前第 2／2 名",
+                "ok": true,
+                "romance_board": [
+                  {
+                    "dating": false,
+                    "hearts": 0,
+                    "name": "ProbeA",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                    "points": 25,
+                    "rank": 1,
+                    "tied_for_lead": true
+                  },
+                  {
+                    "dating": false,
+                    "hearts": 0,
+                    "name": "ProbeB",
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
+                    "points": 25,
+                    "rank": 2,
+                    "tied_for_lead": true
+                  }
+                ]
+              }
+            ],
+            "final_snapshot_players": 2,
+            "moved": true,
+            "own_private_plots": 1,
+            "peak_snapshot_players": 2,
+            "peer_id": 1426601755,
+            "protocol": "1.1.0",
+            "romance_suitors": 2,
+            "twin_story_seen": true,
+            "world_rules": {
+              "farm_leaderboard": [
+                {
+                  "crops": 0,
+                  "farm_rank": 1,
+                  "name": "ProbeA",
+                  "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                  "rank": 1,
+                  "score": 510
+                },
+                {
+                  "crops": 0,
+                  "farm_rank": 1,
+                  "name": "ProbeB",
+                  "player_key": "efc26b319546c6e98615c00119384d8d",
+                  "rank": 2,
+                  "score": 510
+                }
+              ],
+              "farm_mode": "competitive",
+              "local_player_key": "efc26b319546c6e98615c00119384d8d",
+              "player_count": 2,
+              "relationship_mode": "competitive",
+              "romance_boards": {
+                "lian": [],
+                "mira": [
+                  {
+                    "dating": true,
+                    "hearts": 10,
+                    "name": "ProbeA",
+                    "player_key": "d47214623fa12ae7e3e4bb3601184760",
+                    "points": 2501,
+                    "rank": 1,
+                    "tied_for_lead": true
+                  },
+                  {
+                    "dating": true,
+                    "hearts": 10,
+                    "name": "ProbeB",
+                    "player_key": "efc26b319546c6e98615c00119384d8d",
+                    "points": 2500,
+                    "rank": 2,
+                    "tied_for_lead": false
+                  }
+                ],
+                "soren": [],
+                "yuna": []
+              },
+              "romance_claims": {
+                "mira": "d47214623fa12ae7e3e4bb3601184760"
+              },
+              "story_variant": {
+                "farm_branch": "每名玩家有獨立農場與季節積分；劇情加入評鑑、領先與逆轉事件。",
+                "id": "twin_bell_pact",
+                "intro": "兩名旅人的鐘聲彼此回應，新的選擇也開始分岔。",
+                "objective": "決定共享收成，或以兩座農場證明各自的道路。",
+                "player_count": 2,
+                "relationship_branch": "戀愛候選人的追求者會互相成為情敵；平手時需等待下一次村莊事件決勝。",
+                "title": "雙鐘盟約"
+              }
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:16",
+          "passed": true,
+          "role": "client"
+        }
+      ]
+    }
+  ],
+  "story_scaling_scenarios": [
+    {
+      "id": "story_1",
+      "farm_mode": "shared",
+      "relationship_mode": "independent",
+      "player_count": 1,
+      "port": 28872,
+      "topology": "1 dedicated server + 1 clients",
+      "probe_mode": "story",
+      "processes": [
+        {
+          "details": {
+            "peak_clients": 1,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "solo_bell",
+              "intro": "一名旅人獨自聽見霧中的鐘聲。",
+              "objective": "依自己的步調重建農場與四季封印。",
+              "player_count": 1,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "獨鐘守望"
+            },
+            "world_path": "user://pixelrpg_servers/qa_28872.json"
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:22",
+          "passed": true,
+          "role": "server"
+        },
+        {
+          "details": {
+            "expected_story_id": "solo_bell",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 1,
+            "peer_id": 1402354582,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "solo_bell",
+              "intro": "一名旅人獨自聽見霧中的鐘聲。",
+              "objective": "依自己的步調重建農場與四季封印。",
+              "player_count": 1,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "獨鐘守望"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:22",
+          "passed": true,
+          "role": "client"
+        }
+      ]
+    },
+    {
+      "id": "story_3",
+      "farm_mode": "shared",
+      "relationship_mode": "independent",
+      "player_count": 3,
+      "port": 28515,
+      "topology": "1 dedicated server + 3 clients",
+      "probe_mode": "story",
+      "processes": [
+        {
+          "details": {
+            "peak_clients": 3,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "four_season_chorus",
+              "intro": "眾人的腳步喚醒四枚封印，村民開始把委託交給整個隊伍。",
+              "objective": "分工照料四季產業，並處理友情、競爭與承諾。",
+              "player_count": 3,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "四季合奏"
+            },
+            "world_path": "user://pixelrpg_servers/qa_28515.json"
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:29",
+          "passed": true,
+          "role": "server"
+        },
+        {
+          "details": {
+            "expected_story_id": "four_season_chorus",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 3,
+            "peer_id": 684401087,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "four_season_chorus",
+              "intro": "眾人的腳步喚醒四枚封印，村民開始把委託交給整個隊伍。",
+              "objective": "分工照料四季產業，並處理友情、競爭與承諾。",
+              "player_count": 3,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "四季合奏"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:29",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "four_season_chorus",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 3,
+            "peer_id": 469650662,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "four_season_chorus",
+              "intro": "眾人的腳步喚醒四枚封印，村民開始把委託交給整個隊伍。",
+              "objective": "分工照料四季產業，並處理友情、競爭與承諾。",
+              "player_count": 3,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "四季合奏"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:29",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "four_season_chorus",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 3,
+            "peer_id": 241843846,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "four_season_chorus",
+              "intro": "眾人的腳步喚醒四枚封印，村民開始把委託交給整個隊伍。",
+              "objective": "分工照料四季產業，並處理友情、競爭與承諾。",
+              "player_count": 3,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "四季合奏"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:29",
+          "passed": true,
+          "role": "client"
+        }
+      ]
+    },
+    {
+      "id": "story_5",
+      "farm_mode": "shared",
+      "relationship_mode": "independent",
+      "player_count": 5,
+      "port": 29247,
+      "topology": "1 dedicated server + 5 clients",
+      "probe_mode": "story",
+      "processes": [
+        {
+          "details": {
+            "peak_clients": 5,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 5,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            },
+            "world_path": "user://pixelrpg_servers/qa_29247.json"
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:36",
+          "passed": true,
+          "role": "server"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 5,
+            "peer_id": 1791031632,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 5,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:36",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 5,
+            "peer_id": 1581031417,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 5,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:36",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 5,
+            "peer_id": 281881186,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 5,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:36",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 5,
+            "peer_id": 2026251104,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 5,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:36",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 5,
+            "peer_id": 59488057,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 5,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T09:52:36",
           "passed": true,
           "role": "client"
         }

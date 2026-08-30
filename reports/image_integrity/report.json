@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T09:02:03",
+	"generated_at": "2026-08-30T09:51:45",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -4207,13 +4207,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1920x1080.png",
 			"passed": true,
-			"detail": "variance=0.02319"
+			"detail": "variance=0.02317"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：1920x1080.png",
 			"passed": true,
-			"detail": "500 sampled colors"
+			"detail": "501 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -4291,13 +4291,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：640x360.png",
 			"passed": true,
-			"detail": "variance=0.02079"
+			"detail": "variance=0.02086"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：640x360.png",
 			"passed": true,
-			"detail": "517 sampled colors"
+			"detail": "518 sampled colors"
 		},
 		{
 			"category": "畫面證據",

@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T09:02:38",
+	"generated_at": "2026-08-30T09:52:44",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -21,31 +21,31 @@
 			"width": 640,
 			"height": 360,
 			"integer_scale": 1,
-			"variance": 0.0209659996713464,
-			"black_ratio": 0.00142361111111111
+			"variance": 0.0210152960517914,
+			"black_ratio": 0.00138888888888889
 		},
 		{
 			"file": "1280x720.png",
 			"width": 1280,
 			"height": 720,
 			"integer_scale": 2,
-			"variance": 0.0216013553342097,
-			"black_ratio": 0.00149305555555556
+			"variance": 0.0215815544841756,
+			"black_ratio": 0.00147569444444444
 		},
 		{
 			"file": "1920x1080.png",
 			"width": 1920,
 			"height": 1080,
 			"integer_scale": 3,
-			"variance": 0.0220695796314426,
-			"black_ratio": 0.00157986111111111
+			"variance": 0.0220619753168231,
+			"black_ratio": 0.00154513888888889
 		},
 		{
 			"file": "2560x1440.png",
 			"width": 2560,
 			"height": 1440,
 			"integer_scale": 4,
-			"variance": 0.0224204405482796,
+			"variance": 0.0224106156618754,
 			"black_ratio": 0.00161458333333333
 		}
 	],
@@ -66,7 +66,7 @@
 			"category": "畫面",
 			"name": "640x360.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02097"
+			"detail": "variance=0.02102"
 		},
 		{
 			"category": "畫面",
@@ -96,7 +96,7 @@
 			"category": "畫面",
 			"name": "1280x720.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02160"
+			"detail": "variance=0.02158"
 		},
 		{
 			"category": "畫面",
@@ -126,13 +126,13 @@
 			"category": "畫面",
 			"name": "1920x1080.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02207"
+			"detail": "variance=0.02206"
 		},
 		{
 			"category": "畫面",
 			"name": "1920x1080.png 沒有異常大面積黑屏",
 			"passed": true,
-			"detail": "black=0.16%"
+			"detail": "black=0.15%"
 		},
 		{
 			"category": "整數縮放",
@@ -156,7 +156,7 @@
 			"category": "畫面",
 			"name": "2560x1440.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02242"
+			"detail": "variance=0.02241"
 		},
 		{
 			"category": "畫面",

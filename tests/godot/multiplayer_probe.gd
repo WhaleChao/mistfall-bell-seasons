@@ -11,6 +11,7 @@ var player_name := "Probe"
 var expected_clients := 2
 var farm_mode_arg := "competitive"
 var relationship_mode_arg := "competitive"
+var probe_mode := "world"
 var failures: Array[String] = []
 var action_results: Array[Dictionary] = []
 var network: Node
@@ -37,6 +38,8 @@ func _parse_arguments() -> void:
 			farm_mode_arg = argument.trim_prefix("--farm-mode=")
 		elif argument.begins_with("--relationship-mode="):
 			relationship_mode_arg = argument.trim_prefix("--relationship-mode=")
+		elif argument.begins_with("--probe-mode="):
+			probe_mode = argument.trim_prefix("--probe-mode=")
 
 
 func _run() -> void:
@@ -70,6 +73,22 @@ func _run_server() -> void:
 		await process_frame
 	if peak_clients < expected_clients:
 		failures.append("Expected %d clients, peak was %d" % [expected_clients, peak_clients])
+	if probe_mode == "story":
+		var observation_deadline := Time.get_ticks_msec() + 5000
+		while Time.get_ticks_msec() < observation_deadline:
+			peak_clients = maxi(peak_clients, network.server_players.size())
+			await process_frame
+		network._capture_shared_world()
+		var expected_story := _expected_story_id(expected_clients)
+		if String(story_at_peak.get("id", "")) != expected_story or int(story_at_peak.get("player_count", 0)) != expected_clients:
+			failures.append("Expected adaptive story %s for %d players" % [expected_story, expected_clients])
+		var story_world_path := ProjectSettings.globalize_path(network.server_world_path())
+		network.stop(false)
+		if not FileAccess.file_exists(story_world_path):
+			failures.append("Story-scaling server world save was not written")
+		_write_report({"peak_clients":peak_clients, "world_path":network.server_world_path(), "story_variant":story_at_peak, "protocol":PixelRPGNetworkManager.PROTOCOL_VERSION})
+		quit(0 if failures.is_empty() else 1)
+		return
 	var action_deadline := Time.get_ticks_msec() + 3500
 	while Time.get_ticks_msec() < action_deadline:
 		peak_clients = maxi(peak_clients, network.server_players.size())
@@ -98,6 +117,11 @@ func _run_server() -> void:
 	var keys := verdict_worlds.keys()
 	var tie_blocked := false
 	var leader_allowed := false
+	var unique_claim_enforced := relationship_mode_arg != "competitive"
+	var claim_persisted := relationship_mode_arg != "competitive"
+	var claimed_player_key := ""
+	var winning_proposal_result: Dictionary = {}
+	var rival_proposal_result: Dictionary = {}
 	if keys.size() == 2:
 		for player_key: String in keys:
 			var context: Dictionary = verdict_worlds[player_key]
@@ -115,13 +139,37 @@ func _run_server() -> void:
 		leader_context["relationships"] = leader_relationships
 		verdict_worlds[keys[0]] = leader_context
 		leader_allowed = bool(PixelRPGMultiplayerNarrativeSystem.proposal_verdict(String(keys[0]), "mira", verdict_worlds, {}, true).get("ok", false))
+		if relationship_mode_arg == "competitive":
+			network.shared_world["player_worlds"] = verdict_worlds
+			var peer_by_key: Dictionary = {}
+			for connected_peer_id: int in network.server_players:
+				var connected_state: Dictionary = network.server_players[connected_peer_id]
+				peer_by_key[String(connected_state.get("player_key", ""))] = connected_peer_id
+			claimed_player_key = String(keys[0])
+			var rival_key := String(keys[1])
+			winning_proposal_result = network._execute_relationship_action(int(peer_by_key.get(claimed_player_key, 0)), "propose_npc", {"npc_id":"mira"})
+			rival_proposal_result = network._execute_relationship_action(int(peer_by_key.get(rival_key, 0)), "propose_npc", {"npc_id":"mira"})
+			unique_claim_enforced = bool(winning_proposal_result.get("ok", false)) and not bool(rival_proposal_result.get("ok", false)) and String(Dictionary(network.shared_world.get("romance_claims", {})).get("mira", "")) == claimed_player_key and "婚約" in String(rival_proposal_result.get("message", ""))
 	if relationship_mode_arg == "competitive" and (not tie_blocked or not leader_allowed):
 		failures.append("Romance competition tie/leader proposal rules failed")
+	if relationship_mode_arg == "competitive" and not unique_claim_enforced:
+		failures.append("Server did not enforce a unique competitive romance claim")
+	network._capture_shared_world()
+	network._broadcast_world()
+	var final_delivery_deadline := Time.get_ticks_msec() + 1500
+	while Time.get_ticks_msec() < final_delivery_deadline:
+		await process_frame
 	var world_path := ProjectSettings.globalize_path(network.server_world_path())
 	network.stop(false)
 	if not FileAccess.file_exists(world_path):
 		failures.append("Dedicated server world save was not written")
-	_write_report({"peak_clients": peak_clients, "world_path": network.server_world_path(), "farm_mode":farm_mode_arg, "relationship_mode":relationship_mode_arg, "shared_plots":shared_plots.size(), "private_player_worlds": player_worlds.size(), "private_farms_ok":private_farms_ok, "story_variant": story, "romance_suitors": romance_board.size(), "tie_blocked":tie_blocked, "leader_allowed":leader_allowed, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION})
+	else:
+		var saved_world: Variant = JSON.parse_string(FileAccess.get_file_as_string(world_path))
+		if saved_world is Dictionary:
+			claim_persisted = relationship_mode_arg != "competitive" or String(Dictionary(Dictionary(saved_world).get("romance_claims", {})).get("mira", "")) == claimed_player_key
+	if relationship_mode_arg == "competitive" and not claim_persisted:
+		failures.append("Competitive romance claim was not persisted in the server world")
+	_write_report({"peak_clients": peak_clients, "world_path": network.server_world_path(), "farm_mode":farm_mode_arg, "relationship_mode":relationship_mode_arg, "shared_plots":shared_plots.size(), "private_player_worlds": player_worlds.size(), "private_farms_ok":private_farms_ok, "story_variant": story, "romance_suitors": romance_board.size(), "tie_blocked":tie_blocked, "leader_allowed":leader_allowed, "winning_proposal":winning_proposal_result, "rival_proposal":rival_proposal_result, "romance_claims":network.shared_world.get("romance_claims", {}), "unique_claim_enforced":unique_claim_enforced, "claim_persisted":claim_persisted, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION})
 	quit(0 if failures.is_empty() else 1)
 
 
@@ -144,6 +192,7 @@ func _run_client() -> void:
 	if not network.handshake_complete:
 		failures.append("Handshake did not complete")
 	else:
+		var connected_peer_id: int = network.multiplayer.get_unique_id()
 		if player_name.ends_with("A"):
 			Input.action_press("move_right")
 		else:
@@ -154,14 +203,29 @@ func _run_client() -> void:
 			await process_frame
 		Input.action_release("move_right")
 		Input.action_release("move_down")
+		if probe_mode == "story":
+			var story_sync_deadline := Time.get_ticks_msec() + 1400
+			while Time.get_ticks_msec() < story_sync_deadline:
+				peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
+				await process_frame
+			await _finish_story_client(avatar, peak_snapshot_players, connected_peer_id)
+			return
 		network.request_world_action("farm_plot", {"x": 0, "y": 0, "seed_id": "spring_turnip"})
-		var action_gap := Time.get_ticks_msec() + 240
+		# Leave ample room above the server's 150 ms abuse throttle. ENet may
+		# coalesce reliable packets while several headless peers start at once.
+		var action_gap := Time.get_ticks_msec() + 500
 		while Time.get_ticks_msec() < action_gap:
 			peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
 			await process_frame
 		network.request_world_action("talk", {"npc_id":"mira"})
 		var sync_deadline := Time.get_ticks_msec() + 1200
 		while Time.get_ticks_msec() < sync_deadline:
+			peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
+			await process_frame
+		# Keep the real peers connected while the server verifies competitive
+		# proposal ownership and persists the unique romance claim.
+		var server_verification_deadline := Time.get_ticks_msec() + 1200
+		while Time.get_ticks_msec() < server_verification_deadline:
 			peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
 			await process_frame
 	peak_snapshot_players = maxi(peak_snapshot_players, network.latest_snapshot.size())
@@ -179,7 +243,8 @@ func _run_client() -> void:
 	var multiplayer_data: Dictionary = local_world.get("multiplayer", {})
 	var own_plots: Dictionary = Dictionary(local_world.get("farm", {})).get("plots", {})
 	var client_romance_board: Array = Dictionary(multiplayer_data.get("romance_boards", {})).get("mira", [])
-	if String(multiplayer_data.get("farm_mode", "")) != farm_mode_arg or String(multiplayer_data.get("relationship_mode", "")) != relationship_mode_arg or String(Dictionary(multiplayer_data.get("story_variant", {})).get("id", "")) != "twin_bell_pact":
+	var twin_story_seen := _world_observed_story(local_world, "twin_bell_pact", 2)
+	if String(multiplayer_data.get("farm_mode", "")) != farm_mode_arg or String(multiplayer_data.get("relationship_mode", "")) != relationship_mode_arg or not twin_story_seen:
 		failures.append("Client did not receive selected world rules and adaptive story")
 	if own_plots.is_empty():
 		failures.append("Client view did not contain the selected shared/private farm")
@@ -187,8 +252,58 @@ func _run_client() -> void:
 		failures.append("Client view did not contain romance rivals")
 	if relationship_mode_arg == "independent" and not Dictionary(local_world.get("relationships", {})).has("mira"):
 		failures.append("Client view did not contain its independent relationship progress")
-	var details := {"peer_id": own_id, "peak_snapshot_players": peak_snapshot_players, "final_snapshot_players": network.latest_snapshot.size(), "moved": moved, "own_private_plots":own_plots.size(), "romance_suitors":client_romance_board.size(), "world_rules":multiplayer_data, "action_results": action_results, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION}
-	network.stop(false)
+	var details := {"peer_id": own_id, "peak_snapshot_players": peak_snapshot_players, "final_snapshot_players": network.latest_snapshot.size(), "moved": moved, "own_private_plots":own_plots.size(), "romance_suitors":client_romance_board.size(), "twin_story_seen":twin_story_seen, "world_rules":multiplayer_data, "action_results": action_results, "protocol": PixelRPGNetworkManager.PROTOCOL_VERSION}
+	await _write_client_report_and_wait(details)
+
+
+func _finish_story_client(avatar: Node2D, peak_snapshot_players: int, own_id: int) -> void:
+	var own_state: Dictionary = network.latest_snapshot.get(own_id, {})
+	var position_data: Array = own_state.get("position", [avatar.global_position.x, avatar.global_position.y])
+	var expected_spawn := Vector2(320.0 + float((own_id % 5) * 18), 205.0)
+	var moved := position_data.size() >= 2 and Vector2(float(position_data[0]), float(position_data[1])).distance_to(expected_spawn) > 20.0
+	if not moved:
+		failures.append("Story-scaling client movement was not authoritative")
+	if peak_snapshot_players < expected_clients:
+		failures.append("Story-scaling client saw %d/%d player snapshots" % [peak_snapshot_players, expected_clients])
+	var multiplayer_data: Dictionary = network.shared_world.get("multiplayer", {})
+	var story: Dictionary = multiplayer_data.get("story_variant", {})
+	var expected_story := _expected_story_id(expected_clients)
+	var expected_story_seen := _world_observed_story(network.shared_world, expected_story, expected_clients)
+	if not expected_story_seen:
+		failures.append("Client expected adaptive story %s for %d players" % [expected_story, expected_clients])
+	var details := {"peer_id":own_id, "peak_snapshot_players":peak_snapshot_players, "moved":moved, "expected_story_id":expected_story, "expected_story_seen":expected_story_seen, "story_variant":story, "protocol":PixelRPGNetworkManager.PROTOCOL_VERSION}
+	await _write_client_report_and_wait(details)
+
+
+func _expected_story_id(player_count: int) -> String:
+	if player_count <= 1:
+		return "solo_bell"
+	if player_count == 2:
+		return "twin_bell_pact"
+	if player_count <= 4:
+		return "four_season_chorus"
+	return "mistfall_council"
+
+
+func _world_observed_story(world: Dictionary, expected_id: String, expected_count: int) -> bool:
+	var current: Dictionary = Dictionary(world.get("multiplayer", {})).get("story_variant", world.get("story_variant", {}))
+	if String(current.get("id", "")) == expected_id and int(current.get("player_count", 0)) == expected_count:
+		return true
+	for event_value: Variant in Array(world.get("narrative_events", [])):
+		if event_value is Dictionary:
+			var event: Dictionary = event_value
+			if String(event.get("variant_id", "")) == expected_id and int(event.get("player_count", 0)) == expected_count:
+				return true
+	return false
+
+
+func _write_client_report_and_wait(details: Dictionary) -> void:
+	var shutdown_deadline := Time.get_ticks_msec() + 7000
+	while network.role == PixelRPGNetworkManager.Role.CLIENT and Time.get_ticks_msec() < shutdown_deadline:
+		await process_frame
+	if network.role == PixelRPGNetworkManager.Role.CLIENT:
+		failures.append("Server did not complete coordinated test shutdown")
+		network.stop(false)
 	_write_report(details)
 	quit(0 if failures.is_empty() else 1)
 
