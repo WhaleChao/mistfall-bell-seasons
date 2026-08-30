@@ -2,7 +2,7 @@
 
 ## 發行結果
 
-v1.0.0 已由垂直切片提升為 Windows x64 繁體中文單人商業發行候選版。遊戲可獨立離線執行；Ollama、模型、Creator Service、設計文件、索引、測試與編輯工具均不在 PCK 中。Windows 包採 portable ZIP，包含 EXE、PCK、玩家說明、MIT 授權、素材授權報告與 SHA-256。
+v1.0.1 已由垂直切片提升為 Windows x64 繁體中文單人商業發行候選版。遊戲可獨立離線執行；Ollama、模型、Creator Service、設計文件、索引、測試與編輯工具均不在 PCK 中。Windows 包採 portable ZIP，包含 EXE、PCK、玩家說明、MIT 授權、素材授權報告與 SHA-256。
 
 ## 系統與內容
 
@@ -27,4 +27,4 @@ v1.0.0 已由垂直切片提升為 Windows x64 繁體中文單人商業發行候
 - Runtime 離線稽核無 HTTP、WebSocket、Ollama 或模型參照。
 - Windows release export、匯出後邊界、可執行檔啟動及壓縮包 SHA-256 通過。
 
-唯一非程式性發布限制是 v1.0.0 沒有付費程式碼簽章憑證，因此 Windows 可能顯示 SmartScreen；GitHub Release 同時提供 SHA-256 供玩家核對。
+唯一非程式性發布限制是 v1.0.1 沒有付費程式碼簽章憑證，因此 Windows 可能顯示 SmartScreen；GitHub Release 同時提供 SHA-256 供玩家核對。

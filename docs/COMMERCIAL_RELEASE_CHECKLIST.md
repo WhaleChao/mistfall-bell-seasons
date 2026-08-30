@@ -10,6 +10,7 @@
 - [x] Runtime 原始碼無 HTTP／WebSocket／Ollama／模型參照；AI、索引、測試與設計來源不進入匯出。
 - [x] RTX 3060、1920×1080、20 敵人實測遠高於 60 FPS 容量。
 - [x] Windows x64 release export、PCK 邊界、可執行檔啟動與 SHA-256 通過。
+- [x] 非 headless Godot 視窗完成 119 項全功能實機驗收，並保存 12 張畫面證據。
 
 ## 人工檢查
 
@@ -21,7 +22,7 @@
 
 ## 發布資訊
 
-- 版本：1.0.0
+- 版本：1.0.1
 - 平台：Windows x64 portable
 - 語系：繁體中文
 - 簽章：未簽章；提供 SHA-256 供核對

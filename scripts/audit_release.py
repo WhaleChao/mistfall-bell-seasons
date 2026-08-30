@@ -27,6 +27,7 @@ REQUIRED_EXCLUDES = {
     "launcher/*",
     "scripts/*",
     "tools/*",
+	"work/*",
     "assets/source/*",
     ".creator/*",
     ".venv/*",
@@ -78,7 +79,7 @@ def audit_build(build_dir: Path, errors: list[str]) -> None:
 def audit_pck_strings(build_dir: Path, errors: list[str]) -> None:
 	for pck in build_dir.glob("*.pck"):
 		payload = pck.read_bytes().lower()
-		for marker in (b"creator_service", b"creator_client", b"ollama", b"httprequest", b"127.0.0.1", b"/api/v1/assist", b".gguf", b"knowledge/", b"screenshots/"):
+		for marker in (b"creator_service", b"creator_client", b"ollama", b"httprequest", b"127.0.0.1", b"/api/v1/assist", b".gguf", b"knowledge/", b"screenshots/", b"work/"):
 			if marker in payload:
 				errors.append(f"release PCK contains forbidden marker {marker.decode(errors='replace')}")
 

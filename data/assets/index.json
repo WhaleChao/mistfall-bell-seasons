@@ -106,7 +106,7 @@
       "id": "chroma_transparency_shader",
       "source_path": "res://assets/shaders/chroma_transparency.gdshader",
       "kind": "other",
-      "sha256": "6fbaa8eeb314388c986fe6bf7b9ff3d232e2cc0ef0787b9edea1ca7a5fc0b135",
+      "sha256": "f38509508a25900e904a9c280c1444408686065afa6345fe8e14155fe6c2d745",
       "license": {"spdx": "MIT", "source": "Original PixelRPG Studio shader, 2026-08-30", "author": "PixelRPG Studio contributors"},
       "tags": ["original", "shader", "runtime", "transparency"],
       "links": ["asset:character_atlas", "asset:enemy_atlas", "asset:animal_atlas", "asset:player_walk_atlas"]

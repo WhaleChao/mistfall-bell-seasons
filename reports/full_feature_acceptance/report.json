@@ -1,0 +1,754 @@
+{
+  "cases": [
+    {
+      "category": "啟動",
+      "detail": "",
+      "name": "正式遊戲場景完成渲染",
+      "passed": true
+    },
+    {
+      "category": "啟動",
+      "detail": "玩家時間應暫停",
+      "name": "標題畫面顯示",
+      "passed": true
+    },
+    {
+      "category": "角色建立",
+      "detail": "",
+      "name": "玩家名稱欄位",
+      "passed": true
+    },
+    {
+      "category": "角色建立",
+      "detail": "",
+      "name": "四種外觀選項",
+      "passed": true
+    },
+    {
+      "category": "角色建立",
+      "detail": "",
+      "name": "套用名稱與外觀",
+      "passed": true
+    },
+    {
+      "category": "啟動",
+      "detail": "",
+      "name": "離開標題後恢復遊戲",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "位移 79.9 px",
+      "name": "ui_right 方向移動",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "atlas row=2",
+      "name": "ui_right 使用正確方向列",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "觀察到 3/4 幀",
+      "name": "ui_right 播放多幀循環",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "位移 79.9 px",
+      "name": "ui_left 方向移動",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "atlas row=1",
+      "name": "ui_left 使用正確方向列",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "觀察到 4/4 幀",
+      "name": "ui_left 播放多幀循環",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "位移 79.9 px",
+      "name": "ui_up 方向移動",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "atlas row=3",
+      "name": "ui_up 使用正確方向列",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "觀察到 4/4 幀",
+      "name": "ui_up 播放多幀循環",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "位移 79.9 px",
+      "name": "ui_down 方向移動",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "atlas row=0",
+      "name": "ui_down 使用正確方向列",
+      "passed": true
+    },
+    {
+      "category": "移動動畫",
+      "detail": "觀察到 4/4 幀",
+      "name": "ui_down 播放多幀循環",
+      "passed": true
+    },
+    {
+      "category": "輸入",
+      "detail": "",
+      "name": "斜向速度正規化",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "2 名",
+      "name": "第 1 層生成敵人",
+      "passed": true
+    },
+    {
+      "category": "戰鬥",
+      "detail": "傷害 16",
+      "name": "近戰攻擊命中",
+      "passed": true
+    },
+    {
+      "category": "戰鬥",
+      "detail": "累積傷害 34",
+      "name": "連擊輸入緩衝",
+      "passed": true
+    },
+    {
+      "category": "戰鬥",
+      "detail": "",
+      "name": "翻滾與無敵幀",
+      "passed": true
+    },
+    {
+      "category": "戰鬥",
+      "detail": "",
+      "name": "主動技能與冷卻",
+      "passed": true
+    },
+    {
+      "category": "戰鬥",
+      "detail": "",
+      "name": "回復藥水",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "1F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "2F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "3F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "4F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "5F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "6F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "7F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "8F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "9F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "Boss",
+      "detail": "",
+      "name": "10F 守護者生成",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "10F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "11F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "12F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "13F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "14F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "15F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "16F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "17F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "18F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "19F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "Boss",
+      "detail": "",
+      "name": "20F 守護者生成",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "20F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "21F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "22F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "23F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "24F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "25F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "26F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "27F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "28F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "29F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "Boss",
+      "detail": "",
+      "name": "30F 守護者生成",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "30F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "31F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "32F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "33F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "34F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "35F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "36F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "37F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "38F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "39F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "Boss",
+      "detail": "",
+      "name": "40F 守護者生成",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "40F 生成、戰鬥與結算",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "四枚季節封印",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "每五層電梯",
+      "passed": true
+    },
+    {
+      "category": "最終戰",
+      "detail": "",
+      "name": "霧鐘核心生成",
+      "passed": true
+    },
+    {
+      "category": "最終戰",
+      "detail": "",
+      "name": "通關與無限模式",
+      "passed": true
+    },
+    {
+      "category": "戰敗",
+      "detail": "",
+      "name": "診所救援扣除 10%",
+      "passed": true
+    },
+    {
+      "category": "農作",
+      "detail": "",
+      "name": "翻土、播種、澆水",
+      "passed": true
+    },
+    {
+      "category": "農作",
+      "detail": "",
+      "name": "工具消耗體力",
+      "passed": true
+    },
+    {
+      "category": "農作",
+      "detail": "",
+      "name": "作物依澆水日成熟",
+      "passed": true
+    },
+    {
+      "category": "農作",
+      "detail": "",
+      "name": "成熟作物收成",
+      "passed": true
+    },
+    {
+      "category": "農作",
+      "detail": "",
+      "name": "換季枯萎規則",
+      "passed": true
+    },
+    {
+      "category": "農場升級",
+      "detail": "",
+      "name": "Lv.10 與溫室解鎖",
+      "passed": true
+    },
+    {
+      "category": "釣魚",
+      "detail": "",
+      "name": "池塘釣魚與季節魚表",
+      "passed": true
+    },
+    {
+      "category": "採集",
+      "detail": "",
+      "name": "樹木與石材節點",
+      "passed": true
+    },
+    {
+      "category": "動物",
+      "detail": "",
+      "name": "雞與牛購入",
+      "passed": true
+    },
+    {
+      "category": "動物",
+      "detail": "",
+      "name": "雞蛋產物收集",
+      "passed": true
+    },
+    {
+      "category": "動物",
+      "detail": "",
+      "name": "照料、心情與繁殖",
+      "passed": true
+    },
+    {
+      "category": "商店",
+      "detail": "",
+      "name": "商品列表與購買回呼",
+      "passed": true
+    },
+    {
+      "category": "經濟",
+      "detail": "",
+      "name": "出貨箱與隔夜結算",
+      "passed": true
+    },
+    {
+      "category": "村莊",
+      "detail": "",
+      "name": "10 名 NPC 可見與排程",
+      "passed": true
+    },
+    {
+      "category": "對話",
+      "detail": "",
+      "name": "NPC 對話、肖像與時間暫停",
+      "passed": true
+    },
+    {
+      "category": "關係",
+      "detail": "",
+      "name": "每日交談增加好感",
+      "passed": true
+    },
+    {
+      "category": "節慶",
+      "detail": "",
+      "name": "指定日期開啟節慶",
+      "passed": true
+    },
+    {
+      "category": "節慶",
+      "detail": "",
+      "name": "五回合評分與獎勵",
+      "passed": true
+    },
+    {
+      "category": "節慶",
+      "detail": "",
+      "name": "四季 12 場節慶資料",
+      "passed": true
+    },
+    {
+      "category": "選單",
+      "detail": "",
+      "name": "旅人手冊暫停遊戲",
+      "passed": true
+    },
+    {
+      "category": "選單",
+      "detail": "",
+      "name": "八個功能分頁",
+      "passed": true
+    },
+    {
+      "category": "選單",
+      "detail": "",
+      "name": "狀態、背包、關係、日曆、主線、成就、料理、設定均可切換",
+      "passed": true
+    },
+    {
+      "category": "戀愛家庭",
+      "detail": "",
+      "name": "告白、求婚與婚姻",
+      "passed": true
+    },
+    {
+      "category": "戀愛家庭",
+      "detail": "",
+      "name": "婚後 30/60 日家庭事件",
+      "passed": true
+    },
+    {
+      "category": "戀愛家庭",
+      "detail": "",
+      "name": "孩子四階段成長",
+      "passed": true
+    },
+    {
+      "category": "料理",
+      "detail": "",
+      "name": "40 道料理清單",
+      "passed": true
+    },
+    {
+      "category": "料理",
+      "detail": "",
+      "name": "烹調與享用恢復體力",
+      "passed": true
+    },
+    {
+      "category": "設定",
+      "detail": "",
+      "name": "音量調整",
+      "passed": true
+    },
+    {
+      "category": "設定",
+      "detail": "",
+      "name": "10/15/20 分鐘速度切換",
+      "passed": true
+    },
+    {
+      "category": "設定",
+      "detail": "",
+      "name": "視窗／全螢幕切換",
+      "passed": true
+    },
+    {
+      "category": "設定",
+      "detail": "",
+      "name": "按鍵重新綁定與還原",
+      "passed": true
+    },
+    {
+      "category": "手把",
+      "detail": "",
+      "name": "戰鬥按鈕映射",
+      "passed": true
+    },
+    {
+      "category": "存檔",
+      "detail": "",
+      "name": "SaveGame v3 快速存讀",
+      "passed": true
+    },
+    {
+      "category": "日曆",
+      "detail": "",
+      "name": "10 年／1,200 日無漂移",
+      "passed": true
+    },
+    {
+      "category": "日曆",
+      "detail": "",
+      "name": "冬 30 日跨年",
+      "passed": true
+    },
+    {
+      "category": "日曆",
+      "detail": "",
+      "name": "三種日長結果一致",
+      "passed": true
+    },
+    {
+      "category": "長期內容",
+      "detail": "",
+      "name": "第 4 年規則式委託",
+      "passed": true
+    },
+    {
+      "category": "主線",
+      "detail": "",
+      "name": "12 章且沒有期限",
+      "passed": true
+    },
+    {
+      "category": "主線",
+      "detail": "",
+      "name": "三年主線可連續完成",
+      "passed": true
+    },
+    {
+      "category": "成就",
+      "detail": "12/12",
+      "name": "12 項成就可解鎖",
+      "passed": true
+    },
+    {
+      "category": "存檔",
+      "detail": "",
+      "name": "v2→v3 遷移",
+      "passed": true
+    },
+    {
+      "category": "存檔",
+      "detail": "",
+      "name": "28 日制 v1→v3 保留日期",
+      "passed": true
+    },
+    {
+      "category": "內容",
+      "detail": "",
+      "name": "48 作物／12 魚／40 料理",
+      "passed": true
+    },
+    {
+      "category": "內容",
+      "detail": "",
+      "name": "10 NPC／12 節慶／16 洞窟敵人",
+      "passed": true
+    },
+    {
+      "category": "離線",
+      "detail": "",
+      "name": "Runtime 場景沒有 HTTPRequest",
+      "passed": true
+    }
+  ],
+  "checks": 119,
+  "elapsed_seconds": 21.64,
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "failed": 0,
+  "generated_at": "2026-08-30T02:00:16",
+  "passed": 119,
+  "renderer": "NVIDIA GeForce RTX 3060",
+  "schema_version": 1,
+  "screenshots": [
+    "res://reports/full_feature_acceptance/01_title_and_profile.png",
+    "res://reports/full_feature_acceptance/02_four_frame_walk.png",
+    "res://reports/full_feature_acceptance/03_dungeon_combat.png",
+    "res://reports/full_feature_acceptance/04_floor_40_boss.png",
+    "res://reports/full_feature_acceptance/05_final_boss.png",
+    "res://reports/full_feature_acceptance/06_mature_crop_and_weather.png",
+    "res://reports/full_feature_acceptance/07_animals_and_farm.png",
+    "res://reports/full_feature_acceptance/08_shop_purchase.png",
+    "res://reports/full_feature_acceptance/09_village_dialogue.png",
+    "res://reports/full_feature_acceptance/10_interactive_festival.png",
+    "res://reports/full_feature_acceptance/11_status_inventory_menu.png",
+    "res://reports/full_feature_acceptance/12_acceptance_complete.png"
+  ],
+  "viewport": [
+    1280,
+    720
+  ]
+}

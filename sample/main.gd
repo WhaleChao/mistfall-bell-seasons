@@ -530,10 +530,6 @@ func _interact() -> void:
 				var gather_result := GameState.gather_resource(node_id, String(resource.kind))
 				_show_toast(String(gather_result.get("message", "")))
 				return
-	var nearby_shop := _nearby_shop()
-	if not nearby_shop.is_empty():
-		shop_menu.open(nearby_shop)
-		return
 	if mode == "village":
 		_show_toast("走近村民、商店招牌或村口再互動")
 		return

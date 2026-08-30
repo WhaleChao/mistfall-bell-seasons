@@ -147,6 +147,9 @@ func _add_relationship_tab() -> void:
 		portrait.custom_minimum_size = Vector2(108, 150)
 		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		var portrait_chroma := ShaderMaterial.new()
+		portrait_chroma.shader = load("res://assets/shaders/chroma_transparency.gdshader")
+		portrait.material = portrait_chroma
 		portrait_row.add_child(portrait)
 	relationships_label = Label.new()
 	relationships_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

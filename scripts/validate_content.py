@@ -216,7 +216,7 @@ def check_manifest(errors: list[str]) -> None:
 def check_export_boundary(errors: list[str]) -> None:
     path = ROOT / "export_presets.cfg"
     text = path.read_text(encoding="utf-8") if path.exists() else ""
-    required = ["creator_service/*", "knowledge/*", ".creator/*", "schemas/*", "tools/*", "assets/source/*"]
+    required = ["creator_service/*", "knowledge/*", ".creator/*", "schemas/*", "tools/*", "work/*", "assets/source/*"]
     for pattern in required:
         if pattern not in text:
             errors.append(f"export_presets.cfg: missing exclusion {pattern}")

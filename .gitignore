@@ -13,4 +13,5 @@ __pycache__/
 /exports/
 /tools/
 /work/
+/reports/**/*.png.import
 creator_service/session.json

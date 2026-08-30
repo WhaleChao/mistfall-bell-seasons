@@ -1,6 +1,6 @@
 # 霧落農歌：鐘塔之季
 
-《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 單人俯視像素農場動作 RPG。v1.0.0 為可離線遊玩的商業發行候選版；遊戲 Runtime 不包含模型、Creator Service、知識庫或網路請求。
+《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 單人俯視像素農場動作 RPG。v1.0.1 為可離線遊玩的商業發行候選版；遊戲 Runtime 不包含模型、Creator Service、知識庫或網路請求。
 
 ![農場畫面](screenshots/commercial_farm.png)
 
@@ -17,7 +17,7 @@
 
 ## 下載與遊玩
 
-[GitHub Releases 的 Windows x64 v1.0.0 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.0.0)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；不需要網路或 AI 模型。
+[GitHub Releases 的 Windows x64 v1.0.1 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.0.1)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；不需要網路或 AI 模型。
 
 原始專案中也可雙擊 `Play Mistfall.cmd`；若尚未安裝 Godot，先執行 `launcher/Fetch-Godot.ps1`。
 
@@ -42,10 +42,11 @@
 .\launcher\Fetch-ExportTemplates.ps1
 .\launcher\Test-PixelRPG.ps1
 .\launcher\Test-RenderPerformance.ps1
+.\launcher\Run-FullAcceptance.ps1
 .\launcher\Package-Release.ps1
 ```
 
-發行閘門會驗證 269 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、Save v1→v2→v3、1,200 日曆模擬、20 敵人效能、離線邊界與匯出後檔案。RTX 3060 的 1080p／20 敵人未鎖垂直同步多輪測試至少 597 FPS；正式遊玩鎖定 60 FPS。
+發行閘門會驗證 269 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、Save v1→v2→v3、1,200 日曆模擬、20 敵人效能、離線邊界與匯出後檔案。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，119 項通過並保存 12 張畫面證據。RTX 3060 的 1080p／20 敵人未鎖垂直同步多輪測試至少 597 FPS；正式遊玩鎖定 60 FPS。
 
 ## PixelRPG Studio 與本機 AI
 
