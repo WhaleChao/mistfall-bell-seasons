@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "tested_at": "2026-08-30T19:03:54.3328867+08:00",
+  "executable": "C:\\Users\\lumi6\\Documents\\Codex\\2026-08-29\\new-chat\\outputs\\PixelRPG-Studio\\build\\Mistfall-Bell-Seasons.exe",
+  "exe_sha256": "9d9ec82ed97b29d24c8a48742d3ccf3e983b646038951d3a0ab48faa6d7d0c16",
+  "steam_tenfoot": "1",
+  "exit_code": 0,
+  "window": {
+    "left": 0,
+    "top": 0,
+    "width": 1920,
+    "height": 1082
+  },
+  "monitor": {
+    "left": 0,
+    "top": 0,
+    "width": 1920,
+    "height": 1080
+  },
+  "covers_monitor": true
+}

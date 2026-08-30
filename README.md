@@ -1,6 +1,6 @@
 # 霧落農歌：鐘塔之季
 
-《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 俯視像素農場動作 RPG。v1.1.2 可完全離線單人遊玩，也能用 Godot ENet／UDP 自行開設最多 16 人的朋友伺服器；遊戲 Runtime 不包含模型、Creator Service、知識庫、遙測或廣告。
+《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 俯視像素農場動作 RPG。v1.1.3 可完全離線單人遊玩，也能用 Godot ENet／UDP 自行開設最多 16 人的朋友伺服器；遊戲 Runtime 不包含模型、Creator Service、知識庫、遙測或廣告。本版另提供保守的 Steam Windows 商店設定與 SteamPipe 預覽工具。
 
 ![農場畫面](screenshots/commercial_farm.png)
 
@@ -20,7 +20,7 @@
 
 ## 下載與遊玩
 
-[GitHub Releases 的 Windows x64 v1.1.2 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.1.2)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；單人遊玩不需要網路或 AI 模型。
+[GitHub Releases 的 Windows x64 v1.1.3 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.1.3)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；單人遊玩不需要網路或 AI 模型。
 
 按 `M`／手把 Select 開啟連線介面，可自行開設主機或輸入 IP 加入；發行包亦可雙擊 `Start Dedicated Server.cmd`。完整的 UDP 轉送、世界檔與安全界線見 [伺服器指南](SERVER_GUIDE.md)。
 
@@ -40,6 +40,8 @@
 | 時間速度／睡覺 | T／C | 十字鍵左／右 |
 | 快速存檔／讀檔 | F5／F9 | 十字鍵上／下 |
 
+鍵盤滑鼠已完成實際遊戲視窗全流程驗收。這台測試機沒有實體手把，因此表中的 XInput 欄位只證明映射與重綁契約；Steam 商店只應標「部分控制器支援」，不可宣稱完整控制器支援或 Steam Deck Verified。
+
 完整操作與新手流程見 [新手指南](docs/BEGINNER_GUIDE.md)。
 
 ## 驗證與建置
@@ -54,14 +56,15 @@
 .\launcher\Test-RealAI.ps1 -CreatorExecutable .\creator_service\dist\PixelRPGCreatorService.exe
 .\launcher\Test-StudioUI.ps1
 .\launcher\Test-RenderPerformance.ps1
+.\launcher\Test-SteamCandidate.ps1
 .\launcher\Run-FullAcceptance.ps1
 .\launcher\Test-Multiplayer.ps1
 .\launcher\Package-Release.ps1
-.\launcher\Test-PublishedRelease.ps1 -Tag v1.1.2
+.\launcher\Test-PublishedRelease.ps1 -Tag v1.1.3
 .\launcher\Test-CodeSigningPipeline.ps1
 ```
 
-發行閘門會驗證 283 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、圖片／圖集／畫面規則、Save v1→v2→v3→v4、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，137 項通過並保存 15 張畫面證據；圖片閘門統一檢查 41 張遊戲、Studio、解析度及宣傳畫面。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成共同、私人、競賽農場與 1／2／3／5／16 人情境（7 台專用伺服器＋31 個客戶端）的握手、移動、最大容量、農場整合／隔離、四種篇章、戀愛競爭／唯一婚約及世界保存。公開版仍會在預設離線模式驗證零網路端點。RTX 3060 的最新 1080p／20 敵人連續封裝測試約 740 FPS；正式遊玩鎖定 60 FPS，精確結果保留於效能報告。
+發行閘門會驗證 283 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、圖片／圖集／畫面規則、Save v1→v2→v3→v4、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放（含 1280×800）、PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，137 項通過並保存 15 張畫面證據；圖片閘門統一檢查 42 張遊戲、Studio、解析度及宣傳畫面。[Steam 候選報告](reports/steam_candidate/REPORT.md)驗證 Big Picture 全螢幕、商店勾選契約、18 組鍵盤／XInput 映射、0 支實體手把的證據限制與 1280×800 字級。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成共同、私人、競賽農場與 1／2／3／5／16 人情境（7 台專用伺服器＋31 個客戶端）的握手、移動、最大容量、農場整合／隔離、四種篇章、戀愛競爭／唯一婚約及世界保存。公開版仍會在預設離線模式驗證零網路端點。RTX 3060 的最新 1080p／20 敵人連續封裝測試約 740 FPS；正式遊玩鎖定 60 FPS，精確結果保留於效能報告。
 
 ## PixelRPG Studio 與本機 AI
 

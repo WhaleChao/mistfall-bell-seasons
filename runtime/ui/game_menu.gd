@@ -73,7 +73,7 @@ func refresh() -> void:
 	eldritch_label.text = _eldritch_journal_text()
 	_refresh_recipe()
 	volume_slider.value = float(GameState.settings.get("master_volume", 0.8))
-	fullscreen_toggle.button_pressed = bool(GameState.settings.get("fullscreen", false))
+	fullscreen_toggle.set_pressed_no_signal(DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN])
 	var next_upgrade := ContentRegistry.get_artifact("farm_upgrades", "farm_rank_%d" % (GameState.farm.rank + 1))
 	farm_upgrade_button.text = "農場已達最高等級" if GameState.farm.rank >= 10 else "擴建：%s（%dG）" % [next_upgrade.get("display_name", "下一級"), next_upgrade.get("cost", 0)]
 	farm_upgrade_button.disabled = GameState.farm.rank >= 10

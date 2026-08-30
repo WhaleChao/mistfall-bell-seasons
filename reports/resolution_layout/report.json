@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T10:16:10",
+	"generated_at": "2026-08-30T10:57:52",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -12,41 +12,69 @@
 		"string": "4.7.2-stable (official)"
 	},
 	"renderer": "NVIDIA GeForce RTX 3060",
-	"checks": 20,
-	"passed": 20,
+	"checks": 30,
+	"passed": 30,
 	"failed": 0,
 	"captures": [
 		{
 			"file": "640x360.png",
+			"window_width": 640,
+			"window_height": 360,
+			"content_width": 640,
+			"content_height": 360,
 			"width": 640,
 			"height": 360,
 			"integer_scale": 1,
-			"variance": 0.0210140968868852,
+			"variance": 0.0210134820301765,
 			"black_ratio": 0.00138888888888889
 		},
 		{
 			"file": "1280x720.png",
+			"window_width": 1280,
+			"window_height": 720,
+			"content_width": 1280,
+			"content_height": 720,
 			"width": 1280,
 			"height": 720,
 			"integer_scale": 2,
-			"variance": 0.0215797499475156,
-			"black_ratio": 0.00147569444444444
+			"variance": 0.0215832994402378,
+			"black_ratio": 0.00149305555555556
+		},
+		{
+			"file": "1280x800.png",
+			"window_width": 1280,
+			"window_height": 800,
+			"content_width": 1280,
+			"content_height": 720,
+			"width": 1280,
+			"height": 800,
+			"integer_scale": 2,
+			"variance": 0.0245113040058127,
+			"black_ratio": 0.10134375
 		},
 		{
 			"file": "1920x1080.png",
+			"window_width": 1920,
+			"window_height": 1080,
+			"content_width": 1920,
+			"content_height": 1080,
 			"width": 1920,
 			"height": 1080,
 			"integer_scale": 3,
-			"variance": 0.0220685189175836,
+			"variance": 0.0220518018667969,
 			"black_ratio": 0.00154513888888889
 		},
 		{
 			"file": "2560x1440.png",
+			"window_width": 2560,
+			"window_height": 1440,
+			"content_width": 2560,
+			"content_height": 1440,
 			"width": 2560,
 			"height": 1440,
 			"integer_scale": 4,
-			"variance": 0.0224200600762631,
-			"black_ratio": 0.00163194444444444
+			"variance": 0.02240906567408,
+			"black_ratio": 0.00164930555555556
 		}
 	],
 	"cases": [
@@ -58,9 +86,15 @@
 		},
 		{
 			"category": "解析度",
-			"name": "640x360.png 實際 framebuffer 尺寸正確",
+			"name": "640x360.png 實際視窗尺寸正確",
 			"passed": true,
 			"detail": "640x360"
+		},
+		{
+			"category": "解析度",
+			"name": "640x360.png 合成顯示證據尺寸正確",
+			"passed": true,
+			"detail": "content=640x360 output=640x360"
 		},
 		{
 			"category": "畫面",
@@ -88,9 +122,15 @@
 		},
 		{
 			"category": "解析度",
-			"name": "1280x720.png 實際 framebuffer 尺寸正確",
+			"name": "1280x720.png 實際視窗尺寸正確",
 			"passed": true,
 			"detail": "1280x720"
+		},
+		{
+			"category": "解析度",
+			"name": "1280x720.png 合成顯示證據尺寸正確",
+			"passed": true,
+			"detail": "content=1280x720 output=1280x720"
 		},
 		{
 			"category": "畫面",
@@ -112,21 +152,63 @@
 		},
 		{
 			"category": "截圖",
+			"name": "1280x800.png 可輸出 PNG",
+			"passed": true,
+			"detail": "OK"
+		},
+		{
+			"category": "解析度",
+			"name": "1280x800.png 實際視窗尺寸正確",
+			"passed": true,
+			"detail": "1280x800"
+		},
+		{
+			"category": "解析度",
+			"name": "1280x800.png 合成顯示證據尺寸正確",
+			"passed": true,
+			"detail": "content=1280x720 output=1280x800"
+		},
+		{
+			"category": "畫面",
+			"name": "1280x800.png 不是空白或純色畫面",
+			"passed": true,
+			"detail": "variance=0.02451"
+		},
+		{
+			"category": "畫面",
+			"name": "1280x800.png 沒有異常大面積黑屏",
+			"passed": true,
+			"detail": "black=10.13%"
+		},
+		{
+			"category": "整數縮放",
+			"name": "1280x800.png 使用整數像素倍率",
+			"passed": true,
+			"detail": "2x"
+		},
+		{
+			"category": "截圖",
 			"name": "1920x1080.png 可輸出 PNG",
 			"passed": true,
 			"detail": "OK"
 		},
 		{
 			"category": "解析度",
-			"name": "1920x1080.png 實際 framebuffer 尺寸正確",
+			"name": "1920x1080.png 實際視窗尺寸正確",
 			"passed": true,
 			"detail": "1920x1080"
+		},
+		{
+			"category": "解析度",
+			"name": "1920x1080.png 合成顯示證據尺寸正確",
+			"passed": true,
+			"detail": "content=1920x1080 output=1920x1080"
 		},
 		{
 			"category": "畫面",
 			"name": "1920x1080.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02207"
+			"detail": "variance=0.02205"
 		},
 		{
 			"category": "畫面",
@@ -148,15 +230,21 @@
 		},
 		{
 			"category": "解析度",
-			"name": "2560x1440.png 實際 framebuffer 尺寸正確",
+			"name": "2560x1440.png 實際視窗尺寸正確",
 			"passed": true,
 			"detail": "2560x1440"
+		},
+		{
+			"category": "解析度",
+			"name": "2560x1440.png 合成顯示證據尺寸正確",
+			"passed": true,
+			"detail": "content=2560x1440 output=2560x1440"
 		},
 		{
 			"category": "畫面",
 			"name": "2560x1440.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02242"
+			"detail": "variance=0.02241"
 		},
 		{
 			"category": "畫面",

@@ -43,6 +43,7 @@ const EVIDENCE_SETS := {
 const RESOLUTION_EVIDENCE := {
 	"640x360.png":Vector2i(640, 360),
 	"1280x720.png":Vector2i(1280, 720),
+	"1280x800.png":Vector2i(1280, 800),
 	"1920x1080.png":Vector2i(1920, 1080),
 	"2560x1440.png":Vector2i(2560, 1440),
 }
@@ -395,7 +396,7 @@ func _audit_all_visual_evidence() -> void:
 		var config := Dictionary(EVIDENCE_SETS[directory_path])
 		evidence_count += _audit_evidence_set(directory_path, config)
 	evidence_count += _audit_resolution_evidence()
-	_check(evidence_count == 41, "畫面證據", "所有商業畫面、實機驗收與解析度證據均納入統一閘門", "%d/41" % evidence_count)
+	_check(evidence_count == 42, "畫面證據", "所有商業畫面、實機驗收與解析度證據均納入統一閘門", "%d/42" % evidence_count)
 
 
 func _audit_evidence_set(directory_path: String, config: Dictionary) -> int:
@@ -429,7 +430,7 @@ func _audit_resolution_evidence() -> int:
 		if file_name.to_lower().ends_with(".png"):
 			names.append(file_name)
 	names.sort()
-	_check(names.size() == RESOLUTION_EVIDENCE.size(), "畫面證據", "四種整數縮放解析度畫面齊全", "%d/%d" % [names.size(), RESOLUTION_EVIDENCE.size()])
+	_check(names.size() == RESOLUTION_EVIDENCE.size(), "畫面證據", "五種整數縮放解析度畫面齊全（含 1280×800）", "%d/%d" % [names.size(), RESOLUTION_EVIDENCE.size()])
 	for file_name: String in names:
 		_check(RESOLUTION_EVIDENCE.has(file_name), "畫面證據", "解析度畫面檔名受契約約束：%s" % file_name, "")
 		if RESOLUTION_EVIDENCE.has(file_name):
@@ -521,7 +522,7 @@ func _write_report() -> void:
 		"",
 		"結果：**%s**　｜　%d 通過／%d 失敗　｜　%d 張 Runtime 圖片" % ["PASS" if failed == 0 else "FAIL", passed, failed, image_metrics.size()],
 		"",
-		"本閘門自動盤點並直接解碼全部 Runtime PNG 與 SVG 圖示，驗證資產登錄、無損匯入、真 alpha、可追溯原稿、前景像素無遺失、格線安全邊界、動畫幀差異，以及 41 張實機／Studio／解析度／商業宣傳畫面。",
+		"本閘門自動盤點並直接解碼全部 Runtime PNG 與 SVG 圖示，驗證資產登錄、無損匯入、真 alpha、可追溯原稿、前景像素無遺失、格線安全邊界、動畫幀差異，以及 42 張實機／Studio／解析度／商業宣傳畫面。",
 		"",
 		"| 分類 | 項目 | 結果 | 細節 |",
 		"|---|---|---:|---|",

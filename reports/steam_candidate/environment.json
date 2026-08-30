@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "tested_at": "2026-08-30T18:57:52.4985481+08:00",
+  "os": "Microsoft Windows NT 10.0.19045.0",
+  "steam_client_installed": true,
+  "steam_install_path": "C:\\Program Files (x86)\\Steam",
+  "steam_client_running": true,
+  "controller_test_level": "mapping_only_no_physical_device",
+  "store_controller_claim": "partial",
+  "steam_deck_claim": "not_claimed",
+  "big_picture_fullscreen": true,
+  "deck_resolution_1280x800": true
+}

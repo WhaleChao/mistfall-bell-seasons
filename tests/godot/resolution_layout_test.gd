@@ -3,7 +3,7 @@ extends SceneTree
 const REPORT_DIRECTORY := "res://reports/resolution_layout"
 const REPORT_JSON := REPORT_DIRECTORY + "/report.json"
 const REPORT_MARKDOWN := REPORT_DIRECTORY + "/REPORT.md"
-const RESOLUTIONS := [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(2560, 1440)]
+const RESOLUTIONS := [Vector2i(640, 360), Vector2i(1280, 720), Vector2i(1280, 800), Vector2i(1920, 1080), Vector2i(2560, 1440)]
 
 var cases: Array[Dictionary] = []
 var captures: Array[Dictionary] = []
@@ -30,17 +30,26 @@ func _run() -> void:
 		root.size = resolution
 		for _frame in 12:
 			await process_frame
-		var image := root.get_texture().get_image()
+		var window_size := DisplayServer.window_get_size()
+		var content_image := root.get_texture().get_image()
+		var image := content_image
+		var content_size := Vector2i(content_image.get_width(), content_image.get_height())
+		if content_size != resolution:
+			image = Image.create_empty(resolution.x, resolution.y, false, content_image.get_format())
+			image.fill(Color.BLACK)
+			var offset := Vector2i((resolution.x - content_size.x) / 2, (resolution.y - content_size.y) / 2)
+			image.blit_rect(content_image, Rect2i(Vector2i.ZERO, content_size), offset)
 		var file_name := "%dx%d.png" % [resolution.x, resolution.y]
 		var save_error := image.save_png(REPORT_DIRECTORY + "/" + file_name)
 		_check(save_error == OK, "截圖", "%s 可輸出 PNG" % file_name, error_string(save_error))
-		_check(image.get_width() == resolution.x and image.get_height() == resolution.y, "解析度", "%s 實際 framebuffer 尺寸正確" % file_name, "%dx%d" % [image.get_width(), image.get_height()])
+		_check(window_size == resolution, "解析度", "%s 實際視窗尺寸正確" % file_name, "%dx%d" % [window_size.x, window_size.y])
+		_check(image.get_width() == resolution.x and image.get_height() == resolution.y, "解析度", "%s 合成顯示證據尺寸正確" % file_name, "content=%dx%d output=%dx%d" % [content_size.x, content_size.y, image.get_width(), image.get_height()])
 		var stats := _image_stats(image)
 		_check(float(stats.variance) > 0.008, "畫面", "%s 不是空白或純色畫面" % file_name, "variance=%.5f" % stats.variance)
 		_check(float(stats.black_ratio) < 0.45, "畫面", "%s 沒有異常大面積黑屏" % file_name, "black=%.2f%%" % (100.0 * float(stats.black_ratio)))
 		var scale := mini(resolution.x / 640, resolution.y / 360)
 		_check(scale >= 1 and scale == floori(scale), "整數縮放", "%s 使用整數像素倍率" % file_name, "%dx" % scale)
-		captures.append({"file":file_name,"width":image.get_width(),"height":image.get_height(),"integer_scale":scale,"variance":stats.variance,"black_ratio":stats.black_ratio})
+		captures.append({"file":file_name,"window_width":window_size.x,"window_height":window_size.y,"content_width":content_size.x,"content_height":content_size.y,"width":image.get_width(),"height":image.get_height(),"integer_scale":scale,"variance":stats.variance,"black_ratio":stats.black_ratio})
 	_write_report()
 	var failed := cases.filter(func(item: Dictionary) -> bool: return not bool(item.passed)).size()
 	scene.queue_free()
@@ -90,9 +99,9 @@ func _write_report() -> void:
 	var lines := PackedStringArray([
 		"# 《霧落農歌：鐘塔之季》多解析度畫面驗收",
 		"",
-		"結果：**%s**　｜　%d 通過／%d 失敗　｜　640×360 至 2560×1440" % ["PASS" if failed == 0 else "FAIL", passed, failed],
+		"結果：**%s**　｜　%d 通過／%d 失敗　｜　含 Steam Deck 原生 1280×800" % ["PASS" if failed == 0 else "FAIL", passed, failed],
 		"",
-		"本測試使用實際 GPU framebuffer，以 1×、2×、3×、4×整數縮放渲染正式遊戲場景，驗證輸出尺寸、非空白畫面與黑屏比例，並保存原始 PNG。",
+		"本測試驗證實際 Windows 視窗尺寸及 GPU ViewportTexture，以 1×、2×、3×、4×整數縮放渲染正式遊戲場景。1280×800 的 ViewportTexture 為 1280×720，證據圖依實際 KEEP aspect 顯示規則補上上下各 40px 留邊；報告同時保存視窗、內容及輸出尺寸，避免將內容紋理誤稱為完整 framebuffer。",
 		"",
 		"| 分類 | 項目 | 結果 | 細節 |",
 		"|---|---|---:|---|",

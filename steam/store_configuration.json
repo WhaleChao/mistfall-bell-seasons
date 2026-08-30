@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "product": {
+    "name": "霧落農歌：鐘塔之季",
+    "platforms": ["windows"],
+    "default_language": "tchinese",
+    "languages": {
+      "tchinese": {
+        "interface": true,
+        "full_audio": false,
+        "subtitles": true
+      }
+    }
+  },
+  "launch_options": [
+    {
+      "type": "game",
+      "executable": "Mistfall-Bell-Seasons.exe",
+      "arguments": "",
+      "platform": "windows"
+    },
+    {
+      "type": "dedicated_server",
+      "executable": "Mistfall-Bell-Seasons.exe",
+      "arguments": "--headless -- --server",
+      "platform": "windows"
+    }
+  ],
+  "store_features": {
+    "single_player": true,
+    "online_coop": true,
+    "lan_coop": true,
+    "online_pvp": false,
+    "shared_split_screen_coop": false,
+    "max_online_players": 16,
+    "player_hosted_dedicated_server": true,
+    "partial_controller_support": true,
+    "full_controller_support": false,
+    "steam_input_api": false,
+    "steam_achievements": false,
+    "steam_cloud": false,
+    "steam_matchmaking": false,
+    "steam_workshop": false,
+    "in_app_purchases": false
+  },
+  "input_evidence": {
+    "keyboard_mouse": "physical_end_to_end",
+    "controller": "mapping_contract_only_no_physical_device",
+    "controller_count_during_candidate_test": 0
+  },
+  "steam_deck": {
+    "compatibility_claim": "not_claimed",
+    "tested_resolution": "1280x800",
+    "notes": "1280x800 integer-scaled presentation is tested, but physical controller, Steam Input glyphs, on-screen keyboard and Proton were not verified. Do not request or advertise Verified status from this evidence."
+  },
+  "system_requirements": {
+    "minimum": {
+      "os": "Windows 10 64-bit",
+      "processor": "x86-64 dual-core processor",
+      "memory_mb": 4096,
+      "graphics": "OpenGL 3.3 compatible graphics",
+      "storage_mb": 256,
+      "network": "Broadband connection only for optional direct-IP multiplayer"
+    },
+    "recommended": {
+      "os": "Windows 11 64-bit",
+      "processor": "x86-64 quad-core processor",
+      "memory_mb": 8192,
+      "graphics": "Dedicated or integrated GPU with current OpenGL drivers",
+      "storage_mb": 512
+    }
+  },
+  "content_survey": {
+    "pre_generated_ai_content": true,
+    "live_generated_ai_content": false,
+    "disclosure_draft": "部分像素美術概念與初稿曾使用生成式 AI 輔助，之後由製作者進行色盤、輪廓、動畫與規格統一。正式遊戲不連接或執行生成式 AI 服務。",
+    "requires_rightsholder_confirmation": true
+  },
+  "steamworks_ids": {
+    "app_id": null,
+    "windows_depot_id": null,
+    "dedicated_server_depot_id": null
+  }
+}

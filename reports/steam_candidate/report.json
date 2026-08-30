@@ -1,0 +1,322 @@
+{
+	"generated_at": "2026-08-30T10:57:47",
+	"passed": true,
+	"checks": 51,
+	"passed_checks": 51,
+	"failed_checks": 0,
+	"display_mode": 3,
+	"connected_joypads": [],
+	"controller_test_level": "mapping_only_no_physical_device",
+	"visible_text_controls": 4,
+	"smallest_logical_font_px": 15,
+	"deck_effective_minimum_px_at_1280x800": 30,
+	"store_configuration_schema": 1.0,
+	"cases": [
+		{
+			"category": "Steam 啟動",
+			"name": "Big Picture 環境旗標存在",
+			"passed": true,
+			"detail": "SteamTenfoot=1"
+		},
+		{
+			"category": "商店設定",
+			"name": "Steam 商店設定檔存在",
+			"passed": true,
+			"detail": "res://steam/store_configuration.json"
+		},
+		{
+			"category": "商店設定",
+			"name": "Steam 商店設定為合法 JSON",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "商店設定",
+			"name": "只宣稱已實作的單人功能",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "商店設定",
+			"name": "IP 直連合作人數標示為 16",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "商店設定",
+			"name": "手把只標部分支援",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "商店設定",
+			"name": "未宣稱未整合的 Steamworks 功能",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "商店設定",
+			"name": "手把證據明確標示為非實體測試",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "商店設定",
+			"name": "沒有宣稱 Steam Deck Verified",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "內容問卷",
+			"name": "AI 輔助素材列為預先生成、非遊玩時生成",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "啟動設定",
+			"name": "Steam Windows 遊戲與伺服器啟動項完整",
+			"passed": true,
+			"detail": "2 options"
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_left 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_left 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_right 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_right 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_up 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_up 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_down 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "move_down 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "attack 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "attack 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "dodge 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "dodge 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "active_skill 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "active_skill 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "interact 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "interact 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "use_potion 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "use_potion 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "cycle_seed 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "cycle_seed 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "sleep_day 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "sleep_day 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "time_speed 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "time_speed 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "toggle_cave 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "toggle_cave 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "attend_festival 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "attend_festival 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "pause_menu 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "pause_menu 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "multiplayer_menu 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "multiplayer_menu 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "quick_save 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "quick_save 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "輸入設定",
+			"name": "quick_load 有鍵盤／滑鼠映射",
+			"passed": true,
+			"detail": ""
+		},
+		{
+			"category": "輸入設定",
+			"name": "quick_load 有 XInput 相容映射",
+			"passed": true,
+			"detail": "mapping-only"
+		},
+		{
+			"category": "Steam 啟動",
+			"name": "Big Picture 啟動自動進入全螢幕",
+			"passed": true,
+			"detail": "mode=3"
+		},
+		{
+			"category": "1280×800",
+			"name": "標題與 HUD 可見文字控制項已納入字級檢查",
+			"passed": true,
+			"detail": "4 controls"
+		},
+		{
+			"category": "1280×800",
+			"name": "最小可見文字高於 Steam Deck 9px 下限",
+			"passed": true,
+			"detail": "15px logical × 2 = 30px"
+		},
+		{
+			"category": "測試環境",
+			"name": "記錄連接的手把數量；證據等級仍限映射契約",
+			"passed": true,
+			"detail": "0 connected"
+		}
+	]
+}

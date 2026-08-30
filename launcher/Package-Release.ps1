@@ -12,8 +12,8 @@ if ($LASTEXITCODE -ne 0) { throw '自動測試未通過。' }
 if ($LASTEXITCODE -ne 0) { throw '多人連線全情境測試未通過。' }
 & (Join-Path $PSScriptRoot 'Test-RenderPerformance.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw '1080p 效能測試未通過。' }
-& (Join-Path $PSScriptRoot 'Test-ResolutionLayout.ps1') -GodotPath $GodotPath
-if ($LASTEXITCODE -ne 0) { throw '多解析度畫面測試未通過。' }
+& (Join-Path $PSScriptRoot 'Test-SteamCandidate.ps1') -GodotPath $GodotPath
+if ($LASTEXITCODE -ne 0) { throw 'Steam Windows 候選版測試未通過。' }
 & (Join-Path $PSScriptRoot 'Export-Sample.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw 'Windows 匯出失敗。' }
 $signingPfx = [Environment]::GetEnvironmentVariable('PIXELRPG_SIGNING_PFX', 'Process')
@@ -27,6 +27,8 @@ if ($signingPfx) {
 }
 & (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1')
 if ($LASTEXITCODE -ne 0) { throw '匯出遊戲 smoke test 失敗。' }
+& (Join-Path $PSScriptRoot 'Test-ExportedSteamLaunch.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'Steam Big Picture 正式 EXE 啟動測試失敗。' }
 
 $distRoot = Join-Path $projectRoot 'dist'
 $packageName = "Mistfall-Bell-Seasons-v$version-Windows-x64"

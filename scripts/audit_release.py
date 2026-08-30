@@ -28,6 +28,7 @@ REQUIRED_EXCLUDES = {
     "reports/*",
     "launcher/*",
     "scripts/*",
+    "steam/*",
     "tools/*",
     "work/*",
     "assets/source/*",

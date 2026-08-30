@@ -72,6 +72,7 @@ func _ready() -> void:
 		hide()
 		set_process(false)
 		return
+	_apply_launch_display_mode()
 	seed(1337)
 	PixelRPGInputBindings.load_saved()
 	mode = "dungeon" if GameState.current_map_id == &"mistfall_depths" else ("village" if GameState.current_map_id == &"mistfall_village" else ("abyss" if GameState.current_map_id == &"dreaming_shore" else "farm"))
@@ -90,6 +91,16 @@ func _ready() -> void:
 	elif not bool(GameState.get_flag(&"title_seen", false)):
 		_create_title_screen()
 	queue_redraw()
+
+
+func _apply_launch_display_mode() -> void:
+	# Steam sets SteamTenfoot=1 when launching from Big Picture. Respect that
+	# runtime hint without persisting it over the player's own window setting.
+	var steam_big_picture := OS.get_environment("SteamTenfoot") == "1"
+	var wants_fullscreen := steam_big_picture or bool(GameState.settings.get("fullscreen", false))
+	var target_mode := DisplayServer.WINDOW_MODE_FULLSCREEN if wants_fullscreen else DisplayServer.WINDOW_MODE_WINDOWED
+	if DisplayServer.window_get_mode() != target_mode:
+		DisplayServer.window_set_mode(target_mode)
 
 
 func _exit_tree() -> void:
