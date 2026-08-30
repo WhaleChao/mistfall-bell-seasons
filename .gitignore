@@ -1,6 +1,6 @@
-.godot/
-.creator/
-.venv/
+/.godot/
+/.creator/
+/.venv/
 __pycache__/
 .pytest_cache/
 *.egg-info/
@@ -8,9 +8,9 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
-build/
-dist/
-exports/
-tools/
-work/
+/build/
+/dist/
+/exports/
+/tools/
+/work/
 creator_service/session.json
