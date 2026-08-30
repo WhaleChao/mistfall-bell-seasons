@@ -56,7 +56,9 @@ func _run() -> void:
 
 
 func _run_server() -> void:
-	var result: Dictionary = network.host_server(port, 8, "QA Dedicated", "", true, "qa_%d" % port, farm_mode_arg, relationship_mode_arg)
+	# Every scenario uses the shipping maximum so the 16-client capacity path is
+	# exercised by the same server implementation used by the release build.
+	var result: Dictionary = network.host_server(port, PixelRPGNetworkManager.MAX_CLIENTS_LIMIT, "QA Dedicated", "", true, "qa_%d" % port, farm_mode_arg, relationship_mode_arg)
 	if not bool(result.get("ok", false)):
 		failures.append(String(result.get("message", "server failed")))
 		_write_report(result)

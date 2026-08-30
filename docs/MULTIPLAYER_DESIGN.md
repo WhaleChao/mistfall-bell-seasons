@@ -2,7 +2,7 @@
 
 ## 拓撲
 
-v1.1.1 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，並維持 `1.1.0` 網路協定相容性。一個程序是權威伺服器；其餘程序為客戶端。遊戲內「開設主機」是 listen server，同一個 Windows EXE 加上 `--headless -- --server` 則為專用伺服器。預設 UDP `27180`、最多 16 人、位置快照 20 Hz、世界視圖 2 Hz。
+v1.1.2 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，並維持 `1.1.0` 網路協定相容性。一個程序是權威伺服器；其餘程序為客戶端。遊戲內「開設主機」是 listen server，同一個 Windows EXE 加上 `--headless -- --server` 則為專用伺服器。預設 UDP `27180`、最多 16 人、位置快照 20 Hz、世界視圖 2 Hz；最大容量以 1 服 16 客真實程序驗證。
 
 ## 握手與身份
 
@@ -32,4 +32,4 @@ v1.1.1 使用 Godot 高階 Multiplayer API 與 `ENetMultiplayerPeer`，並維持
 
 ## 已知界線
 
-ENet 封包沒有 TLS，v1.1.1 也沒有密碼、公開伺服器清單、NAT 穿透、反作弊服務、聊天、管理員指令或帳號復原。公開營運前應另行加入加密身份層、權限／封禁、DDoS 防護與正式滲透測試；目前 UI、指南與隱私政策皆不把朋友伺服器描述為安全的公網服務。
+ENet 封包沒有 TLS，v1.1.2 也沒有密碼、公開伺服器清單、NAT 穿透、反作弊服務、聊天、管理員指令或帳號復原。公開營運前應另行加入加密身份層、權限／封禁、DDoS 防護與正式滲透測試；目前 UI、指南與隱私政策皆不把朋友伺服器描述為安全的公網服務。

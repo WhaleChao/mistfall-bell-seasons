@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T09:51:51",
+	"generated_at": "2026-08-30T10:15:10",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -22,7 +22,7 @@
 		"generated_request_instances": 34923,
 		"final_save_bytes": 3222,
 		"disk_save_cycles": 250,
-		"elapsed_seconds": 5.293
+		"elapsed_seconds": 5.156
 	},
 	"cases": [
 		{

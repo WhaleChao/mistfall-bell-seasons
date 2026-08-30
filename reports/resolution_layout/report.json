@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T09:52:44",
+	"generated_at": "2026-08-30T10:16:10",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -21,7 +21,7 @@
 			"width": 640,
 			"height": 360,
 			"integer_scale": 1,
-			"variance": 0.0210152960517914,
+			"variance": 0.0210140968868852,
 			"black_ratio": 0.00138888888888889
 		},
 		{
@@ -29,7 +29,7 @@
 			"width": 1280,
 			"height": 720,
 			"integer_scale": 2,
-			"variance": 0.0215815544841756,
+			"variance": 0.0215797499475156,
 			"black_ratio": 0.00147569444444444
 		},
 		{
@@ -37,7 +37,7 @@
 			"width": 1920,
 			"height": 1080,
 			"integer_scale": 3,
-			"variance": 0.0220619753168231,
+			"variance": 0.0220685189175836,
 			"black_ratio": 0.00154513888888889
 		},
 		{
@@ -45,8 +45,8 @@
 			"width": 2560,
 			"height": 1440,
 			"integer_scale": 4,
-			"variance": 0.0224106156618754,
-			"black_ratio": 0.00161458333333333
+			"variance": 0.0224200600762631,
+			"black_ratio": 0.00163194444444444
 		}
 	],
 	"cases": [
@@ -66,7 +66,7 @@
 			"category": "畫面",
 			"name": "640x360.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02102"
+			"detail": "variance=0.02101"
 		},
 		{
 			"category": "畫面",
@@ -126,7 +126,7 @@
 			"category": "畫面",
 			"name": "1920x1080.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02206"
+			"detail": "variance=0.02207"
 		},
 		{
 			"category": "畫面",
@@ -156,7 +156,7 @@
 			"category": "畫面",
 			"name": "2560x1440.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02241"
+			"detail": "variance=0.02242"
 		},
 		{
 			"category": "畫面",

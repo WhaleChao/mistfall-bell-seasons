@@ -1,6 +1,6 @@
 # 霧落農歌：鐘塔之季
 
-《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 俯視像素農場動作 RPG。v1.1.1 可完全離線單人遊玩，也能用 Godot ENet／UDP 自行開設最多 16 人的朋友伺服器；遊戲 Runtime 不包含模型、Creator Service、知識庫、遙測或廣告。
+《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows 俯視像素農場動作 RPG。v1.1.2 可完全離線單人遊玩，也能用 Godot ENet／UDP 自行開設最多 16 人的朋友伺服器；遊戲 Runtime 不包含模型、Creator Service、知識庫、遙測或廣告。
 
 ![農場畫面](screenshots/commercial_farm.png)
 
@@ -14,13 +14,13 @@
 - 40 層四季鐘窟、12 種一般敵人、4 名季節守護者、獨立攻擊型態、四枚封印、最終戰與無限挑戰。
 - 無星異潮、100 點理智、異魚圖鑑、無期限「潮下的低語」任務，以及使用原創透明像素素材與 16 向彈幕的「克蘇魯之影・溺夢古神」。
 - 可在遊戲內開設主機或用 IP 加入；另附無視窗專用伺服器。開服時可選共同農場、私人農場或私人競賽排行，以及獨立戀愛或同一 NPC 的競爭追求。
-- 多人劇情依 1 人、2 人、3–4 人、5 人以上切換「獨鐘守望／雙鐘盟約／四季合奏／霧落拓荒議會」；共同、私人、競賽農場與 1／2／3／5 人拓撲合計以 6 服 15 客、21 個真實程序驗證版本握手、權威移動、農場整合／隔離、四種篇章、戀愛平手／領先／唯一婚約與原子世界存檔。
+- 多人劇情依 1 人、2 人、3–4 人、5 人以上切換「獨鐘守望／雙鐘盟約／四季合奏／霧落拓荒議會」；共同、私人、競賽農場與 1／2／3／5／16 人拓撲合計以 7 服 31 客、38 個真實程序驗證版本握手、權威移動、最大容量、農場整合／隔離、四種篇章、戀愛平手／領先／唯一婚約與原子世界存檔。
 - 四方向四幀玩家走路動畫、原創角色／敵人／動物圖集、季節與天候效果、程序式離線音樂與音效。
 - SaveGame v4；可遷移 v1（28 日制）、v2 與 v3 存檔，保留原季節與日數。
 
 ## 下載與遊玩
 
-[GitHub Releases 的 Windows x64 v1.1.1 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.1.1)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；單人遊玩不需要網路或 AI 模型。
+[GitHub Releases 的 Windows x64 v1.1.2 壓縮檔](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.1.2)為免安裝版：解壓縮後執行 `Mistfall-Bell-Seasons.exe`。系統需求為 Windows 10/11 x64、支援 OpenGL 3.3 的顯示硬體、4 GB RAM；單人遊玩不需要網路或 AI 模型。
 
 按 `M`／手把 Select 開啟連線介面，可自行開設主機或輸入 IP 加入；發行包亦可雙擊 `Start Dedicated Server.cmd`。完整的 UDP 轉送、世界檔與安全界線見 [伺服器指南](SERVER_GUIDE.md)。
 
@@ -57,11 +57,11 @@
 .\launcher\Run-FullAcceptance.ps1
 .\launcher\Test-Multiplayer.ps1
 .\launcher\Package-Release.ps1
-.\launcher\Test-PublishedRelease.ps1 -Tag v1.1.1
+.\launcher\Test-PublishedRelease.ps1 -Tag v1.1.2
 .\launcher\Test-CodeSigningPipeline.ps1
 ```
 
-發行閘門會驗證 283 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、圖片／圖集／畫面規則、Save v1→v2→v3→v4、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，137 項通過並保存 15 張畫面證據；圖片閘門統一檢查 41 張遊戲、Studio、解析度及宣傳畫面。[多人連線證據](reports/multiplayer_acceptance.json)由 21 個獨立 Godot 程序完成共同、私人、競賽農場與 1／2／3／5 人情境（6 台專用伺服器＋15 個客戶端）的握手、移動、農場整合／隔離、四種篇章、戀愛競爭／唯一婚約及世界保存。公開版仍會在預設離線模式驗證零網路端點。RTX 3060 的最新 1080p／20 敵人連續封裝測試約 740 FPS；正式遊玩鎖定 60 FPS，精確結果保留於效能報告。
+發行閘門會驗證 283 筆內容、JSON Schema／引用、所有資產 SHA-256／授權、圖片／圖集／畫面規則、Save v1→v2→v3→v4、12,000 日／100 年、250 次磁碟存讀、20 敵人效能、640×360 至 2560×1440 整數縮放、PCK 邊界、正式 ZIP 與解壓後啟動。另有非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)，實際開啟遊戲視窗、驅動輸入與 UI，137 項通過並保存 15 張畫面證據；圖片閘門統一檢查 41 張遊戲、Studio、解析度及宣傳畫面。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成共同、私人、競賽農場與 1／2／3／5／16 人情境（7 台專用伺服器＋31 個客戶端）的握手、移動、最大容量、農場整合／隔離、四種篇章、戀愛競爭／唯一婚約及世界保存。公開版仍會在預設離線模式驗證零網路端點。RTX 3060 的最新 1080p／20 敵人連續封裝測試約 740 FPS；正式遊玩鎖定 60 FPS，精確結果保留於效能報告。
 
 ## PixelRPG Studio 與本機 AI
 

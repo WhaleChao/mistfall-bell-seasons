@@ -82,7 +82,7 @@ foreach ($scenario in $scenarios) {
 }
 
 $storyScalingReports = @()
-foreach ($playerCount in @(1, 3, 5)) {
+foreach ($playerCount in @(1, 3, 5, 16)) {
     $storyScalingReports += Invoke-MultiplayerScenario "story_$playerCount" 'shared' 'independent' $playerCount 'story'
 }
 
@@ -92,10 +92,11 @@ $evidence = [ordered]@{
     generated_at = [DateTime]::UtcNow.ToString('o')
     result = 'PASS'
     transport = 'Godot ENet UDP'
-    topology = '6 dedicated servers + 15 clients across world-mode and player-count scenarios'
+    topology = '7 dedicated servers + 31 clients across world-mode and player-count scenarios'
     world_mode_scenarios = $scenarioReports
     story_scaling_scenarios = $storyScalingReports
 }
 $evidence | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $evidencePath -Encoding utf8
-Write-Host '多人連線全情境實測通過：共同、私人、競賽農場與 1／2／3／5 人劇情拓撲，共 6 台專用伺服器 + 15 個客戶端；版本握手、權威移動、農場隔離／整合、戀愛制度、劇情切換與世界存檔均 PASS。'
+Write-Host '多人連線全情境實測通過：共同、私人、競賽農場與 1／2／3／5／16 人劇情拓撲，共 7 台專用伺服器 + 31 個客戶端；版本握手、權威移動、最大容量、農場隔離／整合、戀愛制度、劇情切換與世界存檔均 PASS。'
 Write-Host "證據：$evidencePath"
+$global:LASTEXITCODE = 0

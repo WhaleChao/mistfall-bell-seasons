@@ -50,7 +50,7 @@
     },
     {
       "category": "移動動畫",
-      "detail": "觀察到 3/4 幀",
+      "detail": "觀察到 4/4 幀",
       "name": "ui_right 播放多幀循環",
       "passed": true
     },
@@ -824,7 +824,7 @@
     }
   ],
   "checks": 137,
-  "elapsed_seconds": 24.07,
+  "elapsed_seconds": 25.32,
   "engine": {
     "build": "official",
     "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
@@ -837,7 +837,7 @@
     "timestamp": 0
   },
   "failed": 0,
-  "generated_at": "2026-08-30T08:48:21",
+  "generated_at": "2026-08-30T10:11:32",
   "passed": 137,
   "renderer": "NVIDIA GeForce RTX 3060",
   "schema_version": 1,

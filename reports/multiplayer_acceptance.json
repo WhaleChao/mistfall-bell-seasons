@@ -1,16 +1,16 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-08-30T09:52:36.5491768Z",
+  "generated_at": "2026-08-30T10:16:02.8754605Z",
   "result": "PASS",
   "transport": "Godot ENet UDP",
-  "topology": "6 dedicated servers + 15 clients across world-mode and player-count scenarios",
+  "topology": "7 dedicated servers + 31 clients across world-mode and player-count scenarios",
   "world_mode_scenarios": [
     {
       "id": "shared",
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 2,
-      "port": 28450,
+      "port": 29107,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
@@ -40,12 +40,69 @@
             "tie_blocked": true,
             "unique_claim_enforced": true,
             "winning_proposal": {},
-            "world_path": "user://pixelrpg_servers/qa_28450.json"
+            "world_path": "user://pixelrpg_servers/qa_29107.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:03",
+          "generated_at": "2026-08-30T10:15:21",
           "passed": true,
           "role": "server"
+        },
+        {
+          "details": {
+            "action_results": [
+              {
+                "action": "tilled",
+                "message": "翻鬆了土地",
+                "ok": true
+              },
+              {
+                "hearts": 0,
+                "message": "與mira交談，好感 0♥",
+                "ok": true,
+                "romance_board": [
+                  {
+                    "dating": false,
+                    "hearts": 0,
+                    "name": "ProbeA",
+                    "player_key": "2fdfac768116f983d959da0e18389d64",
+                    "points": 25,
+                    "rank": 1,
+                    "tied_for_lead": false
+                  }
+                ]
+              }
+            ],
+            "final_snapshot_players": 2,
+            "moved": true,
+            "own_private_plots": 1,
+            "peak_snapshot_players": 2,
+            "peer_id": 1227920002,
+            "protocol": "1.1.0",
+            "romance_suitors": 0,
+            "twin_story_seen": true,
+            "world_rules": {
+              "farm_leaderboard": [],
+              "farm_mode": "shared",
+              "local_player_key": "2fdfac768116f983d959da0e18389d64",
+              "player_count": 2,
+              "relationship_mode": "independent",
+              "romance_boards": {},
+              "romance_claims": {},
+              "story_variant": {
+                "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+                "id": "twin_bell_pact",
+                "intro": "兩名旅人的鐘聲彼此回應，新的選擇也開始分岔。",
+                "objective": "決定共享收成，或以兩座農場證明各自的道路。",
+                "player_count": 2,
+                "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+                "title": "雙鐘盟約"
+              }
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:15:21",
+          "passed": true,
+          "role": "client"
         },
         {
           "details": {
@@ -85,64 +142,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1472463938,
-            "protocol": "1.1.0",
-            "romance_suitors": 0,
-            "twin_story_seen": true,
-            "world_rules": {
-              "farm_leaderboard": [],
-              "farm_mode": "shared",
-              "local_player_key": "2fdfac768116f983d959da0e18389d64",
-              "player_count": 2,
-              "relationship_mode": "independent",
-              "romance_boards": {},
-              "romance_claims": {},
-              "story_variant": {
-                "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
-                "id": "twin_bell_pact",
-                "intro": "兩名旅人的鐘聲彼此回應，新的選擇也開始分岔。",
-                "objective": "決定共享收成，或以兩座農場證明各自的道路。",
-                "player_count": 2,
-                "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
-                "title": "雙鐘盟約"
-              }
-            }
-          },
-          "failures": [],
-          "generated_at": "2026-08-30T09:52:03",
-          "passed": true,
-          "role": "client"
-        },
-        {
-          "details": {
-            "action_results": [
-              {
-                "action": "tilled",
-                "message": "翻鬆了土地",
-                "ok": true
-              },
-              {
-                "hearts": 0,
-                "message": "與mira交談，好感 0♥",
-                "ok": true,
-                "romance_board": [
-                  {
-                    "dating": false,
-                    "hearts": 0,
-                    "name": "ProbeB",
-                    "player_key": "0a9996fc18e525ab8861e57b26d5e1b1",
-                    "points": 25,
-                    "rank": 1,
-                    "tied_for_lead": false
-                  }
-                ]
-              }
-            ],
-            "final_snapshot_players": 2,
-            "moved": true,
-            "own_private_plots": 1,
-            "peak_snapshot_players": 2,
-            "peer_id": 1421893798,
+            "peer_id": 1866056442,
             "protocol": "1.1.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -166,7 +166,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:03",
+          "generated_at": "2026-08-30T10:15:21",
           "passed": true,
           "role": "client"
         }
@@ -177,7 +177,7 @@
       "farm_mode": "private",
       "relationship_mode": "independent",
       "player_count": 2,
-      "port": 28473,
+      "port": 28495,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
@@ -207,10 +207,10 @@
             "tie_blocked": true,
             "unique_claim_enforced": true,
             "winning_proposal": {},
-            "world_path": "user://pixelrpg_servers/qa_28473.json"
+            "world_path": "user://pixelrpg_servers/qa_28495.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:09",
+          "generated_at": "2026-08-30T10:15:28",
           "passed": true,
           "role": "server"
         },
@@ -243,7 +243,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 244721439,
+            "peer_id": 1818187059,
             "protocol": "1.1.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -267,7 +267,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:09",
+          "generated_at": "2026-08-30T10:15:28",
           "passed": true,
           "role": "client"
         },
@@ -309,7 +309,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1045802959,
+            "peer_id": 2135521645,
             "protocol": "1.1.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -333,7 +333,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:09",
+          "generated_at": "2026-08-30T10:15:28",
           "passed": true,
           "role": "client"
         }
@@ -344,7 +344,7 @@
       "farm_mode": "competitive",
       "relationship_mode": "competitive",
       "player_count": 2,
-      "port": 29438,
+      "port": 28581,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
@@ -402,10 +402,10 @@
                 }
               ]
             },
-            "world_path": "user://pixelrpg_servers/qa_29438.json"
+            "world_path": "user://pixelrpg_servers/qa_28581.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:16",
+          "generated_at": "2026-08-30T10:15:34",
           "passed": true,
           "role": "server"
         },
@@ -456,7 +456,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1224497331,
+            "peer_id": 1507189739,
             "protocol": "1.1.0",
             "romance_suitors": 2,
             "twin_story_seen": true,
@@ -523,7 +523,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:16",
+          "generated_at": "2026-08-30T10:15:34",
           "passed": true,
           "role": "client"
         },
@@ -583,7 +583,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1426601755,
+            "peer_id": 1949766616,
             "protocol": "1.1.0",
             "romance_suitors": 2,
             "twin_story_seen": true,
@@ -650,7 +650,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:16",
+          "generated_at": "2026-08-30T10:15:34",
           "passed": true,
           "role": "client"
         }
@@ -663,7 +663,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 1,
-      "port": 28872,
+      "port": 28842,
       "topology": "1 dedicated server + 1 clients",
       "probe_mode": "story",
       "processes": [
@@ -680,10 +680,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "獨鐘守望"
             },
-            "world_path": "user://pixelrpg_servers/qa_28872.json"
+            "world_path": "user://pixelrpg_servers/qa_28842.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:22",
+          "generated_at": "2026-08-30T10:15:41",
           "passed": true,
           "role": "server"
         },
@@ -693,7 +693,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 1,
-            "peer_id": 1402354582,
+            "peer_id": 1812201288,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -706,7 +706,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:22",
+          "generated_at": "2026-08-30T10:15:41",
           "passed": true,
           "role": "client"
         }
@@ -717,7 +717,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 3,
-      "port": 28515,
+      "port": 29872,
       "topology": "1 dedicated server + 3 clients",
       "probe_mode": "story",
       "processes": [
@@ -734,10 +734,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "四季合奏"
             },
-            "world_path": "user://pixelrpg_servers/qa_28515.json"
+            "world_path": "user://pixelrpg_servers/qa_29872.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:29",
+          "generated_at": "2026-08-30T10:15:47",
           "passed": true,
           "role": "server"
         },
@@ -747,7 +747,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 684401087,
+            "peer_id": 616535751,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -760,7 +760,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:29",
+          "generated_at": "2026-08-30T10:15:47",
           "passed": true,
           "role": "client"
         },
@@ -770,7 +770,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 469650662,
+            "peer_id": 303448217,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -783,7 +783,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:29",
+          "generated_at": "2026-08-30T10:15:47",
           "passed": true,
           "role": "client"
         },
@@ -793,7 +793,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 241843846,
+            "peer_id": 914629578,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -806,7 +806,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:29",
+          "generated_at": "2026-08-30T10:15:47",
           "passed": true,
           "role": "client"
         }
@@ -817,7 +817,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 5,
-      "port": 29247,
+      "port": 30151,
       "topology": "1 dedicated server + 5 clients",
       "probe_mode": "story",
       "processes": [
@@ -834,10 +834,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "霧落拓荒議會"
             },
-            "world_path": "user://pixelrpg_servers/qa_29247.json"
+            "world_path": "user://pixelrpg_servers/qa_30151.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:36",
+          "generated_at": "2026-08-30T10:15:54",
           "passed": true,
           "role": "server"
         },
@@ -847,7 +847,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 1791031632,
+            "peer_id": 2082518780,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -860,7 +860,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:36",
+          "generated_at": "2026-08-30T10:15:54",
           "passed": true,
           "role": "client"
         },
@@ -870,7 +870,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 1581031417,
+            "peer_id": 1205766362,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -883,7 +883,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:36",
+          "generated_at": "2026-08-30T10:15:54",
           "passed": true,
           "role": "client"
         },
@@ -893,7 +893,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 281881186,
+            "peer_id": 1599479544,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -906,7 +906,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:36",
+          "generated_at": "2026-08-30T10:15:54",
           "passed": true,
           "role": "client"
         },
@@ -916,7 +916,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 2026251104,
+            "peer_id": 1631874486,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -929,7 +929,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:36",
+          "generated_at": "2026-08-30T10:15:54",
           "passed": true,
           "role": "client"
         },
@@ -939,7 +939,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 59488057,
+            "peer_id": 414760698,
             "protocol": "1.1.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -952,7 +952,406 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T09:52:36",
+          "generated_at": "2026-08-30T10:15:54",
+          "passed": true,
+          "role": "client"
+        }
+      ]
+    },
+    {
+      "id": "story_16",
+      "farm_mode": "shared",
+      "relationship_mode": "independent",
+      "player_count": 16,
+      "port": 29513,
+      "topology": "1 dedicated server + 16 clients",
+      "probe_mode": "story",
+      "processes": [
+        {
+          "details": {
+            "peak_clients": 16,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            },
+            "world_path": "user://pixelrpg_servers/qa_29513.json"
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "server"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 79976073,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 518765619,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 141705138,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1949447356,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1766575851,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1112387032,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1826812188,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1942272574,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1665684468,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 448777893,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1531871549,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1584892908,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1003756518,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 557892057,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 314329575,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
+          "passed": true,
+          "role": "client"
+        },
+        {
+          "details": {
+            "expected_story_id": "mistfall_council",
+            "expected_story_seen": true,
+            "moved": true,
+            "peak_snapshot_players": 16,
+            "peer_id": 1263013269,
+            "protocol": "1.1.0",
+            "story_variant": {
+              "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
+              "id": "mistfall_council",
+              "intro": "五名以上旅人讓聚落成為新的拓荒地，資源與人心都需要制度。",
+              "objective": "以議會式共同目標維持聚落，並在排行榜與共享建設間取得平衡。",
+              "player_count": 16,
+              "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
+              "title": "霧落拓荒議會"
+            }
+          },
+          "failures": [],
+          "generated_at": "2026-08-30T10:16:02",
           "passed": true,
           "role": "client"
         }
