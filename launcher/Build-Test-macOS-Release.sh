@@ -27,6 +27,7 @@ case "$work_root" in
 esac
 rm -rf "$work_root"
 mkdir -p "$build_root" "$dist_root" "$work_root/extracted" "$work_root/runtime-home" "$report_root"
+mkdir -p "$work_root/test-home"
 rm -f "$raw_archive" "$final_archive"
 
 cd "$project_root"
@@ -36,7 +37,7 @@ python3 scripts/generate_license_report.py
 "$godot_path" --headless --path . --editor --quit
 "$godot_path" --headless --path . --script res://tests/godot/smoke_test.gd
 "$godot_path" --headless --path . --script res://tests/godot/image_integrity_test.gd
-"$godot_path" --headless --path . --script res://tests/godot/commercial_stress_test.gd
+PIXELRPG_TEST_ISOLATED=1 HOME="$work_root/test-home" "$godot_path" --headless --path . --script res://tests/godot/commercial_stress_test.gd
 "$godot_path" --headless --path . --export-release "macOS Universal" "$raw_archive"
 python3 scripts/audit_macos_archive.py "$raw_archive" --version "$version" --report "$report_root/raw_export.json"
 
