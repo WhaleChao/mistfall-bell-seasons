@@ -16,7 +16,7 @@
 - [x] 最終 Creator Service EXE 以真實 Ollama／Qwen 通過 24/24，並以 Docling、RapidOCR、sqlite-vec 通過 9/9 文件格式與離線增量索引。
 - [x] Godot EditorPlugin 通過 57/57 實機 UI 驗收與 16 張互異畫面，涵蓋 15 頁、UndoRedo、節點圖、引用、diff 與套用前驗證。
 - [x] 最終發行資料夾與 ZIP 經 Windows Defender 定義 1.457.393.0 掃描，偵測 0 項威脅。
-- [x] GitHub 全新 Windows 11 VM 從公開 Release 下載、驗證、解壓及啟動；23 次執行期網路觀測為 0 端點。
+- [x] GitHub 全新 Windows 11 VM 從公開 Release 下載、驗證、解壓及啟動；24 次執行期網路觀測為 0 端點。
 - [x] PFX Authenticode 管線以公開 EXE 隔離複本完成，且正式 EXE 原雜湊不變。
 - [x] 非 headless Godot 視窗完成 119 項全功能實機驗收，並保存 12 張畫面證據。
 

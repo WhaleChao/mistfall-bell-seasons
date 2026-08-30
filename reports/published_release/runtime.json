@@ -1,12 +1,12 @@
 {
   "passed": true,
-  "tested_at": "2026-08-30T11:06:30.9735734+08:00",
-  "os": "Microsoft Windows NT 10.0.19045.0",
-  "build_directory": "<temporary-directory>/expanded/Mistfall-Bell-Seasons-v1.0.2-Windows-x64",
+  "tested_at": "2026-08-30T06:00:14.2193593+00:00",
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "build_directory": "<temporary-directory>/expanded/Mistfall-Bell-Seasons-v1.0.3-Windows-x64",
   "quit_after_frames": 600,
   "exit_code": 0,
-  "network_samples": 14,
+  "network_samples": 24,
   "network_endpoints": [],
-  "exe_sha256": "2dcc94bdca8eb45fe800a96ad9320b68714a458baa3e88725b3d397a87650cf3",
-  "pck_sha256": "50dbd2268c3533b3a0dc860b7737105ebdb492f5af42dfa2580825aa1c29562b"
+  "exe_sha256": "c62d32651c07c7cda3c1f71c0bfee9cd065c4f78a0a8cd4ffce94138e64e8773",
+  "pck_sha256": "2df650987f1795b38016b6bbf13b9ad777d919b6db2c3dd483ddf7c0952953f8"
 }
