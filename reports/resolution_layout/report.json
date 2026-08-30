@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T13:16:01",
+	"generated_at": "2026-08-30T14:04:02",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -25,7 +25,7 @@
 			"width": 640,
 			"height": 360,
 			"integer_scale": 1,
-			"variance": 0.021000339479253,
+			"variance": 0.0210068106819205,
 			"black_ratio": 0.00140625
 		},
 		{
@@ -37,8 +37,8 @@
 			"width": 1280,
 			"height": 720,
 			"integer_scale": 2,
-			"variance": 0.0215818141909637,
-			"black_ratio": 0.00149305555555556
+			"variance": 0.0215863065269064,
+			"black_ratio": 0.00147569444444444
 		},
 		{
 			"file": "1280x800.png",
@@ -49,8 +49,8 @@
 			"width": 1280,
 			"height": 800,
 			"integer_scale": 2,
-			"variance": 0.0244964965585575,
-			"black_ratio": 0.101328125
+			"variance": 0.0244951319648008,
+			"black_ratio": 0.10134375
 		},
 		{
 			"file": "1920x1080.png",
@@ -61,7 +61,7 @@
 			"width": 1920,
 			"height": 1080,
 			"integer_scale": 3,
-			"variance": 0.0220569523699621,
+			"variance": 0.0220403647308962,
 			"black_ratio": 0.00154513888888889
 		},
 		{
@@ -73,7 +73,7 @@
 			"width": 2560,
 			"height": 1440,
 			"integer_scale": 4,
-			"variance": 0.0223703619483293,
+			"variance": 0.0224035603752525,
 			"black_ratio": 0.00161458333333333
 		}
 	],
@@ -100,7 +100,7 @@
 			"category": "畫面",
 			"name": "640x360.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02100"
+			"detail": "variance=0.02101"
 		},
 		{
 			"category": "畫面",
@@ -136,7 +136,7 @@
 			"category": "畫面",
 			"name": "1280x720.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02158"
+			"detail": "variance=0.02159"
 		},
 		{
 			"category": "畫面",
@@ -208,7 +208,7 @@
 			"category": "畫面",
 			"name": "1920x1080.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02206"
+			"detail": "variance=0.02204"
 		},
 		{
 			"category": "畫面",
@@ -244,7 +244,7 @@
 			"category": "畫面",
 			"name": "2560x1440.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02237"
+			"detail": "variance=0.02240"
 		},
 		{
 			"category": "畫面",

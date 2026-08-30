@@ -16,16 +16,17 @@ Steam 僅作輸入、Big Picture、解析度與商店宣稱的品質基準；本
 - [x] RTX 3060、1920×1080、20 敵人實測遠高於 60 FPS 容量。
 - [x] Windows x64 release export、PCK 邊界、可執行檔啟動、正式 ZIP 精確檔案清單、解壓後啟動與 SHA-256 通過。
 - [x] Windows 上交叉匯出的 macOS ZIP 為 Universal 2（x86_64＋arm64）、bundle ID／可執行權限／PCK 邊界均通過。
-- [ ] GitHub macOS runner 上的 ad-hoc 簽章、實際啟動、零網路端點、授權封裝與公開下載後重驗；必須在 v1.2.0 發布前轉為 [x]。
+- [x] GitHub macOS runner 上完成 Universal 2、ad-hoc 簽章、實際啟動、零網路端點與授權封裝；workflow `33315320403` 全部成功，候選 ZIP 下載後 SHA-256 與本機複驗亦通過。
+- [ ] v1.2.0 發布後由全新 Windows／macOS runner 從公開 Release 重新下載、核對 SHA-256、解壓、啟動並觀測零網路端點。
 - [x] 640×360、1280×720、1280×800、1920×1080、2560×1440 實際 Windows 視窗、GPU 內容與 1×–4× 整數縮放通過；1280×800 為 1280×720 內容加上下各 40px 留邊。
 - [x] Steam 品質基準 51/51：Big Picture 全螢幕、兩個啟動項、功能勾選契約、18 組鍵盤／XInput 映射、0 支手把的證據限制及 1280×800 最小 30px 有效字級通過；未上傳 Steam。
-- [ ] v1.2.0 正式 EXE 的 `SteamTenfoot=1` 視窗覆蓋與正常退出；正式封裝時更新。
+- [x] v1.2.0 正式 EXE 的 `SteamTenfoot=1` 視窗覆蓋與正常退出通過；視窗 1920×1082，覆蓋 1920×1080 螢幕。
 - [x] 完整 Creator Service 環境 138 個依賴的已知漏洞掃描為 0，16 個 Python 測試通過；Godot 4.7.2 授權與完整第三方著作權原文以固定雜湊納入 ZIP。
 - [x] 最終 Creator Service EXE 以真實 Ollama／Qwen 通過 24/24，並以 Docling、RapidOCR、sqlite-vec 通過 9/9 文件格式與離線增量索引。
 - [x] Godot EditorPlugin 通過 57/57 實機 UI 驗收與 16 張互異畫面，涵蓋 15 頁、UndoRedo、節點圖、引用、diff 與套用前驗證。
 - [x] Godot CLI 閘門除 exit code 外亦拒絕腳本解析、編譯、資源載入及一般 `ERROR` 日誌；Studio 僅隔離成功標記後三種已知 Editor 關閉診斷。
 - [x] 最終發行資料夾與 ZIP 經 Windows Defender 定義 1.457.393.0 掃描，偵測 0 項威脅。
-- [x] GitHub 全新 Windows 11 VM 從公開 Release 下載、驗證、解壓及啟動；24 次執行期網路觀測為 0 端點。
+- [x] 公開 Release 重驗管線已由先前候選完成全新 Windows 11 VM 下載、驗證、解壓及啟動；v1.2.0 的雙平台公開資產仍依上述獨立待辦於發布後再跑一次。
 - [x] PFX Authenticode 管線以公開 EXE 隔離複本完成，且正式 EXE 原雜湊不變。
 - [x] 非 headless Godot 視窗完成 146 項全功能實機驗收，並保存 20 張畫面證據。
 

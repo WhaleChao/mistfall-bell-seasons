@@ -60,6 +60,14 @@ REQUIRED_PCK_MARKERS = (
 )
 
 
+def display_zip_path(path: str) -> str:
+    """Restore UTF-8 names from ZIPs whose Unicode flag was omitted by ditto."""
+    try:
+        return path.encode("cp437").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return path
+
+
 def universal_architectures(payload: bytes) -> set[int]:
     if len(payload) < 8:
         return set()
@@ -197,15 +205,15 @@ def main() -> int:
         "archive": archive.name,
         "archive_bytes": archive.stat().st_size,
         "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
-        "app_bundle": app_root,
+        "app_bundle": display_zip_path(app_root),
         "bundle_identifier": plist.get("CFBundleIdentifier"),
         "version": args.version,
-        "executable": executable_path,
+        "executable": display_zip_path(executable_path),
         "plist_executable_name": executable_name,
         "zip_filename_encoding_fallback": used_filename_encoding_fallback,
         "executable_mode": oct(executable_mode),
         "architectures": ["x86_64" if value == CPU_X86_64 else "arm64" if value == CPU_ARM64 else hex(value) for value in sorted(architectures)],
-        "pck": pck_path,
+        "pck": display_zip_path(pck_path),
         "pck_sha256": hashlib.sha256(pck_payload).hexdigest() if pck_payload else "",
         "commercial_notices": sorted(bundled_licenses),
         "errors": errors,

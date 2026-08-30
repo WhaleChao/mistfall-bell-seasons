@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-08-30T13:12:06.3390911Z",
+  "generated_at": "2026-08-30T14:03:50.7268503Z",
   "result": "PASS",
   "transport": "Godot ENet UDP",
   "topology": "7 dedicated servers + 31 clients across world-mode and player-count scenarios",
@@ -10,7 +10,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 2,
-      "port": 28710,
+      "port": 29628,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
@@ -42,10 +42,10 @@
             "tie_blocked": true,
             "unique_claim_enforced": true,
             "winning_proposal": {},
-            "world_path": "user://pixelrpg_servers/qa_28710.json"
+            "world_path": "user://pixelrpg_servers/qa_29628.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:24",
+          "generated_at": "2026-08-30T14:03:09",
           "passed": true,
           "role": "server"
         },
@@ -93,7 +93,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1860201785,
+            "peer_id": 1743669869,
             "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -117,7 +117,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:24",
+          "generated_at": "2026-08-30T14:03:09",
           "passed": true,
           "role": "client"
         },
@@ -174,7 +174,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 282093161,
+            "peer_id": 1928479775,
             "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -198,7 +198,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:24",
+          "generated_at": "2026-08-30T14:03:09",
           "passed": true,
           "role": "client"
         }
@@ -209,7 +209,7 @@
       "farm_mode": "private",
       "relationship_mode": "independent",
       "player_count": 2,
-      "port": 28825,
+      "port": 28934,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
@@ -241,10 +241,10 @@
             "tie_blocked": true,
             "unique_claim_enforced": true,
             "winning_proposal": {},
-            "world_path": "user://pixelrpg_servers/qa_28825.json"
+            "world_path": "user://pixelrpg_servers/qa_28934.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:31",
+          "generated_at": "2026-08-30T14:03:16",
           "passed": true,
           "role": "server"
         },
@@ -292,7 +292,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1415015468,
+            "peer_id": 2021961385,
             "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -316,7 +316,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:31",
+          "generated_at": "2026-08-30T14:03:16",
           "passed": true,
           "role": "client"
         },
@@ -373,7 +373,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1286326452,
+            "peer_id": 1818612073,
             "protocol": "1.2.0",
             "romance_suitors": 0,
             "twin_story_seen": true,
@@ -397,7 +397,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:31",
+          "generated_at": "2026-08-30T14:03:16",
           "passed": true,
           "role": "client"
         }
@@ -408,7 +408,7 @@
       "farm_mode": "competitive",
       "relationship_mode": "competitive",
       "player_count": 2,
-      "port": 29446,
+      "port": 29404,
       "topology": "1 dedicated server + 2 clients",
       "probe_mode": "world",
       "processes": [
@@ -468,10 +468,10 @@
                 }
               ]
             },
-            "world_path": "user://pixelrpg_servers/qa_29446.json"
+            "world_path": "user://pixelrpg_servers/qa_29404.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:38",
+          "generated_at": "2026-08-30T14:03:22",
           "passed": true,
           "role": "server"
         },
@@ -555,7 +555,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 1952221402,
+            "peer_id": 1849378347,
             "protocol": "1.2.0",
             "romance_suitors": 2,
             "twin_story_seen": true,
@@ -622,7 +622,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:38",
+          "generated_at": "2026-08-30T14:03:22",
           "passed": true,
           "role": "client"
         },
@@ -715,7 +715,7 @@
             "moved": true,
             "own_private_plots": 1,
             "peak_snapshot_players": 2,
-            "peer_id": 784089409,
+            "peer_id": 652737349,
             "protocol": "1.2.0",
             "romance_suitors": 2,
             "twin_story_seen": true,
@@ -782,7 +782,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:38",
+          "generated_at": "2026-08-30T14:03:22",
           "passed": true,
           "role": "client"
         }
@@ -795,7 +795,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 1,
-      "port": 28365,
+      "port": 29451,
       "topology": "1 dedicated server + 1 clients",
       "probe_mode": "story",
       "processes": [
@@ -812,10 +812,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "獨鐘守望"
             },
-            "world_path": "user://pixelrpg_servers/qa_28365.json"
+            "world_path": "user://pixelrpg_servers/qa_29451.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:44",
+          "generated_at": "2026-08-30T14:03:28",
           "passed": true,
           "role": "server"
         },
@@ -825,7 +825,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 1,
-            "peer_id": 1566384896,
+            "peer_id": 2076265035,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -838,7 +838,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:44",
+          "generated_at": "2026-08-30T14:03:28",
           "passed": true,
           "role": "client"
         }
@@ -849,7 +849,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 3,
-      "port": 29724,
+      "port": 30145,
       "topology": "1 dedicated server + 3 clients",
       "probe_mode": "story",
       "processes": [
@@ -866,10 +866,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "四季合奏"
             },
-            "world_path": "user://pixelrpg_servers/qa_29724.json"
+            "world_path": "user://pixelrpg_servers/qa_30145.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:51",
+          "generated_at": "2026-08-30T14:03:35",
           "passed": true,
           "role": "server"
         },
@@ -879,7 +879,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 183418706,
+            "peer_id": 421702691,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -892,7 +892,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:51",
+          "generated_at": "2026-08-30T14:03:35",
           "passed": true,
           "role": "client"
         },
@@ -902,7 +902,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 606367926,
+            "peer_id": 512832515,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -915,7 +915,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:51",
+          "generated_at": "2026-08-30T14:03:35",
           "passed": true,
           "role": "client"
         },
@@ -925,7 +925,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 3,
-            "peer_id": 493698202,
+            "peer_id": 1948275080,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -938,7 +938,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:51",
+          "generated_at": "2026-08-30T14:03:35",
           "passed": true,
           "role": "client"
         }
@@ -949,7 +949,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 5,
-      "port": 29432,
+      "port": 30178,
       "topology": "1 dedicated server + 5 clients",
       "probe_mode": "story",
       "processes": [
@@ -966,10 +966,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "霧落拓荒議會"
             },
-            "world_path": "user://pixelrpg_servers/qa_29432.json"
+            "world_path": "user://pixelrpg_servers/qa_30178.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:57",
+          "generated_at": "2026-08-30T14:03:42",
           "passed": true,
           "role": "server"
         },
@@ -979,7 +979,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 2078708641,
+            "peer_id": 1753725037,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -992,7 +992,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:57",
+          "generated_at": "2026-08-30T14:03:42",
           "passed": true,
           "role": "client"
         },
@@ -1002,7 +1002,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 1750443395,
+            "peer_id": 446328666,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1015,7 +1015,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:57",
+          "generated_at": "2026-08-30T14:03:42",
           "passed": true,
           "role": "client"
         },
@@ -1025,7 +1025,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 918439781,
+            "peer_id": 1928142426,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1038,7 +1038,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:57",
+          "generated_at": "2026-08-30T14:03:42",
           "passed": true,
           "role": "client"
         },
@@ -1048,7 +1048,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 1290320098,
+            "peer_id": 63535312,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1061,7 +1061,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:57",
+          "generated_at": "2026-08-30T14:03:42",
           "passed": true,
           "role": "client"
         },
@@ -1071,7 +1071,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 5,
-            "peer_id": 486692453,
+            "peer_id": 1547501752,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1084,7 +1084,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:11:57",
+          "generated_at": "2026-08-30T14:03:42",
           "passed": true,
           "role": "client"
         }
@@ -1095,7 +1095,7 @@
       "farm_mode": "shared",
       "relationship_mode": "independent",
       "player_count": 16,
-      "port": 29625,
+      "port": 28874,
       "topology": "1 dedicated server + 16 clients",
       "probe_mode": "story",
       "processes": [
@@ -1112,10 +1112,10 @@
               "relationship_branch": "每名玩家的友情、戀愛與家庭線彼此獨立，不會搶走別人的伴侶。",
               "title": "霧落拓荒議會"
             },
-            "world_path": "user://pixelrpg_servers/qa_29625.json"
+            "world_path": "user://pixelrpg_servers/qa_28874.json"
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "server"
         },
@@ -1125,7 +1125,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 728413312,
+            "peer_id": 698177282,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1138,7 +1138,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1148,7 +1148,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 20329145,
+            "peer_id": 1544696292,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1161,7 +1161,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1171,7 +1171,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 735057596,
+            "peer_id": 929925524,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1184,7 +1184,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1194,7 +1194,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 638225925,
+            "peer_id": 1666184472,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1207,7 +1207,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1217,7 +1217,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1990184959,
+            "peer_id": 717582769,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1230,7 +1230,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1240,7 +1240,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 93602404,
+            "peer_id": 1678822937,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1253,7 +1253,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1263,7 +1263,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1220322780,
+            "peer_id": 1758049858,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1276,7 +1276,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1286,7 +1286,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 901513069,
+            "peer_id": 1337601082,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1299,7 +1299,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1309,7 +1309,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1736321615,
+            "peer_id": 829237867,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1322,7 +1322,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1332,7 +1332,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 2031103586,
+            "peer_id": 1058742911,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1345,7 +1345,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1355,7 +1355,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 328610204,
+            "peer_id": 358564437,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1368,7 +1368,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1378,7 +1378,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1942777012,
+            "peer_id": 2013949068,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1391,7 +1391,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1401,7 +1401,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1793709854,
+            "peer_id": 1892466120,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1414,7 +1414,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1424,7 +1424,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 1109036164,
+            "peer_id": 1228785589,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1437,7 +1437,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1447,7 +1447,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 782753848,
+            "peer_id": 1804321320,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1460,7 +1460,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         },
@@ -1470,7 +1470,7 @@
             "expected_story_seen": true,
             "moved": true,
             "peak_snapshot_players": 16,
-            "peer_id": 361640069,
+            "peer_id": 859395230,
             "protocol": "1.2.0",
             "story_variant": {
               "farm_branch": "所有玩家共用農地、倉庫與經濟；劇情強調分工與共同承諾。",
@@ -1483,7 +1483,7 @@
             }
           },
           "failures": [],
-          "generated_at": "2026-08-30T13:12:06",
+          "generated_at": "2026-08-30T14:03:50",
           "passed": true,
           "role": "client"
         }
