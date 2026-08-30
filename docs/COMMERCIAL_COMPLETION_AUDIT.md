@@ -17,10 +17,10 @@
 | SaveGame 長期可靠與舊版遷移 | 已證明 | v1／v2→v3、250 次磁碟 round-trip、主檔截斷備份復原、暫存檔復原、未知 schema 拒絕 |
 | 1080p／20 敵人維持 60 FPS | 已證明 | RTX 3060 連續封裝測試皆超過 800 FPS 容量；遊玩鎖定 60 FPS，精確值見 `reports/render_performance.json` |
 | 640×360 基準與整數縮放 | 已證明 | 640×360、1280×720、1920×1080、2560×1440 實際 GPU framebuffer 1×–4× 通過 |
-| 成品不含 AI／模型／設計文件且不連網 | 已證明 | PCK 路徑與字串稽核；本機及乾淨 Windows VM 分別取樣 15／24 次 TCP、UDP，皆為零端點 |
+| 成品不含 AI／模型／設計文件且不連網 | 已證明 | PCK 路徑與字串稽核；從公開 Release 下載後，本機及乾淨 Windows VM 分別取樣 14／24 次 TCP、UDP，皆為零端點 |
 | 正式 ZIP、公開下載與乾淨 Windows 啟動 | 已證明 | GitHub Actions Windows 11 build 26100 從公開 Release 下載、驗證、解壓與啟動通過 |
 | 授權、供應鏈與惡意程式檢查 | 已證明 | 素材雜湊／授權閘門、Godot 官方法律原文、138 套件 0 已知漏洞、Microsoft Defender 0 偵測 |
-| 公開 GitHub Release | 待 v1.0.4 發布驗證 | v1.0.3 已公開且通過；v1.0.4 正在重建、發布及等待乾淨 Windows workflow |
+| 公開 GitHub Release | 已證明 | v1.0.4 已公開；標籤 CI 與乾淨 Windows Release workflow 均成功，並另於本機從公開下載點交叉驗證 |
 
 ## 製作工具與本機 AI 門檻
 
