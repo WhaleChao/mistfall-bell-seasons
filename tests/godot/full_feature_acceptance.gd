@@ -71,13 +71,37 @@ func _test_launch_and_profile() -> void:
 	_record("啟動", "標題畫面顯示", is_instance_valid(game.title_overlay), "玩家時間應暫停")
 	_record("角色建立", "玩家名稱欄位", is_instance_valid(game.name_input) and game.name_input.max_length == 12)
 	_record("角色建立", "四種外觀選項", is_instance_valid(game.appearance_input) and game.appearance_input.item_count == 4)
+	_record("輸入焦點", "首啟自動聚焦玩家名稱欄位", game.name_input.has_focus())
 	await _capture("01_title_and_profile")
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	_record("輸入焦點", "名稱輸入 E 不會誤觸互動或開始遊戲", is_instance_valid(game.title_overlay) and not game.multiplayer_menu.visible)
+	await _send_key_event(KEY_M, "m".unicode_at(0))
+	_record("輸入焦點", "名稱輸入 M 不會誤開連線介面", is_instance_valid(game.title_overlay) and not game.multiplayer_menu.visible)
+	game.name_input.release_focus()
+	await _frames(1)
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	_record("標題輸入", "標題只接受 ui_accept 開始", is_instance_valid(game.title_overlay))
+	game.name_input.grab_focus()
 	game.name_input.text = "實機測試員"
 	game.appearance_input.select(2)
-	game._close_title_screen()
+	await _send_key_event(KEY_ENTER, 13)
 	await _frames(4)
 	_record("角色建立", "套用名稱與外觀", state_store.player_profile.name == "實機測試員" and int(state_store.player_profile.appearance.outfit) == 2)
 	_record("啟動", "離開標題後恢復遊戲", not is_instance_valid(game.title_overlay) and player.is_physics_processing())
+
+	var text_guard := LineEdit.new()
+	text_guard.position = Vector2(-1000, -1000)
+	game.add_child(text_guard)
+	text_guard.grab_focus()
+	await _frames(1)
+	player.global_position = game._plot_world_position(Vector2i.ZERO)
+	var plots_before: Dictionary = state_store.farm.plots.duplicate(true)
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	await _send_key_event(KEY_M, "m".unicode_at(0))
+	_record("輸入焦點", "任意 LineEdit 編輯時忽略遊戲全域快捷鍵", state_store.farm.plots == plots_before and not game.multiplayer_menu.visible)
+	text_guard.release_focus()
+	text_guard.queue_free()
+	await _frames(1)
 
 
 func _test_movement_and_animation() -> void:
@@ -762,6 +786,23 @@ func _tap_action(action: StringName, settle_frames: int = 2) -> void:
 	await physics_frame
 	Input.action_release(action)
 	await _frames(settle_frames)
+
+
+func _send_key_event(keycode: int, unicode_value: int = 0) -> void:
+	var press := InputEventKey.new()
+	press.pressed = true
+	press.keycode = keycode
+	press.physical_keycode = keycode
+	press.unicode = unicode_value
+	Input.parse_input_event(press)
+	await process_frame
+	var release := InputEventKey.new()
+	release.pressed = false
+	release.keycode = keycode
+	release.physical_keycode = keycode
+	release.unicode = unicode_value
+	Input.parse_input_event(release)
+	await process_frame
 
 
 func _frames(count: int) -> void:

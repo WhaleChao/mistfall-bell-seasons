@@ -31,6 +31,19 @@ func _run() -> void:
 		for _frame in 12:
 			await process_frame
 		var window_size := DisplayServer.window_get_size()
+		var usable_size := DisplayServer.screen_get_usable_rect(DisplayServer.window_get_current_screen()).size
+		var exact_window_size := window_size == resolution
+		# macOS keeps decorated windows inside the current screen's usable area. A
+		# requested 1080p/1440p window can therefore be shorter than requested on a
+		# smaller display even though the viewport still renders at the target size.
+		var platform_clamped := (
+			OS.get_name() == "macOS"
+			and (resolution.x > usable_size.x or resolution.y > usable_size.y)
+			and window_size.x > 0
+			and window_size.y > 0
+			and window_size.x <= resolution.x
+			and window_size.y <= resolution.y
+		)
 		var content_image := root.get_texture().get_image()
 		var image := content_image
 		var content_size := Vector2i(content_image.get_width(), content_image.get_height())
@@ -42,14 +55,14 @@ func _run() -> void:
 		var file_name := "%dx%d.png" % [resolution.x, resolution.y]
 		var save_error := image.save_png(REPORT_DIRECTORY + "/" + file_name)
 		_check(save_error == OK, "截圖", "%s 可輸出 PNG" % file_name, error_string(save_error))
-		_check(window_size == resolution, "解析度", "%s 實際視窗尺寸正確" % file_name, "%dx%d" % [window_size.x, window_size.y])
+		_check(exact_window_size or platform_clamped, "解析度", "%s 視窗尺寸符合要求或平台工作區夾限" % file_name, "requested=%dx%d actual=%dx%d usable=%dx%d%s" % [resolution.x, resolution.y, window_size.x, window_size.y, usable_size.x, usable_size.y, " clamped" if platform_clamped else ""])
 		_check(image.get_width() == resolution.x and image.get_height() == resolution.y, "解析度", "%s 合成顯示證據尺寸正確" % file_name, "content=%dx%d output=%dx%d" % [content_size.x, content_size.y, image.get_width(), image.get_height()])
 		var stats := _image_stats(image)
 		_check(float(stats.variance) > 0.008, "畫面", "%s 不是空白或純色畫面" % file_name, "variance=%.5f" % stats.variance)
 		_check(float(stats.black_ratio) < 0.45, "畫面", "%s 沒有異常大面積黑屏" % file_name, "black=%.2f%%" % (100.0 * float(stats.black_ratio)))
 		var scale := mini(resolution.x / 640, resolution.y / 360)
 		_check(scale >= 1 and scale == floori(scale), "整數縮放", "%s 使用整數像素倍率" % file_name, "%dx" % scale)
-		captures.append({"file":file_name,"window_width":window_size.x,"window_height":window_size.y,"content_width":content_size.x,"content_height":content_size.y,"width":image.get_width(),"height":image.get_height(),"integer_scale":scale,"variance":stats.variance,"black_ratio":stats.black_ratio})
+		captures.append({"file":file_name,"window_width":window_size.x,"window_height":window_size.y,"screen_usable_width":usable_size.x,"screen_usable_height":usable_size.y,"window_clamped":platform_clamped,"content_width":content_size.x,"content_height":content_size.y,"width":image.get_width(),"height":image.get_height(),"integer_scale":scale,"variance":stats.variance,"black_ratio":stats.black_ratio})
 	_write_report()
 	var failed := cases.filter(func(item: Dictionary) -> bool: return not bool(item.passed)).size()
 	scene.queue_free()
@@ -101,7 +114,7 @@ func _write_report() -> void:
 		"",
 		"結果：**%s**　｜　%d 通過／%d 失敗　｜　含 Steam Deck 原生 1280×800" % ["PASS" if failed == 0 else "FAIL", passed, failed],
 		"",
-		"本測試驗證實際 Windows 視窗尺寸及 GPU ViewportTexture，以 1×、2×、3×、4×整數縮放渲染正式遊戲場景。1280×800 的 ViewportTexture 為 1280×720，證據圖依實際 KEEP aspect 顯示規則補上上下各 40px 留邊；報告同時保存視窗、內容及輸出尺寸，避免將內容紋理誤稱為完整 framebuffer。",
+		"本測試驗證 Windows／macOS 實際視窗及 GPU ViewportTexture，以 1×、2×、3×、4×整數縮放渲染正式遊戲場景。macOS 會把大於目前螢幕可用工作區的裝飾視窗安全夾限，這種情況另行記錄實際視窗與工作區尺寸，同時仍要求目標解析度的內容紋理完整渲染。1280×800 的 ViewportTexture 為 1280×720，證據圖依 KEEP aspect 顯示規則補上上下各 40px 留邊。",
 		"",
 		"| 分類 | 項目 | 結果 | 細節 |",
 		"|---|---|---:|---|",

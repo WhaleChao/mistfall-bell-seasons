@@ -1,5 +1,7 @@
 extends SceneTree
 
+const INPUT_BINDINGS_TEST_PATH := "user://pixelrpg_input_smoke_test.json"
+
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -18,6 +20,7 @@ func _run() -> void:
 	failures.append_array(registry.validate_references())
 	_assert_content(registry, failures)
 	_assert_calendar(failures)
+	_assert_input_bindings(failures)
 	_assert_farming(failures)
 	_assert_farm_automation(registry, failures)
 	_assert_social(failures)
@@ -98,6 +101,172 @@ func _assert_calendar(failures: PackedStringArray) -> void:
 		calendar.process(seconds)
 		if calendar.minute_of_day != PixelRPGCalendarSystem.DAY_END_MINUTE:
 			failures.append("Speed mode %s did not reach 24:00 deterministically" % mode)
+
+
+func _assert_input_bindings(failures: PackedStringArray) -> void:
+	PixelRPGInputBindings.reset_to_project_defaults()
+	var baseline := _input_binding_snapshot()
+	var null_candidates: Dictionary = {}
+	if PixelRPGInputBindings._load_candidates_from_file(null, null_candidates):
+		failures.append("A null input settings file was accepted")
+	if not _write_input_contents("{"):
+		failures.append("Could not create the corrupt input settings fixture")
+	else:
+		if PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+			failures.append("Corrupt input settings JSON was accepted")
+		if _input_binding_snapshot() != baseline:
+			failures.append("Corrupt input settings changed the current InputMap")
+
+	if not _write_input_payload({"schema_version": 1, "actions": []}):
+		failures.append("Could not create the malformed input settings fixture")
+	else:
+		if PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+			failures.append("A non-dictionary input actions payload was accepted")
+		if _input_binding_snapshot() != baseline:
+			failures.append("Malformed input settings changed the current InputMap")
+
+	var partial_payload := {
+		"schema_version": 1,
+		"actions": {
+			"attack": [{"type": "key", "physical_keycode": KEY_P, "keycode": 0}],
+		},
+	}
+	if not _write_input_payload(partial_payload):
+		failures.append("Could not create the partial input settings fixture")
+	else:
+		if PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+			failures.append("A partial input actions payload was accepted")
+		if _input_binding_snapshot() != baseline:
+			failures.append("Partial input settings cleared or changed default bindings")
+
+	var valid_payload: Variant = null
+	if not PixelRPGInputBindings._save_to_path(INPUT_BINDINGS_TEST_PATH):
+		failures.append("Could not save the default input bindings fixture")
+	else:
+		valid_payload = _read_input_payload()
+	if valid_payload is Dictionary:
+		var invalid_payload: Dictionary = valid_payload.duplicate(true)
+		invalid_payload["actions"]["attack"] = [{"type": "key", "physical_keycode": "not-a-key"}]
+		if not _write_input_payload(invalid_payload):
+			failures.append("Could not create the invalid input event fixture")
+		else:
+			if PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+				failures.append("An invalid input event record was accepted")
+			if _input_binding_snapshot() != baseline:
+				failures.append("An invalid input event partially changed the InputMap")
+
+		var empty_action_payload: Dictionary = valid_payload.duplicate(true)
+		empty_action_payload["actions"]["attack"] = []
+		if not _write_input_payload(empty_action_payload):
+			failures.append("Could not create the empty input action fixture")
+		else:
+			if PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+				failures.append("An input action without events was accepted")
+			if _input_binding_snapshot() != baseline:
+				failures.append("An empty input action cleared default bindings")
+
+		var legacy_payload: Dictionary = valid_payload.duplicate(true)
+		for records: Array in legacy_payload["actions"].values():
+			for record: Dictionary in records:
+				for new_field: String in ["device", "key_label", "location", "alt_pressed", "shift_pressed", "ctrl_pressed", "meta_pressed"]:
+					record.erase(new_field)
+		if not _write_input_payload(legacy_payload):
+			failures.append("Could not create the legacy input settings fixture")
+		else:
+			PixelRPGInputBindings.reset_to_project_defaults()
+			if not PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+				failures.append("A complete legacy schema-1 input payload could not be loaded")
+			elif _input_binding_snapshot() != baseline:
+				failures.append("Legacy schema-1 input defaults did not round-trip")
+	else:
+		failures.append("Saved input bindings did not produce a JSON dictionary")
+
+	PixelRPGInputBindings.reset_to_project_defaults()
+	var mac_key := InputEventKey.new()
+	mac_key.device = PixelRPGInputBindings.KEYBOARD_DEVICE_ID
+	mac_key.physical_keycode = KEY_P
+	mac_key.keycode = KEY_P
+	mac_key.key_label = KEY_P
+	mac_key.location = KEY_LOCATION_LEFT
+	mac_key.alt_pressed = true
+	mac_key.shift_pressed = true
+	mac_key.ctrl_pressed = true
+	mac_key.meta_pressed = true
+	mac_key.pressed = true
+	mac_key.echo = true
+	mac_key.unicode = 112
+	if not PixelRPGInputBindings.rebind_device(&"attack", mac_key):
+		failures.append("Could not create a macOS modifier binding")
+	elif not PixelRPGInputBindings._save_to_path(INPUT_BINDINGS_TEST_PATH):
+		failures.append("Could not save a macOS modifier binding")
+	else:
+		var serialized_payload: Variant = _read_input_payload()
+		var serialized_mac_key: Dictionary = {}
+		if serialized_payload is Dictionary:
+			for record: Dictionary in serialized_payload["actions"]["attack"]:
+				if record.get("type", "") == "key" and int(record.get("physical_keycode", 0)) == KEY_P:
+					serialized_mac_key = record
+					break
+		if serialized_mac_key.is_empty():
+			failures.append("The macOS modifier key was missing from saved bindings")
+		elif serialized_mac_key.has("pressed") or serialized_mac_key.has("echo") or serialized_mac_key.has("unicode"):
+			failures.append("Transient key state was persisted with an input mapping")
+		PixelRPGInputBindings.reset_to_project_defaults()
+		if not PixelRPGInputBindings._load_from_path(INPUT_BINDINGS_TEST_PATH):
+			failures.append("Could not reload a macOS modifier binding")
+		else:
+			var restored_key: InputEventKey = null
+			for event: InputEvent in InputMap.action_get_events(&"attack"):
+				if event is InputEventKey and event.physical_keycode == KEY_P:
+					restored_key = event
+					break
+			if restored_key == null:
+				failures.append("The macOS modifier key did not round-trip")
+			elif not restored_key.alt_pressed or not restored_key.shift_pressed or not restored_key.ctrl_pressed or not restored_key.meta_pressed:
+				failures.append("Alt/Shift/Ctrl/Meta modifiers did not round-trip")
+			elif restored_key.keycode != KEY_P or restored_key.key_label != KEY_P or restored_key.location != KEY_LOCATION_LEFT or restored_key.device != PixelRPGInputBindings.KEYBOARD_DEVICE_ID:
+				failures.append("Key code, label, location, or device did not round-trip")
+			elif restored_key.is_pressed() or restored_key.is_echo() or restored_key.unicode != 0:
+				failures.append("Transient pressed/echo/unicode state was restored")
+
+	PixelRPGInputBindings.reset_to_project_defaults()
+	var absolute_test_path := ProjectSettings.globalize_path(INPUT_BINDINGS_TEST_PATH)
+	if FileAccess.file_exists(INPUT_BINDINGS_TEST_PATH) and DirAccess.remove_absolute(absolute_test_path) != OK:
+		failures.append("Could not remove the input bindings smoke-test fixture")
+
+
+func _write_input_payload(payload: Variant) -> bool:
+	return _write_input_contents(JSON.stringify(payload))
+
+
+func _write_input_contents(contents: String) -> bool:
+	var file := FileAccess.open(INPUT_BINDINGS_TEST_PATH, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(contents)
+	file.close()
+	return true
+
+
+func _read_input_payload() -> Variant:
+	var file := FileAccess.open(INPUT_BINDINGS_TEST_PATH, FileAccess.READ)
+	if file == null:
+		return null
+	var contents := file.get_as_text()
+	file.close()
+	return JSON.parse_string(contents)
+
+
+func _input_binding_snapshot() -> Dictionary:
+	var snapshot: Dictionary = {}
+	for action: StringName in PixelRPGInputBindings.PERSISTED_ACTIONS:
+		if not InputMap.has_action(action):
+			continue
+		var records: Array[Dictionary] = []
+		for event: InputEvent in InputMap.action_get_events(action):
+			records.append(PixelRPGInputBindings._serialize_event(event))
+		snapshot[String(action)] = records
+	return snapshot
 
 
 func _assert_farming(failures: PackedStringArray) -> void:

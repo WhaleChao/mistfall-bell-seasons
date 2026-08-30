@@ -1,6 +1,6 @@
 # 自行開設多人伺服器
 
-《霧落農歌：鐘塔之季》v1.1.3 使用 Godot ENet／UDP，可像常見沙盒遊戲一樣由玩家自行開設世界，不依賴官方帳號、雲端或媒合服務。單人離線模式不會建立網路端點。
+《霧落農歌：鐘塔之季》v1.2.0 使用 Godot ENet／UDP，可像常見沙盒遊戲一樣由玩家自行開設世界，不依賴官方帳號、雲端或媒合服務。單人離線模式不會建立網路端點。
 
 ## 最快開始
 
@@ -12,16 +12,20 @@
 
 ### 專用伺服器
 
-雙擊發行包中的 `Start Dedicated Server.cmd`。同一個正式 EXE 會以無視窗、無顯示卡需求的專用伺服器模式啟動。進階命令如下：
+Windows 可雙擊發行包中的 `Start Dedicated Server.cmd`。Windows 與 macOS 都使用同一個正式遊戲程式，以無視窗、無顯示卡需求的專用伺服器模式啟動：
 
-```text
+```powershell
 Mistfall-Bell-Seasons.exe --headless -- --server --port=27180 --max-clients=8 --server-name="Mistfall Dedicated" --world=mistfall --farm-mode=competitive --relationship-mode=competitive
+```
+
+```bash
+'./霧落農歌：鐘塔之季.app/Contents/MacOS/霧落農歌：鐘塔之季' --headless -- --server --port=27180 --max-clients=8 --server-name='Mistfall Dedicated' --world=mistfall --farm-mode=competitive --relationship-mode=competitive
 ```
 
 - 玩家上限可設 1–16 人。
 - 世界名稱只接受英數、底線與連字號，最長 32 字元。
 - 世界資料會原子寫入 Godot `user://pixelrpg_servers/<world>.json`，上一版保留為 `.bak`。
-- 客戶端與伺服器必須使用相同的 `1.1.0` 通訊協定；不相容版本會在握手階段被拒絕。
+- 客戶端與伺服器必須使用相同的 `1.2.0` 通訊協定；不相容版本會在握手階段被拒絕。
 
 ## 世界制度
 
@@ -37,7 +41,7 @@ Mistfall-Bell-Seasons.exe --headless -- --server --port=27180 --max-clients=8 --
 
 ## 從網際網路加入
 
-ENet 使用 UDP。主機需在 Windows 防火牆與路由器設定中允許並轉送所選 UDP 埠（預設 `27180`）至伺服器電腦；朋友輸入主機的公開 IP。若 ISP 使用 CGNAT，請改用具有 UDP 轉送能力的 VPN／虛擬區網或向 ISP 申請可轉送的位址。
+ENet 使用 UDP。主機需在作業系統防火牆與路由器設定中允許並轉送所選 UDP 埠（預設 `27180`）至伺服器電腦；朋友輸入主機的公開 IP。若 ISP 使用 CGNAT，請改用具有 UDP 轉送能力的 VPN／虛擬區網或向 ISP 申請可轉送的位址。
 
 ## 安全界線
 
@@ -48,6 +52,6 @@ ENet 使用 UDP。主機需在 Windows 防火牆與路由器設定中允許並�
 
 ## 已同步範圍
 
-v1.1.3 同步玩家名稱、位置、朝向、所在地圖，以及日曆、天氣、農地、採集、釣魚、出貨、動物照料、NPC 交談、戀愛競爭、任務、洞窟與深潮世界狀態。私人／競賽農場以本機產生的 128-bit 玩家識別碼分隔；沒有帳號驗證，因此仍以信任的朋友為使用前提。伺服器每秒 20 次傳送位置快照、每 0.5 秒同步各玩家可見的世界視圖，並每 30 秒及關服時保存。網路協定仍為相容的 `1.1.0`；發行閘門以 1 台伺服器＋16 個客戶端驗證最大人數。
+v1.2.0 同步玩家名稱、位置、朝向、所在地圖，以及日曆、天氣、農地、採集、釣魚、出貨、動物照料、NPC 交談、戀愛競爭、任務、洞窟、深潮與農場自動化世界狀態。私人／競賽農場以本機產生的 128-bit 玩家識別碼分隔；沒有帳號驗證，因此仍以信任的朋友為使用前提。伺服器每秒 20 次傳送位置快照、每 0.5 秒同步各玩家可見的世界視圖，並每 30 秒及關服時保存。網路協定為 `1.2.0`；發行閘門以 1 台伺服器＋16 個客戶端驗證最大人數。
 
 問題回報請附伺服器與客戶端版本、UDP 埠、拓撲（LAN／網際網路）、重現步驟與去除個資後的日誌。

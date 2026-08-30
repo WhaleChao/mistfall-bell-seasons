@@ -38,6 +38,8 @@ python3 scripts/generate_license_report.py
 "$godot_path" --headless --path . --script res://tests/godot/smoke_test.gd
 "$godot_path" --headless --path . --script res://tests/godot/image_integrity_test.gd
 PIXELRPG_TEST_ISOLATED=1 HOME="$work_root/test-home" "$godot_path" --headless --path . --script res://tests/godot/commercial_stress_test.gd
+PIXELRPG_TEST_ISOLATED=1 HOME="$work_root/test-home" "$godot_path" --path . --rendering-method gl_compatibility --position 4000,4000 --script res://tests/godot/resolution_layout_test.gd
+PIXELRPG_TEST_ISOLATED=1 HOME="$work_root/test-home" "$godot_path" --path . --rendering-method gl_compatibility --resolution 1280x720 --script res://tests/godot/full_feature_acceptance.gd
 "$godot_path" --headless --path . --export-release "macOS Universal" "$raw_archive"
 python3 scripts/audit_macos_archive.py "$raw_archive" --version "$version" --report "$report_root/raw_export.json"
 
@@ -108,23 +110,52 @@ if [[ -s "$network_log" ]]; then
   exit 1
 fi
 
+# Exercise the same LaunchServices path as opening the app from Finder. Keep the
+# direct headless launch above for PID-scoped offline monitoring, then require a
+# visible renderer here so a broken window/display startup cannot pass the gate.
+gui_home="$work_root/gui-home"
+gui_stdout="$report_root/gui.stdout.txt"
+gui_stderr="$report_root/gui.stderr.txt"
+gui_log="$report_root/gui.godot.log"
+mkdir -p "$gui_home"
+set +e
+open -n -F -W -o "$gui_stdout" --stderr "$gui_stderr" --env "HOME=$gui_home" "$app_bundle" --args --quit-after 600 --log-file "$gui_log"
+gui_exit=$?
+set -e
+cat "$gui_stdout"
+cat "$gui_stderr" >&2
+if [[ $gui_exit -ne 0 ]]; then
+  printf 'Exported macOS app failed to launch through LaunchServices (status %d).\n' "$gui_exit" >&2
+  exit 1
+fi
+if grep -Eqi '^\s*(SCRIPT ERROR:|ERROR:)|Parse Error|Compile Error|Failed to load script|Failed to load resource' "$gui_stdout" "$gui_stderr" "$gui_log"; then
+  printf 'Exported macOS GUI launch emitted engine errors.\n' >&2
+  exit 1
+fi
+if ! grep -Eq 'OpenGL API|Metal API|Vulkan API' "$gui_stdout" "$gui_log"; then
+  printf 'Exported macOS GUI launch did not initialize a visible renderer.\n' >&2
+  exit 1
+fi
+
 ditto -c -k --sequesterRsrc --keepParent "$app_bundle" "$final_archive"
 python3 scripts/audit_macos_archive.py "$final_archive" --version "$version" --require-licenses --report "$report_root/report.json"
 archive_hash="$(shasum -a 256 "$final_archive" | awk '{print $1}')"
 printf '%s  %s\n' "$archive_hash" "$(basename "$final_archive")" > "$dist_root/SHA256SUMS-macOS.txt"
-python3 - "$report_root/runtime.json" "$runtime_exit" "$network_samples" "$architectures" <<'PY'
+python3 - "$report_root/runtime.json" "$runtime_exit" "$gui_exit" "$network_samples" "$architectures" <<'PY'
 import json
 import platform
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-path, exit_code, samples, architectures = sys.argv[1:]
+path, exit_code, gui_exit_code, samples, architectures = sys.argv[1:]
 Path(path).write_text(json.dumps({
     "passed": True,
     "tested_at": datetime.now(timezone.utc).isoformat(),
     "os": platform.platform(),
     "runtime_exit_code": int(exit_code),
+    "launchservices_gui_exit_code": int(gui_exit_code),
+    "visible_renderer_verified": True,
     "network_samples": int(samples),
     "network_endpoints": [],
     "architectures": architectures.split(),

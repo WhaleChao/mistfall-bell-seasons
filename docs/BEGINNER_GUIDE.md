@@ -7,11 +7,11 @@
 3. 安裝 Ollama；在 PowerShell 執行 `ollama pull qwen3.5:4b` 與 `ollama pull qwen3-embedding:0.6b`。先用 4B 熟悉流程，品質足夠後再下載 9B。
 4. 雙擊 `PixelRPG Studio.cmd`。Godot 上方會出現 `PixelRPG` 主畫面。
 
-若只想先試遊戲，不需安裝 Python 或 Ollama：直接用 Godot 開啟專案，按 F6/F5 即可。
+若只想先試遊戲，不需安裝 Python 或 Ollama：Windows 可雙擊 `Play Mistfall.cmd`，macOS 可雙擊 `Play Mistfall.command`；也可直接用 Godot 開啟專案後按 F6/F5。
 
 ## 建議的第一小時
 
-1. 雙擊 `Play Mistfall.cmd`，在標題畫面命名並選裝束。
+1. Windows 雙擊 `Play Mistfall.cmd`，macOS 雙擊 `Play Mistfall.command`，在標題畫面命名並選裝束。
 2. 走近農地按 E，依序翻土、播種、澆水；按 F4 快轉一天，重複澆水直到成熟後收成。
 3. 走近米拉、雞、牛、池塘與洞窟按 E，觀察情境互動；洞窟內用 J／K／L 戰鬥。
 4. 開啟 Studio 的「日曆」「農作」「節慶」頁，修改資料後以 Ctrl+Z 測試復原。

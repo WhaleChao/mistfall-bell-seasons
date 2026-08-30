@@ -11,6 +11,10 @@ from pathlib import Path
 
 
 EXPECTED_BUNDLE_ID = "com.whalechao.mistfall-bell-seasons"
+EXPECTED_MINIMUM_SYSTEM_VERSIONS = {
+    "x86_64": "11.0",
+    "arm64": "13.0",
+}
 CPU_X86_64 = 0x01000007
 CPU_ARM64 = 0x0100000C
 REQUIRED_LICENSES = {
@@ -187,6 +191,12 @@ def main() -> int:
             errors.append(f"unexpected bundle version: {plist.get('CFBundleVersion')!r}")
         if plist.get("CFBundlePackageType") != "APPL":
             errors.append(f"unexpected bundle package type: {plist.get('CFBundlePackageType')!r}")
+        minimum_system_versions = plist.get("LSMinimumSystemVersionByArchitecture")
+        if minimum_system_versions != EXPECTED_MINIMUM_SYSTEM_VERSIONS:
+            errors.append(
+                "unexpected minimum macOS versions: "
+                f"{minimum_system_versions!r}; expected {EXPECTED_MINIMUM_SYSTEM_VERSIONS!r}"
+            )
 
         lowered_names = [name.lower() for name in names]
         for forbidden in FORBIDDEN_NAMES:
@@ -208,6 +218,7 @@ def main() -> int:
         "app_bundle": display_zip_path(app_root),
         "bundle_identifier": plist.get("CFBundleIdentifier"),
         "version": args.version,
+        "minimum_system_versions": minimum_system_versions,
         "executable": display_zip_path(executable_path),
         "plist_executable_name": executable_name,
         "zip_filename_encoding_fallback": used_filename_encoding_fallback,

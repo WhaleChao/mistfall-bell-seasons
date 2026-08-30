@@ -116,14 +116,17 @@ func _exit_tree() -> void:
 
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("multiplayer_menu"):
+	var text_input_focused := _is_line_edit_focused()
+	if is_instance_valid(title_overlay):
+		if Input.is_action_just_pressed("ui_accept"):
+			_close_title_screen()
+		elif not text_input_focused and Input.is_action_just_pressed("multiplayer_menu"):
+			multiplayer_menu.toggle()
+		return
+	if not text_input_focused and Input.is_action_just_pressed("multiplayer_menu"):
 		multiplayer_menu.toggle()
 		return
-	if is_instance_valid(title_overlay):
-		if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("interact"):
-			_close_title_screen()
-		return
-	if Input.is_action_just_pressed("pause_menu"):
+	if not text_input_focused and Input.is_action_just_pressed("pause_menu"):
 		game_menu.toggle()
 		return
 	_animate_world_sprites()
@@ -138,6 +141,8 @@ func _process(delta: float) -> void:
 		if weather_refresh_timer <= 0.0:
 			weather_refresh_timer = 1.0 / 30.0
 			queue_redraw()
+	if text_input_focused:
+		return
 	if Input.is_action_just_pressed("interact"):
 		_interact()
 	if Input.is_action_just_pressed("cycle_seed") and mode == "farm":
@@ -169,6 +174,11 @@ func _process(delta: float) -> void:
 		if GameState.consume_item(&"health_potion"):
 			player.heal(35)
 			_show_toast("使用回復藥水")
+
+
+func _is_line_edit_focused() -> bool:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return is_instance_valid(focus_owner) and focus_owner is LineEdit
 
 
 func _draw() -> void:
@@ -578,6 +588,7 @@ func _create_title_screen() -> void:
 	subtitle.add_theme_font_size_override("font_size", 15)
 	subtitle.add_theme_color_override("font_color", Color("f4ead3"))
 	title_overlay.add_child(subtitle)
+	name_input.call_deferred("grab_focus")
 
 
 func _close_title_screen() -> void:

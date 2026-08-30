@@ -61,5 +61,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: macOS-commercial-evidence-${{ github.run_id }}
-          path: reports/macos_archive/
+          path: |
+            reports/macos_archive/
+            reports/full_feature_acceptance/
+            reports/resolution_layout/
           if-no-files-found: error

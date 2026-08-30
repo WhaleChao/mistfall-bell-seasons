@@ -22,13 +22,13 @@
 
 ## 下載與遊玩
 
-[GitHub Releases v1.2.0](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.2.0)提供 Windows x64 免安裝 ZIP 與 macOS Universal 2 ZIP。Windows 解壓後執行 `Mistfall-Bell-Seasons.exe`；macOS 版同時包含 Apple Silicon 與 Intel 架構，解壓後開啟《霧落農歌：鐘塔之季》App。兩者單人遊玩都不需要網路或 AI 模型。
+[GitHub Releases v1.2.0](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.2.0)提供 Windows x64 免安裝 ZIP 與 macOS Universal 2 ZIP。Windows 解壓後執行 `Mistfall-Bell-Seasons.exe`；macOS 版同時包含 Apple Silicon（macOS 13 以上）與 Intel（macOS 11 以上）架構，解壓後開啟《霧落農歌：鐘塔之季》App。兩者單人遊玩都不需要網路或 AI 模型。
 
 macOS 成品由 GitHub 的 macOS runner 實際簽署、啟動與觀測離線行為；目前是可驗證的 ad-hoc 簽章，尚無 Apple Developer ID 與 notarization，因此 Gatekeeper 可能要求使用者以右鍵「打開」確認。Windows 亦尚無受公眾信任的 Authenticode 憑證，下載後請以 Release 內的 `SHA256SUMS.txt` 核對。
 
-按 `M`／手把 Select 開啟連線介面，可自行開設主機或輸入 IP 加入；發行包亦可雙擊 `Start Dedicated Server.cmd`。完整的 UDP 轉送、世界檔與安全界線見 [伺服器指南](SERVER_GUIDE.md)。
+按 `M`／手把 Select 開啟連線介面，可自行開設主機或輸入 IP 加入；Windows 發行包可雙擊 `Start Dedicated Server.cmd`，macOS 專用伺服器命令見[伺服器指南](SERVER_GUIDE.md)。
 
-原始專案中也可雙擊 `Play Mistfall.cmd`；若尚未安裝 Godot，先執行 `launcher/Fetch-Godot.ps1`。
+原始專案在 Windows 可雙擊 `Play Mistfall.cmd`；macOS 請先安裝 Godot 4.7.2，再雙擊 `Play Mistfall.command`。若 Godot 不在 `/Applications/Godot.app`，可在終端機以 `GODOT_PATH=/完整路徑/Godot.app/Contents/MacOS/Godot ./Play\ Mistfall.command` 啟動。
 
 | 功能 | 鍵盤 | 手把 |
 |---|---|---|

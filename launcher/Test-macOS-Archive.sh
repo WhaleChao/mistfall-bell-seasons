@@ -9,7 +9,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 project_root="$(cd "$script_dir/.." && pwd)"
 archive="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
 version="$2"
-report_root="${3:-$project_root/reports/macos_archive_verification}"
+report_root_input="${3:-$project_root/reports/macos_archive_verification}"
+if [[ "$report_root_input" == /* ]]; then
+  report_root="$report_root_input"
+else
+  report_root="$PWD/$report_root_input"
+fi
 work_root="$project_root/work/macos-archive-verification"
 case "$work_root" in
   "$project_root"/work/*) ;;
@@ -17,6 +22,7 @@ case "$work_root" in
 esac
 rm -rf "$work_root"
 mkdir -p "$work_root/extracted" "$work_root/runtime-home" "$report_root"
+report_root="$(cd "$report_root" && pwd)"
 
 python3 "$project_root/scripts/audit_macos_archive.py" "$archive" --version "$version" --require-licenses --report "$report_root/archive.json"
 ditto -x -k "$archive" "$work_root/extracted"
@@ -71,21 +77,47 @@ if [[ -s "$network_log" ]]; then
   exit 1
 fi
 
+gui_home="$work_root/gui-home"
+gui_stdout="$report_root/gui.stdout.txt"
+gui_stderr="$report_root/gui.stderr.txt"
+gui_log="$report_root/gui.godot.log"
+mkdir -p "$gui_home"
+set +e
+open -n -F -W -o "$gui_stdout" --stderr "$gui_stderr" --env "HOME=$gui_home" "$app_bundle" --args --quit-after 600 --log-file "$gui_log"
+gui_exit=$?
+set -e
+cat "$gui_stdout"
+cat "$gui_stderr" >&2
+if [[ $gui_exit -ne 0 ]]; then
+  printf 'Published macOS app failed to launch through LaunchServices (status %d).\n' "$gui_exit" >&2
+  exit 1
+fi
+if grep -Eqi '^\s*(SCRIPT ERROR:|ERROR:)|Parse Error|Compile Error|Failed to load script|Failed to load resource' "$gui_stdout" "$gui_stderr" "$gui_log"; then
+  printf 'Published macOS GUI launch emitted engine errors.\n' >&2
+  exit 1
+fi
+if ! grep -Eq 'OpenGL API|Metal API|Vulkan API' "$gui_stdout" "$gui_log"; then
+  printf 'Published macOS GUI launch did not initialize a visible renderer.\n' >&2
+  exit 1
+fi
+
 archive_hash="$(shasum -a 256 "$archive" | awk '{print $1}')"
-python3 - "$report_root/report.json" "$archive_hash" "$runtime_exit" "$network_samples" "$architectures" <<'PY'
+python3 - "$report_root/report.json" "$archive_hash" "$runtime_exit" "$gui_exit" "$network_samples" "$architectures" <<'PY'
 import json
 import platform
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-path, archive_hash, exit_code, samples, architectures = sys.argv[1:]
+path, archive_hash, exit_code, gui_exit_code, samples, architectures = sys.argv[1:]
 Path(path).write_text(json.dumps({
     "passed": True,
     "verified_at": datetime.now(timezone.utc).isoformat(),
     "os": platform.platform(),
     "archive_sha256": archive_hash,
     "runtime_exit_code": int(exit_code),
+    "launchservices_gui_exit_code": int(gui_exit_code),
+    "visible_renderer_verified": True,
     "network_samples": int(samples),
     "network_endpoints": [],
     "architectures": architectures.split(),
