@@ -7,6 +7,8 @@
   "bundle_identifier": "com.whalechao.mistfall-bell-seasons",
   "version": "1.2.0",
   "executable": "霧落農歌：鐘塔之季.app/Contents/MacOS/霧落農歌：鐘塔之季",
+  "plist_executable_name": "霧落農歌：鐘塔之季",
+  "zip_filename_encoding_fallback": false,
   "executable_mode": "0o100755",
   "architectures": [
     "x86_64",

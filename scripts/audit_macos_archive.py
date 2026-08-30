@@ -116,10 +116,32 @@ def main() -> int:
                 plist = {}
 
         executable_name = str(plist.get("CFBundleExecutable", "Mistfall-Bell-Seasons"))
-        executable_path = f"{app_root}/Contents/MacOS/{executable_name}"
+        expected_executable_path = f"{app_root}/Contents/MacOS/{executable_name}"
+        macos_root = f"{app_root}/Contents/MacOS/"
+        executable_candidates = [
+            name for name in names
+            if name.startswith(macos_root)
+            and name != macos_root
+            and "/" not in name.removeprefix(macos_root)
+            and not name.rsplit("/", 1)[-1].startswith("._")
+        ]
+        # ditto writes Unicode ZIP entry names in the platform encoding without
+        # always setting the UTF-8 flag. Info.plist remains authoritative, while
+        # Python's zipfile may decode the one executable entry as CP437 mojibake.
+        # Require exactly one Contents/MacOS file and audit that actual payload;
+        # this keeps the structural gate strict without depending on a lossy
+        # filename decoder.
+        used_filename_encoding_fallback = False
+        if expected_executable_path in names:
+            executable_path = expected_executable_path
+        elif len(executable_candidates) == 1:
+            executable_path = executable_candidates[0]
+            used_filename_encoding_fallback = True
+        else:
+            executable_path = expected_executable_path
         pck_candidates = [name for name in names if name.startswith(f"{app_root}/Contents/Resources/") and name.endswith(".pck")]
         if executable_path not in names:
-            errors.append(f"main executable is missing: {executable_path}")
+            errors.append(f"bundle must contain exactly one main executable; found {executable_candidates}")
             executable = b""
             executable_mode = 0
             architectures: set[int] = set()
@@ -179,6 +201,8 @@ def main() -> int:
         "bundle_identifier": plist.get("CFBundleIdentifier"),
         "version": args.version,
         "executable": executable_path,
+        "plist_executable_name": executable_name,
+        "zip_filename_encoding_fallback": used_filename_encoding_fallback,
         "executable_mode": oct(executable_mode),
         "architectures": ["x86_64" if value == CPU_X86_64 else "arm64" if value == CPU_ARM64 else hex(value) for value in sorted(architectures)],
         "pck": pck_path,
