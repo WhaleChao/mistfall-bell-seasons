@@ -72,7 +72,7 @@ jobs:
           archive="Mistfall-Bell-Seasons-${TEST_TAG}-macOS-Universal.zip"
           mkdir -p work/published-macos-download reports/published_macos_release
           gh release download "$TEST_TAG" --repo '${{ github.repository }}' --dir work/published-macos-download --pattern "$archive" --pattern 'SHA256SUMS.txt'
-          expected="$(awk -v name="$archive" '$2 == name {print $1}' work/published-macos-download/SHA256SUMS.txt)"
+          expected="$(tr -d '\r' < work/published-macos-download/SHA256SUMS.txt | awk -v name="$archive" '$2 == name {print $1}')"
           actual="$(shasum -a 256 "work/published-macos-download/$archive" | awk '{print $1}')"
           test -n "$expected"
           test "$expected" = "$actual"
