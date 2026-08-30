@@ -1,0 +1,5 @@
+{
+  "schema_version": 1, "id": "slime_red", "display_name": "赤紅史萊姆", "sprite": "",
+  "max_health": 56, "damage": 11, "move_speed": 61.0, "behavior": "melee", "is_boss": false,
+  "drops": [{"item_id": "mist_shard", "chance": 0.7, "count": 1}]
+}

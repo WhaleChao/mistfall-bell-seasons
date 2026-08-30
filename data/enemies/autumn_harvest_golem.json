@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"autumn_harvest_golem","display_name":"秋穗石魔像","max_health":720,"damage":28,"move_speed":38,"behavior":"boss","is_boss":true,"color":"c69545","detection_radius":300,"attack_radius":62,"projectile_speed":150,"attack_cooldown":0.68,"drops":[{"item_id":"stone","chance":1.0,"count":16},{"item_id":"gold_ore","chance":1.0,"count":5}]}

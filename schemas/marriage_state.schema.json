@@ -1,0 +1,3 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://pixelrpg.local/schemas/marriage_state.schema.json", "title": "MarriageState", "type": "object", "required": ["spouse_id", "married_absolute_day", "family_talk_seen"], "properties": {"spouse_id": {"type": "string"}, "married_absolute_day": {"type": "integer", "minimum": 0}, "family_talk_seen": {"type": "boolean"}}, "additionalProperties": false
+}

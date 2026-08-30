@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/project_manifest.schema.json",
+  "title": "ProjectManifest",
+  "type": "object",
+  "required": ["schema_version", "id", "display_name", "locales", "pixel_spec", "start_map", "dependencies"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "locales": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "default_locale": {"type": "string"},
+    "pixel_spec": {
+      "type": "object",
+      "required": ["viewport", "tile_size", "fps", "integer_scaling"],
+      "properties": {
+        "viewport": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}], "items": false},
+        "tile_size": {"type": "integer", "minimum": 8},
+        "fps": {"type": "integer", "minimum": 30},
+        "integer_scaling": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "start_map": {"type": "string", "minLength": 1},
+    "dependencies": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

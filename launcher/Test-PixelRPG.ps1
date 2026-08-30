@@ -1,0 +1,43 @@
+[CmdletBinding()]
+param([string]$GodotPath = '')
+
+$ErrorActionPreference = 'Stop'
+$projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$python = Join-Path $projectRoot '.venv\Scripts\python.exe'
+if (-not (Test-Path -LiteralPath $python)) {
+    & (Join-Path $PSScriptRoot 'Setup-PixelRPG.ps1') -WithTestTools
+}
+if ($GodotPath) {
+    $godot = (Resolve-Path -LiteralPath $GodotPath).Path
+} else {
+    $godotCommand = Get-Command godot -ErrorAction SilentlyContinue
+    if ($godotCommand) {
+        $godot = $godotCommand.Source
+    } else {
+        $bundled = Get-ChildItem -LiteralPath (Join-Path $projectRoot 'tools') -Filter 'Godot_v4.7.2-stable_win64_console.exe' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $bundled) { throw '找不到 Godot console executable；請先執行 Fetch-Godot.ps1。' }
+        $godot = $bundled.FullName
+    }
+}
+
+& $python (Join-Path $projectRoot 'scripts\validate_content.py') --release
+if ($LASTEXITCODE -ne 0) { throw '內容 release gate 失敗。' }
+& $python (Join-Path $projectRoot 'scripts\audit_release.py')
+if ($LASTEXITCODE -ne 0) { throw '離線／匯出邊界稽核失敗。' }
+Push-Location $projectRoot
+try {
+    & $python -m pytest tests\python -q
+    if ($LASTEXITCODE -ne 0) { throw 'Python 測試失敗。' }
+    $editorOutput = & $godot --headless --path . --editor --quit 2>&1
+    $editorOutput | Write-Host
+    if ($LASTEXITCODE -ne 0 -or (($editorOutput -join "`n") -match 'SCRIPT ERROR|Parse Error|Compile Error|Failed to load script')) {
+        throw 'Godot editor import 或腳本編譯失敗。'
+    }
+    & $godot --headless --path . --script res://tests/godot/smoke_test.gd
+    if ($LASTEXITCODE -ne 0) { throw 'Godot smoke test 失敗。' }
+    & $godot --headless --path . --script res://tests/godot/performance_test.gd
+    if ($LASTEXITCODE -ne 0) { throw '20 敵人效能閘門失敗。' }
+} finally {
+    Pop-Location
+}
+Write-Host 'PixelRPG 所有自動驗證均通過。'

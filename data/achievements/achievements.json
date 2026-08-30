@@ -1,0 +1,14 @@
+{"schema_version":1,"definitions":[
+  {"id":"first_harvest","display_name":"第一籃收成","description":"收成第一株作物。","condition":{"metric":"crops_harvested","threshold":1},"reward_coins":100},
+  {"id":"field_keeper","display_name":"田野守望者","description":"累計收成 100 株作物。","condition":{"metric":"crops_harvested","threshold":100},"reward_coins":1000},
+  {"id":"master_farmer","display_name":"四季農匠","description":"累計收成 1000 株作物。","condition":{"metric":"crops_harvested","threshold":1000},"reward_coins":5000},
+  {"id":"first_catch","display_name":"霧岸第一竿","description":"釣起第一條魚。","condition":{"metric":"fish_caught","threshold":1},"reward_coins":100},
+  {"id":"angler","display_name":"四季釣客","description":"累計釣起 100 條魚。","condition":{"metric":"fish_caught","threshold":100},"reward_coins":1500},
+  {"id":"cave_scout","display_name":"鐘窟斥候","description":"擊倒 25 名敵人。","condition":{"metric":"monsters_defeated","threshold":25},"reward_coins":500},
+  {"id":"bell_champion","display_name":"鐘塔勇者","description":"擊倒四名季節守護者。","condition":{"metric":"bosses_defeated","threshold":4},"reward_coins":5000},
+  {"id":"festival_friend","display_name":"祭典常客","description":"參加 12 場節慶。","condition":{"metric":"festivals_attended","threshold":12},"reward_coins":1200},
+  {"id":"village_friend","display_name":"霧落之友","description":"累積 20 顆友誼心。","condition":{"metric":"relationship_hearts","threshold":20},"reward_coins":800},
+  {"id":"newlywed","display_name":"鐘聲誓約","description":"與心儀對象結婚。","condition":{"metric":"marriages","threshold":1},"reward_coins":3000},
+  {"id":"seasoned_farmer","display_name":"完整的一年","description":"在霧落村生活 120 日。","condition":{"metric":"days_played","threshold":120},"reward_coins":2000},
+  {"id":"merchant","display_name":"金色出貨單","description":"累計賺取 100000G。","condition":{"metric":"coins_earned","threshold":100000},"reward_coins":5000}
+]}

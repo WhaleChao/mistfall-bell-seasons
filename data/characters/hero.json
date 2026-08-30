@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "hero",
+  "display_name": "拾光者",
+  "portrait": "",
+  "sprite": "",
+  "faction": "mistfall_village",
+  "stats": {"max_health": 100, "attack": 16, "defense": 4, "move_speed": 118.0},
+  "lore_refs": ["lore:mending_lantern"]
+}

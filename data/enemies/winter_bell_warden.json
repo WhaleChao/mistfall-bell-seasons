@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"winter_bell_warden","display_name":"冬鐘守望者","max_health":960,"damage":32,"move_speed":52,"behavior":"boss","is_boss":true,"color":"8175bd","detection_radius":320,"attack_radius":64,"projectile_speed":195,"attack_cooldown":0.6,"drops":[{"item_id":"frost_crystal","chance":1.0,"count":10},{"item_id":"warden_emblem","chance":1.0,"count":1}]}

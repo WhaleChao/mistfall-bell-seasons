@@ -1,0 +1,5 @@
+{
+  "schema_version": 1, "id": "warden_core", "display_name": "遺跡守望者", "sprite": "",
+  "max_health": 180, "damage": 18, "move_speed": 45.0, "behavior": "boss", "is_boss": true,
+  "drops": [{"item_id": "warden_emblem", "chance": 1.0, "count": 1}]
+}

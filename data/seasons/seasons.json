@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "definitions": [
+    {"id":"spring","display_name":"春","index":0,"days":30,"weather_weights":{"clear":45,"rain":37,"storm":10,"fog":8}},
+    {"id":"summer","display_name":"夏","index":1,"days":30,"weather_weights":{"clear":60,"rain":24,"typhoon":10,"fog":6}},
+    {"id":"autumn","display_name":"秋","index":2,"days":30,"weather_weights":{"clear":50,"rain":25,"fog":19,"storm":6}},
+    {"id":"winter","display_name":"冬","index":3,"days":30,"weather_weights":{"clear":35,"snow":45,"blizzard":10,"fog":10}}
+  ]
+}

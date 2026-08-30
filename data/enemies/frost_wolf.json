@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"frost_wolf","display_name":"霜脊狼","max_health":132,"damage":24,"move_speed":102,"behavior":"melee","color":"b5d4dc","detection_radius":245,"drops":[{"item_id":"frost_crystal","chance":0.6,"count":1},{"item_id":"health_potion","chance":0.12,"count":1}]}

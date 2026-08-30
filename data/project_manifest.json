@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "mistfall_bell_seasons",
+  "display_name": "霧落農歌：鐘塔之季",
+  "locales": ["zh_TW"],
+  "default_locale": "zh_TW",
+  "pixel_spec": {"viewport": [640, 360], "tile_size": 32, "fps": 60, "integer_scaling": true},
+  "start_map": "mistfall_farm",
+  "dependencies": {"godot": "4.7.2", "dialogue_manager": "4.0.3", "quest_system": "2.0.2.4_4", "gloot": "3.0.2"}
+}

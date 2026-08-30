@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"ember_slime","display_name":"餘燼史萊姆","max_health":68,"damage":13,"move_speed":55,"behavior":"melee","color":"e7673f","drops":[{"item_id":"ember_core","chance":0.28,"count":1},{"item_id":"copper_ore","chance":0.35,"count":1}]}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/tool_definition.schema.json",
+  "title": "ToolDefinition catalog",
+  "$defs": {
+    "tier": {
+      "type": "object",
+      "required": ["level", "name", "price", "required_rank", "materials"],
+      "properties": {
+        "level": {"type": "integer", "minimum": 1, "maximum": 4},
+        "name": {"type": "string", "minLength": 1},
+        "price": {"type": "integer", "minimum": 0},
+        "required_rank": {"type": "integer", "minimum": 1, "maximum": 10},
+        "materials": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}
+      },
+      "additionalProperties": false
+    },
+    "definition": {
+      "type": "object",
+      "required": ["id", "display_name", "action", "base_stamina", "tiers"],
+      "properties": {
+        "id": {"enum": ["hoe", "watering_can", "axe", "pickaxe", "fishing_rod", "sickle"]},
+        "display_name": {"type": "string", "minLength": 1},
+        "action": {"type": "string", "minLength": 1},
+        "base_stamina": {"type": "integer", "minimum": 1, "maximum": 20},
+        "tiers": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/tier"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/definition"},
+    {"type": "object", "required": ["schema_version", "definitions"], "properties": {"schema_version": {"const": 1}, "definitions": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/definition"}}}, "additionalProperties": false}
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/season_definition.schema.json",
+  "title": "SeasonDefinition catalog",
+  "$defs": {"definition": {"type": "object", "required": ["id", "display_name", "index", "days", "weather_weights"], "properties": {"id": {"enum": ["spring", "summer", "autumn", "winter"]}, "display_name": {"type": "string"}, "index": {"type": "integer", "minimum": 0, "maximum": 3}, "days": {"const": 30}, "weather_weights": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 100}}}, "additionalProperties": false}},
+  "oneOf": [{"$ref": "#/$defs/definition"}, {"type": "object", "required": ["schema_version", "definitions"], "properties": {"schema_version": {"const": 1}, "definitions": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/definition"}}}, "additionalProperties": false}]
+}

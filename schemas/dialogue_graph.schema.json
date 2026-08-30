@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/dialogue_graph.schema.json",
+  "title": "DialogueGraph",
+  "type": "object",
+  "required": ["schema_version", "id", "title", "start_node", "characters", "nodes"],
+  "properties": {
+    "schema_version": {"const": 1}, "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}, "title": {"type": "string"},
+    "start_node": {"type": "string"}, "characters": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "nodes": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "type"], "properties": {
+      "id": {"type": "string"}, "type": {"enum": ["line", "choice", "condition", "action", "end"]}, "speaker": {"type": "string"}, "text": {"type": "string"},
+      "next": {"type": ["string", "null"]}, "options": {"type": "array", "items": {"type": "object", "required": ["text", "next"], "properties": {"text": {"type": "string"}, "next": {"type": "string"}, "condition": {"type": "object"}}, "additionalProperties": false}},
+      "condition": {"type": "object"}, "actions": {"type": "array", "items": {"type": "object"}}
+    }, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}

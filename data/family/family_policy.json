@@ -1,0 +1,1 @@
+{"schema_version":1,"marriage":{"minimum_hearts":10,"dating_required":true,"deadline":null},"child":{"maximum_children":1,"family_talk_after_days":30,"arrival_after_marriage_days":60,"stages":{"baby":[0,29],"toddler":[30,89],"child":[90,209],"teen":[210,null]},"adult_stage":false,"generational_succession":false},"romance_restricted_by_appearance":false}

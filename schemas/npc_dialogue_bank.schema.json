@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/npc_dialogue_bank.schema.json",
+  "title": "NPCDialogueBank catalog",
+  "$defs": {
+    "lines": {"type": "array", "minItems": 3, "items": {"type": "string", "minLength": 4}, "uniqueItems": true},
+    "milestone": {
+      "type": "object",
+      "required": ["hearts", "line"],
+      "properties": {"hearts": {"type": "integer", "minimum": 1, "maximum": 10}, "line": {"type": "string", "minLength": 4}},
+      "additionalProperties": false
+    },
+    "definition": {
+      "type": "object",
+      "required": ["id", "display_name", "season_lines", "weather_lines", "festival_lines", "heart_milestones"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "season_lines": {
+          "type": "object",
+          "required": ["spring", "summer", "autumn", "winter"],
+          "properties": {"spring": {"$ref": "#/$defs/lines"}, "summer": {"$ref": "#/$defs/lines"}, "autumn": {"$ref": "#/$defs/lines"}, "winter": {"$ref": "#/$defs/lines"}},
+          "additionalProperties": false
+        },
+        "weather_lines": {
+          "type": "object",
+          "required": ["rain", "storm", "snow", "fog"],
+          "properties": {"rain": {"type": "string"}, "storm": {"type": "string"}, "snow": {"type": "string"}, "fog": {"type": "string"}},
+          "additionalProperties": false
+        },
+        "festival_lines": {"$ref": "#/$defs/lines"},
+        "heart_milestones": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/milestone"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/definition"},
+    {"type": "object", "required": ["schema_version", "definitions"], "properties": {"schema_version": {"const": 1}, "definitions": {"type": "array", "minItems": 10, "maxItems": 10, "items": {"$ref": "#/$defs/definition"}}}, "additionalProperties": false}
+  ]
+}

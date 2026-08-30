@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"magma_beetle","display_name":"熔甲蟲","max_health":82,"damage":15,"move_speed":42,"behavior":"ranged","color":"cf8b3f","attack_radius":155,"projectile_speed":145,"attack_cooldown":1.4,"drops":[{"item_id":"ember_core","chance":0.4,"count":1},{"item_id":"iron_ore","chance":0.18,"count":1}]}

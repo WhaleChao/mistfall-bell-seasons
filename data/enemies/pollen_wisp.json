@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"pollen_wisp","display_name":"花粉浮靈","max_health":38,"damage":9,"move_speed":44,"behavior":"ranged","color":"f1cf70","attack_radius":140,"projectile_speed":125,"attack_cooldown":1.25,"drops":[{"item_id":"mist_shard","chance":0.25,"count":1}]}

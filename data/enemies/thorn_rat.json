@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"thorn_rat","display_name":"棘背穴鼠","max_health":54,"damage":11,"move_speed":78,"behavior":"melee","color":"a77a58","detection_radius":190,"drops":[{"item_id":"wood","chance":0.45,"count":2},{"item_id":"health_potion","chance":0.04,"count":1}]}

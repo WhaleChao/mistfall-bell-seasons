@@ -1,0 +1,3 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://pixelrpg.local/schemas/relationship_state.schema.json", "title": "RelationshipState", "type": "object", "required": ["friendship", "romance", "dating", "events_seen"], "properties": {"friendship": {"type": "integer", "minimum": 0, "maximum": 2500}, "romance": {"type": "integer", "minimum": 0, "maximum": 2500}, "dating": {"type": "boolean"}, "events_seen": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}}, "additionalProperties": false
+}

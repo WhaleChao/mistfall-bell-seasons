@@ -1,0 +1,5 @@
+{
+  "schema_version": 1, "id": "slime_green", "display_name": "苔原史萊姆", "sprite": "",
+  "max_health": 42, "damage": 8, "move_speed": 52.0, "behavior": "melee", "is_boss": false,
+  "drops": [{"item_id": "health_potion", "chance": 0.22, "count": 1}]
+}

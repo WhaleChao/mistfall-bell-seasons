@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/item_definition.schema.json",
+  "title": "ItemDefinition",
+  "type": "object",
+  "required": ["schema_version", "id", "display_name", "category", "description", "stack_limit", "effects"],
+  "properties": {
+    "schema_version": {"const": 1}, "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "display_name": {"type": "string", "minLength": 1}, "icon": {"type": "string"},
+    "category": {"enum": ["consumable", "weapon", "armor", "quest", "material"]},
+    "description": {"type": "string"}, "stack_limit": {"type": "integer", "minimum": 1},
+    "effects": {"type": "array", "items": {"type": "object", "required": ["type", "value"], "properties": {"type": {"enum": ["heal", "damage", "stat", "flag"]}, "value": {}, "target": {"type": "string"}}, "additionalProperties": false}},
+    "obtain_conditions": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

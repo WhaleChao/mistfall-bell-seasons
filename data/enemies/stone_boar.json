@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"stone_boar","display_name":"岩鬃野豬","max_health":125,"damage":20,"move_speed":66,"behavior":"melee","color":"766a59","detection_radius":225,"drops":[{"item_id":"stone","chance":0.75,"count":2},{"item_id":"iron_ore","chance":0.3,"count":1}]}

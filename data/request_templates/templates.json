@@ -1,0 +1,8 @@
+{"schema_version":1,"definitions":[
+  {"id":"daily_harvest","display_name":"當季採收委託","type":"harvest","target_pool":["seasonal_crop"],"count_range":[3,8],"reward_range":[180,520],"duration_days":3},
+  {"id":"village_delivery","display_name":"村民配送委託","type":"delivery","target_pool":["crop","animal_product","cooked_dish"],"count_range":[1,5],"reward_range":[220,650],"duration_days":4},
+  {"id":"cave_patrol","display_name":"洞窟巡查委託","type":"monster","target_pool":["seasonal_dungeon_enemy"],"count_range":[4,12],"reward_range":[300,900],"duration_days":5},
+  {"id":"fishing_order","display_name":"漁獲收購委託","type":"fish","target_pool":["seasonal_fish"],"count_range":[1,4],"reward_range":[240,760],"duration_days":4},
+  {"id":"ranch_help","display_name":"牧場協助委託","type":"animal","target_pool":["egg","milk"],"count_range":[2,6],"reward_range":[200,600],"duration_days":3},
+  {"id":"neighbor_visit","display_name":"鄰里關懷委託","type":"social","target_pool":["town_npc"],"count_range":[1,3],"reward_range":[100,400],"duration_days":2}
+]}

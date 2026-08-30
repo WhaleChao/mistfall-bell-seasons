@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"amber_slime","display_name":"琥珀史萊姆","max_health":88,"damage":16,"move_speed":58,"behavior":"melee","color":"d7a64b","drops":[{"item_id":"iron_ore","chance":0.42,"count":1},{"item_id":"mist_shard","chance":0.18,"count":1}]}

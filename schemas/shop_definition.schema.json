@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/shop_definition.schema.json",
+  "title": "ShopDefinition catalog",
+  "$defs": {
+    "offer": {
+      "type": "object",
+      "required": ["id", "kind", "target_id", "display_name", "quantity", "price", "required_rank"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "kind": {"enum": ["item", "animal", "seed", "tool_upgrade"]},
+        "target_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "quantity": {"type": "integer", "minimum": 1},
+        "price": {"type": "integer", "minimum": 1},
+        "required_rank": {"type": "integer", "minimum": 1, "maximum": 10}
+      },
+      "additionalProperties": false
+    },
+    "definition": {
+      "type": "object",
+      "required": ["id", "display_name", "open_minute", "close_minute", "catalog_mode", "offers"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "keeper_id": {"type": "string"},
+        "open_minute": {"type": "integer", "minimum": 360, "maximum": 1439},
+        "close_minute": {"type": "integer", "minimum": 361, "maximum": 1440},
+        "catalog_mode": {"enum": ["fixed", "seasonal_seeds", "tool_upgrades"]},
+        "offers": {"type": "array", "items": {"$ref": "#/$defs/offer"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/definition"},
+    {"type": "object", "required": ["schema_version", "definitions"], "properties": {"schema_version": {"const": 1}, "definitions": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/definition"}}}, "additionalProperties": false}
+  ]
+}

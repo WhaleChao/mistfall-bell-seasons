@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/enemy_definition.schema.json",
+  "title": "EnemyDefinition",
+  "type": "object",
+  "required": ["schema_version", "id", "display_name", "max_health", "damage", "move_speed", "behavior", "drops"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "sprite": {"type": "string"},
+    "max_health": {"type": "integer", "minimum": 1},
+    "damage": {"type": "integer", "minimum": 0},
+    "move_speed": {"type": "number", "exclusiveMinimum": 0},
+    "behavior": {"enum": ["melee", "ranged", "boss"]},
+    "is_boss": {"type": "boolean"},
+    "color": {"type": "string", "pattern": "^[0-9a-fA-F]{6}$"},
+    "detection_radius": {"type": "number", "minimum": 48},
+    "attack_radius": {"type": "number", "minimum": 16},
+    "projectile_speed": {"type": "number", "minimum": 40},
+    "attack_cooldown": {"type": "number", "minimum": 0.2},
+    "drops": {"type": "array", "items": {"type": "object", "required": ["item_id", "chance"], "properties": {"item_id": {"type": "string"}, "chance": {"type": "number", "minimum": 0, "maximum": 1}, "count": {"type": "integer", "minimum": 1}}, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "arena_victory",
+  "trigger": {"type": "enemy_defeated", "target": "warden_core"},
+  "conditions": [{"type": "flag_equals", "flag": "sample_arena_cleared", "value": false}],
+  "actions": [
+    {"type": "set_flag", "flag": "sample_arena_cleared", "value": true},
+    {"type": "quest", "quest_id": "silence_the_warden", "state": "completed"},
+    {"type": "give_item", "item_id": "health_potion", "count": 2}
+  ],
+  "once": true
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "silence_the_warden",
+  "title": "讓守望者沉睡",
+  "summary": "擊敗佔據鐘塔遺跡的守望者核心，讓村中的晨鐘再次響起。",
+  "prerequisites": [],
+  "objectives": [{"id": "defeat_warden", "type": "defeat", "target": "warden_core", "count": 1}],
+  "rewards": [{"type": "item", "id": "health_potion", "count": 2}],
+  "dialogue_refs": ["mira_warden_request"]
+}

@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"ice_slime","display_name":"冰露史萊姆","max_health":105,"damage":20,"move_speed":60,"behavior":"melee","color":"80c8dc","drops":[{"item_id":"frost_crystal","chance":0.45,"count":1},{"item_id":"gold_ore","chance":0.14,"count":1}]}

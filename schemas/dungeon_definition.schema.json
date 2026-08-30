@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/dungeon_definition.schema.json",
+  "title": "DungeonDefinition",
+  "type": "object",
+  "required": ["schema_version", "id", "display_name", "max_floor", "boss_floors", "elevator_interval", "season_zones", "enemy_ids", "boss_ids", "seal_ids"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "display_name": {"type": "string"},
+    "max_floor": {"const": 40},
+    "boss_floors": {"const": [10, 20, 30, 40]},
+    "elevator_interval": {"const": 5},
+    "season_zones": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "object"}},
+    "enemy_ids": {"type": "array", "minItems": 12, "maxItems": 12, "uniqueItems": true, "items": {"type": "string"}},
+    "boss_ids": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"type": "string"}},
+    "seal_ids": {"const": ["spring_seal", "summer_seal", "autumn_seal", "winter_seal"]}
+  },
+  "additionalProperties": false
+}

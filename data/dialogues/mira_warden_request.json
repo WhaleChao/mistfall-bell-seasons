@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "mira_warden_request",
+  "title": "米拉的請求",
+  "start_node": "start",
+  "characters": ["hero", "mira"],
+  "nodes": [
+    {"id": "start", "type": "line", "speaker": "mira", "text": "鐘塔沉默後，霧就不肯散去。你願意去看看嗎？", "next": "answer"},
+    {"id": "answer", "type": "choice", "options": [{"text": "我會讓鐘聲回來。", "next": "accept"}, {"text": "我還需要準備。", "next": "later"}]},
+    {"id": "accept", "type": "action", "actions": [{"type": "quest", "quest_id": "silence_the_warden", "state": "active"}], "next": "end"},
+    {"id": "later", "type": "line", "speaker": "mira", "text": "別太久。這片霧正在學會我們的名字。", "next": "end"},
+    {"id": "end", "type": "end"}
+  ]
+}

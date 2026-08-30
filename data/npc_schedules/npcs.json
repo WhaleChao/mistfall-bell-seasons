@@ -1,0 +1,12 @@
+{"schema_version":1,"definitions":[
+  {"id":"mira","display_name":"米拉","romance_candidate":true,"weekday":[{"from":360,"to":720,"map":"mistfall_farm","marker":"mira_garden"},{"from":720,"to":1080,"map":"village","marker":"archive"},{"from":1080,"to":1440,"map":"village","marker":"mira_home"}],"rain":[{"from":360,"to":1440,"map":"village","marker":"archive"}]},
+  {"id":"lian","display_name":"連","romance_candidate":true,"weekday":[{"from":360,"to":840,"map":"river","marker":"fishing_pier"},{"from":840,"to":1440,"map":"village","marker":"tavern"}],"rain":[{"from":360,"to":1440,"map":"village","marker":"tavern"}]},
+  {"id":"soren","display_name":"索倫","romance_candidate":true,"weekday":[{"from":360,"to":1020,"map":"forge","marker":"anvil"},{"from":1020,"to":1440,"map":"village","marker":"plaza"}]},
+  {"id":"yuna","display_name":"優娜","romance_candidate":true,"weekday":[{"from":360,"to":780,"map":"clinic","marker":"desk"},{"from":780,"to":1080,"map":"forest","marker":"herb_path"},{"from":1080,"to":1440,"map":"clinic","marker":"home"}],"rain":[{"from":360,"to":1440,"map":"clinic","marker":"desk"}]},
+  {"id":"orin","display_name":"歐林","romance_candidate":false,"weekday":[{"from":360,"to":1080,"map":"village","marker":"shop"},{"from":1080,"to":1440,"map":"village","marker":"orin_home"}]},
+  {"id":"eira","display_name":"艾拉","romance_candidate":false,"weekday":[{"from":360,"to":960,"map":"ranch","marker":"barn"},{"from":960,"to":1440,"map":"village","marker":"plaza"}]},
+  {"id":"toma","display_name":"托馬","romance_candidate":false,"weekday":[{"from":360,"to":1020,"map":"carpenter","marker":"workbench"},{"from":1020,"to":1440,"map":"village","marker":"toma_home"}]},
+  {"id":"nori","display_name":"諾莉","romance_candidate":false,"weekday":[{"from":360,"to":900,"map":"school","marker":"classroom"},{"from":900,"to":1440,"map":"village","marker":"library"}]},
+  {"id":"asha","display_name":"阿莎","romance_candidate":false,"weekday":[{"from":360,"to":900,"map":"forest","marker":"shrine"},{"from":900,"to":1440,"map":"village","marker":"bell_tower"}]},
+  {"id":"piko","display_name":"皮可","romance_candidate":false,"weekday":[{"from":360,"to":840,"map":"village","marker":"plaza"},{"from":840,"to":1440,"map":"forest","marker":"secret_tree"}]}
+]}

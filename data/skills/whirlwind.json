@@ -1,0 +1,4 @@
+{
+  "schema_version": 1, "id": "whirlwind", "display_name": "迴旋斬", "description": "揮出一圈短促但強力的劍風。", "icon": "",
+  "cooldown": 4.0, "power_multiplier": 1.8, "range": 74.0, "effects": []
+}

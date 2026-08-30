@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"moss_slime","display_name":"苔芽史萊姆","max_health":42,"damage":8,"move_speed":48,"behavior":"melee","color":"6fa45f","drops":[{"item_id":"wood","chance":0.35,"count":1},{"item_id":"mist_shard","chance":0.08,"count":1}]}

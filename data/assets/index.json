@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "schema_version": 1,
+      "id": "mistfall_farm_title",
+      "source_path": "res://assets/runtime/backgrounds/mistfall_farm_title.png",
+      "kind": "image",
+      "sha256": "3432f8d584cb064da13e7a7b38203e06cd3f44089bd310f8b405f9afce0774f1",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "title", "mistfall_farm"],
+      "links": ["project:mistfall_bell_seasons"]
+    },
+    {
+      "schema_version": 1,
+      "id": "romance_candidates_atlas",
+      "source_path": "res://assets/runtime/portraits/romance_candidates_atlas.png",
+      "kind": "image",
+      "sha256": "5543942fdae9c78e46f0391c0ac0f9e1e4b11d588830c7cbc4cd71108758754b",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "portrait", "romance_candidates"],
+      "links": ["character:mira", "character:lian", "character:soren", "character:yuna"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_farm_commercial",
+      "source_path": "res://assets/runtime/backgrounds/mistfall_farm_commercial.png",
+      "kind": "image",
+      "sha256": "33b88de32bb62b343ce832307f81116fd7b2b94e901b6ea1e685095f81741646",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "farm"],
+      "links": ["map:mistfall_farm"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_village_commercial",
+      "source_path": "res://assets/runtime/backgrounds/mistfall_village_commercial.png",
+      "kind": "image",
+      "sha256": "c30d0c68e5929c861e9aa41baac7b4265c7b9dbed969feecfbf2508a611f76d1",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "village"],
+      "links": ["map:mistfall_village"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_dungeon_commercial",
+      "source_path": "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png",
+      "kind": "image",
+      "sha256": "eee09167f7aa9a0ca56eda1b69d647be95e545454d399f0040a59587ad3ec022",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "dungeon"],
+      "links": ["map:mistfall_depths"]
+    },
+    {
+      "schema_version": 1,
+      "id": "character_atlas",
+      "source_path": "res://assets/runtime/sprites/character_atlas.png",
+      "kind": "image",
+      "sha256": "7354dbd9a0ed60dedb8de633820bc394769f080fd9ef59fcdcf7a2797e33ab02",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "sprites", "characters"],
+      "links": ["character:hero", "character:mira", "character:lian", "character:soren", "character:yuna", "character:orin", "character:eira", "character:toma", "character:nori", "character:asha", "character:piko"]
+    },
+    {
+      "schema_version": 1,
+      "id": "enemy_atlas",
+      "source_path": "res://assets/runtime/sprites/enemy_atlas.png",
+      "kind": "image",
+      "sha256": "917759e5fcbbe7df435b3c38a61e9e2dbd5b3b4047efc341dfe416ef10990a65",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "sprites", "enemies", "bosses"],
+      "links": ["dungeon:mistfall_depths"]
+    },
+    {
+      "schema_version": 1,
+      "id": "animal_atlas",
+      "source_path": "res://assets/runtime/sprites/animal_atlas.png",
+      "kind": "image",
+      "sha256": "6bdba66c0b8593c8891b3d8a3d5bd14adcc917d1ae0c9d9d4bfc3ab8ba05a725",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "sprites", "animals", "farm_products"],
+      "links": ["animal:chicken", "animal:cow", "item:egg", "item:milk"]
+    },
+    {
+      "schema_version": 1,
+      "id": "player_walk_atlas",
+      "source_path": "res://assets/runtime/sprites/player_walk_atlas.png",
+      "kind": "image",
+      "sha256": "ff38826d3054d98b41f16c515e77b7ef493365a465baf10935ffe6b848046c85",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-08-30", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "sprites", "player", "walk_animation", "four_direction"],
+      "links": ["character:hero", "animation:idle", "animation:walk"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_application_icon",
+      "source_path": "res://icon.svg",
+      "kind": "image",
+      "sha256": "8a74e4da7113aa1a35292b8c3e799050405c369e2121237c061b95505cac9a71",
+      "license": {"spdx": "MIT", "source": "Original PixelRPG Studio vector artwork, 2026-08-30", "author": "PixelRPG Studio contributors"},
+      "tags": ["original", "vector", "application_icon", "bell", "leaf"],
+      "links": ["project:mistfall_bell_seasons"]
+    },
+    {
+      "schema_version": 1,
+      "id": "chroma_transparency_shader",
+      "source_path": "res://assets/shaders/chroma_transparency.gdshader",
+      "kind": "other",
+      "sha256": "6fbaa8eeb314388c986fe6bf7b9ff3d232e2cc0ef0787b9edea1ca7a5fc0b135",
+      "license": {"spdx": "MIT", "source": "Original PixelRPG Studio shader, 2026-08-30", "author": "PixelRPG Studio contributors"},
+      "tags": ["original", "shader", "runtime", "transparency"],
+      "links": ["asset:character_atlas", "asset:enemy_atlas", "asset:animal_atlas", "asset:player_walk_atlas"]
+    }
+  ]
+}

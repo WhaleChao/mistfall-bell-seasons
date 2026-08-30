@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/sprite_import.schema.json",
+  "title": "SpriteImportDefinition",
+  "type": "object",
+  "required": ["schema_version", "id", "source_asset_id", "runtime_texture", "grid", "directions", "animations", "collision"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "source_asset_id": {"type": "string"},
+    "runtime_texture": {"type": "string", "pattern": "^res://assets/runtime/"},
+    "grid": {"type": "object", "required": ["columns", "rows", "frame_width", "frame_height"], "properties": {"columns": {"type": "integer", "minimum": 1}, "rows": {"type": "integer", "minimum": 1}, "frame_width": {"type": "integer", "minimum": 1}, "frame_height": {"type": "integer", "minimum": 1}}, "additionalProperties": false},
+    "directions": {"enum": [4, 8]},
+    "animations": {"type": "object", "additionalProperties": {"type": "object", "required": ["row", "frames", "fps", "loop"], "properties": {"row": {"type": "integer", "minimum": 0}, "frames": {"type": "array", "items": {"type": "integer", "minimum": 0}}, "fps": {"type": "number", "exclusiveMinimum": 0}, "loop": {"type": "boolean"}}, "additionalProperties": false}},
+    "collision": {"type": "object", "required": ["x", "y", "width", "height"], "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "width": {"type": "number", "exclusiveMinimum": 0}, "height": {"type": "number", "exclusiveMinimum": 0}}, "additionalProperties": false}
+  },
+  "additionalProperties": false
+}

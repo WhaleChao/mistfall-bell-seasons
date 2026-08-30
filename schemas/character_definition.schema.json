@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/character_definition.schema.json",
+  "title": "CharacterDefinition",
+  "type": "object",
+  "required": ["schema_version", "id", "display_name", "faction", "stats", "lore_refs"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "portrait": {"type": "string"},
+    "sprite": {"type": "string"},
+    "faction": {"type": "string"},
+    "stats": {
+      "type": "object",
+      "required": ["max_health", "attack", "defense", "move_speed"],
+      "properties": {
+        "max_health": {"type": "integer", "minimum": 1}, "attack": {"type": "integer", "minimum": 0},
+        "defense": {"type": "integer", "minimum": 0}, "move_speed": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "lore_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "additionalProperties": false
+}

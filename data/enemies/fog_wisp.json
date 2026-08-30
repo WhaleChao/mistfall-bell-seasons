@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"fog_wisp","display_name":"迷途霧靈","max_health":72,"damage":18,"move_speed":52,"behavior":"ranged","color":"9ca7c3","attack_radius":170,"projectile_speed":155,"attack_cooldown":1.1,"drops":[{"item_id":"mist_shard","chance":0.55,"count":1},{"item_id":"gold_ore","chance":0.08,"count":1}]}

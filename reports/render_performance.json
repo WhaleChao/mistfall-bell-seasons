@@ -1,0 +1,15 @@
+{
+  "average_fps": 729.6,
+  "base_scene_fps": 1430.4,
+  "capacity_ratio": 0.237,
+  "elapsed_seconds": 0.411,
+  "empty_window_fps": 3078.4,
+  "enemies": 20,
+  "frames": 300,
+  "passed": true,
+  "renderer": "NVIDIA GeForce RTX 3060",
+  "viewport": [
+    1920,
+    1080
+  ]
+}

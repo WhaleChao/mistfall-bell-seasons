@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pixelrpg-creator-service"
+version = "0.1.0"
+description = "Local-only document retrieval and structured AI drafts for PixelRPG Studio"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "fastapi==0.141.1",
+  "uvicorn[standard]==0.52.0",
+  "pydantic==2.13.5",
+  "httpx>=0.28.1,<0.29",
+  "jsonschema>=4.25,<5"
+]
+
+[project.optional-dependencies]
+documents = ["docling==2.123.1", "openpyxl>=3.1,<4"]
+vector = ["sqlite-vec==0.1.9"]
+test = ["pytest>=8.4,<9"]
+bundle = ["pyinstaller>=6.15,<7"]
+
+[project.scripts]
+pixelrpg-creator = "app.main:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["../tests/python"]
+addopts = "-q"

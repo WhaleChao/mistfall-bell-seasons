@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"spring_root_guardian","display_name":"春根守護者","max_health":360,"damage":18,"move_speed":48,"behavior":"boss","is_boss":true,"color":"55a768","detection_radius":280,"attack_radius":48,"projectile_speed":135,"attack_cooldown":0.9,"drops":[{"item_id":"wood","chance":1.0,"count":12},{"item_id":"mist_shard","chance":1.0,"count":3}]}

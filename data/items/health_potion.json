@@ -1,0 +1,5 @@
+{
+  "schema_version": 1, "id": "health_potion", "display_name": "回復藥水", "icon": "", "category": "consumable",
+  "description": "帶著薄荷氣味的紅色藥水，回復 35 點生命。", "stack_limit": 10,
+  "effects": [{"type": "heal", "value": 35, "target": "self"}], "obtain_conditions": []
+}

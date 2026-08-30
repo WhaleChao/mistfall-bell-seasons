@@ -1,0 +1,22 @@
+{"schema_version":1,"definitions":[
+  {"id":"mira_heart_2","npc_id":"mira","hearts":2,"season":"spring","weather":"any","map":"archive","title":"沾著泥土的舊書"},
+  {"id":"mira_heart_4","npc_id":"mira","hearts":4,"season":"any","weather":"rain","map":"archive","title":"雨聲與未寄出的信"},
+  {"id":"mira_heart_6","npc_id":"mira","hearts":6,"season":"summer","weather":"clear","map":"bell_tower","title":"鐘影下的告白練習"},
+  {"id":"mira_heart_8","npc_id":"mira","hearts":8,"season":"autumn","weather":"fog","map":"forest","title":"霧中牽起的手"},
+  {"id":"mira_heart_10","npc_id":"mira","hearts":10,"season":"winter","weather":"snow","map":"bell_tower","title":"聽見同一座鐘"},
+  {"id":"lian_heart_2","npc_id":"lian","hearts":2,"season":"summer","weather":"clear","map":"river","title":"借來的釣竿"},
+  {"id":"lian_heart_4","npc_id":"lian","hearts":4,"season":"any","weather":"rain","map":"tavern","title":"沒說完的航程"},
+  {"id":"lian_heart_6","npc_id":"lian","hearts":6,"season":"autumn","weather":"fog","map":"coast","title":"潮線之外"},
+  {"id":"lian_heart_8","npc_id":"lian","hearts":8,"season":"winter","weather":"clear","map":"coast","title":"留在港灣的理由"},
+  {"id":"lian_heart_10","npc_id":"lian","hearts":10,"season":"spring","weather":"clear","map":"river","title":"兩人的河燈"},
+  {"id":"soren_heart_2","npc_id":"soren","hearts":2,"season":"any","weather":"any","map":"forge","title":"火星與護目鏡"},
+  {"id":"soren_heart_4","npc_id":"soren","hearts":4,"season":"summer","weather":"clear","map":"forge","title":"過熱的工作日"},
+  {"id":"soren_heart_6","npc_id":"soren","hearts":6,"season":"autumn","weather":"any","map":"dungeon","title":"並肩試刀"},
+  {"id":"soren_heart_8","npc_id":"soren","hearts":8,"season":"winter","weather":"snow","map":"forge","title":"為你打造的鐘飾"},
+  {"id":"soren_heart_10","npc_id":"soren","hearts":10,"season":"spring","weather":"clear","map":"bell_tower","title":"金屬也會記得溫度"},
+  {"id":"yuna_heart_2","npc_id":"yuna","hearts":2,"season":"spring","weather":"clear","map":"forest","title":"辨認第一株藥草"},
+  {"id":"yuna_heart_4","npc_id":"yuna","hearts":4,"season":"summer","weather":"rain","map":"clinic","title":"診所的長夜"},
+  {"id":"yuna_heart_6","npc_id":"yuna","hearts":6,"season":"autumn","weather":"fog","map":"forest","title":"迷霧中的呼吸"},
+  {"id":"yuna_heart_8","npc_id":"yuna","hearts":8,"season":"winter","weather":"snow","map":"clinic","title":"掌心的溫度"},
+  {"id":"yuna_heart_10","npc_id":"yuna","hearts":10,"season":"spring","weather":"clear","map":"mistfall_farm","title":"一起種下明年"}
+]}

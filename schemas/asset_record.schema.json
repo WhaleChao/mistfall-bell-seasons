@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/asset_record.schema.json",
+  "title": "AssetRecord",
+  "type": "object",
+  "required": ["schema_version", "id", "source_path", "kind", "sha256", "license", "tags", "links"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "source_path": {"type": "string", "minLength": 1},
+    "kind": {"enum": ["image", "document", "audio", "data", "other"]},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "license": {
+      "type": "object",
+      "required": ["spdx", "source"],
+      "properties": {"spdx": {"type": "string", "minLength": 1}, "source": {"type": "string"}, "author": {"type": "string"}},
+      "additionalProperties": false
+    },
+    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "links": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "additionalProperties": false
+}

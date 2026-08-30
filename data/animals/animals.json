@@ -1,0 +1,4 @@
+{"schema_version":1,"definitions":[
+  {"id":"chicken","display_name":"霧落雞","purchase_price":800,"product_id":"egg","product_interval_days":1,"gestation_days":7},
+  {"id":"cow","display_name":"鐘乳牛","purchase_price":5000,"product_id":"milk","product_interval_days":1,"gestation_days":20}
+]}

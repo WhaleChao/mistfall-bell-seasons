@@ -1,0 +1,14 @@
+{"schema_version":1,"definitions":[
+  {"id":"brook_trout","display_name":"霧溪鱒","seasons":["spring"],"locations":["river"],"hours":[6,18],"weather":["clear","rain"],"sell_price":90},
+  {"id":"petal_carp","display_name":"花瓣鯉","seasons":["spring"],"locations":["pond"],"hours":[8,20],"weather":["clear"],"sell_price":120},
+  {"id":"rain_eel","display_name":"春雨鰻","seasons":["spring"],"locations":["river"],"hours":[18,24],"weather":["rain","storm"],"sell_price":210},
+  {"id":"sun_bass","display_name":"日紋鱸","seasons":["summer"],"locations":["lake"],"hours":[6,16],"weather":["clear"],"sell_price":105},
+  {"id":"blue_mackerel","display_name":"青風鯖","seasons":["summer"],"locations":["coast"],"hours":[9,20],"weather":["clear","rain"],"sell_price":135},
+  {"id":"storm_ray","display_name":"雷潮魟","seasons":["summer"],"locations":["coast"],"hours":[16,24],"weather":["storm","typhoon"],"sell_price":260},
+  {"id":"amber_salmon","display_name":"琥珀鮭","seasons":["autumn"],"locations":["river"],"hours":[6,18],"weather":["clear","fog"],"sell_price":125},
+  {"id":"moon_perch","display_name":"月影鱸","seasons":["autumn"],"locations":["lake"],"hours":[17,24],"weather":["clear","fog"],"sell_price":155},
+  {"id":"leaf_catfish","display_name":"落葉鯰","seasons":["autumn"],"locations":["pond"],"hours":[12,24],"weather":["rain"],"sell_price":225},
+  {"id":"ice_smelt","display_name":"冰晶公魚","seasons":["winter"],"locations":["lake"],"hours":[6,17],"weather":["clear","snow"],"sell_price":115},
+  {"id":"snow_cod","display_name":"雪霧鱈","seasons":["winter"],"locations":["coast"],"hours":[8,20],"weather":["snow"],"sell_price":165},
+  {"id":"aurora_sturgeon","display_name":"極光鱘","seasons":["winter"],"locations":["lake"],"hours":[18,24],"weather":["blizzard","fog"],"sell_price":320}
+]}

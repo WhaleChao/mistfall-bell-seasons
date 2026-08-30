@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"bell_guardian","display_name":"鐘塔守衛","max_health":155,"damage":25,"move_speed":48,"behavior":"ranged","color":"b3a6d8","attack_radius":185,"projectile_speed":180,"attack_cooldown":0.95,"drops":[{"item_id":"gold_ore","chance":0.35,"count":1},{"item_id":"mist_shard","chance":0.65,"count":2}]}

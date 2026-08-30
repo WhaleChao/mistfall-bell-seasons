@@ -1,0 +1,4 @@
+{
+  "schema_version": 1, "id": "mist_shard", "display_name": "霧晶碎片", "icon": "", "category": "material",
+  "description": "魔霧凝結後留下的冰涼晶體。", "stack_limit": 99, "effects": [], "obtain_conditions": []
+}

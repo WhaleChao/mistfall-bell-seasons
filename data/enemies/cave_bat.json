@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"cave_bat","display_name":"熱穴蝙蝠","max_health":48,"damage":12,"move_speed":92,"behavior":"melee","color":"8f5972","detection_radius":215,"drops":[{"item_id":"copper_ore","chance":0.4,"count":1},{"item_id":"health_potion","chance":0.05,"count":1}]}

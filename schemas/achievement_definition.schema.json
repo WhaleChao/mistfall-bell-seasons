@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/achievement_definition.schema.json",
+  "title": "AchievementDefinition catalog",
+  "$defs": {
+    "definition": {
+      "type": "object",
+      "required": ["id", "display_name", "description", "condition", "reward_coins"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "display_name": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "condition": {"type": "object", "required": ["metric", "threshold"], "properties": {"metric": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}, "threshold": {"type": "integer", "minimum": 1}}, "additionalProperties": false},
+        "reward_coins": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/definition"},
+    {"type": "object", "required": ["schema_version", "definitions"], "properties": {"schema_version": {"const": 1}, "definitions": {"type": "array", "minItems": 10, "items": {"$ref": "#/$defs/definition"}}}, "additionalProperties": false}
+  ]
+}

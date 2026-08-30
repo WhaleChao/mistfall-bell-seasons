@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"summer_forge_drake","display_name":"盛夏爐翼龍","max_health":520,"damage":23,"move_speed":58,"behavior":"boss","is_boss":true,"color":"db5a3c","detection_radius":290,"attack_radius":54,"projectile_speed":165,"attack_cooldown":0.75,"drops":[{"item_id":"ember_core","chance":1.0,"count":8},{"item_id":"iron_ore","chance":1.0,"count":6}]}

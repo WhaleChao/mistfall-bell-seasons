@@ -1,0 +1,3 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://pixelrpg.local/schemas/child_state.schema.json", "title": "ChildState", "type": "object", "required": ["exists", "name", "born_absolute_day", "stage"], "properties": {"exists": {"type": "boolean"}, "name": {"type": "string"}, "born_absolute_day": {"type": "integer", "minimum": 0}, "stage": {"enum": ["none", "baby", "toddler", "child", "teen"]}}, "additionalProperties": false
+}

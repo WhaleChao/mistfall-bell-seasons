@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrpg.local/schemas/world_event.schema.json",
+  "title": "WorldEvent",
+  "type": "object",
+  "required": ["schema_version", "id", "trigger", "conditions", "actions", "once"],
+  "properties": {
+    "schema_version": {"const": 1}, "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "trigger": {"type": "object", "required": ["type"], "properties": {"type": {"enum": ["interact", "enter_area", "enemy_defeated", "quest_state", "auto"]}, "target": {"type": "string"}}, "additionalProperties": false},
+    "conditions": {"type": "array", "items": {"type": "object"}},
+    "actions": {"type": "array", "items": {"type": "object", "required": ["type"], "properties": {"type": {"enum": ["dialogue", "set_flag", "quest", "give_item", "take_item", "change_map", "spawn_actor", "remove_actor", "animation", "sound", "cutscene"]}}, "additionalProperties": true}},
+    "once": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

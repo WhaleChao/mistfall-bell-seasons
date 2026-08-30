@@ -1,0 +1,4 @@
+{
+  "schema_version": 1, "id": "warden_emblem", "display_name": "守望者徽記", "icon": "", "category": "quest",
+  "description": "證明遺跡核心已停止運作的古老徽記。", "stack_limit": 1, "effects": [], "obtain_conditions": []
+}
