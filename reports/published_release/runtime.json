@@ -1,12 +1,12 @@
 {
   "passed": true,
-  "tested_at": "2026-08-30T10:22:08.8680287+00:00",
+  "tested_at": "2026-08-30T11:06:00.2475903+00:00",
   "os": "Microsoft Windows NT 10.0.26100.0",
-  "build_directory": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\pixelrpg-published-1.1.2-11aefcf34c3d4266a16ecf4b0595f02d\\expanded\\Mistfall-Bell-Seasons-v1.1.2-Windows-x64",
+  "build_directory": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\pixelrpg-published-1.1.3-57b59c819cd44676a0e1294dc7a089e6\\expanded\\Mistfall-Bell-Seasons-v1.1.3-Windows-x64",
   "quit_after_frames": 600,
   "exit_code": 0,
   "network_samples": 21,
   "network_endpoints": [],
-  "exe_sha256": "a236f29c91091c13c58693558540c63fc5a1115e63f2082717fb1719733f952b",
-  "pck_sha256": "c632c60cfbb3719a5639ec48133b6d52c97cbac7274004f4cd0b38820f09afa7"
+  "exe_sha256": "9d9ec82ed97b29d24c8a48742d3ccf3e983b646038951d3a0ab48faa6d7d0c16",
+  "pck_sha256": "5690f57d57ad84af892f4be7cd18ae110d8a77a70f43cc05bd4975fb091ff092"
 }
