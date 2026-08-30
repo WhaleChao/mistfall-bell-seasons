@@ -21,7 +21,7 @@
 | 玩家自行開服與 IP 直連 | 已證明 | 共同、私人、競賽三種情境各由 1 服 2 客真實程序完成版本握手、雙玩家移動快照、農場整合／隔離、雙人篇章、戀愛制度與世界保存；合計 3 服 6 客 |
 | 正式 ZIP、公開下載與乾淨 Windows 啟動 | 已證明 | GitHub Actions Windows 11 build 26100 從公開 Release 下載、驗證、解壓與啟動通過 |
 | 授權、供應鏈與惡意程式檢查 | 已證明 | 素材雜湊／授權閘門、Godot 官方法律原文、138 套件 0 已知漏洞、Microsoft Defender 0 偵測 |
-| 公開 GitHub Release | 部分完成 | v1.0.4 已公開並通過乾淨 Windows 驗證；v1.1.0 將在本輪完整回歸後發布與重新下載驗證 |
+| 公開 GitHub Release | 已證明 | v1.1.0 已公開；ZIP 的本機、GitHub asset 與重新下載 SHA-256 均為 `ac8aa7398d6769f08e77ffce33809530a3398cb723a0d7ac24522e94e87a0b4f`，公開下載與 GitHub Actions 乾淨 Windows 驗證皆通過 |
 
 ## 製作工具與本機 AI 門檻
 
