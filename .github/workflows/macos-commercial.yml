@@ -195,3 +195,24 @@ jobs:
           printf '%s\n' "$windows_name" "$macos_name" 'SHA256SUMS.txt' | sort > work/expected-release-assets.txt
           diff -u work/expected-release-assets.txt work/actual-release-assets.txt
           gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json url,isDraft,assets
+
+  publish-release:
+    if: github.ref_type == 'tag'
+    needs: draft-release
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+    steps:
+      - name: Publish the verified assets and queue public-download verification
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          test "$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')" = 'true'
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+          test "$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')" = 'false'
+          gh workflow run published-release-verification.yml --repo "$GITHUB_REPOSITORY" --ref "$tag" -f tag="$tag"
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json url,isDraft,publishedAt,assets
