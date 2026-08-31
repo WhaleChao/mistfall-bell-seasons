@@ -149,9 +149,14 @@ try {
             throw "1080p 效能測試沒有唯一且一致的完成標記（exit code $exitCode）。"
         }
 
-        $basicAdapterLines = @($lines | Where-Object { [string]$_ -match '^OpenGL API .+ - Compatibility - Using Device: Google Inc\. \(Microsoft\) - ANGLE \(Microsoft, Microsoft Basic Render Driver \(0x[0-9A-Fa-f]+\) Direct3D11 .+\)$' })
+        $microsoftSoftwarePattern = '^ANGLE \(Microsoft, Microsoft Basic Render Driver \(0x[0-9A-Fa-f]{8}\) Direct3D11 vs_5_0 ps_5_0, D3D11-[0-9.]+\)$'
+        $expectedAdapterSuffix = " - Compatibility - Using Device: Google Inc. (Microsoft) - $($report.renderer)"
+        $basicAdapterLines = @($lines | Where-Object {
+            $adapterLine = [string]$_
+            $adapterLine.StartsWith('OpenGL API ', [StringComparison]::Ordinal) -and $adapterLine.EndsWith($expectedAdapterSuffix, [StringComparison]::Ordinal)
+        })
         $isGitHubHostedWindows = $env:GITHUB_ACTIONS -ceq 'true' -and $env:RUNNER_ENVIRONMENT -ceq 'github-hosted' -and $env:RUNNER_OS -ceq 'Windows'
-        $reportNamesMicrosoftSoftware = $report.renderer -ceq 'Microsoft Basic Render Driver'
+        $reportNamesMicrosoftSoftware = $report.renderer -cmatch $microsoftSoftwarePattern
         $isMicrosoftSoftwareRenderer = $isGitHubHostedWindows -and $reportNamesMicrosoftSoftware -and $basicAdapterLines.Count -eq 1
         if (($reportNamesMicrosoftSoftware -or $basicAdapterLines.Count -gt 0) -and -not $isMicrosoftSoftwareRenderer) {
             throw 'Microsoft Basic Render Driver 證據不完整或不在 GitHub hosted Windows runner。'
