@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param([string]$ArchivePath = '')
+param(
+    [string]$ArchivePath = '',
+    [switch]$UseDummyAudio
+)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -51,7 +54,7 @@ $buildExeHash = (Get-FileHash -LiteralPath (Join-Path $projectRoot 'build\Mistfa
 $archivePckHash = (Get-FileHash -LiteralPath (Join-Path $packageRoot 'Mistfall-Bell-Seasons.pck') -Algorithm SHA256).Hash
 $buildPckHash = (Get-FileHash -LiteralPath (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.pck') -Algorithm SHA256).Hash
 if ($archiveExeHash -ne $buildExeHash -or $archivePckHash -ne $buildPckHash) { throw 'ZIP 內 EXE／PCK 與已驗證 build 不一致。' }
-& (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1') -BuildDirectory $packageRoot
+& (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1') -BuildDirectory $packageRoot -UseDummyAudio:$UseDummyAudio
 if ($LASTEXITCODE -ne 0) { throw '解壓後遊戲啟動驗證失敗。' }
 $reportRoot = Join-Path $projectRoot 'reports\release_archive'
 New-Item -ItemType Directory -Path $reportRoot -Force | Out-Null
@@ -64,6 +67,7 @@ $report = [ordered]@{
     exe_sha256 = $archiveExeHash.ToLowerInvariant()
     pck_sha256 = $archivePckHash.ToLowerInvariant()
     extracted_launch = $true
+    audio_driver = if ($UseDummyAudio) { 'Dummy' } else { 'default' }
 }
 $report | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $reportRoot 'report.json') -Encoding utf8NoBOM
 Write-Host "正式 ZIP 完整性與解壓啟動驗證通過：$archive"

@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$GodotPath = '',
-    [switch]$SkipResolution
+    [switch]$SkipResolution,
+    [switch]$UseDummyAudio
 )
 
 $ErrorActionPreference = 'Stop'
@@ -53,7 +54,9 @@ $env:LOCALAPPDATA = $isolatedRoot
 $env:SteamTenfoot = '1'
 Push-Location $projectRoot
 try {
-    Invoke-GodotGate -GodotPath $godot -Label 'Steam Big Picture／輸入／商店設定閘門' -Arguments @('--path', '.', '--rendering-method', 'gl_compatibility', '--script', 'res://tests/godot/steam_candidate_test.gd')
+    $arguments = @('--path', '.', '--rendering-method', 'gl_compatibility', '--script', 'res://tests/godot/steam_candidate_test.gd')
+    if ($UseDummyAudio) { $arguments = @('--audio-driver', 'Dummy') + $arguments }
+    Invoke-GodotGate -GodotPath $godot -Label 'Steam Big Picture／輸入／商店設定閘門' -Arguments $arguments
 } finally {
     Pop-Location
     $env:APPDATA = $previousAppData
@@ -61,7 +64,7 @@ try {
     $env:SteamTenfoot = $previousTenfoot
 }
 if (-not $SkipResolution) {
-    & (Join-Path $PSScriptRoot 'Test-ResolutionLayout.ps1') -GodotPath $godot
+    & (Join-Path $PSScriptRoot 'Test-ResolutionLayout.ps1') -GodotPath $godot -UseDummyAudio:$UseDummyAudio
     if ($LASTEXITCODE -ne 0) { throw 'Steam 候選版 1280×800 畫面測試失敗。' }
 }
 
@@ -73,6 +76,7 @@ $report = [ordered]@{
     steam_client_installed = [bool]$steamInstall
     steam_install_path = [string]$steamInstall
     steam_client_running = $steamRunning
+    audio_driver = if ($UseDummyAudio) { 'Dummy' } else { 'default' }
     controller_test_level = 'mapping_only_no_physical_device'
     store_controller_claim = 'partial'
     steam_deck_claim = 'not_claimed'

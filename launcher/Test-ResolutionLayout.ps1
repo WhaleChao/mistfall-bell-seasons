@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param([string]$GodotPath = '')
+param(
+    [string]$GodotPath = '',
+    [switch]$UseDummyAudio
+)
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -13,7 +16,9 @@ if ($GodotPath) {
 }
 Push-Location $projectRoot
 try {
-    Invoke-GodotGate -GodotPath $godot -Label '多解析度畫面閘門' -Arguments @('--path', '.', '--rendering-method', 'gl_compatibility', '--position', '4000,4000', '--script', 'res://tests/godot/resolution_layout_test.gd')
+    $arguments = @('--path', '.', '--rendering-method', 'gl_compatibility', '--position', '4000,4000', '--script', 'res://tests/godot/resolution_layout_test.gd')
+    if ($UseDummyAudio) { $arguments = @('--audio-driver', 'Dummy') + $arguments }
+    Invoke-GodotGate -GodotPath $godot -Label '多解析度畫面閘門' -Arguments $arguments
 } finally {
     Pop-Location
 }

@@ -1,6 +1,8 @@
 extends SceneTree
 
-const REPORT_PATH := "res://reports/render_performance.json"
+const DEFAULT_REPORT_PATH := "res://reports/render_performance.json"
+const MINIMUM_AVERAGE_FPS := 58.0
+const MINIMUM_BASELINE_RATIO := 0.95
 
 
 func _initialize() -> void:
@@ -53,25 +55,61 @@ func _run() -> void:
 		await process_frame
 	var elapsed_seconds := float(Time.get_ticks_usec() - started_usec) / 1_000_000.0
 	var measured_fps := 300.0 / maxf(elapsed_seconds, 0.001)
+	var reported_elapsed := snappedf(elapsed_seconds, 0.001)
+	var reported_fps := snappedf(measured_fps, 0.1)
+	var reported_empty_fps := snappedf(baseline_fps, 0.1)
+	var reported_scene_fps := snappedf(scene_fps, 0.1)
+	var reported_capacity := snappedf(reported_fps / maxf(reported_empty_fps, 0.001), 0.001)
+	var passed_by := "none"
+	if reported_fps >= MINIMUM_AVERAGE_FPS:
+		passed_by = "average_fps"
+	elif reported_empty_fps < MINIMUM_AVERAGE_FPS and reported_capacity >= MINIMUM_BASELINE_RATIO:
+		passed_by = "baseline_ratio"
+	var passed := passed_by != "none"
+	var expected_exit_code := 0 if passed else 1
+	var completion_token := OS.get_environment("PIXELRPG_RENDER_COMPLETION_TOKEN")
 	var report := {
+		"schema_version": 2,
 		"viewport": [1920, 1080],
 		"frames": 300,
 		"enemies": get_nodes_in_group("enemies").size(),
-		"elapsed_seconds": snappedf(elapsed_seconds, 0.001),
-		"average_fps": snappedf(measured_fps, 0.1),
-		"empty_window_fps": snappedf(baseline_fps, 0.1),
-		"base_scene_fps": snappedf(scene_fps, 0.1),
-		"capacity_ratio": snappedf(measured_fps / maxf(baseline_fps, 0.001), 0.001),
+		"elapsed_seconds": reported_elapsed,
+		"average_fps": reported_fps,
+		"empty_window_fps": reported_empty_fps,
+		"base_scene_fps": reported_scene_fps,
+		"capacity_ratio": reported_capacity,
+		"minimum_average_fps": MINIMUM_AVERAGE_FPS,
+		"minimum_baseline_ratio": MINIMUM_BASELINE_RATIO,
 		"renderer": RenderingServer.get_video_adapter_name(),
-		"passed": measured_fps >= 58.0 or (baseline_fps < 58.0 and measured_fps / baseline_fps >= 0.95),
+		"passed": passed,
+		"passed_by": passed_by,
+		"failure_reason": "" if passed else "performance_threshold",
+		"expected_exit_code": expected_exit_code,
+		"completion_token": completion_token,
+		"completed": false,
 	}
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://reports"))
-	var file := FileAccess.open(REPORT_PATH, FileAccess.WRITE)
-	file.store_string(JSON.stringify(report, "  ") + "\n")
-	print("PixelRPG 1080p render gate: %s (empty %.1f FPS, base %.1f FPS, 20 enemies %.1f FPS)" % ["PASS" if report.passed else "FAIL", baseline_fps, scene_fps, measured_fps])
 	scene.queue_free()
 	await process_frame
 	var audio_director: Node = root.get_node("AudioDirector")
 	audio_director.call("shutdown_audio")
 	await process_frame
-	quit(0 if report.passed else 1)
+	report["completed"] = true
+	var report_path := OS.get_environment("PIXELRPG_RENDER_PERFORMANCE_REPORT")
+	if report_path.is_empty():
+		report_path = DEFAULT_REPORT_PATH
+	var absolute_report_path := ProjectSettings.globalize_path(report_path)
+	var directory_error := DirAccess.make_dir_recursive_absolute(absolute_report_path.get_base_dir())
+	if directory_error != OK:
+		push_error("Cannot create render performance report directory: %s" % error_string(directory_error))
+		quit(2)
+		return
+	var file := FileAccess.open(report_path, FileAccess.WRITE)
+	if file == null:
+		push_error("Cannot write render performance report: %s" % FileAccess.get_open_error())
+		quit(2)
+		return
+	file.store_string(JSON.stringify(report, "  ") + "\n")
+	file.close()
+	print("PixelRPG 1080p render gate: %s (empty %.1f FPS, base %.1f FPS, 20 enemies %.1f FPS)" % ["PASS" if passed else "FAIL", reported_empty_fps, reported_scene_fps, reported_fps])
+	print("PIXELRPG_RENDER_COMPLETED token=%s result=%s exit=%d" % [completion_token, "PASS" if passed else "FAIL", expected_exit_code])
+	quit(expected_exit_code)

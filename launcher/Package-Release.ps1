@@ -1,21 +1,30 @@
 [CmdletBinding()]
 param(
     [string]$GodotPath = '',
-    [string]$MacOSArchivePath = ''
+    [string]$MacOSArchivePath = '',
+    [switch]$AllowSoftwareRenderer,
+    [switch]$UseDummyAudio
 )
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $version = (Get-Content -LiteralPath (Join-Path $projectRoot 'VERSION') -Raw).Trim()
 if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "VERSION 格式錯誤：$version" }
+$isGitHubHostedWindows = $env:GITHUB_ACTIONS -ceq 'true' -and $env:RUNNER_ENVIRONMENT -ceq 'github-hosted' -and $env:RUNNER_OS -ceq 'Windows'
+if (($AllowSoftwareRenderer -or $UseDummyAudio) -and -not $isGitHubHostedWindows) {
+    throw '軟體渲染／Dummy audio 發行模式只允許 GitHub hosted Windows runner。'
+}
+if ($AllowSoftwareRenderer -and -not $UseDummyAudio) {
+    throw '軟體渲染發行模式必須同時啟用 Dummy audio，避免把 runner 缺少音效裝置誤判成遊戲錯誤。'
+}
 
 & (Join-Path $PSScriptRoot 'Test-PixelRPG.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw '自動測試未通過。' }
 & (Join-Path $PSScriptRoot 'Test-Multiplayer.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw '多人連線全情境測試未通過。' }
-& (Join-Path $PSScriptRoot 'Test-RenderPerformance.ps1') -GodotPath $GodotPath
+& (Join-Path $PSScriptRoot 'Test-RenderPerformance.ps1') -GodotPath $GodotPath -AllowSoftwareRenderer:$AllowSoftwareRenderer
 if ($LASTEXITCODE -ne 0) { throw '1080p 效能測試未通過。' }
-& (Join-Path $PSScriptRoot 'Test-SteamCandidate.ps1') -GodotPath $GodotPath
+& (Join-Path $PSScriptRoot 'Test-SteamCandidate.ps1') -GodotPath $GodotPath -UseDummyAudio:$UseDummyAudio
 if ($LASTEXITCODE -ne 0) { throw 'Steam Windows 候選版測試未通過。' }
 & (Join-Path $PSScriptRoot 'Export-Sample.ps1') -GodotPath $GodotPath
 if ($LASTEXITCODE -ne 0) { throw 'Windows 匯出失敗。' }
@@ -28,9 +37,9 @@ if ($signingPfx) {
 } elseif ($requireSigning) {
     throw '此發行要求 Authenticode 簽章，但未設定 PIXELRPG_SIGNING_PFX。'
 }
-& (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1')
+& (Join-Path $PSScriptRoot 'Test-ExportedBuild.ps1') -UseDummyAudio:$UseDummyAudio
 if ($LASTEXITCODE -ne 0) { throw '匯出遊戲 smoke test 失敗。' }
-& (Join-Path $PSScriptRoot 'Test-ExportedSteamLaunch.ps1')
+& (Join-Path $PSScriptRoot 'Test-ExportedSteamLaunch.ps1') -UseDummyAudio:$UseDummyAudio
 if ($LASTEXITCODE -ne 0) { throw 'Steam Big Picture 正式 EXE 啟動測試失敗。' }
 
 $distRoot = Join-Path $projectRoot 'dist'
@@ -87,6 +96,6 @@ if ($MacOSArchivePath) {
     throw '此發行要求 macOS Universal ZIP，但未提供 -MacOSArchivePath。'
 }
 [IO.File]::WriteAllLines((Join-Path $distRoot 'SHA256SUMS.txt'), $hashLines, [Text.UTF8Encoding]::new($false))
-& (Join-Path $PSScriptRoot 'Test-ReleaseArchive.ps1') -ArchivePath $archive
+& (Join-Path $PSScriptRoot 'Test-ReleaseArchive.ps1') -ArchivePath $archive -UseDummyAudio:$UseDummyAudio
 if ($LASTEXITCODE -ne 0) { throw '正式 ZIP 完整性驗證失敗。' }
 Write-Host "發行包完成：$archive"

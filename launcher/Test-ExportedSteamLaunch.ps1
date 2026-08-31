@@ -2,7 +2,8 @@
 param(
     [string]$BuildDirectory = '',
     [ValidateRange(120, 1800)][int]$QuitAfterFrames = 360,
-    [string]$ReportPath = ''
+    [string]$ReportPath = '',
+    [switch]$UseDummyAudio
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,8 +33,10 @@ $isolatedRoot = Join-Path $runRoot "appdata-$runId"
 New-Item -ItemType Directory -Path $isolatedRoot | Out-Null
 $stdoutPath = Join-Path $runRoot "$runId.stdout.txt"
 $stderrPath = Join-Path $runRoot "$runId.stderr.txt"
+$arguments = @('--quit-after', "$QuitAfterFrames")
+if ($UseDummyAudio) { $arguments = @('--audio-driver', 'Dummy') + $arguments }
 $process = Start-Process -FilePath $game `
-    -ArgumentList @('--quit-after', "$QuitAfterFrames") `
+    -ArgumentList $arguments `
     -PassThru `
     -Environment @{
         APPDATA = $isolatedRoot
@@ -93,6 +96,7 @@ $report = [ordered]@{
     executable = $game
     exe_sha256 = (Get-FileHash -LiteralPath $game -Algorithm SHA256).Hash.ToLowerInvariant()
     steam_tenfoot = '1'
+    audio_driver = if ($UseDummyAudio) { 'Dummy' } else { 'default' }
     exit_code = $process.ExitCode
     window = [ordered]@{ left = $windowRect.Left; top = $windowRect.Top; width = $windowWidth; height = $windowHeight }
     monitor = [ordered]@{ left = $screenBounds.Left; top = $screenBounds.Top; width = $screenBounds.Width; height = $screenBounds.Height }

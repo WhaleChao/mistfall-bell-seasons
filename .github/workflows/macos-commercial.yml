@@ -113,7 +113,9 @@ jobs:
           $env:PIXELRPG_REQUIRE_SIGNING = '0'
           ./launcher/Package-Release.ps1 `
             -GodotPath '.\tools\Godot_v4.7.2-stable_win64_console.exe' `
-            -MacOSArchivePath $macCandidates[0].FullName
+            -MacOSArchivePath $macCandidates[0].FullName `
+            -AllowSoftwareRenderer `
+            -UseDummyAudio
       - name: Upload the complete release candidate
         uses: actions/upload-artifact@v6
         with:
@@ -136,8 +138,10 @@ jobs:
             reports/multiplayer_acceptance.json
             reports/release_archive/
             reports/render_performance.json
+            reports/render_performance_environment.json
             reports/resolution_layout/
             reports/steam_candidate/
+            work/render-performance/
           if-no-files-found: warn
 
   draft-release:

@@ -2,7 +2,8 @@
 param(
     [string]$BuildDirectory = '',
     [ValidateRange(300, 3600)][int]$QuitAfterFrames = 600,
-    [string]$ReportPath = ''
+    [string]$ReportPath = '',
+    [switch]$UseDummyAudio
 )
 
 $ErrorActionPreference = 'Stop'
@@ -27,8 +28,10 @@ New-Item -ItemType Directory -Path $isolatedUserRoot -Force | Out-Null
 $env:APPDATA = $isolatedUserRoot
 $env:LOCALAPPDATA = $isolatedUserRoot
 try {
+    $arguments = @('--headless', '--quit-after', "$QuitAfterFrames")
+    if ($UseDummyAudio) { $arguments = @('--audio-driver', 'Dummy') + $arguments }
     $process = Start-Process -FilePath $game `
-        -ArgumentList @('--headless', '--quit-after', "$QuitAfterFrames") `
+        -ArgumentList $arguments `
         -PassThru `
         -WindowStyle Hidden `
         -RedirectStandardOutput $stdoutPath `
@@ -78,6 +81,7 @@ $report = [ordered]@{
     os = [Environment]::OSVersion.VersionString
     build_directory = $buildRoot
     quit_after_frames = $QuitAfterFrames
+    audio_driver = if ($UseDummyAudio) { 'Dummy' } else { 'default' }
     exit_code = $process.ExitCode
     network_samples = $networkSamples
     network_endpoints = @($uniqueConnections)
