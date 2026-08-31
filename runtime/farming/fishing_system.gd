@@ -10,9 +10,15 @@ func available_fish(season_id: StringName, minute_of_day: int, weather: String, 
 		var requires_tide := bool(fish.get("tide_required", false))
 		if requires_tide != eldritch_tide or rod_level < int(fish.get("min_rod_level", 1)):
 			continue
-		if String(season_id) in fish.get("seasons", []) and location in fish.get("locations", []) and weather in fish.get("weather", []) and hours.size() == 2 and hour >= int(hours[0]) and hour < int(hours[1]):
+		if String(season_id) in fish.get("seasons", []) and _location_matches(location, fish.get("locations", [])) and weather in fish.get("weather", []) and hours.size() == 2 and hour >= int(hours[0]) and hour < int(hours[1]):
 			available.append(fish)
 	return available
+
+
+func _location_matches(location: String, fish_locations: Array) -> bool:
+	return location in fish_locations \
+		or (location == "pond" and "lake" in fish_locations) \
+		or (location == "river" and "coast" in fish_locations)
 
 
 func catch_fish(season_id: StringName, minute_of_day: int, weather: String, location: String, absolute_day: int, eldritch_tide: bool = false, rod_level: int = 1) -> Dictionary:

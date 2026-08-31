@@ -54,7 +54,9 @@ $expectedFiles = @(
     'SERVER_GUIDE.md',
     'Start Dedicated Server.cmd',
     'SUPPORT.md',
-    'THIRD_PARTY_NOTICES.md'
+    'THIRD_PARTY_NOTICES.md',
+    'docs/BEGINNER_GUIDE.md',
+    'docs/GAMEPLAY_GUIDE.md'
 )
 $actualFiles = @(Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object { [IO.Path]::GetRelativePath($packageRoot, $_.FullName).Replace('\', '/') } | Sort-Object)
 $missing = @($expectedFiles | Where-Object { $_ -notin $actualFiles })

@@ -1,5 +1,7 @@
 extends Node
 
+signal quick_load_completed
+
 const QUICK_SAVE_PATH := "user://pixelrpg_quick_save.json"
 const QUICK_SAVE_TEMP_PATH := QUICK_SAVE_PATH + ".tmp"
 const QUICK_SAVE_BACKUP_PATH := QUICK_SAVE_PATH + ".bak"
@@ -7,6 +9,9 @@ const QUICK_SAVE_OLD_BACKUP_PATH := QUICK_SAVE_PATH + ".bak.old"
 
 
 func save_quick() -> bool:
+	if NetworkManager.is_online():
+		EventBus.toast("連線世界不可快速存檔；世界進度由伺服器保存")
+		return false
 	var player := get_tree().get_first_node_in_group("player")
 	if player != null:
 		GameState.player_position = player.global_position
@@ -56,6 +61,9 @@ func save_quick() -> bool:
 
 
 func load_quick() -> bool:
+	if NetworkManager.is_online():
+		EventBus.toast("連線世界不可快速讀檔；請先離開伺服器")
+		return false
 	var candidates := [QUICK_SAVE_PATH, QUICK_SAVE_BACKUP_PATH, QUICK_SAVE_OLD_BACKUP_PATH, QUICK_SAVE_TEMP_PATH]
 	var any_file := false
 	for candidate: String in candidates:
@@ -70,6 +78,7 @@ func load_quick() -> bool:
 			player.global_position = GameState.player_position
 			if player.has_method("restore_from_game_state"):
 				player.restore_from_game_state()
+		quick_load_completed.emit()
 		EventBus.toast("快速讀檔完成" if candidate == QUICK_SAVE_PATH else "主存檔損壞，已從安全備份復原")
 		return true
 	if not any_file:

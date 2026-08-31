@@ -11,6 +11,6 @@
   {"id":"newlywed","display_name":"鐘聲誓約","description":"與心儀對象結婚。","condition":{"metric":"marriages","threshold":1},"reward_coins":3000},
   {"id":"seasoned_farmer","display_name":"完整的一年","description":"在霧落村生活 120 日。","condition":{"metric":"days_played","threshold":120},"reward_coins":2000},
   {"id":"merchant","display_name":"金色出貨單","description":"累計賺取 100000G。","condition":{"metric":"coins_earned","threshold":100000},"reward_coins":5000},
-  {"id":"abyssal_angler","display_name":"無星釣客","description":"從異潮記錄四種不同的異魚。","condition":{"metric":"eldritch_fish_caught","threshold":4},"reward_coins":1800},
+  {"id":"abyssal_angler","display_name":"無星釣客","description":"從異潮記錄四種不同的異魚。","condition":{"metric":"eldritch_unique_catches","threshold":4},"reward_coins":1800},
   {"id":"dreamer_silenced","display_name":"仍記得自己的名字","description":"擊退克蘇魯之影・溺夢古神。","condition":{"metric":"eldritch_bosses_defeated","threshold":1},"reward_coins":4200}
 ]}

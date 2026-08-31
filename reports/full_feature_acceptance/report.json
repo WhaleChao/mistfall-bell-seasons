@@ -25,6 +25,30 @@
       "passed": true
     },
     {
+      "category": "輸入焦點",
+      "detail": "",
+      "name": "首啟自動聚焦玩家名稱欄位",
+      "passed": true
+    },
+    {
+      "category": "輸入焦點",
+      "detail": "",
+      "name": "名稱輸入 E 不會誤觸互動或開始遊戲",
+      "passed": true
+    },
+    {
+      "category": "輸入焦點",
+      "detail": "",
+      "name": "名稱輸入 M 不會誤開連線介面",
+      "passed": true
+    },
+    {
+      "category": "標題輸入",
+      "detail": "",
+      "name": "標題只接受 ui_accept 開始",
+      "passed": true
+    },
+    {
       "category": "角色建立",
       "detail": "",
       "name": "套用名稱與外觀",
@@ -34,6 +58,12 @@
       "category": "啟動",
       "detail": "",
       "name": "離開標題後恢復遊戲",
+      "passed": true
+    },
+    {
+      "category": "輸入焦點",
+      "detail": "",
+      "name": "任意 LineEdit 編輯時忽略遊戲全域快捷鍵",
       "passed": true
     },
     {
@@ -50,7 +80,7 @@
     },
     {
       "category": "移動動畫",
-      "detail": "觀察到 4/4 幀",
+      "detail": "觀察到 3/4 幀",
       "name": "ui_right 播放多幀循環",
       "passed": true
     },
@@ -427,6 +457,12 @@
       "passed": true
     },
     {
+      "category": "洞窟",
+      "detail": "",
+      "name": "離洞後從檢查點恢復最終挑戰",
+      "passed": true
+    },
+    {
       "category": "最終戰",
       "detail": "",
       "name": "霧鐘核心生成",
@@ -436,6 +472,12 @@
       "category": "最終戰",
       "detail": "",
       "name": "通關與無限模式",
+      "passed": true
+    },
+    {
+      "category": "洞窟",
+      "detail": "",
+      "name": "通關後從 41F 開始無限挑戰",
       "passed": true
     },
     {
@@ -507,7 +549,7 @@
     {
       "category": "動物",
       "detail": "",
-      "name": "照料、心情與繁殖",
+      "name": "玩家互動可照料、繁殖與迎接幼崽",
       "passed": true
     },
     {
@@ -661,6 +703,30 @@
       "passed": true
     },
     {
+      "category": "主線互動",
+      "detail": "",
+      "name": "inactive 與已看過章節可重談",
+      "passed": true
+    },
+    {
+      "category": "主線互動",
+      "detail": "",
+      "name": "active 未達標不重播章節或發獎",
+      "passed": true
+    },
+    {
+      "category": "主線互動",
+      "detail": "",
+      "name": "既有 seen＋active 存檔以真 E 結算",
+      "passed": true
+    },
+    {
+      "category": "主線互動",
+      "detail": "",
+      "name": "成功只發獎一次並開放下一章",
+      "passed": true
+    },
+    {
       "category": "選單",
       "detail": "",
       "name": "旅人手冊暫停遊戲",
@@ -747,7 +813,7 @@
     {
       "category": "存檔",
       "detail": "",
-      "name": "SaveGame v5 快速存讀",
+      "name": "SaveGame v5 跨地圖快速存讀",
       "passed": true
     },
     {
@@ -824,7 +890,7 @@
     },
     {
       "category": "主線",
-      "detail": "",
+      "detail": "12/12",
       "name": "三年主線可連續完成",
       "passed": true
     },
@@ -877,8 +943,8 @@
       "passed": true
     }
   ],
-  "checks": 146,
-  "elapsed_seconds": 26.0,
+  "checks": 157,
+  "elapsed_seconds": 23.24,
   "engine": {
     "build": "official",
     "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
@@ -891,9 +957,9 @@
     "timestamp": 0
   },
   "failed": 0,
-  "generated_at": "2026-08-30T13:16:36",
-  "passed": 146,
-  "renderer": "NVIDIA GeForce RTX 3060",
+  "generated_at": "2026-08-31T03:35:32",
+  "passed": 157,
+  "renderer": "Apple M4",
   "schema_version": 1,
   "screenshots": [
     "res://reports/full_feature_acceptance/01_title_and_profile.png",
@@ -918,7 +984,7 @@
     "res://reports/full_feature_acceptance/12_acceptance_complete.png"
   ],
   "viewport": [
-    1280,
-    720
+    1920,
+    1080
   ]
 }

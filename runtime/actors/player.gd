@@ -244,6 +244,11 @@ func restore_from_game_state() -> void:
 	health = clampi(int(GameState.player_stats.get("health", max_health)), 1, max_health)
 	attack_power = int(GameState.player_stats.get("attack", 16))
 	state = State.MOVE
+	state_timer = 0.0
+	combo_stage = 0
+	combo_queued = false
+	attack_has_landed = false
+	velocity = Vector2.ZERO
 	invulnerable = false
 	queue_redraw()
 

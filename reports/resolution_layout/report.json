@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T14:17:20",
+	"generated_at": "2026-08-31T03:35:08",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -11,7 +11,7 @@
 		"timestamp": 0,
 		"string": "4.7.2-stable (official)"
 	},
-	"renderer": "NVIDIA GeForce RTX 3060",
+	"renderer": "Apple M4",
 	"checks": 30,
 	"passed": 30,
 	"failed": 0,
@@ -20,61 +20,76 @@
 			"file": "640x360.png",
 			"window_width": 640,
 			"window_height": 360,
+			"screen_usable_width": 1920,
+			"screen_usable_height": 963,
+			"window_clamped": false,
 			"content_width": 640,
 			"content_height": 360,
 			"width": 640,
 			"height": 360,
 			"integer_scale": 1,
-			"variance": 0.0210075368710444,
+			"variance": 0.0200791278255362,
 			"black_ratio": 0.00138888888888889
 		},
 		{
 			"file": "1280x720.png",
 			"window_width": 1280,
 			"window_height": 720,
+			"screen_usable_width": 1920,
+			"screen_usable_height": 963,
+			"window_clamped": false,
 			"content_width": 1280,
 			"content_height": 720,
 			"width": 1280,
 			"height": 720,
 			"integer_scale": 2,
-			"variance": 0.0215847605887238,
+			"variance": 0.0209304338659239,
 			"black_ratio": 0.00149305555555556
 		},
 		{
 			"file": "1280x800.png",
 			"window_width": 1280,
 			"window_height": 800,
+			"screen_usable_width": 1920,
+			"screen_usable_height": 963,
+			"window_clamped": false,
 			"content_width": 1280,
 			"content_height": 720,
 			"width": 1280,
 			"height": 800,
 			"integer_scale": 2,
-			"variance": 0.0244940992913685,
-			"black_ratio": 0.10134375
+			"variance": 0.0239117048875586,
+			"black_ratio": 0.101328125
 		},
 		{
 			"file": "1920x1080.png",
 			"window_width": 1920,
-			"window_height": 1080,
+			"window_height": 931,
+			"screen_usable_width": 1920,
+			"screen_usable_height": 963,
+			"window_clamped": true,
 			"content_width": 1920,
 			"content_height": 1080,
 			"width": 1920,
 			"height": 1080,
 			"integer_scale": 3,
-			"variance": 0.0220462974759701,
+			"variance": 0.0214750632050255,
 			"black_ratio": 0.00154513888888889
 		},
 		{
 			"file": "2560x1440.png",
 			"window_width": 2560,
-			"window_height": 1440,
+			"window_height": 931,
+			"screen_usable_width": 1920,
+			"screen_usable_height": 963,
+			"window_clamped": true,
 			"content_width": 2560,
 			"content_height": 1440,
 			"width": 2560,
 			"height": 1440,
 			"integer_scale": 4,
-			"variance": 0.0224060181148465,
-			"black_ratio": 0.00161458333333333
+			"variance": 0.0217475214173516,
+			"black_ratio": 0.00164930555555556
 		}
 	],
 	"cases": [
@@ -86,9 +101,9 @@
 		},
 		{
 			"category": "解析度",
-			"name": "640x360.png 實際視窗尺寸正確",
+			"name": "640x360.png 視窗尺寸符合要求或平台工作區夾限",
 			"passed": true,
-			"detail": "640x360"
+			"detail": "requested=640x360 actual=640x360 usable=1920x963"
 		},
 		{
 			"category": "解析度",
@@ -100,7 +115,7 @@
 			"category": "畫面",
 			"name": "640x360.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02101"
+			"detail": "variance=0.02008"
 		},
 		{
 			"category": "畫面",
@@ -122,9 +137,9 @@
 		},
 		{
 			"category": "解析度",
-			"name": "1280x720.png 實際視窗尺寸正確",
+			"name": "1280x720.png 視窗尺寸符合要求或平台工作區夾限",
 			"passed": true,
-			"detail": "1280x720"
+			"detail": "requested=1280x720 actual=1280x720 usable=1920x963"
 		},
 		{
 			"category": "解析度",
@@ -136,7 +151,7 @@
 			"category": "畫面",
 			"name": "1280x720.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02158"
+			"detail": "variance=0.02093"
 		},
 		{
 			"category": "畫面",
@@ -158,9 +173,9 @@
 		},
 		{
 			"category": "解析度",
-			"name": "1280x800.png 實際視窗尺寸正確",
+			"name": "1280x800.png 視窗尺寸符合要求或平台工作區夾限",
 			"passed": true,
-			"detail": "1280x800"
+			"detail": "requested=1280x800 actual=1280x800 usable=1920x963"
 		},
 		{
 			"category": "解析度",
@@ -172,7 +187,7 @@
 			"category": "畫面",
 			"name": "1280x800.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02449"
+			"detail": "variance=0.02391"
 		},
 		{
 			"category": "畫面",
@@ -194,9 +209,9 @@
 		},
 		{
 			"category": "解析度",
-			"name": "1920x1080.png 實際視窗尺寸正確",
+			"name": "1920x1080.png 視窗尺寸符合要求或平台工作區夾限",
 			"passed": true,
-			"detail": "1920x1080"
+			"detail": "requested=1920x1080 actual=1920x931 usable=1920x963 clamped"
 		},
 		{
 			"category": "解析度",
@@ -208,7 +223,7 @@
 			"category": "畫面",
 			"name": "1920x1080.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02205"
+			"detail": "variance=0.02148"
 		},
 		{
 			"category": "畫面",
@@ -230,9 +245,9 @@
 		},
 		{
 			"category": "解析度",
-			"name": "2560x1440.png 實際視窗尺寸正確",
+			"name": "2560x1440.png 視窗尺寸符合要求或平台工作區夾限",
 			"passed": true,
-			"detail": "2560x1440"
+			"detail": "requested=2560x1440 actual=2560x931 usable=1920x963 clamped"
 		},
 		{
 			"category": "解析度",
@@ -244,7 +259,7 @@
 			"category": "畫面",
 			"name": "2560x1440.png 不是空白或純色畫面",
 			"passed": true,
-			"detail": "variance=0.02241"
+			"detail": "variance=0.02175"
 		},
 		{
 			"category": "畫面",

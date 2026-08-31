@@ -615,9 +615,32 @@ func _connect_events() -> void:
 	EventBus.festival_available.connect(_on_festival_available)
 	EventBus.farm_changed.connect(_on_farm_changed)
 	EventBus.map_change_requested.connect(_on_map_change_requested)
+	SaveManager.quick_load_completed.connect(_on_quick_load_completed)
 	NetworkManager.snapshot_received.connect(_on_network_snapshot)
 	NetworkManager.action_result_received.connect(_on_network_action_result)
 	NetworkManager.status_changed.connect(_on_network_status_changed)
+
+
+func _on_quick_load_completed() -> void:
+	var restored_mode := _mode_for_map(GameState.current_map_id)
+	if restored_mode == "dungeon":
+		_enter_dungeon(false)
+		return
+	if restored_mode == "abyss":
+		_begin_eldritch_challenge(false)
+		return
+	_clear_enemies()
+	mode = restored_mode
+	final_challenge_active = false
+	eldritch_challenge_active = false
+	floor_cleared = false
+	if is_instance_valid(title_label):
+		title_label.position = Vector2(135, 125)
+		title_label.size = Vector2(370, 85)
+		title_label.text = ""
+	_set_background_for_mode()
+	_refresh_seasonal_seeds()
+	queue_redraw()
 
 
 func _update_hud() -> void:
@@ -789,11 +812,19 @@ func _talk_to_npc(npc_id: String) -> void:
 	var hearts := GameState.talk_to(StringName(npc_id))
 	if npc_id == "mira":
 		var chapter := GameState.next_story_chapter()
-		var chapter_flag := "story_dialogue_seen_%s" % chapter.get("id", "")
-		if not chapter.is_empty() and not bool(GameState.get_flag(chapter_flag, false)):
-			GameState.set_flag(chapter_flag, true)
-			DialogueAdapter.start_dialogue("%s_dialogue" % chapter.get("id", ""))
-			return
+		if not chapter.is_empty():
+			var chapter_id := String(chapter.get("id", ""))
+			var quest_id := "%s_quest" % chapter_id
+			var quest_state := String(GameState.quest_states.get(quest_id, "inactive"))
+			if quest_state == "inactive":
+				GameState.set_flag("story_dialogue_seen_%s" % chapter_id, true)
+				DialogueAdapter.start_dialogue("%s_dialogue" % chapter_id)
+				return
+			if quest_state == "active":
+				var story_result := GameState.try_complete_current_story_chapter()
+				if bool(story_result.get("ok", false)):
+					dialogue_overlay.open_line(&"mira", String(story_result.get("message", "章節完成")), "主線完成")
+					return
 	var heart_event := _next_heart_event(npc_id)
 	if not heart_event.is_empty():
 		GameState.social.mark_event_seen(npc_id, String(heart_event.get("id", "")))
@@ -1008,12 +1039,8 @@ func _enter_farm_from_village() -> void:
 
 
 func _interact_animal(animal_id: String) -> void:
-	var product: Dictionary = GameState.farm.collect_animal_product(animal_id)
-	if bool(product.get("ok", false)):
-		_show_toast(String(product.message))
-	else:
-		var tending: Dictionary = GameState.tend_animal(animal_id)
-		_show_toast(String(tending.get("message", "")))
+	var result: Dictionary = GameState.interact_animal(animal_id)
+	_show_toast(String(result.get("message", "")))
 	EventBus.farm_changed.emit(&"animal_tended", {"animal_id": animal_id})
 
 
@@ -1060,13 +1087,30 @@ func _enter_dungeon(reset_position: bool = true) -> void:
 	mode = "dungeon"
 	_set_background_for_mode()
 	GameState.current_map_id = &"mistfall_depths"
+	var resume_final_challenge: bool = GameState.dungeon.current_floor >= PixelRPGDungeonSystem.MAX_FLOOR and GameState.dungeon.can_challenge_final_boss() and not GameState.dungeon.final_boss_defeated
 	if GameState.dungeon.current_floor <= 0:
-		GameState.dungeon.enter_floor(1)
+		if GameState.dungeon.can_challenge_final_boss() and not GameState.dungeon.final_boss_defeated:
+			GameState.dungeon.enter_floor(PixelRPGDungeonSystem.MAX_FLOOR)
+			resume_final_challenge = true
+		elif GameState.dungeon.endless_unlocked:
+			GameState.dungeon.enter_floor(maxi(PixelRPGDungeonSystem.MAX_FLOOR + 1, GameState.dungeon.max_reached + 1))
+		else:
+			var elevators: Array[int] = GameState.dungeon.available_elevators()
+			var target_floor := 1 if elevators.is_empty() else mini(PixelRPGDungeonSystem.MAX_FLOOR, int(elevators.back()) + 1)
+			GameState.dungeon.enter_floor(target_floor)
 	if reset_position:
 		player.global_position = Vector2(84, 285)
 	_clear_enemies()
-	_spawn_dungeon_floor()
-	_show_toast("進入四季鐘窟 %dF" % GameState.dungeon.current_floor)
+	if resume_final_challenge:
+		_begin_final_challenge()
+	elif GameState.dungeon.current_floor in GameState.dungeon.cleared_floors:
+		floor_cleared = true
+		final_challenge_active = false
+		title_label.text = "%dF 探索完成\n按 E 前往下一層" % GameState.dungeon.current_floor
+		_show_toast("已恢復四季鐘窟 %dF 的清層進度" % GameState.dungeon.current_floor)
+	else:
+		_spawn_dungeon_floor()
+		_show_toast("進入四季鐘窟 %dF" % GameState.dungeon.current_floor)
 	queue_redraw()
 
 
@@ -1090,6 +1134,16 @@ func _begin_eldritch_challenge(reset_position: bool = true) -> void:
 	_set_background_for_mode()
 	if reset_position:
 		player.global_position = Vector2(84, 285)
+	if GameState.eldritch.boss_defeated:
+		floor_cleared = true
+		final_challenge_active = false
+		eldritch_challenge_active = false
+		title_label.position = Vector2(76, 126)
+		title_label.size = Vector2(330, 85)
+		title_label.text = "無星異潮退去\n深潮夢核回應了鐘聲"
+		_show_toast("夢岸進度已恢復；按 E 返回農場")
+		queue_redraw()
+		return
 	var definition := ContentRegistry.get_artifact("enemies", &"drowned_dreamer")
 	var enemy := EnemySceneScript.new() as PixelRPGEnemy
 	enemy.configure(definition)

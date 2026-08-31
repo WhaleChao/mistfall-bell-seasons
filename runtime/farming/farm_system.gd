@@ -363,7 +363,9 @@ func run_automation_day(season_id: StringName, inventory: Dictionary) -> Diction
 			report.active += 1
 		else:
 			report.idle += 1
-	automation_cycle_count += int(not automation_devices.is_empty())
+	var cycle_ran := int(report.active) > 0
+	report.cycle_ran = cycle_ran
+	automation_cycle_count += int(cycle_ran)
 	report.cycle = automation_cycle_count
 	report.power_remaining = 0
 	report.water_remaining = 0
@@ -443,7 +445,7 @@ func _automate_processing() -> bool:
 func _automate_feeding(inventory: Dictionary) -> int:
 	var fed := 0
 	for index in range(animals.size()):
-		if bool(animals[index].get("fed", false)) or int(inventory.get("animal_feed", 0)) <= 0:
+		if bool(animals[index].get("fed", false)) or bool(animals[index].get("grazed", false)) or int(inventory.get("animal_feed", 0)) <= 0:
 			continue
 		var animal: Dictionary = animals[index].duplicate(true)
 		animal.fed = true
@@ -480,7 +482,7 @@ func _tiles_in_range(origin: Vector2i, device_range: int) -> Array[Vector2i]:
 
 
 func _empty_automation_report() -> Dictionary:
-	return {"cycle": 0, "networks": 0, "devices": 0, "active": 0, "idle": 0, "stalled": 0, "watered": 0, "planted": 0, "harvested": 0, "fed": 0, "processed": 0, "power_remaining": 0, "water_remaining": 0, "message": "尚未建造自動化網路"}
+	return {"cycle": 0, "cycle_ran": false, "networks": 0, "devices": 0, "active": 0, "idle": 0, "stalled": 0, "watered": 0, "planted": 0, "harvested": 0, "fed": 0, "processed": 0, "power_remaining": 0, "water_remaining": 0, "message": "尚未建造自動化網路"}
 
 
 func to_data() -> Dictionary:
@@ -507,11 +509,11 @@ func _advance_animals(weather: String) -> void:
 	var newborns: Array[Dictionary] = []
 	for index in range(animals.size()):
 		var animal: Dictionary = animals[index].duplicate(true)
-		var was_fed := bool(animal.get("fed", false))
-		animal.mood = clampi(int(animal.get("mood", 50)) + (2 if was_fed else -8), 0, 100)
-		if was_fed and int(animal.mood) >= 40:
+		var was_cared_for := bool(animal.get("fed", false)) or bool(animal.get("grazed", false))
+		animal.mood = clampi(int(animal.get("mood", 50)) + (2 if was_cared_for else -8), 0, 100)
+		if was_cared_for and int(animal.mood) >= 40:
 			animal.product_ready = true
-		if was_fed and int(animal.mood) >= 75 and weather not in ["storm", "typhoon", "blizzard"]:
+		if was_cared_for and int(animal.mood) >= 75 and weather not in ["storm", "typhoon", "blizzard"]:
 			animal.hearts = mini(10, int(animal.get("hearts", 0)) + int(posmod(index + int(animal.mood), 5) == 0))
 		animal.fed = false
 		animal.grazed = false

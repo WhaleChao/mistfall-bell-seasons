@@ -21,4 +21,13 @@ creator_service/dist/
 /work/*
 !/work/.gdignore
 /reports/**/*.png.import
+/reports/macos_archive/final_archive/
+/reports/macos_archive/gui.stderr.txt
+/reports/macos_archive/gui.stdout.txt
+/reports/macos_archive/raw_export.json
+/reports/macos_archive/report.json
+/reports/macos_archive/runtime.json
+/reports/macos_archive/runtime.stderr.txt
+/reports/macos_archive/runtime.stdout.txt
+/reports/macos_archive/runtime_network.txt
 creator_service/session.json

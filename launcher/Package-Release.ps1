@@ -45,9 +45,13 @@ if (Test-Path -LiteralPath $packageRoot) {
 }
 if (Test-Path -LiteralPath $archive) { Remove-Item -LiteralPath $archive -Force }
 New-Item -ItemType Directory -Path $packageRoot | Out-Null
+$packageDocs = Join-Path $packageRoot 'docs'
+New-Item -ItemType Directory -Path $packageDocs | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.exe') -Destination $packageRoot
 Copy-Item -LiteralPath (Join-Path $projectRoot 'build\Mistfall-Bell-Seasons.pck') -Destination $packageRoot
 Copy-Item -LiteralPath (Join-Path $projectRoot 'README.md') -Destination (Join-Path $packageRoot 'README.md')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'docs\BEGINNER_GUIDE.md') -Destination (Join-Path $packageDocs 'BEGINNER_GUIDE.md')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'docs\GAMEPLAY_GUIDE.md') -Destination (Join-Path $packageDocs 'GAMEPLAY_GUIDE.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $packageRoot 'LICENSE.txt')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'GODOT_ENGINE_LICENSE.txt') -Destination $packageRoot
 Copy-Item -LiteralPath (Join-Path $projectRoot 'GODOT_ENGINE_COPYRIGHT.txt') -Destination $packageRoot

@@ -1,6 +1,7 @@
 extends SceneTree
 
 const REPORT_DIRECTORY := "res://reports/full_feature_acceptance"
+const EVIDENCE_SIZE := Vector2i(1280, 720)
 
 var cases: Array[Dictionary] = []
 var screenshots: Array[String] = []
@@ -20,7 +21,7 @@ func _initialize() -> void:
 func _run() -> void:
 	started_usec = Time.get_ticks_usec()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(REPORT_DIRECTORY))
-	root.size = Vector2i(1280, 720)
+	root.size = EVIDENCE_SIZE
 	root.content_scale_size = Vector2i(640, 360)
 	DisplayServer.window_set_title("霧落農歌：鐘塔之季｜全功能實機驗收中")
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
@@ -32,8 +33,15 @@ func _run() -> void:
 	state_store.reset()
 	game = load("res://sample/main.tscn").instantiate()
 	root.add_child(game)
-	await _frames(8)
-	player = game.player
+	if not await _wait_for_launch_ready(120):
+		_record("啟動", "正式遊戲場景完成渲染", false, "等待 120 frames 後 UI 仍未就緒")
+		_write_reports()
+		if is_instance_valid(game):
+			game.queue_free()
+		await process_frame
+		quit(1)
+		return
+	player = game.get("player")
 
 	await _test_launch_and_profile()
 	await _test_movement_and_animation()
@@ -42,6 +50,7 @@ func _run() -> void:
 	await _test_maps_and_automation()
 	await _test_eldritch_fishing_and_boss()
 	await _test_village_dialogue_and_festival()
+	await _test_story_dialogue_recovery()
 	await _test_menus_relationships_and_settings()
 	await _test_multiplayer_ui()
 	await _test_alpha_matte_contrast()
@@ -71,7 +80,7 @@ func _test_launch_and_profile() -> void:
 	_record("啟動", "標題畫面顯示", is_instance_valid(game.title_overlay), "玩家時間應暫停")
 	_record("角色建立", "玩家名稱欄位", is_instance_valid(game.name_input) and game.name_input.max_length == 12)
 	_record("角色建立", "四種外觀選項", is_instance_valid(game.appearance_input) and game.appearance_input.item_count == 4)
-	_record("輸入焦點", "首啟自動聚焦玩家名稱欄位", game.name_input.has_focus())
+	_record("輸入焦點", "首啟自動聚焦玩家名稱欄位", is_instance_valid(game.name_input) and game.name_input.has_focus())
 	await _capture("01_title_and_profile")
 	await _send_key_event(KEY_E, "e".unicode_at(0))
 	_record("輸入焦點", "名稱輸入 E 不會誤觸互動或開始遊戲", is_instance_valid(game.title_overlay) and not game.multiplayer_menu.visible)
@@ -210,16 +219,24 @@ func _test_combat_and_dungeon() -> void:
 		_record("洞窟", "%dF 生成、戰鬥與結算" % floor_number, floor_number in state_store.dungeon.cleared_floors and game.floor_cleared)
 	_record("洞窟", "四枚季節封印", state_store.dungeon.seals.size() == 4 and state_store.dungeon.can_challenge_final_boss())
 	_record("洞窟", "每五層電梯", state_store.dungeon.available_elevators().size() >= 8)
-	game._begin_final_challenge()
+	game._leave_dungeon()
+	await _frames(3)
+	game._enter_dungeon()
 	await _frames(6)
 	await _capture("05_final_boss")
 	var final_enemies := get_nodes_in_group("enemies")
+	_record("洞窟", "離洞後從檢查點恢復最終挑戰", state_store.dungeon.current_floor == 40 and final_enemies.size() == 1 and game.final_challenge_active)
 	_record("最終戰", "霧鐘核心生成", final_enemies.size() == 1 and game.final_challenge_active)
 	for enemy_node: Node in final_enemies:
 		var enemy: Node = enemy_node
 		enemy.take_damage(enemy.max_health + 1000, player)
 	await _frames(8)
 	_record("最終戰", "通關與無限模式", state_store.dungeon.final_boss_defeated and state_store.dungeon.endless_unlocked)
+	game._leave_dungeon()
+	await _frames(3)
+	game._enter_dungeon()
+	await _frames(5)
+	_record("洞窟", "通關後從 41F 開始無限挑戰", state_store.dungeon.current_floor == 41 and not game.final_challenge_active)
 	state_store.coins = 1000
 	var rescue: Dictionary = state_store.resolve_player_defeat()
 	_record("戰敗", "診所救援扣除 10%", int(rescue.coins_lost) == 100 and state_store.coins == 900)
@@ -292,12 +309,12 @@ func _test_farming_animals_and_economy() -> void:
 	player.global_position = Vector2(490, 154)
 	game._interact()
 	_record("動物", "雞蛋產物收集", int(state_store.farm.produce.get("egg", 0)) == 1)
-	state_store.tend_animal("chicken_1")
-	var breeding: Dictionary = state_store.farm.begin_breeding("chicken_1")
+	var tending: Dictionary = state_store.interact_animal("chicken_1")
+	var breeding: Dictionary = state_store.interact_animal("chicken_1")
 	for _day in range(7):
 		state_store.farm.tend_animal("chicken_1", true, false)
 		state_store.farm.advance_day(&"spring", "clear")
-	_record("動物", "照料、心情與繁殖", bool(breeding.ok) and state_store.farm.animals.size() == 3)
+	_record("動物", "玩家互動可照料、繁殖與迎接幼崽", bool(tending.ok) and bool(breeding.ok) and state_store.farm.animals.size() == 3)
 	await _capture("07_animals_and_farm")
 
 	state_store.calendar.minute_of_day = 600
@@ -506,6 +523,85 @@ func _test_village_dialogue_and_festival() -> void:
 	_record("節慶", "四季 12 場節慶資料", festival_dates.size() == 12)
 
 
+func _test_story_dialogue_recovery() -> void:
+	game.dialogue_overlay.close()
+	var preserved_state: Dictionary = state_store.to_save_data()
+	var preserved_mode := String(game.mode)
+	state_store.reset()
+	state_store.set_flag(&"title_seen", true)
+	state_store.set_flag(&"story_dialogue_seen_y1_spring_new_soil", true)
+	state_store.current_map_id = &"mistfall_village"
+	game.mode = "village"
+	game._set_background_for_mode()
+	player.restore_from_game_state()
+	player.global_position = Vector2(game.NPC_POSITIONS["mira"])
+	await _frames(3)
+
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	var inactive_reopened: bool = game.dialogue_overlay.visible and String(game.dialogue_overlay.graph.get("id", "")) == "y1_spring_new_soil_dialogue"
+	var decline_flow := await _press_dialogue_button(0)
+	decline_flow = await _press_dialogue_button(0) and decline_flow
+	decline_flow = await _press_dialogue_button(1) and decline_flow
+	decline_flow = await _press_dialogue_button(0) and decline_flow
+	var remained_inactive := String(state_store.quest_states.get("y1_spring_new_soil_quest", "inactive")) == "inactive"
+	game.dialogue_overlay.close()
+	await _frames(2)
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	var reopened_after_decline: bool = game.dialogue_overlay.visible and String(game.dialogue_overlay.graph.get("id", "")) == "y1_spring_new_soil_dialogue"
+	_record("主線互動", "inactive 與已看過章節可重談", inactive_reopened and decline_flow and remained_inactive and reopened_after_decline)
+
+	var coins_before_accept := int(state_store.coins)
+	var accept_flow := await _press_dialogue_button(0)
+	accept_flow = await _press_dialogue_button(0) and accept_flow
+	accept_flow = await _press_dialogue_button(0) and accept_flow
+	var quest_active := String(state_store.quest_states.get("y1_spring_new_soil_quest", "")) == "active"
+	var chapter_incomplete := "y1_spring_new_soil" not in Array(state_store.story_state.get("completed_chapters", []))
+	game.dialogue_overlay.close()
+	await _frames(2)
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	var active_did_not_reopen_story: bool = game.dialogue_overlay.visible and game.dialogue_overlay.graph.is_empty()
+	var unmet_unchanged := int(state_store.coins) == coins_before_accept and String(state_store.quest_states.get("y1_spring_new_soil_quest", "")) == "active" and chapter_incomplete
+	_record("主線互動", "active 未達標不重播章節或發獎", accept_flow and quest_active and active_did_not_reopen_story and unmet_unchanged)
+
+	game.dialogue_overlay.close()
+	state_store.lifetime_stats["crops_harvested"] = 1
+	state_store.social.add_affection(&"mira", 250)
+	state_store.social.add_affection(&"lian", 250)
+	state_store.player_position = Vector2(game.NPC_POSITIONS["mira"])
+	var affected_save: Dictionary = state_store.to_save_data()
+	state_store.reset()
+	var restored_affected_save := bool(state_store.load_save_data(affected_save))
+	game.mode = "village"
+	game._set_background_for_mode()
+	player.restore_from_game_state()
+	player.global_position = Vector2(game.NPC_POSITIONS["mira"])
+	await _frames(3)
+	var coins_before_completion := int(state_store.coins)
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	var completed_chapters: Array = state_store.story_state.get("completed_chapters", [])
+	var recovered_by_real_input: bool = restored_affected_save \
+		and "y1_spring_new_soil" in completed_chapters \
+		and bool(state_store.get_flag(&"chapter_y1_spring_new_soil", false)) \
+		and String(state_store.quest_states.get("y1_spring_new_soil_quest", "")) == "completed" \
+		and int(state_store.coins) == coins_before_completion + 400 \
+		and game.dialogue_overlay.visible \
+		and "章節完成" in game.dialogue_overlay.text_label.text
+	_record("主線互動", "既有 seen＋active 存檔以真 E 結算", recovered_by_real_input)
+
+	game.dialogue_overlay.close()
+	await _frames(2)
+	var coins_after_completion := int(state_store.coins)
+	await _send_key_event(KEY_E, "e".unicode_at(0))
+	var next_chapter_opened := String(game.dialogue_overlay.graph.get("id", "")) == "y1_summer_tide_echo_dialogue"
+	_record("主線互動", "成功只發獎一次並開放下一章", int(state_store.coins) == coins_after_completion and next_chapter_opened)
+	game.dialogue_overlay.close()
+	state_store.load_save_data(preserved_state)
+	game.mode = preserved_mode
+	game._set_background_for_mode()
+	player.restore_from_game_state()
+	await _frames(2)
+
+
 func _test_menus_relationships_and_settings() -> void:
 	game.game_menu.open()
 	await _frames(4)
@@ -561,8 +657,9 @@ func _test_menus_relationships_and_settings() -> void:
 	await _frames(2)
 	var fullscreen_ok := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	game.game_menu._on_fullscreen_toggled(false)
-	await _frames(2)
-	_record("設定", "視窗／全螢幕切換", fullscreen_ok and DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED)
+	DisplayServer.window_set_size(Vector2i(1280, 720))
+	await _frames(3)
+	_record("設定", "視窗／全螢幕切換", fullscreen_ok and DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED and root.size == Vector2i(1280, 720))
 	game.game_menu._begin_rebind(&"attack")
 	var key_event := InputEventKey.new()
 	key_event.pressed = true
@@ -601,10 +698,21 @@ func _test_menus_relationships_and_settings() -> void:
 	PixelRPGInputBindings.save()
 	_record("設定", "所有遊戲操作重綁可跨重啟保存", persisted and loaded_bindings and interact_restored)
 	state_store.coins = 12345
+	state_store.current_map_id = &"mistfall_river"
+	game.mode = "river"
+	game._set_background_for_mode()
+	player.global_position = Vector2(188, 214)
 	var save_ok: bool = bool(save_manager.save_quick())
 	state_store.coins = 7
+	state_store.current_map_id = &"mistfall_farm"
+	game.mode = "farm"
+	game._set_background_for_mode()
+	player.global_position = Vector2(320, 230)
+	player.velocity = Vector2(255, 0)
 	var load_ok: bool = bool(save_manager.load_quick())
-	_record("存檔", "SaveGame v5 快速存讀", save_ok and load_ok and state_store.coins == 12345)
+	await _frames(3)
+	var map_restored: bool = game.mode == "river" and state_store.current_map_id == &"mistfall_river" and player.global_position.distance_to(Vector2(188, 214)) < 1.0 and player.velocity == Vector2.ZERO
+	_record("存檔", "SaveGame v5 跨地圖快速存讀", save_ok and load_ok and state_store.coins == 12345 and map_restored)
 	game.game_menu.close()
 	await _frames(3)
 
@@ -728,6 +836,9 @@ func _test_long_term_content_and_migrations() -> void:
 	state_store.story_state = {"chapter":1, "completed_chapters":[], "season_seals":state_store.dungeon.seals.duplicate(), "final_boss_available":true, "final_boss_defeated":true}
 	state_store.lifetime_stats = {"days_played":360,"crops_harvested":1000,"fish_caught":100,"eldritch_fish_caught":8,"resources_gathered":100,"monsters_defeated":100,"bosses_defeated":4,"eldritch_bosses_defeated":1,"festivals_attended":12,"relationship_hearts":80,"marriages":1,"coins_earned":100000,"purchases":50,"automation_cycles":100,"automated_tiles_watered":500,"automated_crops_planted":200,"automated_crops_harvested":200,"automation_animals_fed":100,"automation_items_processed":50}
 	state_store.farm.rank = 10
+	state_store.farm.automation_devices.clear()
+	for device_x in range(6):
+		state_store.farm.place_automation_device(Vector2i(device_x, 0), &"bell_generator")
 	state_store.farm.automation_cycle_count = 100
 	state_store.dungeon.max_reached = 40
 	state_store.dungeon.defeated_bosses.assign([10, 20, 30, 40])
@@ -746,11 +857,14 @@ func _test_long_term_content_and_migrations() -> void:
 	for tool_id in state_store.tools.tool_levels:
 		state_store.tools.tool_levels[tool_id] = 4
 	var story_completed := 0
+	var story_failure := ""
 	for _chapter in range(12):
 		var result: Dictionary = state_store.try_complete_current_story_chapter()
 		if bool(result.get("ok", false)):
 			story_completed += 1
-	_record("主線", "三年主線可連續完成", story_completed == 12)
+		elif story_failure.is_empty():
+			story_failure = "%s｜%s" % [result.get("message", "未知錯誤"), str(result.get("missing", []))]
+	_record("主線", "三年主線可連續完成", story_completed == 12, "%d/12%s" % [story_completed, "｜%s" % story_failure if not story_failure.is_empty() else ""])
 	state_store._check_achievements()
 	_record("成就", "14 項成就可解鎖", state_store.achievements.unlocked.size() == 14, "%d/14" % state_store.achievements.unlocked.size())
 	var v5: Dictionary = state_store.to_save_data()
@@ -805,6 +919,31 @@ func _send_key_event(keycode: int, unicode_value: int = 0) -> void:
 	await process_frame
 
 
+func _press_dialogue_button(index: int) -> bool:
+	await process_frame
+	var buttons: Array[Node] = game.dialogue_overlay.choices.get_children()
+	if index < 0 or index >= buttons.size() or not (buttons[index] is Button):
+		return false
+	var button := buttons[index] as Button
+	button.pressed.emit()
+	await _frames(2)
+	return true
+
+
+func _wait_for_launch_ready(frame_limit: int) -> bool:
+	for _frame_index in range(frame_limit):
+		var ready_name_input: LineEdit = game.get("name_input") as LineEdit if is_instance_valid(game) else null
+		if is_instance_valid(game) \
+				and is_instance_valid(game.get("player")) \
+				and is_instance_valid(game.get("title_overlay")) \
+				and is_instance_valid(ready_name_input) \
+				and is_instance_valid(game.get("appearance_input")) \
+				and ready_name_input.has_focus():
+			return true
+		await process_frame
+	return false
+
+
 func _frames(count: int) -> void:
 	for _index in range(count):
 		await process_frame
@@ -819,6 +958,11 @@ func _capture(file_stem: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
+	# macOS can retain a Retina backing texture after a fullscreen round-trip even
+	# though the logical window is back at 1280x720. Normalize report artifacts so
+	# every evidence image has the documented, comparable dimensions.
+	if image.get_size() != EVIDENCE_SIZE:
+		image.resize(EVIDENCE_SIZE.x, EVIDENCE_SIZE.y, Image.INTERPOLATE_LANCZOS)
 	var relative_path := "%s/%s.png" % [REPORT_DIRECTORY, file_stem]
 	var error := image.save_png(ProjectSettings.globalize_path(relative_path))
 	if error == OK:

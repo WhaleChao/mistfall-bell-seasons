@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-30T14:16:15",
+	"generated_at": "2026-08-31T03:35:05",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -27,9 +27,9 @@
 		"automation_crops_harvested": 7594.0,
 		"automation_animals_fed": 24000.0,
 		"automation_items_processed": 15797.0,
-		"final_save_bytes": 6192,
+		"final_save_bytes": 6209,
 		"disk_save_cycles": 250,
-		"elapsed_seconds": 9.267
+		"elapsed_seconds": 2.485
 	},
 	"cases": [
 		{
@@ -126,7 +126,7 @@
 			"category": "百年模擬",
 			"name": "百年存檔維持在 1 MiB 內",
 			"passed": true,
-			"detail": "6192 bytes"
+			"detail": "6209 bytes"
 		},
 		{
 			"category": "存檔壓力",

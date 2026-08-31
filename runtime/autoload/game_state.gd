@@ -141,8 +141,9 @@ func advance_day(debug_skip: bool = false) -> Dictionary:
 	EventBus.day_ended.emit(calendar.year, calendar.season_id(), calendar.day)
 	var elapsed_weather := current_weather
 	var automation_report: Dictionary = farm.run_automation_day(calendar.season_id(), inventory)
-	if int(automation_report.get("devices", 0)) > 0:
+	if bool(automation_report.get("cycle_ran", false)):
 		lifetime_stats["automation_cycles"] = int(lifetime_stats.get("automation_cycles", 0)) + 1
+	if int(automation_report.get("devices", 0)) > 0:
 		lifetime_stats["automated_tiles_watered"] = int(lifetime_stats.get("automated_tiles_watered", 0)) + int(automation_report.get("watered", 0))
 		lifetime_stats["automated_crops_planted"] = int(lifetime_stats.get("automated_crops_planted", 0)) + int(automation_report.get("planted", 0))
 		lifetime_stats["automated_crops_harvested"] = int(lifetime_stats.get("automated_crops_harvested", 0)) + int(automation_report.get("harvested", 0))
@@ -336,6 +337,20 @@ func tend_animal(animal_id: String) -> Dictionary:
 	if use_feed and not consume_item(&"animal_feed", 1):
 		return {"ok": false, "message": "雨雪天需要動物飼料"}
 	return farm.tend_animal(animal_id, use_feed, can_graze)
+
+
+func interact_animal(animal_id: String) -> Dictionary:
+	var product: Dictionary = farm.collect_animal_product(animal_id)
+	if bool(product.get("ok", false)):
+		return product
+	for animal: Dictionary in farm.animals:
+		if String(animal.get("id", "")) != animal_id:
+			continue
+		var already_cared_for := bool(animal.get("fed", false)) or bool(animal.get("grazed", false))
+		if already_cared_for and int(animal.get("hearts", 0)) >= 5:
+			return farm.begin_breeding(animal_id)
+		return tend_animal(animal_id)
+	return {"ok": false, "message": "找不到這隻動物"}
 
 
 func next_story_chapter() -> Dictionary:
@@ -733,7 +748,9 @@ func _update_relationship_metric() -> void:
 func _check_achievements() -> void:
 	lifetime_stats["bosses_defeated"] = dungeon.defeated_bosses.size()
 	lifetime_stats["marriages"] = 0 if String(social.marriage.get("spouse_id", "")).is_empty() else 1
-	for achievement: Dictionary in achievements.evaluate(lifetime_stats):
+	var achievement_metrics := lifetime_stats.duplicate(true)
+	achievement_metrics["eldritch_unique_catches"] = eldritch.eldritch_catches.size()
+	for achievement: Dictionary in achievements.evaluate(achievement_metrics):
 		var reward := int(achievement.get("reward_coins", 0))
 		coins += reward
 		EventBus.toast("成就解鎖：%s（+%dG）" % [achievement.get("display_name", "成就"), reward])

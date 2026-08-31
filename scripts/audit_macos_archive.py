@@ -27,6 +27,8 @@ REQUIRED_LICENSES = {
     "PRIVACY.md",
     "SUPPORT.md",
     "SERVER_GUIDE.md",
+    "BEGINNER_GUIDE.md",
+    "GAMEPLAY_GUIDE.md",
 }
 FORBIDDEN_NAMES = (
     "creator_service/",

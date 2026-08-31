@@ -464,7 +464,7 @@ func _execute_game_state_action(state_store: Node, action: String, payload: Dict
 		"ship":
 			return state_store.ship_all_produce()
 		"tend_animal":
-			return state_store.tend_animal(String(payload.get("animal_id", "")))
+			return state_store.interact_animal(String(payload.get("animal_id", "")))
 		"buy_offer":
 			return state_store.buy_offer(StringName(String(payload.get("shop_id", ""))), String(payload.get("offer_id", "")))
 		"farm_upgrade":

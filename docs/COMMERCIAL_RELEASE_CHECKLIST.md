@@ -26,9 +26,9 @@ Steam 僅作輸入、Big Picture、解析度與商店宣稱的品質基準；本
 - [x] Godot EditorPlugin 通過 57/57 實機 UI 驗收與 16 張互異畫面，涵蓋 15 頁、UndoRedo、節點圖、引用、diff 與套用前驗證。
 - [x] Godot CLI 閘門除 exit code 外亦拒絕腳本解析、編譯、資源載入及一般 `ERROR` 日誌；Studio 僅隔離成功標記後三種已知 Editor 關閉診斷。
 - [x] 最終發行資料夾與 ZIP 經 Windows Defender 定義 1.457.393.0 掃描，偵測 0 項威脅。
-- [x] 公開 Release 重驗管線已由先前候選完成全新 Windows 11 VM 下載、驗證、解壓及啟動；v1.2.0 的雙平台公開資產仍依上述獨立待辦於發布後再跑一次。
+- [x] v1.2.0 公開 Release 已在全新 Windows／macOS runner 重新下載、驗證、解壓及啟動，並完成零網路端點觀測。
 - [x] PFX Authenticode 管線以公開 EXE 隔離複本完成，且正式 EXE 原雜湊不變。
-- [x] 非 headless Godot 視窗完成 146 項全功能實機驗收，並保存 20 張畫面證據。
+- [x] Apple M4／OpenGL Metal 的非 headless Godot 視窗完成 157 項全功能實機驗收，並保存 20 張畫面證據。
 
 ## 人工檢查
 

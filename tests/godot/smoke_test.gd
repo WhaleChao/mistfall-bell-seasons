@@ -294,6 +294,16 @@ func _assert_farming(failures: PackedStringArray) -> void:
 	if not bool(purchase.get("ok", false)):
 		failures.append("Rank-three farm could not purchase a chicken")
 		return
+	var grazing: Dictionary = farm.tend_animal("chicken_1", false, true)
+	farm.advance_day(&"summer", "clear")
+	var grazed_animal: Dictionary = farm.animals[0]
+	if not bool(grazing.get("ok", false)) or not bool(grazed_animal.get("product_ready", false)) or int(grazed_animal.get("mood", 0)) != 64:
+		failures.append("Clear-weather grazing did not count as daily care and produce an animal product")
+	var clear_product: Dictionary = farm.collect_animal_product("chicken_1")
+	var fog_grazing: Dictionary = farm.tend_animal("chicken_1", false, true)
+	farm.advance_day(&"summer", "fog")
+	if not bool(clear_product.get("ok", false)) or not bool(fog_grazing.get("ok", false)) or not bool(Dictionary(farm.animals[0]).get("product_ready", false)):
+		failures.append("Fog-weather grazing did not count as daily care and produce an animal product")
 	farm.animals[0]["hearts"] = 5
 	var breeding: Dictionary = farm.begin_breeding("chicken_1")
 	if not bool(breeding.get("ok", false)):
@@ -353,18 +363,27 @@ func _assert_farm_automation(registry: Node, failures: PackedStringArray) -> voi
 		failures.append("Automation did not water/harvest/feed/process deterministically")
 	if int(farm.produce.get("mist_preserves", 0)) != 1 or int(farm.produce.get("dream_tide_salt", 0)) != 1 or int(inventory.get("animal_feed", 0)) != 0:
 		failures.append("Automation outputs or consumable accounting are incorrect")
+	farm.animals[0]["fed"] = false
+	farm.animals[0]["grazed"] = true
+	inventory["animal_feed"] = 1
+	var grazed_report: Dictionary = farm.run_automation_day(&"spring", inventory)
+	if int(grazed_report.get("fed", 0)) != 0 or int(inventory.get("animal_feed", 0)) != 1:
+		failures.append("Animal feeder consumed feed for an animal already cared for by grazing")
 	var saved: Dictionary = farm.to_data()
 	var restored: RefCounted = load("res://runtime/farming/farm_system.gd").new()
 	restored.reset()
 	restored.load_data(saved)
-	if restored.automation_devices.size() != 9 or restored.automation_cycle_count != 1:
+	if restored.automation_devices.size() != 9 or restored.automation_cycle_count != 2:
 		failures.append("Automation network did not survive save round-trip")
 	var isolated: RefCounted = load("res://runtime/farming/farm_system.gd").new()
 	isolated.reset()
 	isolated.rank = 10
 	isolated.place_automation_device(Vector2i(5, 3), &"field_sprinkler")
-	if int(isolated.run_automation_day(&"spring", {}).get("stalled", 0)) != 1:
+	var stalled_report: Dictionary = isolated.run_automation_day(&"spring", {})
+	if int(stalled_report.get("stalled", 0)) != 1:
 		failures.append("Unpowered isolated machine must report a stall")
+	if bool(stalled_report.get("cycle_ran", true)) or isolated.automation_cycle_count != 0:
+		failures.append("A stalled automation device must not count as an operated cycle")
 
 
 func _assert_dungeon(failures: PackedStringArray) -> void:
@@ -384,6 +403,26 @@ func _assert_dungeon(failures: PackedStringArray) -> void:
 
 
 func _assert_eldritch_fishing(registry: Node, state_store: Node, failures: PackedStringArray) -> void:
+	var fishing: RefCounted = load("res://runtime/farming/fishing_system.gd").new()
+	var location_cases := [
+		[&"summer", 12 * 60, "clear", "pond", "sun_bass"],
+		[&"summer", 12 * 60, "clear", "river", "blue_mackerel"],
+		[&"autumn", 18 * 60, "clear", "pond", "moon_perch"],
+		[&"winter", 10 * 60, "snow", "pond", "ice_smelt"],
+		[&"winter", 10 * 60, "snow", "river", "snow_cod"],
+	]
+	for location_case: Array in location_cases:
+		var fish_ids: Array[String] = []
+		for fish: Dictionary in fishing.available_fish(location_case[0], location_case[1], location_case[2], location_case[3]):
+			fish_ids.append(String(fish.get("id", "")))
+		if String(location_case[4]) not in fish_ids:
+			failures.append("Playable %s fishing location did not expose %s" % [location_case[3], location_case[4]])
+	state_store.reset()
+	state_store.lifetime_stats["eldritch_fish_caught"] = 4
+	state_store.eldritch.eldritch_catches = {"whisper_minnow": 4}
+	state_store._check_achievements()
+	if "abyssal_angler" in state_store.achievements.unlocked:
+		failures.append("Repeated catches of one eldritch fish incorrectly unlocked the four-species achievement")
 	state_store.reset()
 	state_store.tools.tool_levels["fishing_rod"] = 4
 	for season_index in range(4):
@@ -394,7 +433,7 @@ func _assert_eldritch_fishing(registry: Node, state_store: Node, failures: Packe
 		var catch_result: Dictionary = state_store.fish_at("pond")
 		if not bool(catch_result.get("ok", false)) or not bool(catch_result.get("eldritch", false)):
 			failures.append("Eldritch tide fishing failed in season %d" % season_index)
-	if state_store.eldritch.eldritch_catches.size() != 4 or not state_store.eldritch.can_challenge():
+	if state_store.eldritch.eldritch_catches.size() != 4 or not state_store.eldritch.can_challenge() or "abyssal_angler" not in state_store.achievements.unlocked:
 		failures.append("Four seasonal eldritch catches did not unlock the drowned dreamer")
 	if state_store.eldritch.sanity >= 100 or int(state_store.lifetime_stats.get("eldritch_fish_caught", 0)) != 4:
 		failures.append("Eldritch catches did not update sanity and lifetime metrics")
@@ -465,6 +504,16 @@ func _assert_save_migration(state_store: Node, failures: PackedStringArray) -> v
 
 
 func _assert_commercial_systems(state_store: Node, failures: PackedStringArray) -> void:
+	state_store.reset()
+	state_store.calendar.minute_of_day = 600
+	state_store.farm.rank = 6
+	state_store.coins = 1000
+	if bool(state_store.buy_offer(&"toma_general_store", "glass_10").get("ok", false)):
+		failures.append("Rank-seven glass offer was available before its required farm rank")
+	state_store.farm.rank = 7
+	var glass_purchase: Dictionary = state_store.buy_offer(&"toma_general_store", "glass_10")
+	if not bool(glass_purchase.get("ok", false)) or int(state_store.inventory.get("glass", 0)) != 10 or state_store.coins != 0:
+		failures.append("Rank-seven Toma offer did not sell ten glass for 1000G")
 	state_store.reset()
 	state_store.calendar.minute_of_day = 600
 	state_store.farm.rank = 2

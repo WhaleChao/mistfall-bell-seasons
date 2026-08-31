@@ -23,6 +23,22 @@ esac
 rm -rf "$work_root"
 mkdir -p "$work_root/extracted" "$work_root/runtime-home" "$report_root"
 report_root="$(cd "$report_root" && pwd)"
+game_pid=""
+temp_base="${TMPDIR:-/tmp}"
+temp_base="${temp_base%/}"
+launch_tmp=""
+cleanup_runtime() {
+	if [[ -n "${game_pid:-}" ]] && kill -0 "$game_pid" 2>/dev/null; then
+		kill "$game_pid" 2>/dev/null || true
+		wait "$game_pid" 2>/dev/null || true
+	fi
+	if [[ -n "${launch_tmp:-}" ]]; then
+		case "$launch_tmp" in
+			"$temp_base"/mistfall-macos-launch.*) rm -rf "$launch_tmp" ;;
+		esac
+	fi
+}
+trap cleanup_runtime EXIT
 
 python3 "$project_root/scripts/audit_macos_archive.py" "$archive" --version "$version" --require-licenses --report "$report_root/archive.json"
 ditto -x -k "$archive" "$work_root/extracted"
@@ -41,6 +57,7 @@ architectures="$(lipo -archs "$game_executable")"
 grep -qw 'x86_64' <<<"$architectures"
 grep -qw 'arm64' <<<"$architectures"
 codesign --verify --deep --strict --verbose=2 "$app_bundle"
+command -v lsof >/dev/null
 
 runtime_stdout="$report_root/runtime.stdout.txt"
 runtime_stderr="$report_root/runtime.stderr.txt"
@@ -60,6 +77,7 @@ done
 set +e
 wait "$game_pid"
 runtime_exit=$?
+game_pid=""
 set -e
 cat "$runtime_stdout"
 cat "$runtime_stderr" >&2
@@ -77,15 +95,42 @@ if [[ -s "$network_log" ]]; then
   exit 1
 fi
 
-gui_home="$work_root/gui-home"
 gui_stdout="$report_root/gui.stdout.txt"
 gui_stderr="$report_root/gui.stderr.txt"
 gui_log="$report_root/gui.godot.log"
+# LaunchServices-spawned apps do not inherit the terminal's Files & Folders
+# permission. Capture under TMPDIR first, then copy the evidence into reports.
+launch_tmp="$(mktemp -d "$temp_base/mistfall-macos-launch.XXXXXX")"
+gui_home="$launch_tmp/home"
+gui_stdout_tmp="$launch_tmp/gui.stdout.txt"
+gui_stderr_tmp="$launch_tmp/gui.stderr.txt"
+gui_log_tmp="$launch_tmp/gui.godot.log"
 mkdir -p "$gui_home"
-set +e
-open -n -F -W -o "$gui_stdout" --stderr "$gui_stderr" --env "HOME=$gui_home" "$app_bundle" --args --quit-after 600 --log-file "$gui_log"
-gui_exit=$?
-set -e
+lsregister_path="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+if [[ -x "$lsregister_path" ]]; then
+	"$lsregister_path" -f "$app_bundle" >/dev/null 2>&1 || true
+	sleep 1
+fi
+gui_exit=1
+for gui_attempt in 1 2 3 4 5; do
+	: > "$gui_stdout_tmp"
+	: > "$gui_stderr_tmp"
+	: > "$gui_log_tmp"
+	set +e
+	open -n -F -W -o "$gui_stdout_tmp" --stderr "$gui_stderr_tmp" --env "HOME=$gui_home" "$app_bundle" --args --quit-after 600 --log-file "$gui_log_tmp"
+	gui_exit=$?
+	set -e
+	if [[ $gui_exit -eq 0 ]]; then
+		break
+	fi
+	if [[ $gui_attempt -lt 5 ]]; then
+		printf 'LaunchServices attempt %d failed with status %d; retrying after registration settles.\n' "$gui_attempt" "$gui_exit" >&2
+		sleep 2
+	fi
+done
+cp "$gui_stdout_tmp" "$gui_stdout"
+cp "$gui_stderr_tmp" "$gui_stderr"
+cp "$gui_log_tmp" "$gui_log"
 cat "$gui_stdout"
 cat "$gui_stderr" >&2
 if [[ $gui_exit -ne 0 ]]; then
