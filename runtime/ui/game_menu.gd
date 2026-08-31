@@ -12,6 +12,7 @@ var achievements_label: Label
 var eldritch_label: Label
 var volume_slider: HSlider
 var fullscreen_toggle: CheckButton
+var fullscreen_request_serial := 0
 var farm_upgrade_button: Button
 var candidate_select: OptionButton
 var capture_action := StringName()
@@ -36,7 +37,7 @@ func _ready() -> void:
 	NetworkManager.world_state_received.connect(_on_network_world_received)
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if visible and not capture_action.is_empty() and event.is_pressed() and not event.is_echo() and (event is InputEventKey or event is InputEventJoypadButton):
 		get_viewport().set_input_as_handled()
 		PixelRPGInputBindings.rebind_device(capture_action, event)
@@ -564,7 +565,23 @@ func _on_volume_changed(value: float) -> void:
 
 func _on_fullscreen_toggled(enabled: bool) -> void:
 	GameState.settings["fullscreen"] = enabled
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if enabled else DisplayServer.WINDOW_MODE_WINDOWED)
+	fullscreen_request_serial += 1
+	_apply_fullscreen_mode(enabled, fullscreen_request_serial)
+
+
+func _apply_fullscreen_mode(enabled: bool, request_serial: int) -> void:
+	var target_mode := DisplayServer.WINDOW_MODE_FULLSCREEN if enabled else DisplayServer.WINDOW_MODE_WINDOWED
+	# macOS may ignore a second mode request while its native fullscreen Space is
+	# still animating. Reapply only the newest intent until the window confirms it.
+	for _attempt in range(12):
+		if request_serial != fullscreen_request_serial:
+			return
+		DisplayServer.window_set_mode(target_mode)
+		await get_tree().create_timer(0.25, true).timeout
+		if request_serial != fullscreen_request_serial:
+			return
+		if DisplayServer.window_get_mode() == target_mode:
+			return
 
 
 func _on_speed_pressed() -> void:

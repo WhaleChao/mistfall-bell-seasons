@@ -53,6 +53,7 @@ func configure(definition: Dictionary) -> void:
 
 func _ready() -> void:
 	add_to_group("enemies")
+	z_index = 4
 	collision_layer = 4
 	collision_mask = 1 | 2 | 4
 	spawn_position = global_position
@@ -204,7 +205,7 @@ func _create_visual_sprite() -> void:
 			visual_sprite.position = Vector2(0, -7)
 			visual_sprite.scale = Vector2(visual_base_scale, visual_base_scale)
 			visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			visual_sprite.z_index = -1
+			visual_sprite.z_index = 0
 			add_child(visual_sprite)
 			return
 	var ids := ["moss_slime","thorn_rat","pollen_wisp","ember_slime","cave_bat","magma_beetle","amber_slime","stone_boar","fog_wisp","ice_slime","frost_wolf","bell_guardian","spring_root_guardian","summer_forge_drake","autumn_harvest_golem","winter_bell_warden"]
@@ -224,7 +225,7 @@ func _create_visual_sprite() -> void:
 	visual_sprite.position = Vector2(0, -7)
 	visual_sprite.scale = Vector2(visual_base_scale, visual_base_scale)
 	visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	visual_sprite.z_index = -1
+	visual_sprite.z_index = 0
 	add_child(visual_sprite)
 
 

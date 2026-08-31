@@ -5,15 +5,14 @@ const REPORT_JSON := REPORT_DIRECTORY + "/report.json"
 const REPORT_MARKDOWN := REPORT_DIRECTORY + "/REPORT.md"
 const SIMULATION_DAYS := 12000
 const SAVE_CYCLES := 250
-const QUICK_SAVE_PATH := "user://pixelrpg_quick_save.json"
-const QUICK_SAVE_TEMP_PATH := QUICK_SAVE_PATH + ".tmp"
-const QUICK_SAVE_BACKUP_PATH := QUICK_SAVE_PATH + ".bak"
-const QUICK_SAVE_OLD_BACKUP_PATH := QUICK_SAVE_PATH + ".bak.old"
-
 var cases: Array[Dictionary] = []
 var metrics := {}
 var game_state: Node
 var save_manager: Node
+var quick_save_path := ""
+var quick_save_temp_path := ""
+var quick_save_backup_path := ""
+var quick_save_old_backup_path := ""
 
 
 func _initialize() -> void:
@@ -31,6 +30,10 @@ func _run() -> void:
 		push_error("Project autoloads were not initialized")
 		quit(2)
 		return
+	quick_save_path = String(save_manager.quick_save_path())
+	quick_save_temp_path = quick_save_path + ".tmp"
+	quick_save_backup_path = quick_save_path + ".bak"
+	quick_save_old_backup_path = quick_save_path + ".bak.old"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(REPORT_DIRECTORY))
 	var started := Time.get_ticks_msec()
 	_test_century_simulation()
@@ -173,7 +176,7 @@ func _test_save_roundtrips() -> void:
 			break
 		successful_cycles += 1
 	_check(successful_cycles == SAVE_CYCLES, "存檔壓力", "250 次磁碟存讀 round-trip", "%d/%d" % [successful_cycles, SAVE_CYCLES])
-	var corrupt := FileAccess.open(QUICK_SAVE_PATH, FileAccess.WRITE)
+	var corrupt := FileAccess.open(quick_save_path, FileAccess.WRITE)
 	if corrupt != null:
 		corrupt.store_string("{truncated")
 		corrupt.close()
@@ -184,14 +187,14 @@ func _test_save_roundtrips() -> void:
 	recovery_player["coins"] = 77777
 	recovery_payload["player"] = recovery_player
 	_cleanup_test_saves()
-	var temp := FileAccess.open(QUICK_SAVE_TEMP_PATH, FileAccess.WRITE)
+	var temp := FileAccess.open(quick_save_temp_path, FileAccess.WRITE)
 	if temp != null:
 		temp.store_string(JSON.stringify(recovery_payload, "", false))
 		temp.close()
 	game_state.coins = -1
 	_check(save_manager.load_quick() and game_state.coins == 77777, "存檔復原", "中斷寫入留下的完整暫存檔可復原", "coins=%d" % game_state.coins)
 	_cleanup_test_saves()
-	var unsupported := FileAccess.open(QUICK_SAVE_PATH, FileAccess.WRITE)
+	var unsupported := FileAccess.open(quick_save_path, FileAccess.WRITE)
 	if unsupported != null:
 		unsupported.store_string('{"schema_version":999}')
 		unsupported.close()
@@ -201,7 +204,7 @@ func _test_save_roundtrips() -> void:
 
 
 func _cleanup_test_saves() -> void:
-	for path in [QUICK_SAVE_PATH, QUICK_SAVE_TEMP_PATH, QUICK_SAVE_BACKUP_PATH, QUICK_SAVE_OLD_BACKUP_PATH]:
+	for path in [quick_save_path, quick_save_temp_path, quick_save_backup_path, quick_save_old_backup_path]:
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 

@@ -115,19 +115,23 @@ func _exit_tree() -> void:
 	GameState.pause_game_time(false)
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_echo() or _is_line_edit_focused():
+		return
+	if event.is_action_pressed("multiplayer_menu"):
+		get_viewport().set_input_as_handled()
+		multiplayer_menu.toggle()
+		return
+	if not is_instance_valid(title_overlay) and event.is_action_pressed("pause_menu"):
+		get_viewport().set_input_as_handled()
+		game_menu.toggle()
+
+
 func _process(delta: float) -> void:
 	var text_input_focused := _is_line_edit_focused()
 	if is_instance_valid(title_overlay):
 		if Input.is_action_just_pressed("ui_accept"):
 			_close_title_screen()
-		elif not text_input_focused and Input.is_action_just_pressed("multiplayer_menu"):
-			multiplayer_menu.toggle()
-		return
-	if not text_input_focused and Input.is_action_just_pressed("multiplayer_menu"):
-		multiplayer_menu.toggle()
-		return
-	if not text_input_focused and Input.is_action_just_pressed("pause_menu"):
-		game_menu.toggle()
 		return
 	_animate_world_sprites()
 	ui_refresh_timer -= delta

@@ -20,6 +20,7 @@ func configure(origin: Vector2, travel_direction: Vector2, projectile_speed: flo
 
 func _ready() -> void:
 	add_to_group("enemy_projectiles")
+	z_index = 6
 	collision_layer = 16
 	collision_mask = 2
 	monitoring = true

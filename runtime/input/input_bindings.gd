@@ -2,6 +2,8 @@ class_name PixelRPGInputBindings
 extends RefCounted
 
 const SETTINGS_PATH := "user://pixelrpg_input.json"
+const TEST_SETTINGS_PATH_ENV := "PIXELRPG_TEST_INPUT_PATH"
+const DEFAULT_TEST_SETTINGS_PATH := "user://pixelrpg_test_input.json"
 const SCHEMA_VERSION := 1
 const KEYBOARD_DEVICE_ID := InputEvent.DEVICE_ID_KEYBOARD
 const MIN_DEVICE_ID := -3
@@ -46,7 +48,16 @@ static func reset_to_project_defaults() -> void:
 
 
 static func save() -> bool:
-	return _save_to_path(SETTINGS_PATH)
+	return _save_to_path(settings_path())
+
+
+static func settings_path() -> String:
+	if OS.get_environment("PIXELRPG_TEST_ISOLATED") == "1":
+		var test_path := OS.get_environment(TEST_SETTINGS_PATH_ENV)
+		if test_path.begins_with("user://") and test_path.ends_with(".json") and not test_path.contains(".."):
+			return test_path
+		return DEFAULT_TEST_SETTINGS_PATH
+	return SETTINGS_PATH
 
 
 static func _save_to_path(path: String) -> bool:
@@ -76,7 +87,7 @@ static func _save_to_path(path: String) -> bool:
 
 
 static func load_saved() -> bool:
-	return _load_from_path(SETTINGS_PATH)
+	return _load_from_path(settings_path())
 
 
 static func _load_from_path(path: String) -> bool:

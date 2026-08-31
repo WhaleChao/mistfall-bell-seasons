@@ -39,6 +39,7 @@ func _run() -> void:
 		if is_instance_valid(game):
 			game.queue_free()
 		await process_frame
+		_cleanup_test_save()
 		quit(1)
 		return
 	player = game.get("player")
@@ -70,6 +71,7 @@ func _run() -> void:
 	if is_instance_valid(game):
 		game.queue_free()
 	await process_frame
+	_cleanup_test_save()
 	var passed := _failure_count() == 0
 	print("PixelRPG visible full-feature acceptance: %s (%d checks, %d screenshots)" % ["PASS" if passed else "FAIL", cases.size(), screenshots.size()])
 	quit(0 if passed else 1)
@@ -138,6 +140,7 @@ func _test_movement_and_animation() -> void:
 		_record("移動動畫", "%s 使用正確方向列" % direction.action, player.visual_direction_row == int(direction.row), "atlas row=%d" % player.visual_direction_row)
 		_record("移動動畫", "%s 播放多幀循環" % direction.action, seen_frames.size() >= 3, "觀察到 %d/4 幀" % seen_frames.size())
 	_record("輸入", "斜向速度正規化", is_equal_approx(Vector2(1, 1).normalized().length(), 1.0))
+	_record("畫面層級", "玩家角色始終繪製在田地與地面裝飾之上", player.z_index > game.z_index and is_instance_valid(player.visual_sprite) and player.visual_sprite.z_index >= 0)
 
 
 func _test_combat_and_dungeon() -> void:
@@ -149,6 +152,8 @@ func _test_combat_and_dungeon() -> void:
 	state_store.player_stats.health = 9999
 	var enemies := get_nodes_in_group("enemies")
 	_record("洞窟", "第 1 層生成敵人", enemies.size() >= 2, "%d 名" % enemies.size())
+	var enemy_layers_ok := enemies.all(func(enemy: Node) -> bool: return enemy.z_index > game.z_index and is_instance_valid(enemy.visual_sprite) and enemy.visual_sprite.z_index >= 0)
+	_record("畫面層級", "敵人角色始終繪製在地形裝飾之上", enemy_layers_ok)
 	await _capture("03_dungeon_combat")
 	for node: Node in enemies:
 		node.set_physics_process(false)
@@ -648,23 +653,33 @@ func _test_menus_relationships_and_settings() -> void:
 	_record("料理", "烹調與享用恢復體力", cooked and state_store.tools.stamina > 0)
 
 	game.game_menu.tabs.current_tab = 7
+	game.game_menu._on_volume_changed(0.0)
+	game.game_menu.volume_slider.grab_focus()
+	await _send_key_event(KEY_ESCAPE)
+	await _frames(2)
+	var escaped_muted_settings: bool = not game.game_menu.visible and not paused and not state_store.calendar.paused
+	_record("設定", "主音量歸零後 Esc 可關閉手冊並返回遊戲", escaped_muted_settings)
+	if not game.game_menu.visible:
+		game.game_menu.open()
+		await _frames(2)
+	game.game_menu.tabs.current_tab = 7
 	game.game_menu._on_volume_changed(0.35)
 	var old_speed := String(state_store.calendar.speed_mode)
 	game.game_menu._on_speed_pressed()
 	_record("設定", "音量調整", is_equal_approx(float(state_store.settings.master_volume), 0.35))
 	_record("設定", "10/15/20 分鐘速度切換", String(state_store.calendar.speed_mode) != old_speed)
 	game.game_menu._on_fullscreen_toggled(true)
-	await _frames(2)
-	var fullscreen_ok := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	var fullscreen_ok: bool = await _wait_for_window_mode([DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN])
 	game.game_menu._on_fullscreen_toggled(false)
+	var windowed_ok: bool = await _wait_for_window_mode([DisplayServer.WINDOW_MODE_WINDOWED])
 	DisplayServer.window_set_size(Vector2i(1280, 720))
-	await _frames(3)
-	_record("設定", "視窗／全螢幕切換", fullscreen_ok and DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED and root.size == Vector2i(1280, 720))
+	await _frames(12)
+	_record("設定", "視窗／全螢幕切換", fullscreen_ok and windowed_ok and root.size == Vector2i(1280, 720), "mode=%d viewport=%s" % [DisplayServer.window_get_mode(), root.size])
 	game.game_menu._begin_rebind(&"attack")
 	var key_event := InputEventKey.new()
 	key_event.pressed = true
 	key_event.physical_keycode = KEY_P
-	game.game_menu._unhandled_input(key_event)
+	game.game_menu._input(key_event)
 	var rebound := false
 	for event: InputEvent in InputMap.action_get_events("attack"):
 		if event is InputEventKey and event.physical_keycode == KEY_P:
@@ -695,7 +710,6 @@ func _test_menus_relationships_and_settings() -> void:
 		if event is InputEventKey and event.physical_keycode == KEY_U:
 			interact_restored = true
 	PixelRPGInputBindings.reset_to_project_defaults()
-	PixelRPGInputBindings.save()
 	_record("設定", "所有遊戲操作重綁可跨重啟保存", persisted and loaded_bindings and interact_restored)
 	state_store.coins = 12345
 	state_store.current_map_id = &"mistfall_river"
@@ -952,6 +966,24 @@ func _frames(count: int) -> void:
 func _physics_frames(count: int) -> void:
 	for _index in range(count):
 		await physics_frame
+
+
+func _wait_for_window_mode(expected_modes: Array, frame_limit: int = 120) -> bool:
+	for _index in range(frame_limit):
+		if DisplayServer.window_get_mode() in expected_modes:
+			return true
+		await process_frame
+	return false
+
+
+func _cleanup_test_save() -> void:
+	if OS.get_environment("PIXELRPG_TEST_ISOLATED") != "1":
+		return
+	var target := String(save_manager.quick_save_path())
+	var network_world := String(network.server_world_path())
+	for path in [target, target + ".tmp", target + ".bak", target + ".bak.old", PixelRPGInputBindings.settings_path(), network_world, network_world + ".tmp", network_world + ".bak", network.client_id_path()]:
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 
 func _capture(file_stem: String) -> void:

@@ -30,6 +30,8 @@ func _run() -> void:
 	_assert_story(registry, state_store, failures)
 	_assert_commercial_systems(state_store, failures)
 	_assert_save_migration(state_store, failures)
+	_assert_test_storage_isolation(failures)
+	await _assert_runtime_ui_regressions(state_store, failures)
 	var event_file := FileAccess.open("res://data/world_events/arena_victory.json", FileAccess.READ)
 	var event_data: Variant = JSON.parse_string(event_file.get_as_text()) if event_file != null else null
 	if not event_data is Dictionary:
@@ -42,6 +44,79 @@ func _run() -> void:
 		failures.append("Player defaults changed unexpectedly")
 	player.free()
 	_finish(failures)
+
+
+func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArray) -> void:
+	state_store.reset()
+	state_store.set_flag(&"title_seen", true)
+	var game: Node = load("res://sample/main.tscn").instantiate()
+	root.add_child(game)
+	for _frame in range(4):
+		await process_frame
+	var runtime_player: Node = game.get("player")
+	var game_menu: Node = game.get("game_menu")
+	if not is_instance_valid(runtime_player) or not is_instance_valid(game_menu):
+		failures.append("Runtime scene did not create the player and game menu")
+	else:
+		var visual_sprite: Sprite2D = runtime_player.get("visual_sprite") as Sprite2D
+		if runtime_player.z_index <= game.z_index or not is_instance_valid(visual_sprite) or visual_sprite.z_index < 0:
+			failures.append("Player sprite can render behind farm plots or world decoration")
+		game_menu.open()
+		game_menu.tabs.current_tab = 7
+		game_menu._on_volume_changed(0.0)
+		game_menu.volume_slider.grab_focus()
+		await process_frame
+		await _send_runtime_key(KEY_ESCAPE)
+		for _frame in range(2):
+			await process_frame
+		if game_menu.visible or paused or state_store.calendar.paused:
+			failures.append("Escape could not return from the muted settings menu to gameplay")
+		var multiplayer_menu: Node = game.get("multiplayer_menu")
+		multiplayer_menu.open()
+		await process_frame
+		await _send_runtime_key(KEY_ESCAPE)
+		if multiplayer_menu.visible or game_menu.visible or paused or state_store.calendar.paused:
+			failures.append("Escape could not close multiplayer without reopening another menu")
+		var shop_menu: Node = game.get("shop_menu")
+		shop_menu.open(&"mira_seed_shop")
+		await process_frame
+		if shop_menu.visible:
+			await _send_runtime_key(KEY_ESCAPE)
+			if shop_menu.visible or game_menu.visible or paused or state_store.calendar.paused:
+				failures.append("Escape could not close a shop without reopening the pause menu")
+	paused = false
+	state_store.pause_game_time(false)
+	if is_instance_valid(game):
+		game.queue_free()
+	await process_frame
+
+
+func _send_runtime_key(keycode: int) -> void:
+	var press := InputEventKey.new()
+	press.pressed = true
+	press.keycode = keycode
+	press.physical_keycode = keycode
+	Input.parse_input_event(press)
+	await process_frame
+	var release := InputEventKey.new()
+	release.pressed = false
+	release.keycode = keycode
+	release.physical_keycode = keycode
+	Input.parse_input_event(release)
+	await process_frame
+
+
+func _assert_test_storage_isolation(failures: PackedStringArray) -> void:
+	if OS.get_environment("PIXELRPG_TEST_ISOLATED") != "1":
+		return
+	var save_manager: Node = root.get_node("SaveManager")
+	var network_manager: Node = root.get_node("NetworkManager")
+	if save_manager.quick_save_path() == "user://pixelrpg_quick_save.json":
+		failures.append("Isolated tests can still overwrite the player's quick save")
+	if PixelRPGInputBindings.settings_path() == "user://pixelrpg_input.json":
+		failures.append("Isolated tests can still overwrite the player's input bindings")
+	if network_manager.server_world_directory() != "user://pixelrpg_test_servers" or network_manager.client_id_path() != "user://pixelrpg_test_client_id.txt":
+		failures.append("Isolated tests can still overwrite the player's multiplayer data")
 
 
 func _assert_content(registry: Node, failures: PackedStringArray) -> void:

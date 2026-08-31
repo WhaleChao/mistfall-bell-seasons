@@ -17,6 +17,8 @@ const WORLD_SAVE_INTERVAL := 30.0
 const INPUT_RATE_LIMIT_MSEC := 25
 const ACTION_RATE_LIMIT_MSEC := 150
 const PLAYER_SPEED := 118.0
+const TEST_SERVER_DIRECTORY := "user://pixelrpg_test_servers"
+const TEST_CLIENT_ID_PATH := "user://pixelrpg_test_client_id.txt"
 const VALID_MAPS := ["mistfall_farm", "mistfall_village", "mistfall_river", "bellwood_grove", "clockwork_ruins", "mistfall_depths", "dreaming_shore"]
 const ALLOWED_ACTIONS := ["farm_plot", "gather", "map_resource", "fish", "ship", "tend_animal", "buy_offer", "farm_upgrade", "automation_place", "automation_configure", "automation_remove", "cook", "eat", "talk", "court_npc", "propose_npc", "family_event"]
 
@@ -197,7 +199,15 @@ func request_world_action(action: String, payload: Dictionary = {}) -> bool:
 
 
 func server_world_path() -> String:
-	return "user://pixelrpg_servers/%s.json" % world_name
+	return "%s/%s.json" % [server_world_directory(), world_name]
+
+
+func server_world_directory() -> String:
+	return TEST_SERVER_DIRECTORY if OS.get_environment("PIXELRPG_TEST_ISOLATED") == "1" else "user://pixelrpg_servers"
+
+
+func client_id_path() -> String:
+	return TEST_CLIENT_ID_PATH if OS.get_environment("PIXELRPG_TEST_ISOLATED") == "1" else "user://pixelrpg_client_id.txt"
 
 
 func _server_process(delta: float) -> void:
@@ -754,7 +764,7 @@ func _refresh_multiplayer_story() -> void:
 func _save_server_world() -> bool:
 	if role != Role.SERVER or shared_world.is_empty():
 		return false
-	var absolute_directory := ProjectSettings.globalize_path("user://pixelrpg_servers")
+	var absolute_directory := ProjectSettings.globalize_path(server_world_directory())
 	DirAccess.make_dir_recursive_absolute(absolute_directory)
 	var path := ProjectSettings.globalize_path(server_world_path())
 	var temporary_path := "%s.tmp" % path
@@ -837,13 +847,13 @@ func _sanitize_world_name(value: String) -> String:
 
 
 func _load_or_create_client_id() -> String:
-	const client_id_path := "user://pixelrpg_client_id.txt"
-	if FileAccess.file_exists(client_id_path):
-		var stored := FileAccess.get_file_as_string(client_id_path).strip_edges().to_lower()
+	var path := client_id_path()
+	if FileAccess.file_exists(path):
+		var stored := FileAccess.get_file_as_string(path).strip_edges().to_lower()
 		if _is_valid_player_key(stored):
 			return stored
 	var generated := Crypto.new().generate_random_bytes(16).hex_encode()
-	var file := FileAccess.open(client_id_path, FileAccess.WRITE)
+	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file != null:
 		file.store_string(generated + "\n")
 	return generated

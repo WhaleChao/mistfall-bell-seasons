@@ -33,6 +33,7 @@ var visual_direction_row := -1
 
 func _ready() -> void:
 	add_to_group("player")
+	z_index = 5
 	collision_layer = 2
 	collision_mask = 1 | 4 | 16
 	var collision := CollisionShape2D.new()
@@ -266,7 +267,7 @@ func _create_visual_sprite() -> void:
 	visual_sprite.texture = visual_region
 	visual_sprite.position = Vector2(0, -12)
 	visual_sprite.scale = Vector2(0.15, 0.15)
-	visual_sprite.z_index = -1
+	visual_sprite.z_index = 0
 	visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(visual_sprite)
 

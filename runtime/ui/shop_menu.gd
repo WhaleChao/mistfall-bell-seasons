@@ -15,7 +15,7 @@ func _ready() -> void:
 	NetworkManager.world_state_received.connect(_on_network_world_received)
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if visible and (event.is_action_pressed("pause_menu") or event.is_action_pressed("ui_cancel")):
 		get_viewport().set_input_as_handled()
 		close()
