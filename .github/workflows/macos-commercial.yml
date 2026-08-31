@@ -1,4 +1,4 @@
-name: macOS Commercial Build
+name: Commercial Release Build
 
 on:
   workflow_dispatch:
@@ -9,11 +9,25 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: commercial-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   universal-build-and-launch:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
+      - name: Verify tag and product version agree
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(tr -d '\r\n' < VERSION)"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          if [[ "$GITHUB_REF_TYPE" == 'tag' && "$GITHUB_REF_NAME" != "v$version" ]]; then
+            printf 'Tag %s does not match VERSION %s.\n' "$GITHUB_REF_NAME" "$version" >&2
+            exit 1
+          fi
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
@@ -66,3 +80,118 @@ jobs:
             reports/full_feature_acceptance/
             reports/resolution_layout/
           if-no-files-found: error
+
+  windows-package-and-test:
+    needs: universal-build-and-launch
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Download the verified macOS candidate
+        uses: actions/download-artifact@v7
+        with:
+          name: Mistfall-Bell-Seasons-${{ github.ref_name }}-macOS-Universal
+          path: work/macos-candidate
+      - name: Build, launch, and package the Windows x64 game
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = (Get-Content -LiteralPath VERSION -Raw).Trim()
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "VERSION 格式錯誤：$version" }
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag $env:GITHUB_REF_NAME 與 VERSION $version 不一致。"
+          }
+          $expectedMacName = "Mistfall-Bell-Seasons-v$version-macOS-Universal.zip"
+          $macCandidates = @(Get-ChildItem -LiteralPath 'work\macos-candidate' -Recurse -File -Filter $expectedMacName)
+          if ($macCandidates.Count -ne 1) { throw "macOS artifact 必須精確包含一份 $expectedMacName。" }
+          ./launcher/Fetch-Godot.ps1
+          ./launcher/Fetch-ExportTemplates.ps1 -ForceRefresh
+          $env:PIXELRPG_REQUIRE_MACOS = '1'
+          $env:PIXELRPG_REQUIRE_SIGNING = '0'
+          ./launcher/Package-Release.ps1 `
+            -GodotPath '.\tools\Godot_v4.7.2-stable_win64_console.exe' `
+            -MacOSArchivePath $macCandidates[0].FullName
+      - name: Upload the complete release candidate
+        uses: actions/upload-artifact@v6
+        with:
+          name: Mistfall-Bell-Seasons-${{ github.ref_name }}-release-candidate
+          path: |
+            dist/Mistfall-Bell-Seasons-v*-Windows-x64.zip
+            dist/Mistfall-Bell-Seasons-v*-macOS-Universal.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Upload Windows verification evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: Windows-commercial-evidence-${{ github.run_id }}
+          path: |
+            reports/commercial_stress/
+            reports/exported_build_runtime.json
+            reports/full_feature_acceptance/
+            reports/macos_archive/release_input.json
+            reports/multiplayer_acceptance.json
+            reports/release_archive/
+            reports/render_performance.json
+            reports/resolution_layout/
+            reports/steam_candidate/
+          if-no-files-found: warn
+
+  draft-release:
+    if: github.ref_type == 'tag'
+    needs: windows-package-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download the complete release candidate
+        uses: actions/download-artifact@v7
+        with:
+          name: Mistfall-Bell-Seasons-${{ github.ref_name }}-release-candidate
+          path: work/release-candidate
+      - name: Verify assets and create a draft GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="$(tr -d '\r\n' < VERSION)"
+          tag="$GITHUB_REF_NAME"
+          test "$tag" = "v$version"
+          candidate='work/release-candidate'
+          windows_name="Mistfall-Bell-Seasons-v${version}-Windows-x64.zip"
+          macos_name="Mistfall-Bell-Seasons-v${version}-macOS-Universal.zip"
+          windows_path="$(find "$candidate" -type f -name "$windows_name" -print -quit)"
+          macos_path="$(find "$candidate" -type f -name "$macos_name" -print -quit)"
+          sums_path="$(find "$candidate" -type f -name 'SHA256SUMS.txt' -print -quit)"
+          test -n "$windows_path" && test -n "$macos_path" && test -n "$sums_path"
+          test "$(wc -l < "$sums_path" | tr -d ' ')" -eq 4
+          verify_zip() {
+            local path="$1"
+            local name="$2"
+            local expected actual count
+            expected="$(tr -d '\r' < "$sums_path" | awk -v item="$name" '$2 == item {print $1}')"
+            count="$(tr -d '\r' < "$sums_path" | awk -v item="$name" '$2 == item {count++} END {print count+0}')"
+            actual="$(sha256sum "$path" | awk '{print $1}')"
+            test "$count" -eq 1
+            test -n "$expected" && test "$expected" = "$actual"
+          }
+          verify_zip "$windows_path" "$windows_name"
+          verify_zip "$macos_path" "$macos_name"
+          notes="docs/RELEASE_NOTES_v${version}.md"
+          test -f "$notes"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft' > work/existing-release-state.txt 2>/dev/null; then
+            test "$(tr -d '\r\n' < work/existing-release-state.txt)" = 'true'
+            gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft --title "霧落農歌：鐘塔之季 v${version}" --notes-file "$notes"
+            gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber "$windows_path" "$macos_path" "$sums_path"
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --title "霧落農歌：鐘塔之季 v${version}" --notes-file "$notes" "$windows_path" "$macos_path" "$sums_path"
+          fi
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | sort > work/actual-release-assets.txt
+          printf '%s\n' "$windows_name" "$macos_name" 'SHA256SUMS.txt' | sort > work/expected-release-assets.txt
+          diff -u work/expected-release-assets.txt work/actual-release-assets.txt
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json url,isDraft,assets

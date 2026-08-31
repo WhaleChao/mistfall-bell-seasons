@@ -1,6 +1,6 @@
 # 霧落農歌：鐘塔之季
 
-《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows／macOS 俯視像素農場動作 RPG。v1.2.0 可完全離線單人遊玩，也能用 Godot ENet／UDP 自行開設最多 16 人的朋友伺服器；遊戲 Runtime 不包含模型、Creator Service、知識庫、遙測或廣告。Steam 設定只作相容性與商業品質基準，目前沒有上傳或發布到 Steam。
+《霧落農歌：鐘塔之季》是以 PixelRPG Studio／Godot 4.7.2 製作的繁體中文 Windows／macOS 俯視像素農場動作 RPG。v1.2.1 可完全離線單人遊玩，也能用 Godot ENet／UDP 自行開設最多 16 人的朋友伺服器；遊戲 Runtime 不包含模型、Creator Service、知識庫、遙測或廣告。Steam 設定只作相容性與商業品質基準，目前沒有上傳或發布到 Steam。
 
 ![農場畫面](screenshots/commercial_farm.png)
 
@@ -22,7 +22,7 @@
 
 ## 下載與遊玩
 
-[GitHub Releases v1.2.0](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.2.0)提供 Windows x64 免安裝 ZIP 與 macOS Universal 2 ZIP。Windows 解壓後執行 `Mistfall-Bell-Seasons.exe`；macOS 版同時包含 Apple Silicon（macOS 13 以上）與 Intel（macOS 11 以上）架構，解壓後開啟《霧落農歌：鐘塔之季》App。兩者單人遊玩都不需要網路或 AI 模型。
+[GitHub Releases v1.2.1](https://github.com/WhaleChao/mistfall-bell-seasons/releases/tag/v1.2.1)提供 Windows x64 免安裝 ZIP 與 macOS Universal 2 ZIP。Windows 解壓後執行 `Mistfall-Bell-Seasons.exe`；macOS 版同時包含 Apple Silicon（macOS 13 以上）與 Intel（macOS 11 以上）架構，解壓後開啟《霧落農歌：鐘塔之季》App。兩者單人遊玩都不需要網路或 AI 模型。
 
 macOS 成品由 GitHub 的 macOS runner 實際簽署、啟動與觀測離線行為；目前是可驗證的 ad-hoc 簽章，尚無 Apple Developer ID 與 notarization，因此 Gatekeeper 可能要求使用者以右鍵「打開」確認。Windows 亦尚無受公眾信任的 Authenticode 憑證，下載後請以 Release 內的 `SHA256SUMS.txt` 核對。
 
@@ -68,12 +68,12 @@ macOS 成品由 GitHub 的 macOS runner 實際簽署、啟動與觀測離線行�
 .\launcher\Run-FullAcceptance.ps1
 .\launcher\Test-Multiplayer.ps1
 .\launcher\Export-macOS.ps1
-.\launcher\Package-Release.ps1 -MacOSArchivePath .\dist\Mistfall-Bell-Seasons-v1.2.0-macOS-Universal.zip
-.\launcher\Test-PublishedRelease.ps1 -Tag v1.2.0
+.\launcher\Package-Release.ps1 -MacOSArchivePath .\dist\Mistfall-Bell-Seasons-v1.2.1-macOS-Universal.zip
+.\launcher\Test-PublishedRelease.ps1 -Tag v1.2.1
 .\launcher\Test-CodeSigningPipeline.ps1
 ```
 
-發行閘門會驗證 297 筆內容、JSON Schema／引用、資產 SHA-256／授權、13 張 Runtime 圖片、Save v1→v2→v3→v4→v5、12,000 日／100 年、12,000 個自動化週期、400 次自動化月存檔、250 次磁碟存讀、20 敵人效能、五種解析度、PCK 邊界與正式 ZIP。非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)以真實 macOS 遊戲視窗驅動輸入與 UI，157 項全數通過並保存 20 張畫面；[圖片閘門](reports/image_integrity/REPORT.md)共 794 項，檢查 47 張遊戲／Studio／解析度／去背對比／宣傳畫面。[Steam 品質基準](reports/steam_candidate/REPORT.md)通過 51/51，但只作檢查、不執行上傳。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成農場自動化整合／隔離、四種篇章、戀愛競爭及原子世界保存。正式版預設離線；v1.2.0 的 Windows 與 macOS 公開包已由全新 GitHub Runner 重新下載、核對、解壓、啟動並驗證零網路端點。
+發行閘門會驗證 297 筆內容、JSON Schema／引用、資產 SHA-256／授權、13 張 Runtime 圖片、Save v1→v2→v3→v4→v5、12,000 日／100 年、12,000 個自動化週期、400 次自動化月存檔、250 次磁碟存讀、20 敵人效能、五種解析度、PCK 邊界與正式 ZIP。非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)以真實 macOS 遊戲視窗驅動輸入與 UI，157 項全數通過並保存 20 張畫面；[圖片閘門](reports/image_integrity/REPORT.md)共 794 項，檢查 47 張遊戲／Studio／解析度／去背對比／宣傳畫面。[Steam 品質基準](reports/steam_candidate/REPORT.md)通過 51/51，但只作檢查、不執行上傳。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成農場自動化整合／隔離、四種篇章、戀愛競爭及原子世界保存。正式版預設離線；公開成品另由全新 GitHub Runner 重新下載、核對、解壓、啟動並驗證零網路端點。
 
 ## PixelRPG Studio 與本機 AI
 

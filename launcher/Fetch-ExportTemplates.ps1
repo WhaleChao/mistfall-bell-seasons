@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param()
+param([switch]$ForceRefresh)
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
@@ -12,6 +12,9 @@ $releaseTemplate = Join-Path $destination 'windows_release_x86_64.exe'
 $debugTemplate = Join-Path $destination 'windows_debug_x86_64.exe'
 $macOSUniversalTemplate = Join-Path $destination 'macos.zip'
 
+if ($ForceRefresh -and (Test-Path -LiteralPath $destination)) {
+    Remove-Item -LiteralPath $destination -Recurse -Force
+}
 if ((Test-Path -LiteralPath $releaseTemplate) -and (Test-Path -LiteralPath $debugTemplate) -and (Test-Path -LiteralPath $macOSUniversalTemplate)) {
     Write-Host "Godot $templateVersion Windows x64／macOS Universal 匯出模板已就緒：$destination"
     exit 0
@@ -19,7 +22,7 @@ if ((Test-Path -LiteralPath $releaseTemplate) -and (Test-Path -LiteralPath $debu
 
 $temporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ("pixelrpg-templates-" + [IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Path $temporaryRoot | Out-Null
-$archive = Join-Path $temporaryRoot $assetName
+$archive = Join-Path $temporaryRoot 'export_templates.zip'
 $expanded = Join-Path $temporaryRoot 'expanded'
 try {
     Write-Host '下載 Godot 4.7.2 官方匯出模板（約 1.2 GB）…'

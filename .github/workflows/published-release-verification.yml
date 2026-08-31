@@ -8,7 +8,7 @@ on:
       tag:
         description: Public GitHub release tag to verify
         required: true
-        default: v1.2.0
+        default: v1.2.1
       expected_sha256:
         description: Optional expected SHA-256 for the Windows ZIP
         required: false
@@ -22,6 +22,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.event.release.tag_name }}
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
@@ -58,6 +60,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.event.release.tag_name }}
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'

@@ -1,5 +1,5 @@
 {
-	"generated_at": "2026-08-31T03:35:36",
+	"generated_at": "2026-08-31T04:01:55",
 	"engine": {
 		"major": 4,
 		"minor": 7,
@@ -3196,7 +3196,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：03_dungeon_combat.png",
 			"passed": true,
-			"detail": "variance=0.01562"
+			"detail": "variance=0.01565"
 		},
 		{
 			"category": "畫面證據",
@@ -3232,19 +3232,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：04_floor_40_boss.png",
 			"passed": true,
-			"detail": "variance=0.01821"
+			"detail": "variance=0.01806"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：04_floor_40_boss.png",
 			"passed": true,
-			"detail": "471 sampled colors"
+			"detail": "468 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：04_floor_40_boss.png",
 			"passed": true,
-			"detail": "dark=0.3% bright=0.0%"
+			"detail": "dark=0.2% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -3268,19 +3268,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：05_final_boss.png",
 			"passed": true,
-			"detail": "variance=0.02258"
+			"detail": "variance=0.02234"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：05_final_boss.png",
 			"passed": true,
-			"detail": "481 sampled colors"
+			"detail": "482 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：05_final_boss.png",
 			"passed": true,
-			"detail": "dark=0.1% bright=0.0%"
+			"detail": "dark=0.2% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -3304,13 +3304,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：06_mature_crop_and_weather.png",
 			"passed": true,
-			"detail": "variance=0.02322"
+			"detail": "variance=0.02196"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：06_mature_crop_and_weather.png",
 			"passed": true,
-			"detail": "525 sampled colors"
+			"detail": "524 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -3340,13 +3340,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：07_animals_and_farm.png",
 			"passed": true,
-			"detail": "variance=0.02121"
+			"detail": "variance=0.02119"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：07_animals_and_farm.png",
 			"passed": true,
-			"detail": "531 sampled colors"
+			"detail": "530 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -3376,13 +3376,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：08_shop_purchase.png",
 			"passed": true,
-			"detail": "variance=0.01523"
+			"detail": "variance=0.01522"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：08_shop_purchase.png",
 			"passed": true,
-			"detail": "88 sampled colors"
+			"detail": "87 sampled colors"
 		},
 		{
 			"category": "畫面證據",
@@ -3412,7 +3412,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：09_village_dialogue.png",
 			"passed": true,
-			"detail": "variance=0.02418"
+			"detail": "variance=0.02417"
 		},
 		{
 			"category": "畫面證據",
@@ -3484,19 +3484,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "variance=0.03375"
+			"detail": "variance=0.03378"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "51 sampled colors"
+			"detail": "50 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：11_status_inventory_menu.png",
 			"passed": true,
-			"detail": "dark=15.3% bright=2.1%"
+			"detail": "dark=15.4% bright=2.1%"
 		},
 		{
 			"category": "畫面證據",
@@ -3520,7 +3520,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：12_acceptance_complete.png",
 			"passed": true,
-			"detail": "variance=0.02382"
+			"detail": "variance=0.02380"
 		},
 		{
 			"category": "畫面證據",
@@ -3592,19 +3592,19 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：14_drowned_dreamer_boss.png",
 			"passed": true,
-			"detail": "variance=0.02334"
+			"detail": "variance=0.02387"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：14_drowned_dreamer_boss.png",
 			"passed": true,
-			"detail": "232 sampled colors"
+			"detail": "237 sampled colors"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：14_drowned_dreamer_boss.png",
 			"passed": true,
-			"detail": "dark=15.9% bright=0.0%"
+			"detail": "dark=15.8% bright=0.0%"
 		},
 		{
 			"category": "畫面證據",
@@ -3628,7 +3628,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：15_multiplayer_host_ui.png",
 			"passed": true,
-			"detail": "variance=0.03404"
+			"detail": "variance=0.03403"
 		},
 		{
 			"category": "畫面證據",
@@ -3640,7 +3640,7 @@
 			"category": "畫面證據",
 			"name": "畫面未全黑或全白：15_multiplayer_host_ui.png",
 			"passed": true,
-			"detail": "dark=16.4% bright=1.2%"
+			"detail": "dark=16.2% bright=1.2%"
 		},
 		{
 			"category": "畫面證據",
@@ -4678,7 +4678,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1280x720.png",
 			"passed": true,
-			"detail": "variance=0.02173"
+			"detail": "variance=0.02174"
 		},
 		{
 			"category": "畫面證據",
@@ -4762,7 +4762,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：1920x1080.png",
 			"passed": true,
-			"detail": "variance=0.02215"
+			"detail": "variance=0.02216"
 		},
 		{
 			"category": "畫面證據",
@@ -4804,7 +4804,7 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：2560x1440.png",
 			"passed": true,
-			"detail": "variance=0.02212"
+			"detail": "variance=0.02219"
 		},
 		{
 			"category": "畫面證據",
@@ -4846,13 +4846,13 @@
 			"category": "畫面證據",
 			"name": "畫面不是空白或單色：640x360.png",
 			"passed": true,
-			"detail": "variance=0.01922"
+			"detail": "variance=0.01923"
 		},
 		{
 			"category": "畫面證據",
 			"name": "畫面具有足夠視覺內容：640x360.png",
 			"passed": true,
-			"detail": "522 sampled colors"
+			"detail": "524 sampled colors"
 		},
 		{
 			"category": "畫面證據",

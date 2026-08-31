@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 AUDIT_SCRIPT = ROOT / "scripts/audit_macos_archive.py"
-VERSION = "1.2.0"
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 SUPPORTED_MINIMUM_SYSTEM_VERSIONS = {
     "x86_64": "11.0",
     "arm64": "13.0",

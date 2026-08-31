@@ -520,43 +520,43 @@
 | 畫面證據 | 商業截圖為完整不透明畫面：02_four_frame_walk.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：03_dungeon_combat.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：03_dungeon_combat.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：03_dungeon_combat.png | 通過 | variance=0.01562 |
+| 畫面證據 | 畫面不是空白或單色：03_dungeon_combat.png | 通過 | variance=0.01565 |
 | 畫面證據 | 畫面具有足夠視覺內容：03_dungeon_combat.png | 通過 | 465 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：03_dungeon_combat.png | 通過 | dark=0.1% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：03_dungeon_combat.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：04_floor_40_boss.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：04_floor_40_boss.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：04_floor_40_boss.png | 通過 | variance=0.01821 |
-| 畫面證據 | 畫面具有足夠視覺內容：04_floor_40_boss.png | 通過 | 471 sampled colors |
-| 畫面證據 | 畫面未全黑或全白：04_floor_40_boss.png | 通過 | dark=0.3% bright=0.0% |
+| 畫面證據 | 畫面不是空白或單色：04_floor_40_boss.png | 通過 | variance=0.01806 |
+| 畫面證據 | 畫面具有足夠視覺內容：04_floor_40_boss.png | 通過 | 468 sampled colors |
+| 畫面證據 | 畫面未全黑或全白：04_floor_40_boss.png | 通過 | dark=0.2% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：04_floor_40_boss.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：05_final_boss.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：05_final_boss.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：05_final_boss.png | 通過 | variance=0.02258 |
-| 畫面證據 | 畫面具有足夠視覺內容：05_final_boss.png | 通過 | 481 sampled colors |
-| 畫面證據 | 畫面未全黑或全白：05_final_boss.png | 通過 | dark=0.1% bright=0.0% |
+| 畫面證據 | 畫面不是空白或單色：05_final_boss.png | 通過 | variance=0.02234 |
+| 畫面證據 | 畫面具有足夠視覺內容：05_final_boss.png | 通過 | 482 sampled colors |
+| 畫面證據 | 畫面未全黑或全白：05_final_boss.png | 通過 | dark=0.2% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：05_final_boss.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：06_mature_crop_and_weather.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：06_mature_crop_and_weather.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：06_mature_crop_and_weather.png | 通過 | variance=0.02322 |
-| 畫面證據 | 畫面具有足夠視覺內容：06_mature_crop_and_weather.png | 通過 | 525 sampled colors |
+| 畫面證據 | 畫面不是空白或單色：06_mature_crop_and_weather.png | 通過 | variance=0.02196 |
+| 畫面證據 | 畫面具有足夠視覺內容：06_mature_crop_and_weather.png | 通過 | 524 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：06_mature_crop_and_weather.png | 通過 | dark=0.2% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：06_mature_crop_and_weather.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：07_animals_and_farm.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：07_animals_and_farm.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：07_animals_and_farm.png | 通過 | variance=0.02121 |
-| 畫面證據 | 畫面具有足夠視覺內容：07_animals_and_farm.png | 通過 | 531 sampled colors |
+| 畫面證據 | 畫面不是空白或單色：07_animals_and_farm.png | 通過 | variance=0.02119 |
+| 畫面證據 | 畫面具有足夠視覺內容：07_animals_and_farm.png | 通過 | 530 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：07_animals_and_farm.png | 通過 | dark=0.2% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：07_animals_and_farm.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：08_shop_purchase.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：08_shop_purchase.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：08_shop_purchase.png | 通過 | variance=0.01523 |
-| 畫面證據 | 畫面具有足夠視覺內容：08_shop_purchase.png | 通過 | 88 sampled colors |
+| 畫面證據 | 畫面不是空白或單色：08_shop_purchase.png | 通過 | variance=0.01522 |
+| 畫面證據 | 畫面具有足夠視覺內容：08_shop_purchase.png | 通過 | 87 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：08_shop_purchase.png | 通過 | dark=12.8% bright=0.3% |
 | 畫面證據 | 商業截圖為完整不透明畫面：08_shop_purchase.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：09_village_dialogue.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：09_village_dialogue.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：09_village_dialogue.png | 通過 | variance=0.02418 |
+| 畫面證據 | 畫面不是空白或單色：09_village_dialogue.png | 通過 | variance=0.02417 |
 | 畫面證據 | 畫面具有足夠視覺內容：09_village_dialogue.png | 通過 | 243 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：09_village_dialogue.png | 通過 | dark=0.3% bright=0.3% |
 | 畫面證據 | 商業截圖為完整不透明畫面：09_village_dialogue.png | 通過 | 0 sampled transparent pixels |
@@ -568,13 +568,13 @@
 | 畫面證據 | 商業截圖為完整不透明畫面：10_interactive_festival.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：11_status_inventory_menu.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：11_status_inventory_menu.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：11_status_inventory_menu.png | 通過 | variance=0.03375 |
-| 畫面證據 | 畫面具有足夠視覺內容：11_status_inventory_menu.png | 通過 | 51 sampled colors |
-| 畫面證據 | 畫面未全黑或全白：11_status_inventory_menu.png | 通過 | dark=15.3% bright=2.1% |
+| 畫面證據 | 畫面不是空白或單色：11_status_inventory_menu.png | 通過 | variance=0.03378 |
+| 畫面證據 | 畫面具有足夠視覺內容：11_status_inventory_menu.png | 通過 | 50 sampled colors |
+| 畫面證據 | 畫面未全黑或全白：11_status_inventory_menu.png | 通過 | dark=15.4% bright=2.1% |
 | 畫面證據 | 商業截圖為完整不透明畫面：11_status_inventory_menu.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：12_acceptance_complete.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：12_acceptance_complete.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：12_acceptance_complete.png | 通過 | variance=0.02382 |
+| 畫面證據 | 畫面不是空白或單色：12_acceptance_complete.png | 通過 | variance=0.02380 |
 | 畫面證據 | 畫面具有足夠視覺內容：12_acceptance_complete.png | 通過 | 687 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：12_acceptance_complete.png | 通過 | dark=0.3% bright=0.3% |
 | 畫面證據 | 商業截圖為完整不透明畫面：12_acceptance_complete.png | 通過 | 0 sampled transparent pixels |
@@ -586,15 +586,15 @@
 | 畫面證據 | 商業截圖為完整不透明畫面：13_eldritch_journal.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：14_drowned_dreamer_boss.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：14_drowned_dreamer_boss.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：14_drowned_dreamer_boss.png | 通過 | variance=0.02334 |
-| 畫面證據 | 畫面具有足夠視覺內容：14_drowned_dreamer_boss.png | 通過 | 232 sampled colors |
-| 畫面證據 | 畫面未全黑或全白：14_drowned_dreamer_boss.png | 通過 | dark=15.9% bright=0.0% |
+| 畫面證據 | 畫面不是空白或單色：14_drowned_dreamer_boss.png | 通過 | variance=0.02387 |
+| 畫面證據 | 畫面具有足夠視覺內容：14_drowned_dreamer_boss.png | 通過 | 237 sampled colors |
+| 畫面證據 | 畫面未全黑或全白：14_drowned_dreamer_boss.png | 通過 | dark=15.8% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：14_drowned_dreamer_boss.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：15_multiplayer_host_ui.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：15_multiplayer_host_ui.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：15_multiplayer_host_ui.png | 通過 | variance=0.03404 |
+| 畫面證據 | 畫面不是空白或單色：15_multiplayer_host_ui.png | 通過 | variance=0.03403 |
 | 畫面證據 | 畫面具有足夠視覺內容：15_multiplayer_host_ui.png | 通過 | 116 sampled colors |
-| 畫面證據 | 畫面未全黑或全白：15_multiplayer_host_ui.png | 通過 | dark=16.4% bright=1.2% |
+| 畫面證據 | 畫面未全黑或全白：15_multiplayer_host_ui.png | 通過 | dark=16.2% bright=1.2% |
 | 畫面證據 | 商業截圖為完整不透明畫面：15_multiplayer_host_ui.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | PNG 可完整解碼：16_mistfall_river_map.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：16_mistfall_river_map.png | 通過 | (1280, 720) |
@@ -767,7 +767,7 @@
 | 畫面證據 | 解析度畫面檔名受契約約束：1280x720.png | 通過 |  |
 | 畫面證據 | PNG 可完整解碼：1280x720.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：1280x720.png | 通過 | (1280, 720) |
-| 畫面證據 | 畫面不是空白或單色：1280x720.png | 通過 | variance=0.02173 |
+| 畫面證據 | 畫面不是空白或單色：1280x720.png | 通過 | variance=0.02174 |
 | 畫面證據 | 畫面具有足夠視覺內容：1280x720.png | 通過 | 515 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：1280x720.png | 通過 | dark=0.1% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：1280x720.png | 通過 | 0 sampled transparent pixels |
@@ -781,22 +781,22 @@
 | 畫面證據 | 解析度畫面檔名受契約約束：1920x1080.png | 通過 |  |
 | 畫面證據 | PNG 可完整解碼：1920x1080.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：1920x1080.png | 通過 | (1920, 1080) |
-| 畫面證據 | 畫面不是空白或單色：1920x1080.png | 通過 | variance=0.02215 |
+| 畫面證據 | 畫面不是空白或單色：1920x1080.png | 通過 | variance=0.02216 |
 | 畫面證據 | 畫面具有足夠視覺內容：1920x1080.png | 通過 | 511 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：1920x1080.png | 通過 | dark=0.1% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：1920x1080.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | 解析度畫面檔名受契約約束：2560x1440.png | 通過 |  |
 | 畫面證據 | PNG 可完整解碼：2560x1440.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：2560x1440.png | 通過 | (2560, 1440) |
-| 畫面證據 | 畫面不是空白或單色：2560x1440.png | 通過 | variance=0.02212 |
+| 畫面證據 | 畫面不是空白或單色：2560x1440.png | 通過 | variance=0.02219 |
 | 畫面證據 | 畫面具有足夠視覺內容：2560x1440.png | 通過 | 494 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：2560x1440.png | 通過 | dark=0.1% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：2560x1440.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | 解析度畫面檔名受契約約束：640x360.png | 通過 |  |
 | 畫面證據 | PNG 可完整解碼：640x360.png | 通過 | OK |
 | 畫面證據 | 畫面解析度正確：640x360.png | 通過 | (640, 360) |
-| 畫面證據 | 畫面不是空白或單色：640x360.png | 通過 | variance=0.01922 |
-| 畫面證據 | 畫面具有足夠視覺內容：640x360.png | 通過 | 522 sampled colors |
+| 畫面證據 | 畫面不是空白或單色：640x360.png | 通過 | variance=0.01923 |
+| 畫面證據 | 畫面具有足夠視覺內容：640x360.png | 通過 | 524 sampled colors |
 | 畫面證據 | 畫面未全黑或全白：640x360.png | 通過 | dark=0.2% bright=0.0% |
 | 畫面證據 | 商業截圖為完整不透明畫面：640x360.png | 通過 | 0 sampled transparent pixels |
 | 畫面證據 | 所有商業畫面、實機驗收、去背對比與解析度證據均納入統一閘門 | 通過 | 47/47 |
