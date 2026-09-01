@@ -151,7 +151,7 @@ func _test_movement_and_animation() -> void:
 		idle_min_y = minf(idle_min_y, float(player.visual_sprite.position.y))
 		idle_max_y = maxf(idle_max_y, float(player.visual_sprite.position.y))
 	_record("待機動畫", "停止移動後切換站立狀態", player.visual_animation == &"idle" and player.visual_frame == 0)
-	_record("待機動畫", "站立時有呼吸動態而非保持走路循環", idle_max_y - idle_min_y > 0.2, "呼吸位移 %.2f px" % (idle_max_y - idle_min_y))
+	_record("待機動畫", "站立時腳底固定，不以整張人物上下位移製造呼吸而造成漂浮", idle_max_y - idle_min_y < 0.05, "腳底位移 %.2f px" % (idle_max_y - idle_min_y))
 	game._travel_to_map(&"mistfall_farm")
 	player.global_position = Vector2(160, 155)
 	var blocked_start_y: float = float(player.global_position.y)
@@ -347,9 +347,9 @@ func _test_farming_animals_and_economy() -> void:
 		if int(state_store.lifetime_stats.fish_caught) > fish_before:
 			break
 	_record("釣魚", "池塘釣魚與季節魚表", int(state_store.lifetime_stats.fish_caught) > fish_before)
-	player.global_position = Vector2(42, 92)
+	player.global_position = Vector2(game.FARM_RESOURCES.tree_west.position)
 	game._interact()
-	player.global_position = Vector2(105, 318)
+	player.global_position = Vector2(game.FARM_RESOURCES.stone_south.position)
 	game._interact()
 	_record("採集", "樹木與石材節點", int(state_store.inventory.get("wood", 0)) > 0 and int(state_store.inventory.get("stone", 0)) > 0)
 
@@ -405,11 +405,16 @@ func _test_maps_and_automation() -> void:
 	var collision_rebuilt := true
 	var foreground_depth_ok := true
 	var routes_clear_and_reachable := true
+	var all_walkable_areas_connected := true
+	var all_interactions_reachable := true
 	for source_mode: String in ["farm", "village", "river", "grove", "ruins", "dungeon"]:
 		var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
 		var collision_summary: Dictionary = game.world_collision_summary(source_mode)
 		collision_rebuilt = collision_rebuilt and int(collision_summary.obstacles) >= 6 and int(collision_summary.polygons) >= 3
 		foreground_depth_ok = foreground_depth_ok and game.foreground_layer_count(source_mode) >= 3
+		all_walkable_areas_connected = all_walkable_areas_connected and int(game.walkable_component_summary(source_mode, 6.0).component_count) == 1
+		for interaction: Dictionary in Array(game.interaction_reachability_cases()[source_mode]):
+			all_interactions_reachable = all_interactions_reachable and game.map_has_reachable_interaction(source_mode, game._safe_spawn_for_mode(source_mode), Vector2(interaction.position), float(interaction.radius), 6.0)
 		if source_mode != "dungeon" and connections.size() < 4:
 			outdoor_connected = false
 		var safe_spawn: Vector2 = game._safe_spawn_for_mode(source_mode)
@@ -424,6 +429,8 @@ func _test_maps_and_automation() -> void:
 	_record("地圖連接", "所有區域連接點都有反向出口", bidirectional)
 	_record("地圖重構", "六張地圖皆依背景重算多段矩形與多邊形碰撞", collision_rebuilt)
 	_record("地圖重構", "所有出口都位於可行走道路且可由安全出生點抵達", routes_clear_and_reachable)
+	_record("地圖重構", "六張地圖的全部可行走網格皆屬同一連通區，沒有到不了的道路孤島", all_walkable_areas_connected)
+	_record("地圖重構", "商店、NPC、釣點、採集物與自動化台均可由道路走到互動範圍，不靠瞬移", all_interactions_reachable)
 	_record("立體景深", "六張地圖均有屋頂、樹冠、機械或崖壁前景遮擋層", foreground_depth_ok)
 	var collision_samples := {
 		"farm":[Vector2(160, 90), Vector2(110, 240), Vector2(470, 240)],
@@ -446,12 +453,29 @@ func _test_maps_and_automation() -> void:
 	var route_has_no_world_text := true
 	for destination_id: String in game.REGION_CONNECTIONS.village:
 		var route: Dictionary = Dictionary(game.REGION_CONNECTIONS.village[destination_id])
-		route_has_no_world_text = route_has_no_world_text and not bool(game._gateway_geometry(Vector2(route.position), String(route.label), destination_id).has_world_text)
+		var gateway_geometry: Dictionary = game._gateway_geometry(Vector2(route.position), String(route.label), destination_id)
+		route_has_no_world_text = route_has_no_world_text and not bool(gateway_geometry.has_world_text) and not bool(gateway_geometry.uses_rotated_text) and not bool(gateway_geometry.has_chevrons) and Array(gateway_geometry.lanterns).size() == 2
 	_record("文字配置", "出口、商店與村民共用單一固定 HUD 提示，沒有可被角色遮住的世界文字", village_labels_ok and route_has_no_world_text)
 	var pickup_geometry: Dictionary = game.world_pickup_geometry(Vector2.ZERO)
-	_record("採集視覺", "蘆葦、藥草、齒輪、木石與礦石使用物件圖、底座及火花而非圓圈", not bool(pickup_geometry.uses_placeholder_ring) and Rect2(pickup_geometry.icon_rect).size == Vector2(42, 42) and Array(pickup_geometry.sparks).size() >= 4)
+	_record("採集視覺", "蘆葦、藥草、齒輪、木石與礦石使用接地的小型物件圖，沒有圓圈、準星或火花疊圖", not bool(pickup_geometry.uses_placeholder_ring) and not bool(pickup_geometry.uses_target_brackets) and Rect2(pickup_geometry.icon_rect).size == Vector2(20, 20) and Array(pickup_geometry.sparks).is_empty())
 	game._travel_to_map(&"mistfall_village")
 	await _frames(3)
+	var mira_sprite: Sprite2D = game.npc_sprites.get("mira")
+	var actor_grounding_ok: bool = game.npc_collision_count() == game.NPC_POSITIONS.size() and player.visual_sprite.position.distance_to(Vector2(0, -12)) < 0.01
+	var mira_ground := Vector2(game.NPC_POSITIONS.mira)
+	player.global_position = mira_ground + Vector2(-28, 0)
+	Input.action_press("ui_right")
+	await _physics_frames(24)
+	Input.action_release("ui_right")
+	await _physics_frames(2)
+	actor_grounding_ok = actor_grounding_ok and player.global_position.distance_to(mira_ground) >= 15.0
+	player.global_position = Vector2(200, 190)
+	player._update_depth_order()
+	var rear_depth: int = player.z_index
+	player.global_position = Vector2(200, 210)
+	player._update_depth_order()
+	actor_grounding_ok = actor_grounding_ok and player.z_index > rear_depth and mira_sprite.z_index == 100 + roundi(Vector2(game.NPC_POSITIONS.mira).y)
+	_record("人物接地", "主角與 NPC 腳底固定、不上下漂浮，彼此有碰撞且按腳底 Y 座標排序前後", actor_grounding_ok)
 	var physical_route_ok := true
 	for leg: Dictionary in [
 		{"target":"mistfall_river", "expected":"river"},

@@ -64,6 +64,8 @@ static func _resolve(id: String, requested_kind: String) -> Dictionary:
 		kind = "automation"
 	elif kind == "item":
 		definition = _artifact("items", StringName(id))
+	elif kind == "world_item":
+		definition = _artifact("items", StringName(id))
 	else:
 		for candidate: Dictionary in [
 			{"type":"items", "kind":"item"}, {"type":"crops", "kind":"crop"},
@@ -132,15 +134,17 @@ static func _svg_for(id: String, kind: String, definition: Dictionary, primary: 
 		_:
 			body = _item_svg(id, main, light, dark)
 	var rune_x := 49 + posmod(id.hash(), 4)
+	var ground_shadow := "" if kind == "world_item" else "<ellipse cx=\"32\" cy=\"56\" rx=\"19\" ry=\"3.5\" fill=\"#081018\" opacity=\".24\"/>"
+	var rune := "" if kind == "world_item" else "<path d=\"M%d 10l1.6 3.2 3.5.5-2.55 2.5.6 3.5-3.15-1.65-3.15 1.65.6-3.5-2.55-2.5 3.5-.5z\" fill=\"#fff4bd\" opacity=\".82\"/>" % rune_x
 	# Compose the XML namespace at runtime so the offline release audit does not
 	# mistake a required SVG identifier for an application network endpoint.
 	var svg_namespace := "http" + "://www.w3.org/2000/svg"
 	return """<svg xmlns="%s" width="64" height="64" viewBox="0 0 64 64">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#%s"/><stop offset="1" stop-color="#%s"/></linearGradient></defs>
-<ellipse cx="32" cy="56" rx="19" ry="3.5" fill="#081018" opacity=".24"/>
 %s
-<path d="M%s 10l1.6 3.2 3.5.5-2.55 2.5.6 3.5-3.15-1.65-3.15 1.65.6-3.5-2.55-2.5 3.5-.5z" fill="#fff4bd" opacity=".82"/>
-</svg>""" % [svg_namespace, light, dark, body, rune_x]
+%s
+%s
+</svg>""" % [svg_namespace, light, dark, ground_shadow, body, rune]
 
 
 static func _seed_svg(id: String, main: String, light: String, dark: String) -> String:
@@ -204,6 +208,8 @@ static func _item_svg(id: String, main: String, light: String, dark: String) -> 
 		return """<path d="M27 7h10l2 8 7 3 7-4 6 8-6 6v8l6 6-6 8-8-4-6 3-2 8H27l-2-8-7-3-8 4-6-8 6-6v-8l-6-6 6-8 7 4 8-3z" fill="url(#g)" stroke="#%s" stroke-width="2"/><circle cx="32" cy="32" r="10" fill="#17212c" stroke="#%s" stroke-width="3"/>""" % [dark, light]
 	if id == "wood":
 		return """<path d="M9 22l37-9 9 30-37 9z" fill="url(#g)" stroke="#%s" stroke-width="2.5"/><ellipse cx="49" cy="28" rx="8" ry="15" transform="rotate(-15 49 28)" fill="#c99868" stroke="#%s" stroke-width="2"/><ellipse cx="49" cy="28" rx="4" ry="9" transform="rotate(-15 49 28)" fill="none" stroke="#%s" stroke-width="2"/>""" % [dark, dark, dark]
+	if id == "stone":
+		return """<path d="M8 48l7-17 12-5 9 9 7-11 12 8 4 16z" fill="url(#g)" stroke="#%s" stroke-width="2.5"/><path d="M16 31l11 13 9-9 8 13M43 24l2 17" fill="none" stroke="#%s" stroke-width="2" opacity=".7"/>""" % [dark, light]
 	if _has_any(id, ["herb", "reed", "seed"]):
 		return """<path d="M31 56V18M30 31C12 14 8 34 29 41M34 37c18-17 23 5 1 10" fill="none" stroke="#%s" stroke-width="5" stroke-linecap="round"/><path d="M31 19c-8-15 13-15 5 1z" fill="#%s"/>""" % [main, light]
 	if "preserves" in id:

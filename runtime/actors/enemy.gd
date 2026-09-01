@@ -53,7 +53,7 @@ func configure(definition: Dictionary) -> void:
 
 func _ready() -> void:
 	add_to_group("enemies")
-	z_index = 4
+	_update_depth_order()
 	collision_layer = 4
 	collision_mask = 1 | 2 | 4
 	spawn_position = global_position
@@ -117,6 +117,7 @@ func _physics_process(delta: float) -> void:
 			if state_timer <= 0.0:
 				state = State.CHASE
 	move_and_slide()
+	_update_depth_order()
 
 
 func _update_visual() -> void:
@@ -124,13 +125,16 @@ func _update_visual() -> void:
 		return
 	var ticks := float(Time.get_ticks_msec()) / 1000.0
 	var phase := float(get_instance_id() % 17) * 0.31
-	var intensity := 2.4 if state in [State.CHASE, State.ATTACK] else 1.4
-	visual_sprite.position = Vector2(0, -7 + sin(ticks * intensity + phase) * (2.0 if is_boss else 1.2))
+	visual_sprite.position = Vector2(0, -7)
 	if is_instance_valid(player):
 		visual_sprite.flip_h = player.global_position.x < global_position.x
 	visual_sprite.modulate = Color(1.5, 1.5, 1.5) if hurt_flash_timer > 0.0 else Color.WHITE
 	var pulse := 1.0 + sin(ticks * 3.0 + phase) * (0.025 if is_boss else 0.012)
 	visual_sprite.scale = Vector2(visual_base_scale * pulse, visual_base_scale / pulse)
+
+
+func _update_depth_order() -> void:
+	z_index = 100 + clampi(roundi(global_position.y), 0, 360)
 
 
 func _patrol(_delta: float) -> void:

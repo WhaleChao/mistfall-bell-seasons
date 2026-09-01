@@ -38,7 +38,7 @@ var attack_visual_progress := 0.0
 
 func _ready() -> void:
 	add_to_group("player")
-	z_index = 8
+	_update_depth_order()
 	collision_layer = 2
 	collision_mask = 1 | 4 | 16
 	var collision := CollisionShape2D.new()
@@ -95,6 +95,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	global_position.x = clampf(global_position.x, 30.0, 610.0)
 	global_position.y = clampf(global_position.y, 42.0, 330.0)
+	_update_depth_order()
 
 
 func _process_move(_delta: float) -> void:
@@ -299,10 +300,10 @@ func _update_visual() -> void:
 		var frame_width := floori(atlas.get_width() / 4.0)
 		var frame_height := floori(atlas.get_height() / 4.0)
 		visual_region.region = Rect2(frame * frame_width, direction_row * frame_height, frame_width, frame_height)
-	var idle_phase := float(Time.get_ticks_msec()) * 0.0045
-	var idle_breath := sin(idle_phase) if visual_animation == &"idle" and state == State.MOVE else 0.0
-	visual_sprite.position = Vector2(0, -12.0 + idle_breath * 0.65)
-	visual_sprite.scale = Vector2(0.15 - idle_breath * 0.0008, 0.15 + idle_breath * 0.0012)
+	# Idle is deliberately rigid at the feet. Moving the whole sprite up and down
+	# made the hero look as if he were hovering over the map.
+	visual_sprite.position = Vector2(0, -12.0)
+	visual_sprite.scale = Vector2(0.15, 0.15)
 	visual_sprite.flip_h = false
 	visual_sprite.rotation = 0.0
 	attack_visual_progress = 0.0
@@ -319,6 +320,11 @@ func _update_visual() -> void:
 
 
 func _draw() -> void:
+	# A compact contact shadow makes the collision/foot point unambiguous without
+	# covering the painted ground beneath it.
+	draw_set_transform(Vector2(0, 4.5), 0.0, Vector2(1.0, 0.34))
+	draw_circle(Vector2.ZERO, 9.0, Color(0.02, 0.03, 0.04, 0.46))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if state == State.ATTACK:
 		var duration: float = ATTACK_DURATIONS[combo_stage]
 		var progress := clampf(1.0 - state_timer / duration, 0.0, 1.0)
@@ -336,6 +342,12 @@ func _draw() -> void:
 	if skill_flash_timer > 0.0:
 		var progress := 1.0 - skill_flash_timer / 0.32
 		draw_arc(Vector2.ZERO, lerpf(18.0, 74.0, progress), 0.0, TAU, 40, Color(0.47, 0.86, 0.79, 1.0 - progress), 3.0)
+
+
+func _update_depth_order() -> void:
+	# All actor nodes share this range. Their feet, rather than creation order,
+	# determine which one is in front.
+	z_index = 100 + clampi(roundi(global_position.y), 0, 360)
 
 
 func attack_effect_geometry(progress: float) -> Dictionary:

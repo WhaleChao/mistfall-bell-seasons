@@ -73,17 +73,19 @@ const SHOP_POSITIONS := {
 	"orin_ranch": Vector2(270, 300),
 }
 const SHOP_SIGN_STYLES := {
+	# Symbols are used only inside the fixed CanvasLayer prompt, never drawn or
+	# rotated in world space.
 	"mira_seed_shop":{"symbol":"苗", "color":Color("79c98a")},
 	"soren_forge":{"symbol":"鍛", "color":Color("e19b58")},
 	"toma_general_store":{"symbol":"雜", "color":Color("78b8cf")},
 	"orin_ranch":{"symbol":"牧", "color":Color("d8b66a")},
 }
 const FARM_RESOURCES := {
-	"tree_west": {"position": Vector2(42, 92), "kind": "tree"},
+	"tree_west": {"position": Vector2(80, 98), "kind": "tree"},
 	"tree_north": {"position": Vector2(610, 92), "kind": "tree"},
 	"stone_south": {"position": Vector2(105, 318), "kind": "stone"},
 }
-const DUNGEON_ORE_POSITION := Vector2(212, 130)
+const DUNGEON_ORE_POSITION := Vector2(230, 145)
 const VILLAGE_GATE_POSITION := Vector2(318, 320)
 const AUTOMATION_CONSOLE_POSITION := Vector2(360, 294)
 const OUTDOOR_EXIT_POSITION := Vector2(92, 304)
@@ -142,6 +144,7 @@ var ui_refresh_timer := 0.0
 var weather_refresh_timer := 0.0
 var remote_players: Dictionary = {}
 var world_collision_root: Node2D
+var npc_collision_root: Node2D
 var active_obstacle_rects: Array[Rect2] = []
 var active_obstacle_polygons: Array[PackedVector2Array] = []
 var world_foreground_root: Node2D
@@ -360,8 +363,9 @@ func _draw_abyss() -> void:
 
 
 func _draw_village() -> void:
-	for shop_id: String in SHOP_POSITIONS:
-		_draw_shop_sign(shop_id, Vector2(SHOP_POSITIONS[shop_id]))
+	# Shops are represented by their authored buildings and resident NPCs. Their
+	# names appear in the single bottom prompt when approached; no floating glyph
+	# signs are composited over the village artwork.
 	_draw_region_connections()
 
 
@@ -379,24 +383,6 @@ func _draw_grove() -> void:
 func _draw_ruins() -> void:
 	_draw_world_pickup(RUINS_RESOURCE_POSITION, &"ancient_gear", Color("d39c55"))
 	_draw_region_connections()
-
-
-func _draw_shop_sign(shop_id: String, position: Vector2) -> void:
-	var style: Dictionary = Dictionary(SHOP_SIGN_STYLES.get(shop_id, {"symbol":"店", "color":Color("78dcca")}))
-	var accent := Color(style.color)
-	# A physical two-post placard remains readable without adding another line
-	# of permanent map text. The exact shop name appears in one context banner.
-	draw_set_transform(position, 0.0, Vector2.ONE)
-	draw_set_transform(position + Vector2(0, 7), 0.0, Vector2(1.0, 0.32))
-	draw_circle(Vector2.ZERO, 12.0, Color(0.02, 0.03, 0.04, 0.4))
-	draw_set_transform(position, 0.0, Vector2.ONE)
-	draw_line(Vector2(-8, -1), Vector2(-8, 12), Color("4c3427"), 3.0)
-	draw_line(Vector2(8, -1), Vector2(8, 12), Color("4c3427"), 3.0)
-	draw_rect(Rect2(-14, -13, 28, 16), Color(0.055, 0.063, 0.105, 0.96), true)
-	draw_rect(Rect2(-14, -13, 28, 16), accent, false, 1.5)
-	draw_polygon(PackedVector2Array([Vector2(-16, -13), Vector2(0, -20), Vector2(16, -13)]), PackedColorArray([accent.darkened(0.3)]))
-	draw_string(ThemeDB.fallback_font, Vector2(-10, -1), String(style.symbol), HORIZONTAL_ALIGNMENT_CENTER, 20, 11, Color("fff1b6"))
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _context_prompt_rect() -> Rect2:
@@ -474,57 +460,54 @@ func _dungeon_ore_item_id() -> StringName:
 
 func _draw_world_pickup(position: Vector2, item_id: StringName, accent: Color) -> void:
 	var geometry := world_pickup_geometry(position)
-	# The item sits on a real stone-and-wood salvage stand. Corner brackets and
-	# sparks draw attention without surrounding it with a placeholder ring.
-	draw_set_transform(position + Vector2(0, 8), 0.0, Vector2(1.0, 0.32))
-	draw_circle(Vector2.ZERO, 17.0, Color(0.02, 0.03, 0.04, 0.46))
+	# Gatherables are small objects sitting directly on the terrain. The previous
+	# 42px icon, target brackets and sparks read as debug geometry at world scale.
+	draw_set_transform(position + Vector2(0, 3), 0.0, Vector2(1.0, 0.3))
+	draw_circle(Vector2.ZERO, 8.0, Color(0.02, 0.03, 0.04, 0.4))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	draw_polygon(PackedVector2Array([position + Vector2(-19, 8), position + Vector2(19, 8), position + Vector2(14, 15), position + Vector2(-14, 15)]), PackedColorArray([Color("2f3438")]))
-	draw_line(position + Vector2(-17, 9), position + Vector2(17, 9), accent.darkened(0.22), 2.0)
-	var texture := ItemIconFactory.texture_for(item_id, &"item", 42)
+	draw_polygon(PackedVector2Array([position + Vector2(-8, 1), position + Vector2(8, 1), position + Vector2(6, 5), position + Vector2(-6, 5)]), PackedColorArray([accent.darkened(0.45)]))
+	var texture := ItemIconFactory.texture_for(item_id, &"world_item", 20)
 	if texture != null:
 		draw_texture_rect(texture, Rect2(geometry.icon_rect), false)
-	for spark: Vector2 in geometry.sparks:
-		draw_line(position + spark * 0.62, position + spark, accent.lightened(0.28), 1.5)
-	for corner: Vector2 in [Vector2(-22, -27), Vector2(22, -27), Vector2(-22, 10), Vector2(22, 10)]:
-		var horizontal := Vector2(5.0 if corner.x < 0.0 else -5.0, 0)
-		var vertical := Vector2(0, 5.0 if corner.y < 0.0 else -5.0)
-		draw_line(position + corner, position + corner + horizontal, accent, 1.5)
-		draw_line(position + corner, position + corner + vertical, accent, 1.5)
 
 
 func world_pickup_geometry(position: Vector2) -> Dictionary:
 	return {
-		"icon_rect":Rect2(position - Vector2(21, 32), Vector2(42, 42)),
-		"support_rect":Rect2(position - Vector2(19, -8), Vector2(38, 7)),
-		"sparks":[Vector2(-18, -20), Vector2(18, -18), Vector2(-13, -34), Vector2(14, -36)],
+		"icon_rect":Rect2(position - Vector2(10, 19), Vector2(20, 20)),
+		"support_rect":Rect2(position - Vector2(8, -1), Vector2(16, 4)),
+		"sparks":[],
 		"uses_placeholder_ring":false,
+		"uses_target_brackets":false,
+		"world_scale":20,
 	}
 
 
 func _draw_fishing_spot(position: Vector2, eldritch: bool) -> void:
 	var accent := Color("a998dd") if eldritch else Color("64c9dc")
-	var motion := sin(float(Time.get_ticks_msec()) * 0.004)
-	# A line, float and broken water ripples read as an actual fishing location.
-	draw_line(position + Vector2(-23, -25), position + Vector2(-6, -9), Color("5b412d"), 3.0)
-	draw_line(position + Vector2(-6, -9), position + Vector2(2, -1 + motion), Color("dce5ee"), 1.0)
-	draw_rect(Rect2(position + Vector2(-2, -5 + motion), Vector2(5, 8)), Color("f0d37a"), true)
-	draw_rect(Rect2(position + Vector2(-2, -5 + motion), Vector2(5, 3)), Color("d75f5f"), true)
-	for radius in [10.0, 18.0, 27.0]:
-		draw_arc(position + Vector2(0, 3), radius, 0.10, PI * 0.82, 12, accent, 1.4)
-		draw_arc(position + Vector2(0, 3), radius, PI * 1.1, PI * 1.82, 12, accent, 1.4)
+	var motion := sin(float(Time.get_ticks_msec()) * 0.004) * 0.6
+	# The painted pier already communicates the activity. A restrained float and
+	# two water ripples are enough to identify the exact interaction point.
+	draw_line(position + Vector2(-8, -8), position + Vector2(0, -2 + motion), Color("dce5ee"), 0.8)
+	draw_rect(Rect2(position + Vector2(-1.5, -4 + motion), Vector2(3, 6)), Color("f0d37a"), true)
+	draw_rect(Rect2(position + Vector2(-1.5, -4 + motion), Vector2(3, 2)), Color("d75f5f"), true)
+	for radius in [5.0, 10.0]:
+		draw_arc(position + Vector2(0, 2), radius, 0.18, PI * 0.82, 10, accent, 1.0)
+		draw_arc(position + Vector2(0, 2), radius, PI * 1.18, PI * 1.82, 10, accent, 1.0)
 	if eldritch:
-		draw_polyline(PackedVector2Array([position + Vector2(-13, 11), position + Vector2(0, 16), position + Vector2(13, 11)]), accent.lightened(0.25), 2.0)
+		draw_circle(position + Vector2(0, 2), 1.2, accent.lightened(0.25))
 
 
 func _draw_locked_gateway(position: Vector2) -> void:
-	draw_set_transform(position, 0.0, Vector2.ONE)
-	draw_polygon(PackedVector2Array([Vector2(-24, 10), Vector2(-18, -10), Vector2(0, -18), Vector2(18, -10), Vector2(24, 10), Vector2(0, 18)]), PackedColorArray([Color("28323a")]))
-	draw_polyline(PackedVector2Array([Vector2(-20, -9), Vector2(20, 9)]), Color("828894"), 4.0)
-	draw_polyline(PackedVector2Array([Vector2(20, -9), Vector2(-20, 9)]), Color("828894"), 4.0)
-	draw_rect(Rect2(-6, -6, 12, 13), Color("171a2b"), true)
-	draw_arc(Vector2(0, -6), 5.0, PI, TAU, 10, Color("a9b0bd"), 2.0)
+	# The authored doorway remains visible. A small chain and padlock communicate
+	# its state without placing a large hexagon/X badge over the floor.
+	draw_set_transform(position + Vector2(0, 3), 0.0, Vector2(1.0, 0.3))
+	draw_circle(Vector2.ZERO, 8.0, Color(0.02, 0.03, 0.04, 0.42))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	draw_line(position + Vector2(-10, -3), position + Vector2(10, 3), Color("777b82"), 1.8)
+	draw_line(position + Vector2(-10, 3), position + Vector2(10, -3), Color("777b82"), 1.8)
+	draw_rect(Rect2(position + Vector2(-4, -2), Vector2(8, 8)), Color("252a32"), true)
+	draw_rect(Rect2(position + Vector2(-4, -2), Vector2(8, 8)), Color("b9a263"), false, 1.2)
+	draw_arc(position + Vector2(0, -2), 3.0, PI, TAU, 10, Color("b9a263"), 1.5)
 
 
 func _draw_crop_visual(center: Vector2, crop_id: String, crop: Dictionary, plot: Dictionary) -> void:
@@ -574,27 +557,18 @@ func _crop_id_has_any(crop_id: String, tokens: Array[String]) -> bool:
 func _draw_travel_marker(position: Vector2, label: String, destination_id: String = "") -> void:
 	var geometry := _gateway_geometry(position, label, destination_id)
 	var accent := Color(geometry.accent)
-	var angle := float(geometry.angle)
 	var nearby := is_instance_valid(player) and player.global_position.distance_to(position) <= 52.0
-	var emphasis := 0.92 if nearby else 0.58
-	# A compact stone threshold, banner posts and engraved destination crest form
-	# part of the world art. Interaction text lives exclusively in the HUD.
-	draw_set_transform(position, angle, Vector2.ONE)
-	draw_polygon(PackedVector2Array([Vector2(-23, -10), Vector2(19, -10), Vector2(25, -6), Vector2(25, 6), Vector2(19, 10), Vector2(-23, 10)]), PackedColorArray([Color(0.10, 0.13, 0.16, 0.52)]))
-	for slab_x in [-20.0, -9.0, 2.0, 13.0]:
-		draw_rect(Rect2(slab_x, -8, 8, 16), Color(0.34, 0.36, 0.35, emphasis), true)
-		draw_line(Vector2(slab_x, -7), Vector2(slab_x + 7, -7), Color(0.69, 0.70, 0.64, emphasis * 0.62), 1.0)
-	for post_y in [-15.0, 15.0]:
-		draw_rect(Rect2(-3, post_y - 7, 8, 15), Color("3d342e"), true)
-		draw_polygon(PackedVector2Array([Vector2(5, post_y - 5), Vector2(12, post_y), Vector2(5, post_y + 5)]), PackedColorArray([Color(accent.r, accent.g, accent.b, emphasis)]))
-		draw_circle(Vector2(1, post_y - 8), 3.0, Color("8c806d"))
-	for chevron_x in [-14.0, -3.0]:
-		draw_polyline(PackedVector2Array([Vector2(chevron_x - 3, -3), Vector2(chevron_x + 2, 0), Vector2(chevron_x - 3, 3)]), Color(accent.r, accent.g, accent.b, emphasis), 1.5)
-	# A small engraved crest distinguishes destinations without behaving like UI.
-	draw_rect(Rect2(16, -8, 14, 16), Color("28323a"), true)
-	draw_rect(Rect2(16, -8, 14, 16), Color(accent.r, accent.g, accent.b, emphasis), false, 1.0)
-	draw_string(ThemeDB.fallback_font, Vector2(18, 4), String(geometry.symbol), HORIZONTAL_ALIGNMENT_CENTER, 10, 8, Color("fff1b6"))
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var emphasis := 1.0 if nearby else 0.68
+	# The background contains the actual door, gate or road. Two low lanterns mark
+	# its interaction threshold without arrows, posts, glyphs or rotated text.
+	for lantern_position: Vector2 in geometry.lanterns:
+		draw_set_transform(lantern_position + Vector2(0, 2), 0.0, Vector2(1.0, 0.32))
+		draw_circle(Vector2.ZERO, 4.0, Color(0.02, 0.03, 0.04, 0.4))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		draw_rect(Rect2(lantern_position + Vector2(-2.5, -1), Vector2(5, 4)), Color("49413a"), true)
+		draw_line(lantern_position + Vector2(0, -1), lantern_position + Vector2(0, -6), Color("6e6253"), 1.5)
+		draw_circle(lantern_position + Vector2(0, -7), 3.2, Color(accent.r, accent.g, accent.b, 0.18 * emphasis))
+		draw_circle(lantern_position + Vector2(0, -7), 1.45, Color(1.0, 0.91, 0.58, emphasis))
 
 
 func _gateway_geometry(position: Vector2, _label: String, destination_id: String = "") -> Dictionary:
@@ -603,13 +577,12 @@ func _gateway_geometry(position: Vector2, _label: String, destination_id: String
 	var style := _gateway_style(destination_id)
 	return {
 		"outward":outward,
-		"angle":outward.angle(),
 		"accent":style.color,
-		"symbol":style.symbol,
 		"has_world_text":false,
-		"posts":[position + perpendicular * 15.0, position - perpendicular * 15.0],
-		"chevrons":[position - outward * 14.0, position - outward * 3.0],
-		"path_length":48.0,
+		"uses_rotated_text":false,
+		"has_chevrons":false,
+		"lanterns":[position + perpendicular * 11.0 - outward * 2.0, position - perpendicular * 11.0 - outward * 2.0],
+		"overlay_extent":18.0,
 	}
 
 
@@ -649,20 +622,17 @@ func _draw_region_connections() -> void:
 
 func _draw_automation_console_marker() -> void:
 	var position := AUTOMATION_CONSOLE_POSITION
-	draw_set_transform(position + Vector2(0, 11), 0.0, Vector2(1.0, 0.3))
-	draw_circle(Vector2.ZERO, 20.0, Color(0.02, 0.03, 0.04, 0.5))
+	draw_set_transform(position + Vector2(0, 6), 0.0, Vector2(1.0, 0.3))
+	draw_circle(Vector2.ZERO, 10.0, Color(0.02, 0.03, 0.04, 0.44))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	# A bolted field terminal with lever, cable and device diagram replaces the
-	# old floating gear-ring marker. Its name appears only in the nearby prompt.
-	draw_polygon(PackedVector2Array([position + Vector2(-18, 12), position + Vector2(18, 12), position + Vector2(13, -17), position + Vector2(-13, -17)]), PackedColorArray([Color("3c3935")]))
-	draw_rect(Rect2(position + Vector2(-11, -13), Vector2(22, 20)), Color("171a2b"), true)
-	draw_rect(Rect2(position + Vector2(-11, -13), Vector2(22, 20)), Color("e8b54b"), false, 1.5)
-	var icon := ItemIconFactory.texture_for(&"bell_generator", &"automation", 26)
-	if icon != null:
-		draw_texture_rect(icon, Rect2(position + Vector2(-13, -17), Vector2(26, 26)), false)
-	draw_line(position + Vector2(13, -6), position + Vector2(22, -18), Color("b7a279"), 2.5)
-	draw_circle(position + Vector2(22, -18), 3.0, Color("e8b54b"))
-	draw_polyline(PackedVector2Array([position + Vector2(-15, 13), position + Vector2(-23, 18), position + Vector2(-31, 15)]), Color("c97950"), 2.0)
+	# A waist-high brass farm terminal, scaled like the surrounding props.
+	draw_polygon(PackedVector2Array([position + Vector2(-9, 6), position + Vector2(9, 6), position + Vector2(7, -11), position + Vector2(-7, -11)]), PackedColorArray([Color("3c3935")]))
+	draw_rect(Rect2(position + Vector2(-5, -8), Vector2(10, 10)), Color("171a2b"), true)
+	draw_rect(Rect2(position + Vector2(-5, -8), Vector2(10, 10)), Color("a98648"), false, 1.0)
+	draw_circle(position + Vector2(0, -3), 2.5, Color("d2a94e"), false, 1.0)
+	draw_circle(position + Vector2(0, -3), 0.9, Color("fff1b6"))
+	draw_line(position + Vector2(6, -4), position + Vector2(10, -10), Color("8f7657"), 1.5)
+	draw_circle(position + Vector2(10, -10), 1.8, Color("d2a94e"))
 
 
 func _create_player() -> void:
@@ -682,7 +652,7 @@ func _create_background() -> void:
 	add_child(world_background)
 	world_foreground_root = Node2D.new()
 	world_foreground_root.name = "WorldForeground"
-	world_foreground_root.z_index = 6
+	world_foreground_root.z_index = 1000
 	add_child(world_foreground_root)
 	_set_background_for_mode()
 
@@ -795,6 +765,9 @@ func _draw_weather() -> void:
 
 
 func _create_npc_sprites() -> void:
+	npc_collision_root = Node2D.new()
+	npc_collision_root.name = "NPCNavigationCollisions"
+	add_child(npc_collision_root)
 	var atlas: Texture2D = load("res://assets/runtime/sprites/character_atlas_alpha.png")
 	if atlas == null:
 		return
@@ -810,7 +783,6 @@ func _create_npc_sprites() -> void:
 		sprite.texture = region
 		sprite.scale = Vector2(NPC_SPRITE_SCALE, NPC_SPRITE_SCALE)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		sprite.z_index = 7
 		add_child(sprite)
 		npc_sprites[npc_id] = sprite
 	_update_npc_sprites()
@@ -837,6 +809,51 @@ func _update_npc_sprites() -> void:
 		elif mode == "farm" and npc_id == "mira" and _mira_is_on_farm():
 			sprite.position = _npc_sprite_anchor(npc_id, MIRA_POSITION)
 			sprite.visible = true
+		if sprite.visible:
+			var ground := _npc_ground_position(npc_id)
+			sprite.z_index = 100 + clampi(roundi(ground.y), 0, 360)
+	_rebuild_npc_collisions()
+
+
+func _npc_ground_position(npc_id: String) -> Vector2:
+	if mode == "village":
+		return Vector2(NPC_POSITIONS[npc_id])
+	if mode == "river" and RIVER_NPC_POSITIONS.has(npc_id):
+		return Vector2(RIVER_NPC_POSITIONS[npc_id])
+	if mode == "grove" and GROVE_NPC_POSITIONS.has(npc_id):
+		return Vector2(GROVE_NPC_POSITIONS[npc_id])
+	if mode == "ruins" and RUINS_NPC_POSITIONS.has(npc_id):
+		return Vector2(RUINS_NPC_POSITIONS[npc_id])
+	return MIRA_POSITION
+
+
+func _rebuild_npc_collisions() -> void:
+	if not is_instance_valid(npc_collision_root):
+		return
+	for child: Node in npc_collision_root.get_children():
+		npc_collision_root.remove_child(child)
+		child.queue_free()
+	for npc_id: String in npc_sprites:
+		var sprite: Sprite2D = npc_sprites[npc_id]
+		if not sprite.visible:
+			continue
+		var body := StaticBody2D.new()
+		body.name = "NPC_%s" % npc_id
+		body.position = _npc_ground_position(npc_id)
+		body.collision_layer = 1
+		body.collision_mask = 0
+		body.set_meta("npc_id", npc_id)
+		var collision := CollisionShape2D.new()
+		var shape := CircleShape2D.new()
+		shape.radius = 9.0
+		collision.shape = shape
+		collision.position = Vector2(0, -1)
+		body.add_child(collision)
+		npc_collision_root.add_child(body)
+
+
+func npc_collision_count() -> int:
+	return npc_collision_root.get_child_count() if is_instance_valid(npc_collision_root) else 0
 
 
 func _create_world_walls() -> void:
@@ -894,12 +911,16 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 				{"name":"VillageUpperRiver", "polygon":PackedVector2Array([Vector2(20, 187), Vector2(151, 187), Vector2(157, 216), Vector2(132, 246), Vector2(82, 256), Vector2(20, 245)])},
 				{"name":"VillageLowerRiverWest", "polygon":PackedVector2Array([Vector2(20, 245), Vector2(127, 247), Vector2(130, 278), Vector2(112, 302), Vector2(20, 323)])},
 				{"name":"VillageLowerRiverEast", "polygon":PackedVector2Array([Vector2(177, 281), Vector2(227, 286), Vector2(244, 317), Vector2(226, 338), Vector2(164, 338), Vector2(164, 308)])},
-				{"name":"VillageShrineWest", "polygon":PackedVector2Array([Vector2(371, 257), Vector2(430, 250), Vector2(447, 277), Vector2(435, 338), Vector2(370, 338)])},
-				{"name":"VillageShrineEast", "polygon":PackedVector2Array([Vector2(489, 260), Vector2(570, 252), Vector2(592, 279), Vector2(592, 338), Vector2(489, 338)])},
+				{"name":"VillageHarborWater", "polygon":PackedVector2Array([Vector2(20, 287), Vector2(126, 286), Vector2(171, 297), Vector2(171, 338), Vector2(20, 338)])},
+				# The shrine's stone path is visible and must remain reachable. Its
+				# opening is centered around x=420, not in the old x=447 corridor.
+				{"name":"VillageShrineWest", "polygon":PackedVector2Array([Vector2(371, 257), Vector2(399, 250), Vector2(403, 278), Vector2(401, 338), Vector2(370, 338)])},
+				{"name":"VillageShrineEast", "polygon":PackedVector2Array([Vector2(443, 260), Vector2(570, 252), Vector2(592, 279), Vector2(592, 338), Vector2(443, 338)])},
 			]
 		"river":
 			return [
 				{"name":"RiverMill", "rect":Rect2(20, 79, 103, 92)},
+				{"name":"RiverNorthWestCanopy", "rect":Rect2(20, 54, 108, 25)},
 				{"name":"RiverUpperWestWater", "polygon":PackedVector2Array([Vector2(128, 54), Vector2(282, 54), Vector2(283, 111), Vector2(255, 119), Vector2(251, 151), Vector2(220, 174), Vector2(165, 177), Vector2(158, 151), Vector2(131, 134)])},
 				{"name":"RiverUpperCenterWater", "polygon":PackedVector2Array([Vector2(283, 54), Vector2(382, 54), Vector2(382, 111), Vector2(360, 119), Vector2(313, 114), Vector2(283, 111)])},
 				{"name":"RiverCenterChannelNorth", "polygon":PackedVector2Array([Vector2(315, 142), Vector2(395, 143), Vector2(391, 181), Vector2(373, 205), Vector2(379, 240), Vector2(408, 248), Vector2(408, 250), Vector2(317, 250), Vector2(306, 211)])},
@@ -928,6 +949,7 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 				{"name":"RuinsNorthFieldEast", "rect":Rect2(342, 54, 53, 62)},
 				{"name":"RuinsNorthBell", "rect":Rect2(419, 54, 84, 80)},
 				{"name":"RuinsNorthEastTank", "polygon":PackedVector2Array([Vector2(530, 54), Vector2(620, 54), Vector2(620, 137), Vector2(547, 137), Vector2(526, 116)])},
+				{"name":"RuinsNorthEastChannel", "rect":Rect2(503, 54, 28, 84)},
 				{"name":"RuinsWestWheel", "polygon":PackedVector2Array([Vector2(73, 137), Vector2(183, 137), Vector2(190, 207), Vector2(163, 225), Vector2(84, 218), Vector2(69, 178)])},
 				{"name":"RuinsCentralMachine", "polygon":PackedVector2Array([Vector2(257, 135), Vector2(389, 135), Vector2(407, 180), Vector2(388, 219), Vector2(264, 218), Vector2(243, 180)])},
 				{"name":"RuinsEastMachine", "polygon":PackedVector2Array([Vector2(443, 140), Vector2(555, 140), Vector2(568, 187), Vector2(548, 221), Vector2(453, 218), Vector2(431, 183)])},
@@ -1041,6 +1063,115 @@ func map_has_walkable_path(map_mode: String, start: Vector2, target: Vector2, cl
 			visited[key] = true
 			frontier.append(next)
 	return false
+
+
+func map_has_reachable_interaction(map_mode: String, start: Vector2, target: Vector2, interaction_radius: float, clearance: float = 7.0) -> bool:
+	# Interaction anchors may sit on water, a tree or a building facade. Validate
+	# that the player can reach a legal standing point within the real prompt
+	# radius instead of teleporting directly onto that anchor in a test.
+	if is_map_position_blocked(map_mode, start, clearance):
+		return false
+	var step := 4.0
+	var frontier: Array[Vector2] = [start]
+	var visited := {"%d,%d" % [roundi(start.x / step), roundi(start.y / step)]:true}
+	var cursor := 0
+	while cursor < frontier.size() and frontier.size() < 20000:
+		var current := frontier[cursor]
+		cursor += 1
+		if current.distance_to(target) <= interaction_radius:
+			return true
+		for direction: Vector2 in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
+			var next := current + direction * step
+			var key := "%d,%d" % [roundi(next.x / step), roundi(next.y / step)]
+			if visited.has(key) or is_map_position_blocked(map_mode, next, clearance):
+				continue
+			visited[key] = true
+			frontier.append(next)
+	return false
+
+
+func interaction_reachability_cases() -> Dictionary:
+	var farm_cases: Array[Dictionary] = [
+		{"name":"shipping", "position":SHIPPING_POSITION, "radius":42.0},
+		{"name":"pond_fishing", "position":POND_FISH_POSITION, "radius":48.0},
+		{"name":"automation", "position":AUTOMATION_CONSOLE_POSITION, "radius":44.0},
+		{"name":"mira", "position":MIRA_POSITION, "radius":42.0},
+	]
+	for resource_id: String in FARM_RESOURCES:
+		farm_cases.append({"name":resource_id, "position":Vector2(FARM_RESOURCES[resource_id].position), "radius":36.0})
+	var village_cases: Array[Dictionary] = []
+	for shop_id: String in SHOP_POSITIONS:
+		village_cases.append({"name":shop_id, "position":Vector2(SHOP_POSITIONS[shop_id]), "radius":38.0})
+	for npc_id: String in NPC_POSITIONS:
+		village_cases.append({"name":npc_id, "position":Vector2(NPC_POSITIONS[npc_id]), "radius":34.0})
+	var river_cases: Array[Dictionary] = [
+		{"name":"fishing", "position":RIVER_FISH_POSITION, "radius":52.0},
+		{"name":"reeds", "position":RIVER_RESOURCE_POSITION, "radius":48.0},
+	]
+	for npc_id: String in RIVER_NPC_POSITIONS:
+		river_cases.append({"name":npc_id, "position":Vector2(RIVER_NPC_POSITIONS[npc_id]), "radius":46.0})
+	var grove_cases: Array[Dictionary] = [{"name":"herb", "position":GROVE_RESOURCE_POSITION, "radius":48.0}]
+	for npc_id: String in GROVE_NPC_POSITIONS:
+		grove_cases.append({"name":npc_id, "position":Vector2(GROVE_NPC_POSITIONS[npc_id]), "radius":46.0})
+	var ruins_cases: Array[Dictionary] = [{"name":"gear", "position":RUINS_RESOURCE_POSITION, "radius":48.0}]
+	for npc_id: String in RUINS_NPC_POSITIONS:
+		ruins_cases.append({"name":npc_id, "position":Vector2(RUINS_NPC_POSITIONS[npc_id]), "radius":46.0})
+	return {
+		"farm":farm_cases,
+		"village":village_cases,
+		"river":river_cases,
+		"grove":grove_cases,
+		"ruins":ruins_cases,
+		"dungeon":[{"name":"ore", "position":DUNGEON_ORE_POSITION, "radius":38.0}],
+	}
+
+
+func walkable_component_summary(map_mode: String, clearance: float = 7.0, step: float = 4.0) -> Dictionary:
+	# Scan every walkable grid point, not only the route from spawn to exits. This
+	# exposes isolated road pockets that a single start/target test cannot see.
+	var walkable: Dictionary = {}
+	for y_index in range(ceili(54.0 / step), floori(338.0 / step) + 1):
+		for x_index in range(ceili(20.0 / step), floori(620.0 / step) + 1):
+			var point := Vector2(float(x_index) * step, float(y_index) * step)
+			if not is_map_position_blocked(map_mode, point, clearance):
+				walkable[Vector2i(x_index, y_index)] = true
+	var remaining := walkable.duplicate()
+	var components: Array[Dictionary] = []
+	while not remaining.is_empty():
+		var start: Vector2i = remaining.keys()[0]
+		var frontier: Array[Vector2i] = [start]
+		remaining.erase(start)
+		var cursor := 0
+		while cursor < frontier.size():
+			var current := frontier[cursor]
+			cursor += 1
+			for direction: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]:
+				var next := current + direction
+				if remaining.erase(next):
+					frontier.append(next)
+		var minimum := frontier[0]
+		var maximum := frontier[0]
+		for grid_point: Vector2i in frontier:
+			minimum = Vector2i(mini(minimum.x, grid_point.x), mini(minimum.y, grid_point.y))
+			maximum = Vector2i(maxi(maximum.x, grid_point.x), maxi(maximum.y, grid_point.y))
+		components.append({
+			"size":frontier.size(),
+			"sample":Vector2(frontier[0]) * step,
+			"bounds":Rect2(Vector2(minimum) * step, Vector2(maximum - minimum + Vector2i.ONE) * step),
+		})
+	components.sort_custom(func(left: Dictionary, right: Dictionary) -> bool: return int(left.size) > int(right.size))
+	var component_sizes: Array[int] = []
+	for component: Dictionary in components:
+		component_sizes.append(int(component.size))
+	var largest := component_sizes[0] if not component_sizes.is_empty() else 0
+	return {
+		"walkable_points":walkable.size(),
+		"component_count":component_sizes.size(),
+		"component_sizes":component_sizes,
+		"components":components,
+		"largest_component":largest,
+		"disconnected_points":walkable.size() - largest,
+	}
 
 
 func world_collision_summary(map_mode: String) -> Dictionary:
@@ -1728,6 +1859,7 @@ func _animate_world_sprites() -> void:
 		# Keep the alpha silhouette's lowest foot pixel locked to its world
 		# ground point. A vertical sine wave made NPCs, especially Mira, hover.
 		sprite.position = _npc_anchor(npc_id)
+		sprite.z_index = 100 + clampi(roundi(_npc_ground_position(npc_id).y), 0, 360)
 
 
 func _npc_anchor(npc_id: String) -> Vector2:
@@ -1816,12 +1948,11 @@ func _update_animal_sprites() -> void:
 			sprite.texture = region
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			sprite.scale = Vector2(0.105, 0.105) if String(animal.get("species", "")) == "chicken" else Vector2(0.13, 0.13)
-			sprite.z_index = 3
 			add_child(sprite)
 			animal_sprites[animal_id] = sprite
 		var animal_position := Vector2(490 + (index % 4) * 31, 154 + (index / 4) * 33)
-		var bob := sin(float(Time.get_ticks_msec()) * 0.0025 + index) * 1.0
-		sprite.position = animal_position + Vector2(0, -9 + bob)
+		sprite.position = animal_position + Vector2(0, -9)
+		sprite.z_index = 100 + clampi(roundi(animal_position.y), 0, 360)
 		sprite.visible = mode == "farm"
 	for animal_id: String in animal_sprites.keys():
 		if live_ids.has(animal_id):

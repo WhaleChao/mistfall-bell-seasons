@@ -152,6 +152,12 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 				failures.append("World map lacks recalculated multi-shape collision coverage: %s" % source_mode)
 			if game.foreground_layer_count(source_mode) < 3:
 				failures.append("World map lacks dimensional walk-behind foreground layers: %s" % source_mode)
+			var component_summary: Dictionary = game.walkable_component_summary(source_mode, 6.0)
+			if int(component_summary.component_count) != 1:
+				failures.append("World map contains unreachable walkable pockets: %s %s" % [source_mode, component_summary.components])
+			for interaction: Dictionary in Array(game.interaction_reachability_cases()[source_mode]):
+				if not game.map_has_reachable_interaction(source_mode, game._safe_spawn_for_mode(source_mode), Vector2(interaction.position), float(interaction.radius), 6.0):
+					failures.append("World interaction cannot be reached without teleporting: %s/%s" % [source_mode, interaction.name])
 			var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
 			if source_mode != "dungeon" and connections.size() < 4:
 				failures.append("Outdoor region lacks direct routes: %s" % source_mode)
@@ -185,11 +191,12 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 				failures.append("Village contextual labels overlap at %s" % village_probe)
 		for destination_id: String in game.REGION_CONNECTIONS.village:
 			var route: Dictionary = Dictionary(game.REGION_CONNECTIONS.village[destination_id])
-			if bool(game._gateway_geometry(Vector2(route.position), String(route.label), destination_id).has_world_text):
+			var gateway_geometry: Dictionary = game._gateway_geometry(Vector2(route.position), String(route.label), destination_id)
+			if bool(gateway_geometry.has_world_text) or bool(gateway_geometry.uses_rotated_text) or bool(gateway_geometry.has_chevrons) or Array(gateway_geometry.lanterns).size() != 2 or float(gateway_geometry.overlay_extent) > 18.0:
 				failures.append("Village gateway reverted to character-overlappable world text: %s" % destination_id)
 		var pickup_geometry: Dictionary = game.world_pickup_geometry(Vector2.ZERO)
-		if bool(pickup_geometry.uses_placeholder_ring) or Rect2(pickup_geometry.icon_rect).size != Vector2(42, 42) or Array(pickup_geometry.sparks).size() < 4:
-			failures.append("Gatherable herb/reed/gear/ore visuals reverted to placeholder circles")
+		if bool(pickup_geometry.uses_placeholder_ring) or bool(pickup_geometry.uses_target_brackets) or Rect2(pickup_geometry.icon_rect).size != Vector2(20, 20) or not Array(pickup_geometry.sparks).is_empty():
+			failures.append("Gatherable herb/reed/gear/ore visuals are oversized or use placeholder targeting geometry")
 		game._travel_to_map(&"mistfall_village")
 		var mira_sprite: Sprite2D = game.npc_sprites.get("mira")
 		var grounded_mira_position: Vector2 = game._npc_sprite_anchor("mira", Vector2(game.NPC_POSITIONS["mira"]))
@@ -198,6 +205,17 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			await process_frame
 		if mira_sprite.position.distance_to(grounded_mira_position) >= 0.1 or mira_sprite.position.distance_to(mira_position_before) >= 0.1:
 			failures.append("Mira is not foot-anchored to the village ground")
+		if game.npc_collision_count() != game.NPC_POSITIONS.size():
+			failures.append("Visible village NPCs do not all have physical collision bodies")
+		if runtime_player.visual_sprite.position.distance_to(Vector2(0, -12)) >= 0.01 or runtime_player.visual_sprite.scale.distance_to(Vector2(0.15, 0.15)) >= 0.001:
+			failures.append("Player idle pose is not locked to a stable ground contact point")
+		runtime_player.global_position = Vector2(200, 190)
+		runtime_player._update_depth_order()
+		var behind_depth: int = runtime_player.z_index
+		runtime_player.global_position = Vector2(200, 210)
+		runtime_player._update_depth_order()
+		if runtime_player.z_index <= behind_depth or mira_sprite.z_index != 100 + roundi(Vector2(game.NPC_POSITIONS.mira).y):
+			failures.append("Actor draw order is not derived from feet Y position")
 		for npc_id: String in game.NPC_POSITIONS:
 			if game.is_world_position_blocked(Vector2(game.NPC_POSITIONS[npc_id]), 9.0):
 				failures.append("Village NPC is positioned inside an obstacle: %s" % npc_id)

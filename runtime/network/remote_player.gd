@@ -19,7 +19,7 @@ func configure(id: int, display_name: String, initial_position: Vector2) -> void
 
 
 func _ready() -> void:
-	z_index = 4
+	_update_depth_order()
 	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas_alpha.png")
 	if atlas != null:
 		visual_region = AtlasTexture.new()
@@ -56,6 +56,7 @@ func apply_snapshot(state: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	global_position = global_position.lerp(target_position, clampf(delta * 12.0, 0.0, 1.0))
+	_update_depth_order()
 	if not is_instance_valid(visual_region):
 		return
 	var row := 0
@@ -67,6 +68,16 @@ func _process(delta: float) -> void:
 	var frame := int(Time.get_ticks_msec() / 110) % 4 if moving else 0
 	var atlas := visual_region.atlas
 	visual_region.region = Rect2(frame * atlas.get_width() / 4.0, row * atlas.get_height() / 4.0, atlas.get_width() / 4.0, atlas.get_height() / 4.0)
+
+
+func _draw() -> void:
+	draw_set_transform(Vector2(0, 4.5), 0.0, Vector2(1.0, 0.34))
+	draw_circle(Vector2.ZERO, 9.0, Color(0.02, 0.03, 0.04, 0.42))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _update_depth_order() -> void:
+	z_index = 100 + clampi(roundi(global_position.y), 0, 360)
 
 
 func _array_to_vector(value: Variant) -> Vector2:
