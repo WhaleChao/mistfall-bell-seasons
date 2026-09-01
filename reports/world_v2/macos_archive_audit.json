@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "archive": "Mistfall-Bell-Seasons-v1.2.1-macOS-Universal.zip",
+  "archive_bytes": 85645915,
+  "archive_sha256": "d46cdd8a680f87557abf73fd9d72c1701128c64e1e98362a7a6fbfeed63647cf",
+  "app_bundle": "霧落農歌：鐘塔之季.app",
+  "bundle_identifier": "com.whalechao.mistfall-bell-seasons",
+  "version": "1.2.1",
+  "minimum_system_versions": {
+    "arm64": "13.0",
+    "x86_64": "11.0"
+  },
+  "executable": "霧落農歌：鐘塔之季.app/Contents/MacOS/霧落農歌：鐘塔之季",
+  "plist_executable_name": "霧落農歌：鐘塔之季",
+  "zip_filename_encoding_fallback": true,
+  "executable_mode": "0o100755",
+  "architectures": [
+    "x86_64",
+    "arm64"
+  ],
+  "pck": "霧落農歌：鐘塔之季.app/Contents/Resources/霧落農歌：鐘塔之季.pck",
+  "pck_sha256": "a09c23f0d7c944c81e158baff08b79695b2e59b815917c2c025079c6bc77d923",
+  "commercial_notices": [
+    "ASSET_LICENSES.md",
+    "BEGINNER_GUIDE.md",
+    "GAMEPLAY_GUIDE.md",
+    "GODOT_ENGINE_COPYRIGHT.txt",
+    "GODOT_ENGINE_LICENSE.txt",
+    "LICENSE.txt",
+    "PRIVACY.md",
+    "README.md",
+    "SERVER_GUIDE.md",
+    "SUPPORT.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "errors": []
+}

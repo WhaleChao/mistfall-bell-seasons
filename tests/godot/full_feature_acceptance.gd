@@ -630,13 +630,14 @@ func _test_maps_and_automation() -> void:
 	_record("農場自動化", "九種設備可購買並連成單一鐘能網路", built == 9 and state_store.farm.automation_networks().size() == 1)
 	_record("農場自動化", "供電供水、播種、澆水、收割、餵食與雙加工每日實際運作", int(automation_report.get("stalled", 99)) == 0 and int(automation_report.get("watered", 0)) >= 1 and int(automation_report.get("harvested", 0)) >= 1 and int(automation_report.get("fed", 0)) == 1 and int(automation_report.get("processed", 0)) == 2)
 	_record("農場自動化", "霧封農產與夢潮鹽進入可出貨庫", int(state_store.farm.produce.get("mist_preserves", 0)) >= 1 and int(state_store.farm.produce.get("dream_tide_salt", 0)) >= 1)
-	player.global_position = game.AUTOMATION_CONSOLE_POSITION
+	game._travel_to_map(&"mistfall_barn")
+	player.global_position = Vector2(329, 88)
 	game._interact()
 	await _frames(5)
 	var handbook_has_automation := false
 	for tab_index in range(game.game_menu.tabs.get_tab_count()):
 		handbook_has_automation = handbook_has_automation or game.game_menu.tabs.get_tab_title(tab_index) == "自動化"
-	_record("農場自動化", "自動化是農場內鐘網控制台互動，不在設定手冊", game.automation_console.visible and paused and not handbook_has_automation)
+	_record("農場自動化", "自動化是畜舍內鐘網設備互動，不在設定手冊", game.automation_console.visible and paused and not handbook_has_automation)
 	_record("農場自動化", "可視化 6×4 設計圖、設備選擇、作物篩選、優先序與停機資訊可操作", game.automation_console.automation_tile_buttons.size() == 24 and game.automation_console.automation_device_select.item_count == 9 and "1 網路" in game.automation_console.automation_status_label.text)
 	await _capture("19_automation_network")
 	game.automation_console.close()
@@ -964,7 +965,7 @@ func _test_menus_relationships_and_settings() -> void:
 	var load_ok: bool = bool(save_manager.load_quick())
 	await _frames(3)
 	var map_restored: bool = game.mode == "river" and state_store.current_map_id == &"mistfall_river" and player.global_position.distance_to(Vector2(188, 214)) < 1.0 and player.velocity == Vector2.ZERO
-	_record("存檔", "SaveGame v5 跨地圖快速存讀", save_ok and load_ok and state_store.coins == 12345 and map_restored)
+	_record("存檔", "SaveGame v6 跨地圖快速存讀", save_ok and load_ok and state_store.coins == 12345 and map_restored)
 	game.game_menu.close()
 	await _frames(3)
 	state_store.coins = 7
@@ -1130,29 +1131,40 @@ func _test_long_term_content_and_migrations() -> void:
 	_record("主線", "三年主線可連續完成", story_completed == 12, "%d/12%s" % [story_completed, "｜%s" % story_failure if not story_failure.is_empty() else ""])
 	state_store._check_achievements()
 	_record("成就", "14 項成就可解鎖", state_store.achievements.unlocked.size() == 14, "%d/14" % state_store.achievements.unlocked.size())
-	var v5: Dictionary = state_store.to_save_data()
-	var v4: Dictionary = v5.duplicate(true)
+	var v6: Dictionary = state_store.to_save_data()
+	var v5: Dictionary = v6.duplicate(true)
+	v5.schema_version = 5
+	v5.erase("world")
+	var v5_player: Dictionary = Dictionary(v5.player).duplicate(true)
+	v5_player.erase("facing")
+	v5.player = v5_player
+	var v5_ok: bool = bool(state_store.load_save_data(v5))
+	var v4: Dictionary = v6.duplicate(true)
 	v4.schema_version = 4
+	v4.erase("world")
 	var v4_farm: Dictionary = Dictionary(v4.farm).duplicate(true)
 	for key in ["automation_devices","automation_cycle_count","automation_last_report"]:
 		v4_farm.erase(key)
 	v4.farm = v4_farm
 	var v4_ok: bool = bool(state_store.load_save_data(v4))
-	var v3: Dictionary = v5.duplicate(true)
+	var v3: Dictionary = v6.duplicate(true)
 	v3.schema_version = 3
+	v3.erase("world")
 	v3.erase("eldritch")
 	var v3_ok: bool = bool(state_store.load_save_data(v3))
-	var v2: Dictionary = v5.duplicate(true)
+	var v2: Dictionary = v6.duplicate(true)
 	v2.schema_version = 2
+	v2.erase("world")
 	for key in ["tools", "economy", "achievements", "lifetime_stats", "settings", "eldritch"]:
 		v2.erase(key)
 	var v2_ok: bool = bool(state_store.load_save_data(v2))
 	var legacy := {"schema_version":1,"player":{"position":[12,34],"stats":{"max_health":100,"health":80,"attack":16}},"map":"mistfall_farm","flags":{},"quests":{},"inventory":{"health_potion":1},"calendar":{"year":2,"season_index":2,"day":28,"minute_of_day":720,"speed_mode":"relaxed"}}
 	var v1_ok: bool = bool(state_store.load_save_data(legacy))
-	_record("存檔", "v4→v5 自動化資料遷移", v4_ok)
-	_record("存檔", "v3→v5 異潮資料遷移", v3_ok)
-	_record("存檔", "v2→v5 遷移", v2_ok)
-	_record("存檔", "28 日制 v1→v5 保留日期", v1_ok and state_store.calendar.year == 2 and state_store.calendar.season_index == 2 and state_store.calendar.day == 28)
+	_record("存檔", "v5→v6 地圖與室內資料遷移", v5_ok)
+	_record("存檔", "v4→v6 自動化資料遷移", v4_ok)
+	_record("存檔", "v3→v6 異潮資料遷移", v3_ok)
+	_record("存檔", "v2→v6 遷移", v2_ok)
+	_record("存檔", "28 日制 v1→v6 保留日期", v1_ok and state_store.calendar.year == 2 and state_store.calendar.season_index == 2 and state_store.calendar.day == 28)
 	_record("內容", "48 作物／20 魚／40 料理", registry.get_all("crops").size() == 48 and registry.get_all("fish").size() == 20 and registry.get_all("recipes").size() == 40)
 	_record("內容", "10 NPC／12 節慶／17+ 洞窟與異潮敵人／9 種自動設備", registry.get_all("npc_schedules").size() == 10 and registry.get_all("festivals").size() == 12 and registry.get_all("enemies").size() >= 17 and registry.get_all("automation_devices").size() == 9)
 	_record("離線", "Runtime 場景沒有 HTTPRequest", get_nodes_in_group("http_clients").is_empty())

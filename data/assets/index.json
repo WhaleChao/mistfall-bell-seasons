@@ -160,6 +160,176 @@
       "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen concept; deterministic transparent SVG redraw, 2026-09-01", "author": "User-directed AI generation and PixelRPG Studio contributors"},
       "tags": ["original", "vector", "ui", "attack", "slash", "transparent"],
       "links": ["system:combat", "animation:attack"]
+    },
+    {
+      "schema_version": 1,
+      "id": "farmhouse_interior_v2",
+      "source_path": "res://assets/runtime/backgrounds/interiors/farmhouse_interior.png",
+      "kind": "image",
+      "sha256": "47c510c5764283a3ba48e2ee9cd646fb4ee4306e8d9fa213672e294a95887d9f",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-09-02; deterministic 640x360 nearest-neighbour runtime derivative", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "interior", "farmhouse"],
+      "links": ["map:mistfall_farmhouse", "interaction:bed", "interaction:kitchen", "interaction:storage"]
+    },
+    {
+      "schema_version": 1,
+      "id": "barn_interior_v2",
+      "source_path": "res://assets/runtime/backgrounds/interiors/barn_interior.png",
+      "kind": "image",
+      "sha256": "5e3f492d23315d68f01cfd9065bbb7471f4e9fc459b2335133b37478065c8cf1",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-09-02; deterministic 640x360 nearest-neighbour runtime derivative", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "interior", "barn"],
+      "links": ["map:mistfall_barn", "system:animals", "system:farm_automation"]
+    },
+    {
+      "schema_version": 1,
+      "id": "greenhouse_interior_v2",
+      "source_path": "res://assets/runtime/backgrounds/interiors/greenhouse_interior.png",
+      "kind": "image",
+      "sha256": "ac2da9c1423a6520bb75f468773e9cb3bc9dfaf511e6ee28759493ebef66e26c",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen, 2026-09-02; deterministic 640x360 nearest-neighbour runtime derivative", "author": "User-directed AI generation"},
+      "tags": ["original", "pixel_art", "environment", "interior", "greenhouse"],
+      "links": ["map:mistfall_greenhouse", "system:farming"]
+    },
+    {
+      "schema_version": 1,
+      "id": "world_item_visual_manifest_v2",
+      "source_path": "res://assets/runtime/icons/manifest.json",
+      "kind": "data",
+      "sha256": "0d9adb3efe230e68a8c2567eab8e1690504d69723300ff099f9da4baf79ab1e1",
+      "license": {"spdx": "MIT", "source": "Deterministic raster icon manifest and registered project content, 2026-09-02", "author": "PixelRPG Studio contributors"},
+      "tags": ["runtime", "raster", "item_icons", "visual_manifest", "complete"],
+      "links": ["system:inventory", "system:farming", "system:fishing", "system:automation"]
+    },
+    {
+      "schema_version": 1,
+      "id": "player_walk_atlas_final",
+      "source_path": "res://assets/runtime/sprites/player_walk_atlas_final.png",
+      "kind": "image",
+      "sha256": "5339b9906003017e02a880f8eb48ce9c60f7fc586133431aadcc2750c339bd7e",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated player atlas; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprites", "player", "final_size", "four_direction"],
+      "links": ["character:hero", "animation:idle", "animation:walk", "animation:attack"]
+    },
+    {
+      "schema_version": 1,
+      "id": "character_atlas_final",
+      "source_path": "res://assets/runtime/sprites/character_atlas_final.png",
+      "kind": "image",
+      "sha256": "c34565f588a028a1421d05b8da31230e0cf5a11dc9b0af08d7d207bf8cb90813",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated character atlas; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprites", "characters", "final_size"],
+      "links": ["character:mira", "character:lian", "character:soren", "character:yuna"]
+    },
+    {
+      "schema_version": 1,
+      "id": "animal_chicken_atlas_final",
+      "source_path": "res://assets/runtime/sprites/animal_chicken_atlas_final.png",
+      "kind": "image",
+      "sha256": "c514e98483af695eb3e034c2986262f115399c2300271795ffc650a2cfde424e",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated animal atlas; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprites", "animal", "chicken", "final_size"],
+      "links": ["animal:chicken", "item:egg"]
+    },
+    {
+      "schema_version": 1,
+      "id": "animal_livestock_atlas_final",
+      "source_path": "res://assets/runtime/sprites/animal_livestock_atlas_final.png",
+      "kind": "image",
+      "sha256": "9745dcf7e28a3f9b45357a3c0ff6ae647e0231ac293f88f9c1e2b2ed7c142091",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated animal atlas; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprites", "animal", "livestock", "final_size"],
+      "links": ["animal:cow", "item:milk"]
+    },
+    {
+      "schema_version": 1,
+      "id": "enemy_atlas_final",
+      "source_path": "res://assets/runtime/sprites/enemy_atlas_final.png",
+      "kind": "image",
+      "sha256": "a3607153c6c1d77138856f9c37818ef1cb823106df4c80d864d5035785866cba",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated enemy atlas; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprites", "enemy", "final_size"],
+      "links": ["dungeon:mistfall_depths"]
+    },
+    {
+      "schema_version": 1,
+      "id": "enemy_boss_atlas_final",
+      "source_path": "res://assets/runtime/sprites/enemy_boss_atlas_final.png",
+      "kind": "image",
+      "sha256": "e3744662b147be0df9e29173edb5ad71b6f18fcac4e531e6d12dc730f6aeeb05",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated enemy atlas; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprites", "boss", "final_size"],
+      "links": ["dungeon:mistfall_depths", "system:combat"]
+    },
+    {
+      "schema_version": 1,
+      "id": "eldritch_drowned_dreamer_final",
+      "source_path": "res://assets/runtime/sprites/eldritch_drowned_dreamer_final.png",
+      "kind": "image",
+      "sha256": "c649863861d1415fb8f3435d7aa0d67e6d8a3c23707d8f46a99da972490d95ff",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered OpenAI-generated drowned dreamer; deterministic nearest-neighbour final-size derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "sprite", "eldritch", "boss", "final_size"],
+      "links": ["enemy:drowned_dreamer", "quest:whispers_beneath_tide_quest"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_farm_background_640",
+      "source_path": "res://assets/runtime/backgrounds/maps/mistfall_farm_640.png",
+      "kind": "image",
+      "sha256": "9e0d0df57f8bc56e0cca075a246eacce58fb22541d89076dde480d898328404e",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered farm background; deterministic 640x360 nearest-neighbour runtime derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "environment", "map", "integer_scale"],
+      "links": ["map:mistfall_farm"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_village_background_640",
+      "source_path": "res://assets/runtime/backgrounds/maps/mistfall_village_640.png",
+      "kind": "image",
+      "sha256": "30767b1a1786cd956f726b18b6573c4fb6cb5f21f0922ac4241b9384d3d2dea8",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered village background; deterministic 640x360 nearest-neighbour runtime derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "environment", "map", "integer_scale"],
+      "links": ["map:mistfall_village"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_river_background_640",
+      "source_path": "res://assets/runtime/backgrounds/maps/mistfall_river_640.png",
+      "kind": "image",
+      "sha256": "98d7fd6fa73d9597b10ae2b626e27ef1330bd5cfdd635b0cc7e2792c68292e37",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered river background; deterministic 640x360 nearest-neighbour runtime derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "environment", "map", "integer_scale"],
+      "links": ["map:mistfall_river"]
+    },
+    {
+      "schema_version": 1,
+      "id": "bellwood_grove_background_640",
+      "source_path": "res://assets/runtime/backgrounds/maps/bellwood_grove_640.png",
+      "kind": "image",
+      "sha256": "e58de7f6177ee905c74dfd40682e57a81741d682204c0e6c0bf8bbd31b752206",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered grove background; deterministic 640x360 nearest-neighbour runtime derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "environment", "map", "integer_scale"],
+      "links": ["map:bellwood_grove"]
+    },
+    {
+      "schema_version": 1,
+      "id": "clockwork_ruins_background_640",
+      "source_path": "res://assets/runtime/backgrounds/maps/clockwork_ruins_640.png",
+      "kind": "image",
+      "sha256": "3293dbaf64e0fd68ccba89a2c82f2b62aa153461dc48686723696f01b362920f",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered ruins background; deterministic 640x360 nearest-neighbour runtime derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "environment", "map", "integer_scale"],
+      "links": ["map:clockwork_ruins"]
+    },
+    {
+      "schema_version": 1,
+      "id": "mistfall_dungeon_background_640",
+      "source_path": "res://assets/runtime/backgrounds/maps/mistfall_dungeon_640.png",
+      "kind": "image",
+      "sha256": "d6eceb896b53b0554de12303e53977a4a7633bf8c994530592f89210cdf6ffb3",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "Registered dungeon background; deterministic 640x360 nearest-neighbour runtime derivative, 2026-09-02", "author": "User-directed AI generation"},
+      "tags": ["runtime", "pixel_art", "environment", "map", "integer_scale"],
+      "links": ["map:mistfall_depths", "map:dreaming_shore"]
     }
   ]
 }

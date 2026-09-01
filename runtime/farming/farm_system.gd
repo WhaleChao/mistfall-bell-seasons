@@ -8,6 +8,7 @@ const MAX_ANIMAL_CAPACITY := 6
 
 var rank := 1
 var plots: Dictionary = {}
+var greenhouse_plots: Dictionary = {}
 var seed_stock: Dictionary = {}
 var produce: Dictionary = {}
 var animals: Array[Dictionary] = []
@@ -21,6 +22,7 @@ var automation_last_report: Dictionary = {}
 func reset() -> void:
 	rank = 1
 	plots.clear()
+	greenhouse_plots.clear()
 	seed_stock = {"spring_turnip": 8, "spring_potato": 4, "spring_strawberry": 2}
 	produce.clear()
 	animals.clear()
@@ -92,6 +94,64 @@ func harvest(tile: Vector2i) -> Dictionary:
 	return {"ok": true, "action": "harvested", "crop_id": crop_id, "quantity": amount, "message": "收成 %s ×%d" % [definition.get("display_name", crop_id), amount]}
 
 
+func interact_greenhouse_plot(tile: Vector2i, crop_id: StringName) -> Dictionary:
+	var key := _key(tile)
+	var plot: Dictionary = Dictionary(greenhouse_plots.get(key, _new_plot(tile))).duplicate(true)
+	if not bool(plot.get("tilled", false)):
+		plot.tilled = true
+		greenhouse_plots[key] = plot
+		return {"ok": true, "action": "tilled", "message": "翻鬆了溫室栽培床"}
+	if String(plot.get("crop_id", "")).is_empty():
+		var definition := ContentRegistry.get_artifact("crops", crop_id)
+		if definition.is_empty():
+			return {"ok": false, "message": "找不到所選種子的作物資料"}
+		if int(seed_stock.get(String(crop_id), 0)) <= 0:
+			return {"ok": false, "message": "這種種子已經用完"}
+		seed_stock[String(crop_id)] = int(seed_stock.get(String(crop_id), 0)) - 1
+		plot.crop_id = String(crop_id)
+		plot.growth_progress = 0
+		plot.ready = false
+		plot.watered = false
+		plot.withered = false
+		greenhouse_plots[key] = plot
+		return {"ok": true, "action": "planted", "message": "在溫室種下了%s" % definition.get("display_name", crop_id)}
+	if bool(plot.get("withered", false)):
+		plot = _new_plot(tile)
+		plot.tilled = true
+		greenhouse_plots[key] = plot
+		return {"ok": true, "action": "cleared", "message": "清除了枯萎作物"}
+	if bool(plot.get("ready", false)):
+		return _harvest_from(greenhouse_plots, tile)
+	if not bool(plot.get("watered", false)):
+		plot.watered = true
+		greenhouse_plots[key] = plot
+		return {"ok": true, "action": "watered", "message": "溫室澆水完成"}
+	return {"ok": false, "message": "今天已經澆過水了"}
+
+
+func _harvest_from(plot_store: Dictionary, tile: Vector2i) -> Dictionary:
+	var key := _key(tile)
+	if not plot_store.has(key):
+		return {"ok": false, "message": "這裡沒有可收成作物"}
+	var plot: Dictionary = Dictionary(plot_store[key]).duplicate(true)
+	if not bool(plot.get("ready", false)):
+		return {"ok": false, "message": "作物還沒成熟"}
+	var crop_id := String(plot.get("crop_id", ""))
+	var definition := ContentRegistry.get_artifact("crops", crop_id)
+	var amount := 1 + int(rank >= 5 and posmod(tile.x + tile.y, 3) == 0)
+	produce[crop_id] = int(produce.get(crop_id, 0)) + amount
+	var regrow_days := int(definition.get("regrow_days", 0))
+	if regrow_days > 0:
+		plot.growth_progress = maxi(0, int(definition.get("growth_days", 1)) - regrow_days)
+		plot.ready = false
+		plot.watered = false
+	else:
+		plot = _new_plot(tile)
+		plot.tilled = true
+	plot_store[key] = plot
+	return {"ok": true, "action": "harvested", "crop_id": crop_id, "quantity": amount, "message": "收成 %s ×%d" % [definition.get("display_name", crop_id), amount]}
+
+
 func advance_day(new_season_id: StringName, weather: String) -> Array[String]:
 	var messages: Array[String] = []
 	for key: String in plots.keys():
@@ -114,6 +174,19 @@ func advance_day(new_season_id: StringName, weather: String) -> Array[String]:
 				plot.ready = int(plot.growth_progress) >= int(definition.get("growth_days", 1))
 			plot.watered = false
 		plots[key] = plot
+	for key: String in greenhouse_plots.keys():
+		var greenhouse_plot: Dictionary = Dictionary(greenhouse_plots[key]).duplicate(true)
+		var greenhouse_crop_id := String(greenhouse_plot.get("crop_id", ""))
+		if greenhouse_crop_id.is_empty() or bool(greenhouse_plot.get("withered", false)):
+			greenhouse_plot.watered = false
+			greenhouse_plots[key] = greenhouse_plot
+			continue
+		if bool(greenhouse_plot.get("watered", false)):
+			var greenhouse_definition := ContentRegistry.get_artifact("crops", greenhouse_crop_id)
+			greenhouse_plot.growth_progress = int(greenhouse_plot.get("growth_progress", 0)) + 1
+			greenhouse_plot.ready = int(greenhouse_plot.growth_progress) >= int(greenhouse_definition.get("growth_days", 1))
+		greenhouse_plot.watered = false
+		greenhouse_plots[key] = greenhouse_plot
 	_advance_animals(weather)
 	return messages
 
@@ -124,6 +197,7 @@ func tend_animal(animal_id: String, feed: bool = true, graze: bool = false) -> D
 			continue
 		var animal: Dictionary = animals[index].duplicate(true)
 		animal.fed = bool(animal.get("fed", false)) or feed
+		animal.petted = true
 		animal.grazed = bool(animal.get("grazed", false)) or graze
 		animal.mood = clampi(int(animal.get("mood", 50)) + 4 + (3 if graze else 0), 0, 100)
 		animals[index] = animal
@@ -180,7 +254,7 @@ func purchase_animal(species: String) -> Dictionary:
 			next_index += 1
 	var animal_id := "%s_%d" % [species, next_index]
 	var display_name := "小霧%d" % next_index if species == "chicken" else "奶鐘%d" % next_index
-	animals.append({"id": animal_id, "species": species, "name": display_name, "hearts": 0, "mood": 55, "fed": false, "grazed": false, "product_ready": false, "pregnant_days": 0})
+	animals.append({"id": animal_id, "species": species, "name": display_name, "hearts": 0, "mood": 55, "fed": false, "petted": false, "grazed": false, "product_ready": false, "pregnant_days": 0, "scene_id":"mistfall_barn", "stall_index":animals.size()})
 	return {"ok": true, "animal_id": animal_id, "message": "%s加入了農場" % definition.get("display_name", species)}
 
 
@@ -508,17 +582,22 @@ func _empty_automation_report() -> Dictionary:
 
 
 func to_data() -> Dictionary:
-	return {"rank": rank, "plots": plots.duplicate(true), "seed_stock": seed_stock.duplicate(true), "produce": produce.duplicate(true), "animals": animals.duplicate(true), "greenhouse_unlocked": greenhouse_unlocked, "unlocked_upgrades": unlocked_upgrades.duplicate(), "automation_devices": automation_devices.duplicate(true), "automation_cycle_count": automation_cycle_count, "automation_last_report": automation_last_report.duplicate(true)}
+	return {"rank": rank, "plots": plots.duplicate(true), "greenhouse_plots": greenhouse_plots.duplicate(true), "seed_stock": seed_stock.duplicate(true), "produce": produce.duplicate(true), "animals": animals.duplicate(true), "greenhouse_unlocked": greenhouse_unlocked, "unlocked_upgrades": unlocked_upgrades.duplicate(), "automation_devices": automation_devices.duplicate(true), "automation_cycle_count": automation_cycle_count, "automation_last_report": automation_last_report.duplicate(true)}
 
 
 func load_data(data: Dictionary) -> void:
 	rank = clampi(int(data.get("rank", 1)), 1, MAX_RANK)
 	plots = Dictionary(data.get("plots", {})).duplicate(true)
+	greenhouse_plots = Dictionary(data.get("greenhouse_plots", {})).duplicate(true)
 	seed_stock = Dictionary(data.get("seed_stock", {})).duplicate(true)
 	produce = Dictionary(data.get("produce", {})).duplicate(true)
 	animals.clear()
-	for animal: Dictionary in data.get("animals", []):
-		animals.append(animal.duplicate(true))
+	for animal_source: Dictionary in data.get("animals", []):
+		var animal := animal_source.duplicate(true)
+		animal["scene_id"] = String(animal.get("scene_id", "mistfall_barn"))
+		animal["stall_index"] = int(animal.get("stall_index", animals.size()))
+		animal["petted"] = bool(animal.get("petted", false))
+		animals.append(animal)
 	greenhouse_unlocked = bool(data.get("greenhouse_unlocked", false))
 	unlocked_upgrades.assign(data.get("unlocked_upgrades", []))
 	automation_devices = Dictionary(data.get("automation_devices", {})).duplicate(true)
@@ -538,6 +617,7 @@ func _advance_animals(weather: String) -> void:
 		if was_cared_for and int(animal.mood) >= 75 and weather not in ["storm", "typhoon", "blizzard"]:
 			animal.hearts = mini(10, int(animal.get("hearts", 0)) + int(posmod(index + int(animal.mood), 5) == 0))
 		animal.fed = false
+		animal.petted = false
 		animal.grazed = false
 		var pregnant_days := int(animal.get("pregnant_days", 0))
 		if pregnant_days > 0:
@@ -545,7 +625,7 @@ func _advance_animals(weather: String) -> void:
 			if int(animal.pregnant_days) == 0:
 				if animals.size() + newborns.size() < animal_capacity():
 					var species := String(animal.get("species", "chicken"))
-					newborns.append({"id": "%s_%d" % [species, animals.size() + newborns.size() + 1], "species": species, "name": "新生%s" % ("小雞" if species == "chicken" else "小牛"), "hearts": 0, "mood": 55, "fed": false, "grazed": false, "product_ready": false, "pregnant_days": 0})
+					newborns.append({"id": "%s_%d" % [species, animals.size() + newborns.size() + 1], "species": species, "name": "新生%s" % ("小雞" if species == "chicken" else "小牛"), "hearts": 0, "mood": 55, "fed": false, "petted": false, "grazed": false, "product_ready": false, "pregnant_days": 0, "scene_id":"mistfall_barn", "stall_index":animals.size() + newborns.size()})
 				else:
 					# Corrupt/legacy over-capacity saves must not silently lose a birth.
 					animal.pregnant_days = 1

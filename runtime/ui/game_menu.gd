@@ -26,6 +26,7 @@ var rebind_buttons: Dictionary = {}
 var recipe_select: OptionButton
 var recipe_label: Label
 var recipe_icon: TextureRect
+var recipe_tab_index := -1
 
 
 func _ready() -> void:
@@ -65,15 +66,39 @@ func toggle() -> void:
 
 
 func open() -> void:
+	_hide_context_tabs()
 	refresh()
 	visible = true
 	GameState.set_pause_owner(PAUSE_OWNER, true)
 	farm_upgrade_button.grab_focus()
 
 
+func open_to_tab(tab_title: String) -> void:
+	if tab_title == "料理" and recipe_tab_index >= 0:
+		tabs.set_tab_hidden(recipe_tab_index, false)
+		refresh()
+		visible = true
+		GameState.set_pause_owner(PAUSE_OWNER, true)
+	else:
+		open()
+	for tab_index in range(tabs.get_tab_count()):
+		if tabs.get_tab_title(tab_index) == tab_title:
+			tabs.current_tab = tab_index
+			return
+
+
 func close() -> void:
 	visible = false
 	GameState.set_pause_owner(PAUSE_OWNER, false)
+	_hide_context_tabs()
+
+
+func _hide_context_tabs() -> void:
+	if recipe_tab_index < 0 or not is_instance_valid(tabs):
+		return
+	if tabs.current_tab == recipe_tab_index:
+		tabs.current_tab = 0
+	tabs.set_tab_hidden(recipe_tab_index, true)
 
 
 func refresh() -> void:
@@ -336,6 +361,8 @@ func _add_cooking_tab() -> void:
 	var box := VBoxContainer.new()
 	box.name = "料理"
 	tabs.add_child(box)
+	recipe_tab_index = tabs.get_tab_count() - 1
+	tabs.set_tab_hidden(recipe_tab_index, true)
 	var heading := Label.new()
 	heading.text = "農舍廚房・40 道四季料理"
 	heading.add_theme_font_size_override("font_size", 16)

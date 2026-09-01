@@ -34,6 +34,7 @@ var visual_frame := -1
 var visual_direction_row := -1
 var visual_animation := &"idle"
 var attack_visual_progress := 0.0
+var attack_visual_phase: StringName = &"idle"
 
 
 func _ready() -> void:
@@ -169,9 +170,8 @@ func _start_dodge(direction: Vector2) -> void:
 
 
 func _perform_melee_hit() -> void:
-	var radius := 22.0 + float(combo_stage) * 3.0
-	var center := global_position + facing.normalized() * 24.0
-	var hits := _query_enemies(center, radius)
+	var hit_geometry := attack_hit_geometry()
+	var hits := _query_enemies(Vector2(hit_geometry.center), float(hit_geometry.radius))
 	for enemy: Node in hits:
 		var damage := roundi(float(attack_power) * ATTACK_DAMAGE_MULTIPLIERS[combo_stage])
 		enemy.take_damage(damage, self)
@@ -250,6 +250,7 @@ func restore_from_game_state() -> void:
 	max_health = int(GameState.player_stats.get("max_health", 100))
 	health = clampi(int(GameState.player_stats.get("health", max_health)), 1, max_health)
 	attack_power = int(GameState.player_stats.get("attack", 16))
+	facing = GameState.player_facing.normalized() if GameState.player_facing.length_squared() > 0.01 else Vector2.DOWN
 	state = State.MOVE
 	state_timer = 0.0
 	combo_stage = 0
@@ -261,7 +262,7 @@ func restore_from_game_state() -> void:
 
 
 func _create_visual_sprite() -> void:
-	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas_alpha.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas_final.png")
 	if atlas == null:
 		return
 	var frame_width := floori(atlas.get_width() / 4.0)
@@ -272,7 +273,7 @@ func _create_visual_sprite() -> void:
 	visual_sprite = Sprite2D.new()
 	visual_sprite.texture = visual_region
 	visual_sprite.position = Vector2(0, -12)
-	visual_sprite.scale = Vector2(0.15, 0.15)
+	visual_sprite.scale = Vector2.ONE
 	visual_sprite.z_index = 0
 	visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(visual_sprite)
@@ -303,18 +304,19 @@ func _update_visual() -> void:
 	# Idle is deliberately rigid at the feet. Moving the whole sprite up and down
 	# made the hero look as if he were hovering over the map.
 	visual_sprite.position = Vector2(0, -12.0)
-	visual_sprite.scale = Vector2(0.15, 0.15)
+	visual_sprite.scale = Vector2.ONE
 	visual_sprite.flip_h = false
 	visual_sprite.rotation = 0.0
 	attack_visual_progress = 0.0
+	attack_visual_phase = &"idle"
 	if state == State.ATTACK:
 		var duration: float = ATTACK_DURATIONS[combo_stage]
 		attack_visual_progress = clampf(1.0 - state_timer / duration, 0.0, 1.0)
+		attack_visual_phase = attack_phase(attack_visual_progress)
 		var motion := sin(attack_visual_progress * PI)
 		var perpendicular := facing.normalized().rotated(PI * 0.5)
 		visual_sprite.position += facing.normalized() * motion * 3.2 + perpendicular * sin(attack_visual_progress * TAU) * 1.1
 		visual_sprite.rotation = sin(attack_visual_progress * PI) * (0.095 if facing.x >= 0.0 else -0.095)
-		visual_sprite.scale = Vector2(0.15 + motion * 0.006, 0.15 - motion * 0.003)
 	if hurt_flash_timer > 0.0:
 		visual_sprite.modulate = Color(1.4, 1.4, 1.4, visual_sprite.modulate.a)
 
@@ -363,3 +365,23 @@ func attack_effect_geometry(progress: float) -> Dictionary:
 	var tail := effect_transform * ATTACK_EFFECT_TAIL
 	var tip := effect_transform * ATTACK_EFFECT_TIP
 	return {"transform":effect_transform, "origin":origin, "angle":angle, "scale":scale, "tail":tail, "tip":tip}
+
+
+func attack_phase(progress: float = attack_visual_progress) -> StringName:
+	# The three windows are intentionally explicit so animation, hit timing and
+	# regression tests share the same readable combat contract.
+	var normalized := clampf(progress, 0.0, 1.0)
+	if normalized < 0.28:
+		return &"prepare"
+	if normalized < 0.70:
+		return &"strike"
+	return &"recovery"
+
+
+func attack_hit_geometry() -> Dictionary:
+	var direction := facing.normalized() if facing.length_squared() > 0.01 else Vector2.DOWN
+	return {
+		"direction": direction,
+		"center": global_position + direction * 24.0,
+		"radius": 22.0 + float(combo_stage) * 3.0,
+	}

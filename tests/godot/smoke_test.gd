@@ -201,6 +201,9 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 		var pickup_geometry: Dictionary = game.world_pickup_geometry(Vector2.ZERO)
 		if bool(pickup_geometry.uses_placeholder_ring) or bool(pickup_geometry.uses_target_brackets) or Rect2(pickup_geometry.icon_rect).size != Vector2(20, 20) or not Array(pickup_geometry.sparks).is_empty():
 			failures.append("Gatherable herb/reed/gear/ore visuals are oversized or use placeholder targeting geometry")
+		var fishing_geometry: Dictionary = game.fishing_spot_geometry()
+		if bool(fishing_geometry.uses_concentric_rings) or bool(fishing_geometry.uses_target_brackets) or int(fishing_geometry.wake_segments) > 2:
+			failures.append("Fishing point reverted to concentric debug rings")
 		game._travel_to_map(&"mistfall_village")
 		var mira_sprite: Sprite2D = game.npc_sprites.get("mira")
 		var grounded_mira_position: Vector2 = game._npc_sprite_anchor("mira", Vector2(game.NPC_POSITIONS["mira"]))
@@ -218,7 +221,7 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			for other_index in range(spawn_index + 1, game.DUNGEON_ENEMY_SPAWN_POSITIONS.size()):
 				if dungeon_spawn.distance_to(Vector2(game.DUNGEON_ENEMY_SPAWN_POSITIONS[other_index])) < 70.0:
 					failures.append("Dungeon enemy spawn points overlap each other: %d/%d" % [spawn_index, other_index])
-		var npc_frame_size: Vector2 = Vector2(1448.0 / 4.0, 1086.0 / 3.0) * float(game.NPC_SPRITE_SCALE)
+		var npc_frame_size: Vector2 = Vector2(208.0 / 4.0, 156.0 / 3.0) * float(game.NPC_SPRITE_SCALE)
 		var npc_ids: Array = game.NPC_POSITIONS.keys()
 		for first_index in range(npc_ids.size()):
 			for second_index in range(first_index + 1, npc_ids.size()):
@@ -231,7 +234,7 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 				var overlap: Rect2 = first_bounds.intersection(second_bounds)
 				if overlap.get_area() > 256.0:
 					failures.append("Village NPC silhouettes substantially overlap: %s/%s area=%.1f" % [first_id, second_id, overlap.get_area()])
-		if runtime_player.visual_sprite.position.distance_to(Vector2(0, -12)) >= 0.01 or runtime_player.visual_sprite.scale.distance_to(Vector2(0.15, 0.15)) >= 0.001:
+		if runtime_player.visual_sprite.position.distance_to(Vector2(0, -12)) >= 0.01 or runtime_player.visual_sprite.scale.distance_to(Vector2.ONE) >= 0.001:
 			failures.append("Player idle pose is not locked to a stable ground contact point")
 		runtime_player.global_position = Vector2(200, 190)
 		runtime_player._update_depth_order()
@@ -252,12 +255,12 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 		await process_frame
 		if game.mode != "river":
 			failures.append("Village physical route did not reach the river")
-		game._travel_to_map(&"mistfall_farm")
-		runtime_player.global_position = game.AUTOMATION_CONSOLE_POSITION
+		game._travel_to_map(&"mistfall_barn")
+		runtime_player.global_position = Vector2(329, 88)
 		game._interact()
 		await process_frame
 		if not automation_console.visible or not paused or automation_console.automation_tile_buttons.size() != 24:
-			failures.append("Farm automation console is not an in-world interactive device")
+			failures.append("Barn automation console is not an in-world interactive device")
 		if automation_console.automation_device_select.get_item_icon(0) == null or automation_console.automation_crop_select.get_item_icon(0) == null:
 			failures.append("Automation device or crop selector is missing icons")
 		await _send_runtime_key(KEY_ESCAPE)
@@ -795,8 +798,16 @@ func _assert_multiplayer_rules(failures: PackedStringArray) -> void:
 func _assert_save_migration(state_store: Node, failures: PackedStringArray) -> void:
 	state_store.reset()
 	var save_data: Dictionary = state_store.to_save_data()
-	if int(save_data.get("schema_version", 0)) != 5 or not save_data.has("calendar") or not save_data.has("farm") or not save_data.has("dungeon") or not save_data.has("eldritch") or not save_data.has("economy") or not save_data.has("tools"):
-		failures.append("SaveGame v5 contract is incomplete")
+	if int(save_data.get("schema_version", 0)) != 6 or not save_data.has("world") or not save_data.has("calendar") or not save_data.has("farm") or not save_data.has("dungeon") or not save_data.has("eldritch") or not save_data.has("economy") or not save_data.has("tools"):
+		failures.append("SaveGame v6 contract is incomplete")
+	var v5_save := save_data.duplicate(true)
+	v5_save["schema_version"] = 5
+	v5_save.erase("world")
+	var v5_player: Dictionary = Dictionary(v5_save.get("player", {})).duplicate(true)
+	v5_player.erase("facing")
+	v5_save["player"] = v5_player
+	if not state_store.load_save_data(v5_save) or state_store.current_portal_id != &"legacy_v5":
+		failures.append("SaveGame v5 world-state migration failed")
 	var v4_save := save_data.duplicate(true)
 	v4_save["schema_version"] = 4
 	var v4_farm: Dictionary = Dictionary(v4_save.get("farm", {})).duplicate(true)
@@ -823,8 +834,8 @@ func _assert_save_migration(state_store: Node, failures: PackedStringArray) -> v
 	var legacy := {"schema_version": 1, "player": {"position": [12, 34], "stats": {"max_health": 100, "health": 80, "attack": 16}}, "map": "sample_arena", "flags": {}, "quests": {}, "inventory": {"health_potion": 1}, "calendar": {"year": 2, "season_index": 2, "day": 28, "minute_of_day": 720, "speed_mode": "relaxed"}}
 	if not state_store.load_save_data(legacy):
 		failures.append("SaveGame v1 migration failed")
-	elif state_store.calendar.day != 28 or state_store.calendar.season_index != 2 or state_store.calendar.year != 2 or state_store.player_position != Vector2(12, 34):
-		failures.append("SaveGame v1 migration did not preserve legacy state")
+	elif state_store.calendar.day != 28 or state_store.calendar.season_index != 2 or state_store.calendar.year != 2 or state_store.current_map_id != &"mistfall_farm" or state_store.player_position != Vector2(318, 300):
+		failures.append("SaveGame v1 migration did not preserve time or safely relocate an unknown legacy map")
 
 
 func _assert_commercial_systems(state_store: Node, failures: PackedStringArray) -> void:

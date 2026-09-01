@@ -1,6 +1,6 @@
 extends Node
 
-const SAVE_SCHEMA_VERSION := 5
+const SAVE_SCHEMA_VERSION := 6
 const CalendarSystem := preload("res://runtime/calendar/calendar_system.gd")
 const FarmSystem := preload("res://runtime/farming/farm_system.gd")
 const SocialSystem := preload("res://runtime/social/social_system.gd")
@@ -16,6 +16,11 @@ const ToolSystem := preload("res://runtime/economy/tool_system.gd")
 const EconomySystem := preload("res://runtime/economy/economy_system.gd")
 const ShopSystem := preload("res://runtime/economy/shop_system.gd")
 const AchievementSystem := preload("res://runtime/economy/achievement_system.gd")
+const VALID_WORLD_MAP_IDS := [
+	"mistfall_farm", "mistfall_village", "mistfall_river", "bellwood_grove",
+	"clockwork_ruins", "mistfall_depths", "dreaming_shore", "mistfall_farmhouse",
+	"mistfall_barn", "mistfall_greenhouse",
+]
 
 var flags: Dictionary = {}
 var quest_states: Dictionary = {}
@@ -25,6 +30,9 @@ var player_stats: Dictionary = {}
 var coins := 500
 var current_map_id: StringName = &"mistfall_farm"
 var player_position := Vector2(320, 180)
+var current_portal_id: StringName = &""
+var player_facing := Vector2.DOWN
+var indoor_state := false
 var current_weather := "clear"
 var story_state: Dictionary = {"chapter": 1, "completed_chapters": [], "season_seals": [], "final_boss_available": false}
 
@@ -72,6 +80,9 @@ func reset() -> void:
 	coins = 500
 	current_map_id = &"mistfall_farm"
 	player_position = Vector2(320, 180)
+	current_portal_id = &""
+	player_facing = Vector2.DOWN
+	indoor_state = false
 	story_state = {"chapter": 1, "completed_chapters": [], "season_seals": [], "final_boss_available": false}
 	calendar.reset()
 	farm.reset()
@@ -232,6 +243,9 @@ func resolve_player_defeat() -> Dictionary:
 	player_stats["health"] = int(player_stats.get("max_health", 100))
 	current_map_id = &"mistfall_farm"
 	player_position = Vector2(320, 230)
+	current_portal_id = &"defeat_rescue"
+	player_facing = Vector2.DOWN
+	indoor_state = false
 	advance_day()
 	return {"coins_lost": lost, "coins_remaining": coins, "message": "診所救援完成，損失 %dG；關鍵物品完整保留" % lost}
 
@@ -246,6 +260,19 @@ func interact_farm_plot(tile: Vector2i, crop_id: StringName) -> Dictionary:
 			lifetime_stats["crops_harvested"] = int(lifetime_stats.get("crops_harvested", 0)) + int(result.get("quantity", 1))
 		_check_achievements()
 		EventBus.farm_changed.emit(StringName(result.get("action", "changed")), result)
+	return result
+
+
+func interact_greenhouse_plot(tile: Vector2i, crop_id: StringName) -> Dictionary:
+	if not farm.greenhouse_unlocked:
+		return {"ok": false, "message": "溫室尚未解鎖"}
+	var action := _greenhouse_action_for(tile)
+	if not action.is_empty() and not tools.use_for(action):
+		return {"ok": false, "message": "體力不足，請休息或睡到隔天"}
+	var result: Dictionary = farm.interact_greenhouse_plot(tile, crop_id)
+	if bool(result.get("ok", false)) and String(result.get("action", "")) == "harvested":
+		lifetime_stats["crops_harvested"] = int(lifetime_stats.get("crops_harvested", 0)) + int(result.get("quantity", 0))
+	EventBus.farm_changed.emit(&"greenhouse_plot", {"tile":[tile.x, tile.y], "action":result.get("action", "")})
 	return result
 
 
@@ -635,8 +662,9 @@ func purchase_next_farm_upgrade() -> Dictionary:
 func to_save_data() -> Dictionary:
 	return {
 		"schema_version": SAVE_SCHEMA_VERSION,
-		"player": {"name": player_profile.get("name", "旅人"), "appearance": Dictionary(player_profile.get("appearance", {})).duplicate(true), "position": [player_position.x, player_position.y], "stats": player_stats.duplicate(true), "coins": coins},
+		"player": {"name": player_profile.get("name", "旅人"), "appearance": Dictionary(player_profile.get("appearance", {})).duplicate(true), "position": [player_position.x, player_position.y], "facing":[player_facing.x, player_facing.y], "stats": player_stats.duplicate(true), "coins": coins},
 		"map": String(current_map_id),
+		"world": {"map_id":String(current_map_id), "portal_id":String(current_portal_id), "position":[player_position.x, player_position.y], "facing":[player_facing.x, player_facing.y], "indoor":indoor_state},
 		"flags": flags.duplicate(true),
 		"quests": quest_states.duplicate(true),
 		"inventory": inventory.duplicate(true),
@@ -668,6 +696,8 @@ func load_save_data(source_data: Dictionary) -> bool:
 		data = _migrate_v3(data)
 	if int(data.get("schema_version", -1)) == 4:
 		data = _migrate_v4(data)
+	if int(data.get("schema_version", -1)) == 5:
+		data = _migrate_v5(data)
 	if int(data.get("schema_version", -1)) != SAVE_SCHEMA_VERSION:
 		return false
 	flags = Dictionary(data.get("flags", {})).duplicate(true)
@@ -677,13 +707,35 @@ func load_save_data(source_data: Dictionary) -> bool:
 	player_profile = {"name": String(player_data.get("name", "旅人")), "appearance": Dictionary(player_data.get("appearance", {})).duplicate(true)}
 	player_stats = Dictionary(player_data.get("stats", {})).duplicate(true)
 	coins = maxi(0, int(player_data.get("coins", 500)))
-	current_map_id = StringName(data.get("map", "mistfall_farm"))
+	var world_data := Dictionary(data.get("world", {}))
+	current_map_id = StringName(world_data.get("map_id", data.get("map", "mistfall_farm")))
+	current_portal_id = StringName(world_data.get("portal_id", ""))
+	indoor_state = bool(world_data.get("indoor", false))
 	var position_data: Array = player_data.get("position", [320.0, 180.0])
+	if world_data.get("position", []) is Array and Array(world_data.get("position", [])).size() >= 2:
+		position_data = Array(world_data.position)
 	if position_data.size() >= 2:
 		player_position = Vector2(float(position_data[0]), float(position_data[1]))
+	var facing_data: Array = player_data.get("facing", [0.0, 1.0])
+	if world_data.get("facing", []) is Array and Array(world_data.get("facing", [])).size() >= 2:
+		facing_data = Array(world_data.facing)
+	if facing_data.size() >= 2:
+		player_facing = Vector2(float(facing_data[0]), float(facing_data[1])).normalized()
 	calendar.load_data(Dictionary(data.get("calendar", {})))
 	current_weather = String(Dictionary(data.get("weather", {})).get("current", CalendarSystem.weather_for(calendar.year, calendar.season_index, calendar.day)))
 	farm.load_data(Dictionary(data.get("farm", {})))
+	if String(current_map_id) not in VALID_WORLD_MAP_IDS:
+		current_map_id = &"mistfall_farm"
+		current_portal_id = &"invalid_map_safe_migration"
+		player_position = Vector2(318, 300)
+		player_facing = Vector2.DOWN
+		indoor_state = false
+	if current_map_id == &"mistfall_greenhouse" and not farm.greenhouse_unlocked:
+		current_map_id = &"mistfall_farm"
+		current_portal_id = &"greenhouse_safe_migration"
+		player_position = Vector2(102, 159)
+		player_facing = Vector2.DOWN
+		indoor_state = false
 	social.load_data({"relationships": data.get("relationships", {}), "marriage": data.get("marriage", {}), "child": data.get("child", {})})
 	festivals.load_data(Dictionary(data.get("festivals", {})))
 	dungeon.load_data(Dictionary(data.get("dungeon", {})))
@@ -754,9 +806,51 @@ func _migrate_v4(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+func _migrate_v5(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["schema_version"] = 6
+	var player_data: Dictionary = Dictionary(migrated.get("player", {})).duplicate(true)
+	player_data["facing"] = player_data.get("facing", [0.0, 1.0])
+	migrated["player"] = player_data
+	var map_id := String(migrated.get("map", "mistfall_farm"))
+	migrated["world"] = {
+		"map_id":map_id,
+		"portal_id":"legacy_v5",
+		"position":player_data.get("position", [320.0, 180.0]),
+		"facing":player_data.get("facing", [0.0, 1.0]),
+		"indoor":map_id in ["mistfall_farmhouse", "mistfall_barn", "mistfall_greenhouse"],
+	}
+	var migrated_farm: Dictionary = Dictionary(migrated.get("farm", {})).duplicate(true)
+	migrated_farm["greenhouse_plots"] = Dictionary(migrated_farm.get("greenhouse_plots", {})).duplicate(true)
+	var migrated_animals: Array = []
+	for animal_source: Dictionary in migrated_farm.get("animals", []):
+		var animal := animal_source.duplicate(true)
+		animal["scene_id"] = String(animal.get("scene_id", "mistfall_barn"))
+		animal["stall_index"] = int(animal.get("stall_index", migrated_animals.size()))
+		animal["petted"] = bool(animal.get("petted", false))
+		migrated_animals.append(animal)
+	migrated_farm["animals"] = migrated_animals
+	migrated["farm"] = migrated_farm
+	return migrated
+
+
 func _farm_action_for(tile: Vector2i) -> String:
 	var key := "%d,%d" % [tile.x, tile.y]
 	var plot: Dictionary = Dictionary(farm.plots.get(key, {}))
+	if plot.is_empty() or not bool(plot.get("tilled", false)):
+		return "tilled"
+	if bool(plot.get("withered", false)):
+		return "cleared"
+	if bool(plot.get("ready", false)):
+		return "harvested"
+	if not String(plot.get("crop_id", "")).is_empty() and not bool(plot.get("watered", false)):
+		return "watered"
+	return ""
+
+
+func _greenhouse_action_for(tile: Vector2i) -> String:
+	var key := "%d,%d" % [tile.x, tile.y]
+	var plot: Dictionary = Dictionary(farm.greenhouse_plots.get(key, {}))
 	if plot.is_empty() or not bool(plot.get("tilled", false)):
 		return "tilled"
 	if bool(plot.get("withered", false)):

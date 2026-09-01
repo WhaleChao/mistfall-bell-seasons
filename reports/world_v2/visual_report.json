@@ -1,0 +1,26 @@
+{
+  "captures": [
+    "res://reports/world_v2/after/01_farm.png",
+    "res://reports/world_v2/after/02_village.png",
+    "res://reports/world_v2/after/03_river.png",
+    "res://reports/world_v2/after/04_grove.png",
+    "res://reports/world_v2/after/05_ruins.png",
+    "res://reports/world_v2/after/06_depths.png",
+    "res://reports/world_v2/after/07_dreaming_shore.png",
+    "res://reports/world_v2/after/08_farmhouse.png",
+    "res://reports/world_v2/after/09_barn.png",
+    "res://reports/world_v2/after/10_greenhouse.png"
+  ],
+  "evidence_resolution": [
+    1280,
+    720
+  ],
+  "failed": 0,
+  "logical_resolution": [
+    640,
+    360
+  ],
+  "maps": 10,
+  "renderer": "Apple M4",
+  "schema_version": 2
+}

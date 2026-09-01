@@ -20,14 +20,14 @@ func configure(id: int, display_name: String, initial_position: Vector2) -> void
 
 func _ready() -> void:
 	_update_depth_order()
-	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas_alpha.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/player_walk_atlas_final.png")
 	if atlas != null:
 		visual_region = AtlasTexture.new()
 		visual_region.atlas = atlas
 		visual_region.region = Rect2(0, 0, atlas.get_width() / 4.0, atlas.get_height() / 4.0)
 		visual_sprite = Sprite2D.new()
 		visual_sprite.texture = visual_region
-		visual_sprite.scale = Vector2(0.145, 0.145)
+		visual_sprite.scale = Vector2.ONE
 		visual_sprite.position = Vector2(0, -12)
 		visual_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		add_child(visual_sprite)

@@ -48,6 +48,9 @@ func save_quick() -> bool:
 	var player := get_tree().get_first_node_in_group("player")
 	if player != null:
 		GameState.player_position = player.global_position
+		var player_facing: Variant = player.get("facing")
+		if player_facing is Vector2:
+			GameState.player_facing = Vector2(player_facing)
 		var player_health: Variant = player.get("health")
 		if player_health != null:
 			GameState.player_stats["health"] = int(player_health)

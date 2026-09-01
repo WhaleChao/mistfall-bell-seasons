@@ -38,7 +38,7 @@ Godot 是引擎與地圖編輯底座。Studio 是主畫面 `EditorPlugin`，沒�
 
 ## 內容寫入與遷移
 
-`scripts/validate_content.py` 是 Editor、CI、release gate 共用的資料真相。每種 artifact 有獨立 JSON Schema，所有引用使用穩定字串 ID。SaveGame v5 保存玩家、120 日曆、天氣、農場、6×4 自動化設備／網路／統計、動物、關係、婚姻、孩子、節慶、洞窟、故事、工具、經濟、成就、設定、規則式委託與深潮狀態；loader 內建 v1→v2→v3→v4→v5 遷移，並保留舊 28 日日期原值。
+`scripts/validate_content.py` 是 Editor、CI、release gate 共用的資料真相。每種 artifact 有獨立 JSON Schema，所有引用使用穩定字串 ID。SaveGame v6 保存玩家、120 日曆、天氣、農場、6×4 自動化設備／網路／統計、動物、關係、婚姻、孩子、節慶、洞窟、故事、工具、經濟、成就、設定、規則式委託、深潮狀態，以及目前 MapScene、來源 portal、位置、面向、室內狀態與動物所在場景；loader 內建 v1→v2→v3→v4→v5→v6 遷移，並保留舊 28 日日期原值。
 
 ## 多人信任邊界
 

@@ -237,8 +237,32 @@ def check_assets(release: bool, errors: list[str], warnings: list[str]) -> None:
             errors.append(
                 f"asset {asset_id}: SHA-256 mismatch; expected {expected_sha256}, got {actual_sha256}"
             )
+        # A single registered manifest owns the 194 generated raster visual IDs.
+        # Expanding it here keeps the registry auditable without duplicating the
+        # same license/provenance block 194 times in data/assets/index.json.
+        if source_path == "res://assets/runtime/icons/manifest.json":
+            icon_manifest = load_json(asset_path, errors)
+            if not isinstance(icon_manifest, dict):
+                errors.append("runtime icon manifest must be a JSON object")
+                continue
+            icon_records = icon_manifest.get("icons", [])
+            if icon_manifest.get("count") != len(icon_records) or len(icon_records) != 194:
+                errors.append("runtime icon manifest must contain exactly 194 visual IDs")
+            visual_ids: set[str] = set()
+            for icon_record in icon_records:
+                visual_id = str(icon_record.get("visual_id", ""))
+                icon_path = str(icon_record.get("path", ""))
+                if not visual_id or visual_id in visual_ids:
+                    errors.append(f"runtime icon manifest has invalid or duplicate visual ID: {visual_id!r}")
+                visual_ids.add(visual_id)
+                if not icon_path.startswith("res://assets/runtime/icons/"):
+                    errors.append(f"runtime icon manifest path is outside its catalog: {icon_path}")
+                    continue
+                registered_paths.add(icon_path)
+                if not (ROOT / icon_path.removeprefix("res://")).is_file():
+                    errors.append(f"runtime icon manifest file does not exist: {icon_path}")
     runtime_asset_files = [
-        *(path for path in (ROOT / "assets" / "runtime").rglob("*") if path.is_file() and not path.name.endswith(".import")),
+        *(path for path in (ROOT / "assets" / "runtime").rglob("*") if path.is_file() and not path.name.endswith((".import", ".md"))),
         *(path for path in (ROOT / "assets" / "shaders").rglob("*") if path.is_file() and not path.name.endswith(".uid")),
         ROOT / "icon.svg",
     ]

@@ -1,0 +1,36 @@
+{
+  "attack_cycles": 858,
+  "average_fps": 60.0,
+  "combat_seconds": 300.004,
+  "enemy_respawns": 6,
+  "frames": 18001,
+  "load_ok": true,
+  "logical_resolution": [
+    640,
+    360
+  ],
+  "maps_toured": [
+    "mistfall_farm",
+    "mistfall_village",
+    "mistfall_river",
+    "bellwood_grove",
+    "clockwork_ruins",
+    "mistfall_depths",
+    "dreaming_shore",
+    "mistfall_farmhouse",
+    "mistfall_barn",
+    "mistfall_greenhouse"
+  ],
+  "minimum_average_fps": 58.0,
+  "minimum_one_second_fps": 59.8,
+  "model": "Mac16,13",
+  "passed": true,
+  "platform": "macOS",
+  "renderer": "Apple M4",
+  "save_ok": true,
+  "schema_version": 1,
+  "viewport": [
+    1920,
+    1080
+  ]
+}

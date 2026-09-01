@@ -9,6 +9,9 @@ const MAP_IDS := {
 	"ruins": &"clockwork_ruins",
 	"dungeon": &"mistfall_depths",
 	"abyss": &"dreaming_shore",
+	"farmhouse": &"mistfall_farmhouse",
+	"barn": &"mistfall_barn",
+	"greenhouse": &"mistfall_greenhouse",
 }
 
 var game: Node

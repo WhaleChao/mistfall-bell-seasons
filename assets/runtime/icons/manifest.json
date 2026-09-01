@@ -1,0 +1,782 @@
+{
+  "count": 194,
+  "icons": [
+    {
+      "path": "res://assets/runtime/icons/seed/spring_turnip.png",
+      "visual_id": "seed/spring_turnip"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_turnip.png",
+      "visual_id": "crop/spring_turnip"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_radish.png",
+      "visual_id": "seed/spring_radish"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_radish.png",
+      "visual_id": "crop/spring_radish"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_potato.png",
+      "visual_id": "seed/spring_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_potato.png",
+      "visual_id": "crop/spring_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_carrot.png",
+      "visual_id": "seed/spring_carrot"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_carrot.png",
+      "visual_id": "crop/spring_carrot"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_garlic.png",
+      "visual_id": "seed/spring_garlic"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_garlic.png",
+      "visual_id": "crop/spring_garlic"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_tulip.png",
+      "visual_id": "seed/spring_tulip"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_tulip.png",
+      "visual_id": "crop/spring_tulip"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_cabbage.png",
+      "visual_id": "seed/spring_cabbage"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_cabbage.png",
+      "visual_id": "crop/spring_cabbage"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_asparagus.png",
+      "visual_id": "seed/spring_asparagus"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_asparagus.png",
+      "visual_id": "crop/spring_asparagus"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_tea_leaf.png",
+      "visual_id": "seed/spring_tea_leaf"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_tea_leaf.png",
+      "visual_id": "crop/spring_tea_leaf"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_peas.png",
+      "visual_id": "seed/spring_peas"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_peas.png",
+      "visual_id": "crop/spring_peas"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_strawberry.png",
+      "visual_id": "seed/spring_strawberry"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_strawberry.png",
+      "visual_id": "crop/spring_strawberry"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/spring_mist_bloom.png",
+      "visual_id": "seed/spring_mist_bloom"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/spring_mist_bloom.png",
+      "visual_id": "crop/spring_mist_bloom"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_cucumber.png",
+      "visual_id": "seed/summer_cucumber"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_cucumber.png",
+      "visual_id": "crop/summer_cucumber"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_okra.png",
+      "visual_id": "seed/summer_okra"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_okra.png",
+      "visual_id": "crop/summer_okra"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_pepper.png",
+      "visual_id": "seed/summer_pepper"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_pepper.png",
+      "visual_id": "crop/summer_pepper"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_eggplant.png",
+      "visual_id": "seed/summer_eggplant"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_eggplant.png",
+      "visual_id": "crop/summer_eggplant"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_sunflower.png",
+      "visual_id": "seed/summer_sunflower"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_sunflower.png",
+      "visual_id": "crop/summer_sunflower"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_tomato.png",
+      "visual_id": "seed/summer_tomato"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_tomato.png",
+      "visual_id": "crop/summer_tomato"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_melon.png",
+      "visual_id": "seed/summer_melon"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_melon.png",
+      "visual_id": "crop/summer_melon"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_corn.png",
+      "visual_id": "seed/summer_corn"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_corn.png",
+      "visual_id": "crop/summer_corn"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_sugarcane.png",
+      "visual_id": "seed/summer_sugarcane"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_sugarcane.png",
+      "visual_id": "crop/summer_sugarcane"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_coffee.png",
+      "visual_id": "seed/summer_coffee"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_coffee.png",
+      "visual_id": "crop/summer_coffee"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_pineapple.png",
+      "visual_id": "seed/summer_pineapple"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_pineapple.png",
+      "visual_id": "crop/summer_pineapple"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/summer_solar_berry.png",
+      "visual_id": "seed/summer_solar_berry"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/summer_solar_berry.png",
+      "visual_id": "crop/summer_solar_berry"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_beet.png",
+      "visual_id": "seed/autumn_beet"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_beet.png",
+      "visual_id": "crop/autumn_beet"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_onion.png",
+      "visual_id": "seed/autumn_onion"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_onion.png",
+      "visual_id": "crop/autumn_onion"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_sweet_potato.png",
+      "visual_id": "seed/autumn_sweet_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_sweet_potato.png",
+      "visual_id": "crop/autumn_sweet_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_soybean.png",
+      "visual_id": "seed/autumn_soybean"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_soybean.png",
+      "visual_id": "crop/autumn_soybean"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_chrysanthemum.png",
+      "visual_id": "seed/autumn_chrysanthemum"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_chrysanthemum.png",
+      "visual_id": "crop/autumn_chrysanthemum"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_yam.png",
+      "visual_id": "seed/autumn_yam"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_yam.png",
+      "visual_id": "crop/autumn_yam"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_rice.png",
+      "visual_id": "seed/autumn_rice"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_rice.png",
+      "visual_id": "crop/autumn_rice"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_pumpkin.png",
+      "visual_id": "seed/autumn_pumpkin"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_pumpkin.png",
+      "visual_id": "crop/autumn_pumpkin"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_moon_wheat.png",
+      "visual_id": "seed/autumn_moon_wheat"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_moon_wheat.png",
+      "visual_id": "crop/autumn_moon_wheat"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_grape.png",
+      "visual_id": "seed/autumn_grape"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_grape.png",
+      "visual_id": "crop/autumn_grape"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_cranberry.png",
+      "visual_id": "seed/autumn_cranberry"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_cranberry.png",
+      "visual_id": "crop/autumn_cranberry"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/autumn_amber_apple.png",
+      "visual_id": "seed/autumn_amber_apple"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/autumn_amber_apple.png",
+      "visual_id": "crop/autumn_amber_apple"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_snow_turnip.png",
+      "visual_id": "seed/winter_snow_turnip"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_snow_turnip.png",
+      "visual_id": "crop/winter_snow_turnip"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_white_radish.png",
+      "visual_id": "seed/winter_white_radish"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_white_radish.png",
+      "visual_id": "crop/winter_white_radish"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_star_potato.png",
+      "visual_id": "seed/winter_star_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_star_potato.png",
+      "visual_id": "crop/winter_star_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_blue_carrot.png",
+      "visual_id": "seed/winter_blue_carrot"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_blue_carrot.png",
+      "visual_id": "crop/winter_blue_carrot"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_root_parsnip.png",
+      "visual_id": "seed/winter_root_parsnip"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_root_parsnip.png",
+      "visual_id": "crop/winter_root_parsnip"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_rose.png",
+      "visual_id": "seed/winter_rose"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_rose.png",
+      "visual_id": "crop/winter_rose"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_crystal_cabbage.png",
+      "visual_id": "seed/winter_crystal_cabbage"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_crystal_cabbage.png",
+      "visual_id": "crop/winter_crystal_cabbage"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_wheat.png",
+      "visual_id": "seed/winter_wheat"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_wheat.png",
+      "visual_id": "crop/winter_wheat"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_bellflower.png",
+      "visual_id": "seed/winter_bellflower"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_bellflower.png",
+      "visual_id": "crop/winter_bellflower"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_frost_bean.png",
+      "visual_id": "seed/winter_frost_bean"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_frost_bean.png",
+      "visual_id": "crop/winter_frost_bean"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_evergreen_tea.png",
+      "visual_id": "seed/winter_evergreen_tea"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_evergreen_tea.png",
+      "visual_id": "crop/winter_evergreen_tea"
+    },
+    {
+      "path": "res://assets/runtime/icons/seed/winter_aurora_fruit.png",
+      "visual_id": "seed/winter_aurora_fruit"
+    },
+    {
+      "path": "res://assets/runtime/icons/crop/winter_aurora_fruit.png",
+      "visual_id": "crop/winter_aurora_fruit"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/brook_trout.png",
+      "visual_id": "fish/brook_trout"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/petal_carp.png",
+      "visual_id": "fish/petal_carp"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/rain_eel.png",
+      "visual_id": "fish/rain_eel"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/sun_bass.png",
+      "visual_id": "fish/sun_bass"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/blue_mackerel.png",
+      "visual_id": "fish/blue_mackerel"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/storm_ray.png",
+      "visual_id": "fish/storm_ray"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/amber_salmon.png",
+      "visual_id": "fish/amber_salmon"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/moon_perch.png",
+      "visual_id": "fish/moon_perch"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/leaf_catfish.png",
+      "visual_id": "fish/leaf_catfish"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/ice_smelt.png",
+      "visual_id": "fish/ice_smelt"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/snow_cod.png",
+      "visual_id": "fish/snow_cod"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/aurora_sturgeon.png",
+      "visual_id": "fish/aurora_sturgeon"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/whisper_minnow.png",
+      "visual_id": "fish/whisper_minnow"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/mirror_eye_carp.png",
+      "visual_id": "fish/mirror_eye_carp"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/inkfin_eel.png",
+      "visual_id": "fish/inkfin_eel"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/starfall_ray.png",
+      "visual_id": "fish/starfall_ray"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/mouthless_catfish.png",
+      "visual_id": "fish/mouthless_catfish"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/drowned_bell_crab.png",
+      "visual_id": "fish/drowned_bell_crab"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/void_nautilus.png",
+      "visual_id": "fish/void_nautilus"
+    },
+    {
+      "path": "res://assets/runtime/icons/fish/dreamer_spawn.png",
+      "visual_id": "fish/dreamer_spawn"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/animal_feed.png",
+      "visual_id": "item/animal_feed"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/forest_herb.png",
+      "visual_id": "item/forest_herb"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/mist_preserves.png",
+      "visual_id": "item/mist_preserves"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/river_reed.png",
+      "visual_id": "item/river_reed"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/abyssal_relic.png",
+      "visual_id": "item/abyssal_relic"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/stone.png",
+      "visual_id": "item/stone"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/frost_crystal.png",
+      "visual_id": "item/frost_crystal"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/gold_ore.png",
+      "visual_id": "item/gold_ore"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/ancient_gear.png",
+      "visual_id": "item/ancient_gear"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/glass.png",
+      "visual_id": "item/glass"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/egg.png",
+      "visual_id": "item/egg"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/copper_ore.png",
+      "visual_id": "item/copper_ore"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/iron_ore.png",
+      "visual_id": "item/iron_ore"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/dream_tide_salt.png",
+      "visual_id": "item/dream_tide_salt"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/ancient_seed.png",
+      "visual_id": "item/ancient_seed"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/ember_core.png",
+      "visual_id": "item/ember_core"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/wood.png",
+      "visual_id": "item/wood"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/mist_shard.png",
+      "visual_id": "item/mist_shard"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/health_potion.png",
+      "visual_id": "item/health_potion"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/warden_emblem.png",
+      "visual_id": "item/warden_emblem"
+    },
+    {
+      "path": "res://assets/runtime/icons/item/milk.png",
+      "visual_id": "item/milk"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_turnip_soup.png",
+      "visual_id": "dish/spring_turnip_soup"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_potato_hash.png",
+      "visual_id": "dish/spring_potato_hash"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_berry_tart.png",
+      "visual_id": "dish/spring_berry_tart"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_pea_rice.png",
+      "visual_id": "dish/spring_pea_rice"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_garlic_bread.png",
+      "visual_id": "dish/spring_garlic_bread"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_tea.png",
+      "visual_id": "dish/spring_tea"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_cabbage_roll.png",
+      "visual_id": "dish/spring_cabbage_roll"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_asparagus_egg.png",
+      "visual_id": "dish/spring_asparagus_egg"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_radish_pickle.png",
+      "visual_id": "dish/spring_radish_pickle"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/spring_mist_jelly.png",
+      "visual_id": "dish/spring_mist_jelly"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_tomato_stew.png",
+      "visual_id": "dish/summer_tomato_stew"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_corn_soup.png",
+      "visual_id": "dish/summer_corn_soup"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_melon_ice.png",
+      "visual_id": "dish/summer_melon_ice"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_pepper_skewer.png",
+      "visual_id": "dish/summer_pepper_skewer"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_cucumber_salad.png",
+      "visual_id": "dish/summer_cucumber_salad"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_eggplant_grill.png",
+      "visual_id": "dish/summer_eggplant_grill"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_okra_noodle.png",
+      "visual_id": "dish/summer_okra_noodle"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_coffee_milk.png",
+      "visual_id": "dish/summer_coffee_milk"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_pineapple_cake.png",
+      "visual_id": "dish/summer_pineapple_cake"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/summer_solar_compote.png",
+      "visual_id": "dish/summer_solar_compote"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_pumpkin_soup.png",
+      "visual_id": "dish/autumn_pumpkin_soup"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_sweet_potato.png",
+      "visual_id": "dish/autumn_sweet_potato"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_grape_juice.png",
+      "visual_id": "dish/autumn_grape_juice"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_cranberry_pie.png",
+      "visual_id": "dish/autumn_cranberry_pie"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_rice_ball.png",
+      "visual_id": "dish/autumn_rice_ball"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_soy_milk.png",
+      "visual_id": "dish/autumn_soy_milk"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_yam_noodle.png",
+      "visual_id": "dish/autumn_yam_noodle"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_onion_gratin.png",
+      "visual_id": "dish/autumn_onion_gratin"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_beet_salad.png",
+      "visual_id": "dish/autumn_beet_salad"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/autumn_amber_tart.png",
+      "visual_id": "dish/autumn_amber_tart"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_turnip_hotpot.png",
+      "visual_id": "dish/winter_turnip_hotpot"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_radish_stew.png",
+      "visual_id": "dish/winter_radish_stew"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_potato_gratin.png",
+      "visual_id": "dish/winter_potato_gratin"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_blue_carrot_soup.png",
+      "visual_id": "dish/winter_blue_carrot_soup"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_parsnip_roast.png",
+      "visual_id": "dish/winter_parsnip_roast"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_rose_tea.png",
+      "visual_id": "dish/winter_rose_tea"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_cabbage_stew.png",
+      "visual_id": "dish/winter_cabbage_stew"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_wheat_bread.png",
+      "visual_id": "dish/winter_wheat_bread"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_frost_bean_soup.png",
+      "visual_id": "dish/winter_frost_bean_soup"
+    },
+    {
+      "path": "res://assets/runtime/icons/dish/winter_aurora_parfait.png",
+      "visual_id": "dish/winter_aurora_parfait"
+    },
+    {
+      "path": "res://assets/runtime/icons/animal/chicken.png",
+      "visual_id": "animal/chicken"
+    },
+    {
+      "path": "res://assets/runtime/icons/animal/cow.png",
+      "visual_id": "animal/cow"
+    },
+    {
+      "path": "res://assets/runtime/icons/tool/hoe.png",
+      "visual_id": "tool/hoe"
+    },
+    {
+      "path": "res://assets/runtime/icons/tool/watering_can.png",
+      "visual_id": "tool/watering_can"
+    },
+    {
+      "path": "res://assets/runtime/icons/tool/axe.png",
+      "visual_id": "tool/axe"
+    },
+    {
+      "path": "res://assets/runtime/icons/tool/pickaxe.png",
+      "visual_id": "tool/pickaxe"
+    },
+    {
+      "path": "res://assets/runtime/icons/tool/fishing_rod.png",
+      "visual_id": "tool/fishing_rod"
+    },
+    {
+      "path": "res://assets/runtime/icons/tool/sickle.png",
+      "visual_id": "tool/sickle"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/bell_generator.png",
+      "visual_id": "automation/bell_generator"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/mist_pump.png",
+      "visual_id": "automation/mist_pump"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/copper_conveyor.png",
+      "visual_id": "automation/copper_conveyor"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/field_sprinkler.png",
+      "visual_id": "automation/field_sprinkler"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/seed_distributor.png",
+      "visual_id": "automation/seed_distributor"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/crop_harvester.png",
+      "visual_id": "automation/crop_harvester"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/preserves_processor.png",
+      "visual_id": "automation/preserves_processor"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/animal_feeder.png",
+      "visual_id": "automation/animal_feeder"
+    },
+    {
+      "path": "res://assets/runtime/icons/automation/tide_condenser.png",
+      "visual_id": "automation/tide_condenser"
+    }
+  ],
+  "schema_version": 1
+}

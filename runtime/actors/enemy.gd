@@ -19,7 +19,7 @@ var projectile_speed := 140.0
 var attack_interval := 0.9
 var body_color := Color("db5a6b")
 var sprite_path := ""
-var visual_base_scale := 0.145
+var visual_base_scale := 1.0
 var drops: Array = []
 var state := State.PATROL
 var state_timer := 0.0
@@ -43,7 +43,7 @@ func configure(definition: Dictionary) -> void:
 	behavior = String(definition.get("behavior", "melee"))
 	body_color = Color(String(definition.get("color", "db5a6b")))
 	sprite_path = String(definition.get("sprite", ""))
-	visual_base_scale = float(definition.get("sprite_scale", 0.18 if is_boss else 0.145))
+	visual_base_scale = 1.0
 	detection_radius = float(definition.get("detection_radius", 260.0 if is_boss else 175.0))
 	attack_radius = float(definition.get("attack_radius", 54.0 if is_boss else (145.0 if behavior == "ranged" else 31.0)))
 	projectile_speed = float(definition.get("projectile_speed", 150.0))
@@ -123,14 +123,11 @@ func _physics_process(delta: float) -> void:
 func _update_visual() -> void:
 	if not is_instance_valid(visual_sprite):
 		return
-	var ticks := float(Time.get_ticks_msec()) / 1000.0
-	var phase := float(get_instance_id() % 17) * 0.31
 	visual_sprite.position = Vector2(0, -7)
 	if is_instance_valid(player):
 		visual_sprite.flip_h = player.global_position.x < global_position.x
 	visual_sprite.modulate = Color(1.5, 1.5, 1.5) if hurt_flash_timer > 0.0 else Color.WHITE
-	var pulse := 1.0 + sin(ticks * 3.0 + phase) * (0.025 if is_boss else 0.012)
-	visual_sprite.scale = Vector2(visual_base_scale * pulse, visual_base_scale / pulse)
+	visual_sprite.scale = Vector2.ONE
 
 
 func _update_depth_order() -> void:
@@ -216,7 +213,8 @@ func _create_visual_sprite() -> void:
 	var index := ids.find(String(enemy_id))
 	if index < 0:
 		return
-	var atlas: Texture2D = load("res://assets/runtime/sprites/enemy_atlas_alpha.png")
+	var atlas_path := "res://assets/runtime/sprites/enemy_boss_atlas_final.png" if is_boss else "res://assets/runtime/sprites/enemy_atlas_final.png"
+	var atlas: Texture2D = load(atlas_path)
 	if atlas == null:
 		return
 	var region := AtlasTexture.new()

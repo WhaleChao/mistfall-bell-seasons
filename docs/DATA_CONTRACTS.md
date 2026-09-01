@@ -24,10 +24,10 @@
 | ProceduralRequestTemplate | `data/request_templates/` | `procedural_request_template.schema.json` | 第 4 年後規則式委託 |
 | StoryArcDefinition | `data/story_arcs/` | `story_arc_definition.schema.json` | 無期限三年主線 |
 | RelationshipEventDefinition | `data/relationship_events/` | `relationship_event_definition.schema.json` | 四候選的心事件 |
-| SaveGame v5 | `user://pixelrpg_quick_save.json` | `save_game.schema.json` | 日曆、農場、自動化、家庭、洞窟、故事、工具、經濟、成就、設定與深潮狀態 |
+| SaveGame v6 | `user://pixelrpg_quick_save.json` | `save_game.schema.json` | 日曆、農場、自動化、家庭、洞窟、故事、工具、經濟、地圖／傳送門／面向／室內、動物位置與深潮狀態 |
 
 共同規則：`schema_version` 必須存在；`id` 符合 `^[a-z][a-z0-9_]*$`；正式內容不得以檔名或顯示名稱作引用。AI、表單與手工修改最後都走相同 schema 驗證。
 
 WorldEvent 的可執行動作固定為：`dialogue`、`set_flag`、`quest`、`give_item`、`take_item`、`change_map`、`spawn_actor`、`remove_actor`、`animation`、`sound`、`cutscene`。未知動作會被 runtime 拒絕。
 
-同類內容可用單筆 JSON，或以 `{ "schema_version": 1, "definitions": [...] }` 保存為 catalog；ContentRegistry 與 Python 驗證器會展開成相同的穩定 ID 索引。Runtime 會把 SaveGame v1、v2、v3、v4 逐版遷移至 v5；原 28 日制日期保留季節與日數，不做比例換算。v4 新增 `eldritch`；v5 新增 `automation_devices`、`automation_cycle_count` 與 `automation_last_report`，保存 6×4 設計圖、設備設定、網路與長期運作統計。
+同類內容可用單筆 JSON，或以 `{ "schema_version": 1, "definitions": [...] }` 保存為 catalog；ContentRegistry 與 Python 驗證器會展開成相同的穩定 ID 索引。Runtime 會把 SaveGame v1～v5 逐版遷移至 v6；原 28 日制日期保留季節與日數，不做比例換算。v4 新增 `eldritch`；v5 新增鐘網設備及統計；v6 新增 `map_id`、`portal_id`、玩家位置／面向、室內狀態與 `animal_presence`。舊存檔落在未解鎖室內、牆內或無效地圖時，會遷移到對應門外的安全出生點。

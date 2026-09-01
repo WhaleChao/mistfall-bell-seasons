@@ -10,6 +10,8 @@ const MultiplayerMenuScript := preload("res://runtime/ui/multiplayer_menu.gd")
 const AutomationConsoleScript := preload("res://runtime/ui/automation_console.gd")
 const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
 const RemotePlayerScript := preload("res://runtime/network/remote_player.gd")
+const WorldMapCatalog := preload("res://runtime/world/world_map_catalog.gd")
+const AnimalPresenceState := preload("res://runtime/farming/animal_presence_state.gd")
 
 const PLOT_ORIGIN := Vector2(221, 159)
 const PLOT_SPACING := Vector2(36, 26)
@@ -110,7 +112,7 @@ const NPC_POSITIONS := {
 const RIVER_NPC_POSITIONS := {"lian": Vector2(420, 165), "nori": Vector2(245, 180)}
 const GROVE_NPC_POSITIONS := {"asha": Vector2(475, 150), "piko": Vector2(430, 250)}
 const RUINS_NPC_POSITIONS := {"soren": Vector2(220, 180), "toma": Vector2(590, 150)}
-const NPC_SPRITE_SCALE := 0.145
+const NPC_SPRITE_SCALE := 1.0
 const NPC_FOOT_OFFSETS := {
 	"mira":18.6, "lian":19.4, "soren":19.6, "yuna":20.4, "orin":20.3,
 	"eira":21.0, "toma":20.6, "nori":20.3, "asha":21.6, "piko":17.4,
@@ -119,6 +121,20 @@ const ANIMAL_STALL_POSITIONS := [
 	Vector2(410, 150), Vector2(470, 150),
 	Vector2(410, 310), Vector2(470, 310), Vector2(530, 310), Vector2(590, 310),
 ]
+const BARN_ANIMAL_POSITIONS := [
+	Vector2(148, 118), Vector2(492, 118), Vector2(148, 184),
+	Vector2(492, 184), Vector2(148, 250), Vector2(492, 250),
+]
+const FARMHOUSE_DOOR_POSITION := Vector2(205, 137)
+const BARN_DOOR_POSITION := Vector2(478, 137)
+const GREENHOUSE_DOOR_POSITION := Vector2(102, 137)
+const INTERIOR_EXIT_POSITION := Vector2(320, 316)
+const FARMHOUSE_BED_POSITION := Vector2(156, 112)
+const PORTAL_REENTRY_COOLDOWN := 0.45
+const GREENHOUSE_PLOT_ORIGIN := Vector2(187, 130)
+const GREENHOUSE_PLOT_SPACING := Vector2(90, 53)
+const GREENHOUSE_COLUMNS := 4
+const GREENHOUSE_ROWS := 3
 
 var player: PixelRPGPlayer
 var hud_label: Label
@@ -172,6 +188,8 @@ var seed_card_label: Label
 var attack_card: PanelContainer
 var potion_card: PanelContainer
 var potion_label: Label
+var active_map_scene: PixelRPGMapScene
+var portal_transition_cooldown := 0.0
 
 
 func _ready() -> void:
@@ -233,6 +251,11 @@ func _process(delta: float) -> void:
 	if is_instance_valid(title_overlay):
 		_hide_world_prompt()
 		return
+	portal_transition_cooldown = maxf(0.0, portal_transition_cooldown - delta)
+	if is_instance_valid(player):
+		GameState.player_position = player.global_position
+		GameState.player_facing = player.facing
+		GameState.indoor_state = mode in ["farmhouse", "barn", "greenhouse"]
 	_animate_world_sprites()
 	_update_world_prompt_ui()
 	ui_refresh_timer -= delta
@@ -248,31 +271,30 @@ func _process(delta: float) -> void:
 			queue_redraw()
 	if text_input_focused:
 		return
+	_try_automatic_route_transition()
 	if Input.is_action_just_pressed("interact"):
 		_interact()
-	if Input.is_action_just_pressed("cycle_seed") and mode == "farm":
+	if Input.is_action_just_pressed("cycle_seed") and mode in ["farm", "greenhouse"]:
 		_cycle_seed()
 	if Input.is_action_just_pressed("time_speed"):
 		if NetworkManager.is_client():
 			_show_toast("連線世界的時間速度由主機決定")
 		else:
 			GameState.cycle_time_speed()
-	if Input.is_action_just_pressed("sleep_day") and mode == "farm":
+	if Input.is_action_just_pressed("sleep_day"):
 		if NetworkManager.is_client():
 			_show_toast("連線世界由主機決定何時結束今日")
+		elif not can_sleep_at_current_position():
+			_show_toast("只能在農舍床邊休息；農場空地不能直接睡覺")
 		else:
 			GameState.sleep_if_allowed()
 	if Input.is_action_just_pressed("toggle_cave"):
-		if mode == "farm":
-			_enter_dungeon()
-		elif mode == "dungeon":
+		if mode == "dungeon":
 			_leave_dungeon()
 		elif mode == "abyss":
 			_leave_eldritch_shore()
-		elif mode in ["river", "grove", "ruins"]:
-			_travel_to_map(&"mistfall_farm")
 		else:
-			_show_toast("請先由村口返回農場")
+			_show_toast("請使用畫面中的道路、門或洞口移動")
 	if Input.is_action_just_pressed("attend_festival") and mode == "farm":
 		_hide_world_prompt()
 		festival_overlay.open_today()
@@ -301,9 +323,22 @@ func _draw() -> void:
 		_draw_grove()
 	elif mode == "ruins":
 		_draw_ruins()
-	else:
+	elif mode == "abyss":
 		_draw_abyss()
+	elif mode == "greenhouse":
+		_draw_greenhouse()
 	_draw_weather()
+
+
+func _draw_greenhouse() -> void:
+	for y in range(GREENHOUSE_ROWS):
+		for x in range(GREENHOUSE_COLUMNS):
+			var tile := Vector2i(x, y)
+			var plot: Dictionary = Dictionary(GameState.farm.greenhouse_plots.get("%d,%d" % [x, y], {}))
+			var crop_id := String(plot.get("crop_id", ""))
+			if crop_id.is_empty():
+				continue
+			_draw_crop_visual(_greenhouse_plot_world_position(tile), crop_id, ContentRegistry.get_artifact("crops", crop_id), plot)
 
 
 func _draw_farm() -> void:
@@ -337,11 +372,13 @@ func _draw_farm() -> void:
 		var device: Dictionary = GameState.farm.automation_devices[key]
 		var tile_data: Array = device.get("tile", [0, 0])
 		var center := _plot_world_position(Vector2i(int(tile_data[0]), int(tile_data[1])))
-		var definition := ContentRegistry.get_artifact("automation_devices", StringName(device.get("device_id", "")))
-		var device_color := Color("e8b54b") if bool(device.get("enabled", true)) else Color("6f6b67")
-		draw_circle(center + Vector2(8, -7), 7, Color("171a2b"))
-		draw_circle(center + Vector2(8, -7), 6, device_color, false, 2.0)
-		draw_string(ThemeDB.fallback_font, center + Vector2(4, -3), String(definition.get("symbol", "?")), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("fff1b6"))
+		var device_id := StringName(device.get("device_id", ""))
+		var device_texture := ItemIconFactory.texture_for(device_id, &"automation", 24)
+		if device_texture != null:
+			draw_set_transform(center + Vector2(0, 7), 0.0, Vector2(1.0, 0.32))
+			draw_circle(Vector2.ZERO, 10.0, Color(0.02, 0.03, 0.04, 0.42))
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			draw_texture_rect(device_texture, Rect2(center - Vector2(12, 20), Vector2(24, 24)), false, Color.WHITE if bool(device.get("enabled", true)) else Color(0.48, 0.48, 0.48, 0.88))
 	# NPC and animals.
 	for index in range(GameState.farm.animals.size()):
 		var _animal: Dictionary = GameState.farm.animals[index]
@@ -350,7 +387,6 @@ func _draw_farm() -> void:
 			var resource: Dictionary = FARM_RESOURCES[node_id]
 			_draw_resource(Vector2(resource.position), String(resource.kind))
 	_draw_region_connections()
-	_draw_automation_console_marker()
 	var tide_active: bool = GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather)
 	_draw_fishing_spot(POND_FISH_POSITION, tide_active)
 
@@ -445,6 +481,13 @@ func _draw_visible_npc_shadows() -> void:
 		draw_set_transform(ground + Vector2(0, 1.5), 0.0, Vector2(1.0, 0.34))
 		draw_circle(Vector2.ZERO, 10.0, Color(0.02, 0.03, 0.04, 0.42))
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	for index in range(GameState.farm.animals.size()):
+		if not _animal_present_in_current_mode(index):
+			continue
+		var ground := animal_world_position(index)
+		draw_set_transform(ground + Vector2(0, 1.5), 0.0, Vector2(1.0, 0.34))
+		draw_circle(Vector2.ZERO, 8.0, Color(0.02, 0.03, 0.04, 0.38))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_chicken(position: Vector2) -> void:
@@ -501,16 +544,20 @@ func world_pickup_geometry(position: Vector2) -> Dictionary:
 func _draw_fishing_spot(position: Vector2, eldritch: bool) -> void:
 	var accent := Color("a998dd") if eldritch else Color("64c9dc")
 	var motion := sin(float(Time.get_ticks_msec()) * 0.004) * 0.6
-	# The painted pier already communicates the activity. A restrained float and
-	# two water ripples are enough to identify the exact interaction point.
+	# The pier and contextual bottom prompt communicate the interaction. Keep only
+	# a grounded bobber and a narrow broken wake; concentric target rings looked
+	# like debug geometry and did not belong to the painted world.
 	draw_line(position + Vector2(-8, -8), position + Vector2(0, -2 + motion), Color("dce5ee"), 0.8)
 	draw_rect(Rect2(position + Vector2(-1.5, -4 + motion), Vector2(3, 6)), Color("f0d37a"), true)
 	draw_rect(Rect2(position + Vector2(-1.5, -4 + motion), Vector2(3, 2)), Color("d75f5f"), true)
-	for radius in [5.0, 10.0]:
-		draw_arc(position + Vector2(0, 2), radius, 0.18, PI * 0.82, 10, accent, 1.0)
-		draw_arc(position + Vector2(0, 2), radius, PI * 1.18, PI * 1.82, 10, accent, 1.0)
+	draw_line(position + Vector2(-7, 3), position + Vector2(-2, 3), Color(accent.r, accent.g, accent.b, 0.58), 1.0)
+	draw_line(position + Vector2(2, 3), position + Vector2(7, 3), Color(accent.r, accent.g, accent.b, 0.58), 1.0)
 	if eldritch:
 		draw_circle(position + Vector2(0, 2), 1.2, accent.lightened(0.25))
+
+
+func fishing_spot_geometry() -> Dictionary:
+	return {"uses_concentric_rings":false, "uses_target_brackets":false, "bobber_size":Vector2(3, 6), "wake_segments":2}
 
 
 func _draw_locked_gateway(position: Vector2) -> void:
@@ -668,7 +715,9 @@ func _create_background() -> void:
 	add_child(world_background)
 	world_foreground_root = Node2D.new()
 	world_foreground_root.name = "WorldForeground"
-	world_foreground_root.z_index = 1000
+	# Foreground pieces share the same Y-sort range as actor feet. A fixed z=1000
+	# made a whole rectangle erase characters even while they stood in front.
+	world_foreground_root.z_index = 0
 	add_child(world_foreground_root)
 	_set_background_for_mode()
 
@@ -676,20 +725,20 @@ func _create_background() -> void:
 func _set_background_for_mode() -> void:
 	if not is_instance_valid(world_background):
 		return
-	var path := "res://assets/runtime/backgrounds/mistfall_farm_commercial.png"
-	if mode == "village":
-		path = "res://assets/runtime/backgrounds/mistfall_village_commercial.png"
-	elif mode == "river":
-		path = "res://assets/runtime/backgrounds/mistfall_river_commercial.png"
-	elif mode == "grove":
-		path = "res://assets/runtime/backgrounds/bellwood_grove_commercial.png"
-	elif mode == "ruins":
-		path = "res://assets/runtime/backgrounds/clockwork_ruins_commercial.png"
-	elif mode in ["dungeon", "abyss"]:
-		path = "res://assets/runtime/backgrounds/mistfall_dungeon_commercial.png"
-	world_background.texture = load(path)
+	if is_instance_valid(active_map_scene):
+		active_map_scene.queue_free()
+		active_map_scene = null
+	var map_definition := WorldMapCatalog.definition(GameState.current_map_id)
+	var map_scene_resource := load(map_definition.scene_path) as PackedScene
+	if map_scene_resource != null:
+		active_map_scene = map_scene_resource.instantiate() as PixelRPGMapScene
+		active_map_scene.name = "ActiveMapDefinition"
+		add_child(active_map_scene)
+	world_background.texture = load(map_definition.background_path)
 	if world_background.texture != null:
-		world_background.scale = Vector2(640.0 / world_background.texture.get_width(), 360.0 / world_background.texture.get_height())
+		# Runtime backgrounds are authored at the exact logical size. Keeping the
+		# sprite at 1:1 prevents fractional sampling and inconsistent foot anchors.
+		world_background.scale = Vector2.ONE
 	_rebuild_world_foreground()
 	_update_npc_sprites()
 	_update_animal_sprites()
@@ -733,6 +782,7 @@ func _rebuild_world_foreground() -> void:
 		sprite.region_rect = Rect2(world_rect.position / scale_factor, world_rect.size / scale_factor)
 		sprite.position = world_rect.get_center()
 		sprite.scale = scale_factor
+		sprite.z_index = 100 + clampi(roundi(world_rect.end.y), 0, 360)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		world_foreground_root.add_child(sprite)
 
@@ -776,7 +826,7 @@ func dungeon_enemy_spawn_is_clear(spawn_position: Vector2) -> bool:
 
 
 func _draw_weather() -> void:
-	if mode in ["dungeon", "abyss"]:
+	if mode in ["dungeon", "abyss", "farmhouse", "barn", "greenhouse"]:
 		return
 	var motion := int(Time.get_ticks_msec() / 28)
 	match GameState.current_weather:
@@ -803,7 +853,7 @@ func _create_npc_sprites() -> void:
 	animal_collision_root = Node2D.new()
 	animal_collision_root.name = "AnimalNavigationCollisions"
 	add_child(animal_collision_root)
-	var atlas: Texture2D = load("res://assets/runtime/sprites/character_atlas_alpha.png")
+	var atlas: Texture2D = load("res://assets/runtime/sprites/character_atlas_final.png")
 	if atlas == null:
 		return
 	var atlas_indices := {"mira":1,"lian":2,"soren":3,"yuna":4,"orin":5,"eira":6,"toma":7,"nori":8,"asha":9,"piko":10}
@@ -928,6 +978,8 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 	# Each map is traced against its production background. Rectangles describe
 	# architectural footprints; polygons follow shorelines, cliffs and irregular
 	# machinery. The open gaps coincide with the paths, bridges and gate mouths.
+	if map_mode in ["farmhouse", "barn", "greenhouse"]:
+		return WorldMapCatalog.obstacles_for_mode(map_mode)
 	match map_mode:
 		"farm":
 			return [
@@ -1162,8 +1214,6 @@ func interaction_id_at(map_mode: String, test_position: Vector2) -> String:
 			if test_position.distance_to(resource_position) <= 48.0:
 				return {"river":"reeds", "grove":"herb", "ruins":"gear"}[map_mode]
 		"farm":
-			if test_position.distance_to(AUTOMATION_CONSOLE_POSITION) <= 44.0:
-				return "automation"
 			for node_id: String in FARM_RESOURCES:
 				if test_position.distance_to(Vector2(FARM_RESOURCES[node_id].position)) <= 36.0:
 					return node_id
@@ -1238,7 +1288,6 @@ func interaction_reachability_cases() -> Dictionary:
 	var farm_cases: Array[Dictionary] = [
 		{"name":"shipping", "position":SHIPPING_POSITION, "radius":42.0},
 		{"name":"pond_fishing", "position":POND_FISH_POSITION, "radius":48.0},
-		{"name":"automation", "position":AUTOMATION_CONSOLE_POSITION, "radius":44.0},
 	]
 	if _mira_is_on_farm():
 		farm_cases.append({"name":"mira", "position":MIRA_POSITION, "radius":42.0})
@@ -1345,15 +1394,18 @@ func _sanitize_player_position() -> void:
 
 func _safe_spawn_for_mode(map_mode: String = "") -> Vector2:
 	var resolved_mode := mode if map_mode.is_empty() else map_mode
-	return {
+	var legacy_spawn: Vector2 = {
 		"farm": Vector2(318, 300),
 		"village": Vector2(260, 300),
-		"river": Vector2(105, 285),
+		"river": Vector2(105, 210),
 		"grove": Vector2(390, 270),
 		"ruins": Vector2(100, 235),
 		"dungeon": DUNGEON_ENTRY_SPAWN,
 		"abyss": DUNGEON_ENTRY_SPAWN,
-	}.get(resolved_mode, Vector2(318, 300))
+	}.get(resolved_mode, Vector2.ZERO)
+	if legacy_spawn != Vector2.ZERO:
+		return legacy_spawn
+	return WorldMapCatalog.definition(WorldMapCatalog.map_id_for_mode(resolved_mode)).safe_spawn
 
 
 func _create_hud() -> void:
@@ -1562,6 +1614,20 @@ func _update_world_prompt_ui() -> void:
 
 
 func _world_prompt_data() -> Dictionary:
+	var building_portal := _nearby_building_portal()
+	if not building_portal.is_empty():
+		if bool(building_portal.get("locked", false)):
+			return {"symbol":"鎖", "action":"查看", "title":"溫室尚未解鎖", "accent":Color("9ba4ad")}
+		return {"symbol":"門", "action":"進入" if mode == "farm" else "離開", "title":building_portal.label, "accent":Color("d8b66a")}
+	var map_interactable := _nearby_map_interactable()
+	if not map_interactable.is_empty():
+		return {"symbol":"E", "action":map_interactable.action, "title":map_interactable.title, "accent":Color("d8b66a")}
+	if mode == "barn" and not _nearby_animal().is_empty():
+		return {"symbol":"畜", "action":"照料", "title":"畜舍動物", "accent":Color("d8b66a")}
+	if mode == "greenhouse":
+		var greenhouse_tile := _nearest_greenhouse_plot()
+		if greenhouse_tile.x >= 0:
+			return {"symbol":"苗", "action":"照料", "title":"溫室栽培床", "accent":Color("75c98a")}
 	var route_id := _nearby_region_destination()
 	if not route_id.is_empty():
 		var connection: Dictionary = Dictionary(Dictionary(REGION_CONNECTIONS.get(mode, {})).get(String(route_id), {}))
@@ -1599,8 +1665,6 @@ func _world_prompt_data() -> Dictionary:
 			return {"symbol":"取", "action":"採集", "title":ItemIconFactory.display_name_for(item_id), "accent":resource_accent}
 		return {}
 	if mode == "farm":
-		if player.global_position.distance_to(AUTOMATION_CONSOLE_POSITION) <= 44.0:
-			return {"symbol":"鐘", "action":"操作", "title":"農場鐘網控制台", "accent":Color("e8b54b")}
 		if player.global_position.distance_to(SHIPPING_POSITION) <= 42.0:
 			return {"symbol":"箱", "action":"出貨", "title":"農場出貨箱", "accent":Color("78dcca")}
 		if _mira_is_on_farm() and player.global_position.distance_to(MIRA_POSITION) <= 42.0:
@@ -1795,7 +1859,7 @@ func _update_hud() -> void:
 		return
 	var forecast := PixelRPGCalendarSystem.forecast_for_tomorrow(GameState.calendar.year, GameState.calendar.season_index, GameState.calendar.day)
 	var warning := " ⚠明日%s" % _weather_name(String(forecast.weather)) if bool(forecast.warning) else ""
-	seed_card.visible = mode == "farm"
+	seed_card.visible = mode in ["farm", "greenhouse"]
 	attack_card.visible = mode in ["dungeon", "abyss"]
 	potion_card.visible = mode in ["dungeon", "abyss"]
 	potion_label.text = "H/LB 藥水\n×%d" % int(GameState.inventory.get("health_potion", 0))
@@ -1809,7 +1873,7 @@ func _update_hud() -> void:
 		var festival: Dictionary = GameState.festivals.festival_on(GameState.calendar.season_id(), GameState.calendar.day)
 		var day_status := "祭・%s" % festival.get("display_name") if not festival.is_empty() else tide_text
 		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), day_status]
-		controls_label.text = "E/Y 互動／道路／鐘網　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度　C/D→ 睡覺"
+		controls_label.text = "E/Y 互動／道路／建物　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度"
 	elif mode == "village":
 		var tide_text := "異潮" if GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮"
 		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n霧落村｜廣場、商店與居民｜%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, tide_text]
@@ -1820,6 +1884,10 @@ func _update_hud() -> void:
 		var tide_text := "無星異潮可釣" if mode == "river" and GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮探索"
 		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100\n%s｜%s｜%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, map_title, local_hint, tide_text]
 		controls_label.text = "WASD/搖桿 移動　E/Y 道路／互動／釣魚　Esc/Start 旅行圖　M/Select 連線"
+	elif mode in ["farmhouse", "barn", "greenhouse"]:
+		var interior_title: String = {"farmhouse":"農舍｜床鋪、廚房與儲物","barn":"畜舍｜動物、畜產品與鐘網設備","greenhouse":"溫室｜全年栽培床"}.get(mode, "室內")
+		hud_label.text = "%s　%s　%s　%dG　體力 %d/100\n%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), GameState.coins, GameState.tools.stamina, interior_title]
+		controls_label.text = "WASD/搖桿 移動　E/Y 互動／出門　Esc/Start 手冊" + ("　床邊 E/Y 睡覺" if mode == "farmhouse" else "")
 	elif mode == "dungeon":
 		hud_label.text = "%s　%s　HP %d/%d　四季鐘窟 %dF　敵人 %d\n封印 %d/4　電梯 %s　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), player.health, player.max_health, GameState.dungeon.current_floor, enemies_remaining, GameState.dungeon.seals.size(), str(GameState.dungeon.available_elevators()), "無限挑戰已開放" if GameState.dungeon.endless_unlocked else "主線無期限"]
 		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　E/Y 鐘門／下層　B/RS 返回　H/LB 藥水"
@@ -1830,6 +1898,14 @@ func _update_hud() -> void:
 
 func _interact() -> void:
 	_hide_world_prompt()
+	var building_portal := _nearby_building_portal()
+	if not building_portal.is_empty():
+		_activate_building_portal(building_portal)
+		return
+	var map_interactable := _nearby_map_interactable()
+	if not map_interactable.is_empty():
+		_activate_map_interactable(map_interactable)
+		return
 	var region_destination := _nearby_region_destination()
 	if not region_destination.is_empty():
 		_activate_region_destination(region_destination)
@@ -1851,6 +1927,25 @@ func _interact() -> void:
 			_show_toast("右下發光鐘台：E 前往下一層；上方鐘門：E 返回農場")
 		else:
 			_show_toast("清除敵人解鎖右下鐘台；上方鐘門隨時可返回農場")
+		return
+	if mode == "farmhouse":
+		_show_toast("走近床、廚房、儲物箱或正門再互動")
+		return
+	if mode == "barn":
+		var barn_animal := _nearby_animal()
+		if not barn_animal.is_empty():
+			_interact_animal(barn_animal)
+		else:
+			_show_toast("走近動物、飼料槽、收集箱、鐘網設備或正門再互動")
+		return
+	if mode == "greenhouse":
+		var greenhouse_tile := _nearest_greenhouse_plot()
+		if greenhouse_tile.x < 0:
+			_show_toast("走近栽培床或正門再互動")
+			return
+		var greenhouse_result: Dictionary = GameState.interact_greenhouse_plot(greenhouse_tile, _selected_seed_id())
+		_show_toast(String(greenhouse_result.get("message", "")))
+		queue_redraw()
 		return
 	if mode in ["river", "grove", "ruins"]:
 		var map_npc := _nearby_map_npc()
@@ -1885,9 +1980,6 @@ func _interact() -> void:
 			_talk_to_npc(npc_id)
 			return
 	if mode == "farm":
-		if player.global_position.distance_to(AUTOMATION_CONSOLE_POSITION) <= 44.0:
-			automation_console.open()
-			return
 		for node_id: String in FARM_RESOURCES:
 			var resource: Dictionary = FARM_RESOURCES[node_id]
 			if player.global_position.distance_to(Vector2(resource.position)) <= 36.0:
@@ -1946,6 +2038,109 @@ func _nearby_region_destination() -> StringName:
 	return _region_destination_at(mode, player.global_position)
 
 
+func _building_portal_at(map_mode: String, test_position: Vector2) -> Dictionary:
+	var nearest: Dictionary = {}
+	var best_distance := 30.0
+	var source_map_id := WorldMapCatalog.map_id_for_mode(map_mode)
+	for definition: PixelRPGMapPortalDefinition in WorldMapCatalog.portals_for(source_map_id):
+		var is_building_connection := definition.source_map_id in [&"mistfall_farmhouse", &"mistfall_barn", &"mistfall_greenhouse"] or definition.target_map_id in [&"mistfall_farmhouse", &"mistfall_barn", &"mistfall_greenhouse"]
+		if not is_building_connection:
+			continue
+		var distance := test_position.distance_to(definition.position)
+		if distance < best_distance:
+			var locked: bool = definition.unlock_flag == &"greenhouse_unlocked" and not bool(GameState.farm.greenhouse_unlocked)
+			nearest = {
+				"id":definition.portal_id,
+				"position":definition.position,
+				"target":definition.target_map_id,
+				"spawn":definition.target_spawn,
+				"facing":definition.target_facing,
+				"label":definition.label,
+				"locked":locked,
+			}
+			best_distance = distance
+	return nearest
+
+
+func _nearby_building_portal() -> Dictionary:
+	return _building_portal_at(mode, player.global_position)
+
+
+func _activate_building_portal(portal: Dictionary) -> void:
+	if portal.is_empty():
+		return
+	if bool(portal.get("locked", false)):
+		_show_toast("溫室尚未解鎖：農場升級到開放溫室的等級後即可進入")
+		return
+	var target_map := StringName(portal.target)
+	GameState.current_portal_id = StringName(portal.id)
+	_travel_to_map(target_map)
+	player.global_position = Vector2(portal.spawn)
+	player.facing = Vector2(portal.facing)
+	_sanitize_player_position()
+	GameState.player_position = player.global_position
+	GameState.player_facing = player.facing
+	GameState.indoor_state = mode in ["farmhouse", "barn", "greenhouse"]
+	portal_transition_cooldown = PORTAL_REENTRY_COOLDOWN
+
+
+func _nearby_map_interactable() -> Dictionary:
+	var nearest: Dictionary = {}
+	var best_distance := INF
+	for interactable: Dictionary in WorldMapCatalog.interactables_for(GameState.current_map_id):
+		var distance := player.global_position.distance_to(Vector2(interactable.position))
+		if distance <= float(interactable.radius) and distance < best_distance:
+			nearest = interactable
+			best_distance = distance
+	return nearest
+
+
+func can_sleep_at_current_position() -> bool:
+	return is_instance_valid(player) and mode == "farmhouse" and player.global_position.distance_to(FARMHOUSE_BED_POSITION) <= 42.0
+
+
+func _activate_map_interactable(interactable: Dictionary) -> void:
+	match String(interactable.get("action_id", "")):
+		"sleep":
+			if NetworkManager.is_client():
+				_show_toast("連線世界由主機決定何時結束今日")
+			else:
+				GameState.sleep_if_allowed()
+		"cooking":
+			game_menu.open_to_tab("料理")
+		"storage":
+			game_menu.open_to_tab("背包")
+		"automation":
+			automation_console.open()
+		"feed_animals":
+			var fed_count := 0
+			for animal: Dictionary in GameState.farm.animals:
+				var result: Dictionary = GameState.farm.tend_animal(String(animal.get("id", "")), true, false)
+				fed_count += int(bool(result.get("ok", false)))
+			_show_toast("已補充飼料並餵食 %d 隻動物" % fed_count)
+		"collect_products":
+			var collected := 0
+			for animal: Dictionary in GameState.farm.animals:
+				var result: Dictionary = GameState.farm.collect_animal_product(String(animal.get("id", "")))
+				collected += int(bool(result.get("ok", false)))
+			_show_toast("已收取 %d 份畜產品" % collected if collected > 0 else "目前沒有可收取的畜產品")
+		_:
+			_show_toast("目前無法使用這個物件")
+
+
+func _try_automatic_route_transition() -> void:
+	if portal_transition_cooldown > 0.0 or mode in ["farmhouse", "barn", "greenhouse"]:
+		return
+	var destination := _nearby_region_destination()
+	if destination.is_empty():
+		return
+	var connection: Dictionary = Dictionary(Dictionary(REGION_CONNECTIONS.get(mode, {})).get(String(destination), {}))
+	if connection.is_empty() or player.global_position.distance_to(Vector2(connection.position)) > 11.0:
+		return
+	portal_transition_cooldown = PORTAL_REENTRY_COOLDOWN
+	_activate_region_destination(destination)
+
+
 func _region_destination_at(map_mode: String, test_position: Vector2) -> StringName:
 	var best_id := &""
 	# Gate signs are precise physical landmarks. A broad trigger steals nearby
@@ -1988,6 +2183,8 @@ func _nearby_animal() -> String:
 
 func _animal_id_at_position(test_position: Vector2) -> String:
 	for index in range(GameState.farm.animals.size()):
+		if not _animal_present_in_current_mode(index):
+			continue
 		var animal: Dictionary = GameState.farm.animals[index]
 		var animal_position := animal_world_position(index)
 		if test_position.distance_to(animal_position) <= 38.0:
@@ -1996,12 +2193,22 @@ func _animal_id_at_position(test_position: Vector2) -> String:
 
 
 func animal_world_position(index: int) -> Vector2:
+	if mode == "barn" and index >= 0 and index < BARN_ANIMAL_POSITIONS.size():
+		return Vector2(BARN_ANIMAL_POSITIONS[index])
 	if index >= 0 and index < ANIMAL_STALL_POSITIONS.size():
 		return Vector2(ANIMAL_STALL_POSITIONS[index])
 	# Old development saves could predate the capacity rule. Keep their extra
 	# animals deterministic and on-screen rather than stacking at (0, 0).
 	var overflow_index := maxi(0, index - ANIMAL_STALL_POSITIONS.size())
 	return Vector2(410 + (overflow_index % 4) * 60, 310 - (overflow_index / 4 + 1) * 60)
+
+
+func _animal_present_in_current_mode(index: int) -> bool:
+	if index < 0 or index >= GameState.farm.animals.size():
+		return false
+	var animal: Dictionary = GameState.farm.animals[index]
+	var scene_id := StringName(animal.get("scene_id", AnimalPresenceState.scene_for(GameState.current_weather, GameState.calendar.minute_of_day)))
+	return (mode == "farm" and scene_id == &"mistfall_farm") or (mode == "barn" and scene_id == &"mistfall_barn")
 
 
 func _nearby_npc() -> String:
@@ -2086,19 +2293,16 @@ func _animate_world_sprites() -> void:
 
 
 func _animate_animal_sprites() -> void:
-	var elapsed := float(Time.get_ticks_msec()) / 1000.0
 	for animal_id: String in animal_sprites:
 		var sprite: Sprite2D = animal_sprites[animal_id]
 		if not is_instance_valid(sprite) or not sprite.visible:
 			continue
 		var base_scale: Vector2 = Vector2(sprite.get_meta("base_scale", sprite.scale))
 		var ground_position: Vector2 = Vector2(sprite.get_meta("ground_position", sprite.position + Vector2(0, 9)))
-		var phase_offset := float(sprite.get_meta("phase_offset", 0.0))
-		var breath := sin(elapsed * 2.6 + phase_offset)
-		sprite.scale = Vector2(base_scale.x * (1.0 + breath * 0.012), base_scale.y * (1.0 - breath * 0.009))
-		# Counter-adjust the cell's bottom edge so breathing changes the body shape,
-		# not its contact point with the ground.
-		sprite.position = ground_position + Vector2(0, -9.0 + 222.0 * (base_scale.y - sprite.scale.y))
+		# Idle animals use their final-size atlas at 1:1 and keep a fixed foot point.
+		# Scaling-based "breathing" was subtle but made livestock appear to float.
+		sprite.scale = base_scale
+		sprite.position = ground_position + Vector2(0, -9)
 
 
 func _npc_anchor(npc_id: String) -> Vector2:
@@ -2172,16 +2376,21 @@ func _on_network_status_changed(message: String) -> void:
 
 func _update_animal_sprites() -> void:
 	var live_ids: Dictionary = {}
-	var atlas: Texture2D = load("res://assets/runtime/sprites/animal_atlas_alpha.png")
-	if atlas == null:
-		return
 	for index in range(GameState.farm.animals.size()):
-		var animal: Dictionary = GameState.farm.animals[index]
+		var animal: Dictionary = GameState.farm.animals[index].duplicate(true)
+		animal["scene_id"] = String(AnimalPresenceState.scene_for(GameState.current_weather, GameState.calendar.minute_of_day))
+		animal["stall_index"] = index
+		GameState.farm.animals[index] = animal
 		var animal_id := String(animal.get("id", "animal_%d" % index))
 		live_ids[animal_id] = true
 		var sprite: Sprite2D = animal_sprites.get(animal_id)
 		if not is_instance_valid(sprite):
-			var atlas_index := 1 if String(animal.get("species", "")) == "chicken" else 3
+			var is_chicken := String(animal.get("species", "")) == "chicken"
+			var atlas_index := 1 if is_chicken else 3
+			var atlas_path := "res://assets/runtime/sprites/animal_chicken_atlas_final.png" if is_chicken else "res://assets/runtime/sprites/animal_livestock_atlas_final.png"
+			var atlas: Texture2D = load(atlas_path)
+			if atlas == null:
+				continue
 			var region := AtlasTexture.new()
 			region.atlas = atlas
 			var frame_width := floori(atlas.get_width() / 4.0)
@@ -2190,7 +2399,7 @@ func _update_animal_sprites() -> void:
 			sprite = Sprite2D.new()
 			sprite.texture = region
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			var base_scale := Vector2(0.105, 0.105) if String(animal.get("species", "")) == "chicken" else Vector2(0.13, 0.13)
+			var base_scale := Vector2.ONE
 			sprite.scale = base_scale
 			sprite.set_meta("base_scale", base_scale)
 			sprite.set_meta("phase_offset", float(index) * 0.91)
@@ -2200,7 +2409,7 @@ func _update_animal_sprites() -> void:
 		sprite.set_meta("ground_position", animal_position)
 		sprite.position = animal_position + Vector2(0, -9)
 		sprite.z_index = 100 + clampi(roundi(animal_position.y), 0, 360)
-		sprite.visible = mode == "farm"
+		sprite.visible = _animal_present_in_current_mode(index)
 	for animal_id: String in animal_sprites.keys():
 		if live_ids.has(animal_id):
 			continue
@@ -2215,21 +2424,27 @@ func _rebuild_animal_collisions() -> void:
 	if not is_instance_valid(animal_collision_root):
 		return
 	var signature_parts := PackedStringArray([mode])
-	if mode == "farm":
+	if mode in ["farm", "barn"]:
 		for index in range(GameState.farm.animals.size()):
+			if not _animal_present_in_current_mode(index):
+				continue
 			var animal: Dictionary = GameState.farm.animals[index]
 			signature_parts.append("%s:%s:%s" % [String(animal.get("id", index)), String(animal.get("species", "")), animal_world_position(index)])
 	var next_signature := "|".join(signature_parts)
-	var expected_count: int = GameState.farm.animals.size() if mode == "farm" else 0
+	var expected_count := 0
+	for index in range(GameState.farm.animals.size()):
+		expected_count += int(_animal_present_in_current_mode(index))
 	if next_signature == animal_collision_signature and animal_collision_root.get_child_count() == expected_count:
 		return
 	animal_collision_signature = next_signature
 	for child: Node in animal_collision_root.get_children():
 		animal_collision_root.remove_child(child)
 		child.queue_free()
-	if mode != "farm":
+	if mode not in ["farm", "barn"]:
 		return
 	for index in range(GameState.farm.animals.size()):
+		if not _animal_present_in_current_mode(index):
+			continue
 		var animal: Dictionary = GameState.farm.animals[index]
 		var body := StaticBody2D.new()
 		body.name = "Animal_%s" % String(animal.get("id", index))
@@ -2265,11 +2480,7 @@ func _enter_village() -> void:
 
 
 func _mode_for_map(map_id: StringName) -> String:
-	return {
-		"mistfall_farm":"farm", "mistfall_village":"village", "mistfall_river":"river",
-		"bellwood_grove":"grove", "clockwork_ruins":"ruins", "mistfall_depths":"dungeon",
-		"dreaming_shore":"abyss",
-	}.get(String(map_id), "farm")
+	return String(WorldMapCatalog.definition(map_id).mode)
 
 
 func _on_map_change_requested(map_id: StringName, _spawn_id: StringName) -> void:
@@ -2295,8 +2506,7 @@ func _travel_to_map(map_id: StringName) -> void:
 	_sanitize_player_position()
 	GameState.player_position = player.global_position
 	title_label.text = ""
-	var names := {"mistfall_farm":"霧落農場", "mistfall_village":"霧落村", "mistfall_river":"鳴鐘河畔", "bellwood_grove":"古鐘林", "clockwork_ruins":"古鐘機械遺跡"}
-	_show_toast("來到%s" % names.get(String(map_id), String(map_id)))
+	_show_toast("來到%s" % WorldMapCatalog.definition(map_id).display_name)
 	queue_redraw()
 
 
@@ -2310,9 +2520,9 @@ func _arrival_position_for_mode(target_mode: String, source_map_id: StringName) 
 		var entry_position := Vector2(Dictionary(connections[String(source_map_id)]).position)
 		var inward := entry_position.direction_to(Vector2(320, 190))
 		var candidate := entry_position + inward * 34.0
-		if not is_world_position_blocked(candidate, 9.0):
+		if not is_map_position_blocked(target_mode, candidate, 9.0):
 			return candidate
-	return _safe_spawn_for_mode()
+	return _safe_spawn_for_mode(target_mode)
 
 
 func _interact_animal(animal_id: String) -> void:
@@ -2332,6 +2542,23 @@ func _nearest_plot() -> Vector2i:
 				best_distance = distance
 				nearest = tile
 	return nearest
+
+
+func _nearest_greenhouse_plot() -> Vector2i:
+	var nearest := Vector2i(-1, -1)
+	var best_distance := 43.0
+	for y in range(GREENHOUSE_ROWS):
+		for x in range(GREENHOUSE_COLUMNS):
+			var tile := Vector2i(x, y)
+			var distance := player.global_position.distance_to(_greenhouse_plot_world_position(tile))
+			if distance < best_distance:
+				best_distance = distance
+				nearest = tile
+	return nearest
+
+
+func _greenhouse_plot_world_position(tile: Vector2i) -> Vector2:
+	return GREENHOUSE_PLOT_ORIGIN + Vector2(tile.x * GREENHOUSE_PLOT_SPACING.x, tile.y * GREENHOUSE_PLOT_SPACING.y)
 
 
 func _plot_world_position(tile: Vector2i) -> Vector2:
