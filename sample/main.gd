@@ -103,13 +103,13 @@ const RIVER_RESOURCE_POSITION := Vector2(494, 258)
 const GROVE_RESOURCE_POSITION := Vector2(254, 224)
 const RUINS_RESOURCE_POSITION := Vector2(505, 238)
 const NPC_POSITIONS := {
-	"mira": Vector2(220, 200), "lian": Vector2(275, 240), "soren": Vector2(380, 155), "yuna": Vector2(380, 235),
+	"mira": Vector2(220, 200), "lian": Vector2(275, 240), "soren": Vector2(405, 125), "yuna": Vector2(380, 235),
 	"orin": Vector2(425, 180), "eira": Vector2(600, 260), "toma": Vector2(610, 210), "nori": Vector2(325, 230),
 	"asha": Vector2(170, 200), "piko": Vector2(340, 285),
 }
 const RIVER_NPC_POSITIONS := {"lian": Vector2(420, 165), "nori": Vector2(245, 180)}
-const GROVE_NPC_POSITIONS := {"asha": Vector2(475, 150), "piko": Vector2(350, 250)}
-const RUINS_NPC_POSITIONS := {"soren": Vector2(245, 230), "toma": Vector2(410, 230)}
+const GROVE_NPC_POSITIONS := {"asha": Vector2(475, 150), "piko": Vector2(430, 250)}
+const RUINS_NPC_POSITIONS := {"soren": Vector2(220, 180), "toma": Vector2(590, 150)}
 const NPC_SPRITE_SCALE := 0.145
 const NPC_FOOT_OFFSETS := {
 	"mira":18.6, "lian":19.4, "soren":19.6, "yuna":20.4, "orin":20.3,
@@ -943,11 +943,14 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 		"village":
 			return [
 				{"name":"VillageLibrary", "rect":Rect2(67, 54, 151, 101)},
-				{"name":"VillageForge", "rect":Rect2(251, 54, 123, 78)},
-				{"name":"VillageStore", "rect":Rect2(440, 54, 139, 103)},
-				{"name":"VillageClinic", "rect":Rect2(438, 171, 127, 79)},
+				{"name":"VillageForge", "rect":Rect2(251, 54, 123, 70)},
+				# Preserve a full character-height street between the eastern shop and
+				# clinic. The former 14 px slit passed point-grid QA but trapped the
+				# player's 19 px capsule and cut off the whole east side of the village.
+				{"name":"VillageStore", "rect":Rect2(440, 54, 139, 96)},
+				{"name":"VillageClinic", "rect":Rect2(438, 180, 127, 70)},
 				{"name":"VillageHome", "rect":Rect2(127, 218, 126, 68)},
-				{"name":"VillageBell", "polygon":PackedVector2Array([Vector2(297, 147), Vector2(346, 147), Vector2(365, 177), Vector2(348, 212), Vector2(294, 212), Vector2(276, 178)])},
+				{"name":"VillageBell", "polygon":PackedVector2Array([Vector2(297, 156), Vector2(346, 156), Vector2(365, 180), Vector2(348, 212), Vector2(294, 212), Vector2(276, 180)])},
 				{"name":"VillageUpperRiver", "polygon":PackedVector2Array([Vector2(20, 187), Vector2(151, 187), Vector2(157, 216), Vector2(132, 246), Vector2(82, 256), Vector2(20, 245)])},
 				{"name":"VillageLowerRiverWest", "polygon":PackedVector2Array([Vector2(20, 245), Vector2(127, 247), Vector2(130, 278), Vector2(112, 302), Vector2(20, 323)])},
 				{"name":"VillageLowerRiverEast", "polygon":PackedVector2Array([Vector2(177, 281), Vector2(227, 286), Vector2(244, 317), Vector2(226, 338), Vector2(164, 338), Vector2(164, 308)])},
@@ -955,7 +958,7 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 				# The shrine's stone path is visible and must remain reachable. Its
 				# opening is centered around x=420, not in the old x=447 corridor.
 				{"name":"VillageShrineWest", "polygon":PackedVector2Array([Vector2(371, 257), Vector2(399, 250), Vector2(403, 278), Vector2(401, 338), Vector2(370, 338)])},
-				{"name":"VillageShrineEast", "polygon":PackedVector2Array([Vector2(443, 260), Vector2(570, 252), Vector2(592, 279), Vector2(592, 338), Vector2(443, 338)])},
+				{"name":"VillageShrineEast", "polygon":PackedVector2Array([Vector2(443, 260), Vector2(558, 254), Vector2(570, 281), Vector2(570, 338), Vector2(443, 338)])},
 			]
 		"river":
 			return [
@@ -977,9 +980,12 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 				{"name":"GroveNorthCenterForest", "polygon":PackedVector2Array([Vector2(265, 54), Vector2(421, 54), Vector2(421, 113), Vector2(388, 126), Vector2(338, 112), Vector2(294, 124), Vector2(264, 103)])},
 				{"name":"GroveShrine", "polygon":PackedVector2Array([Vector2(425, 54), Vector2(528, 54), Vector2(538, 112), Vector2(518, 135), Vector2(438, 134), Vector2(414, 111)])},
 				{"name":"GroveWestLog", "polygon":PackedVector2Array([Vector2(169, 122), Vector2(238, 128), Vector2(258, 154), Vector2(239, 180), Vector2(181, 169), Vector2(161, 146)])},
-				{"name":"GroveMound", "polygon":PackedVector2Array([Vector2(306, 145), Vector2(391, 144), Vector2(421, 178), Vector2(405, 227), Vector2(326, 235), Vector2(294, 201)])},
+				{"name":"GroveMound", "polygon":PackedVector2Array([Vector2(318, 150), Vector2(391, 144), Vector2(421, 178), Vector2(405, 227), Vector2(326, 235), Vector2(294, 201)])},
 				{"name":"GrovePond", "polygon":PackedVector2Array([Vector2(51, 195), Vector2(127, 190), Vector2(171, 215), Vector2(183, 257), Vector2(158, 297), Vector2(84, 302), Vector2(51, 275)])},
-				{"name":"GroveSouthForest", "polygon":PackedVector2Array([Vector2(220, 262), Vector2(338, 251), Vector2(374, 288), Vector2(363, 338), Vector2(219, 338), Vector2(204, 304)])},
+				# The mound-to-south-forest lane is a painted footpath. Its old 16 px
+				# collision gap was narrower than the hero, and Piko stood in the only
+				# remaining seam, splitting the forest into two maps in practice.
+				{"name":"GroveSouthForest", "polygon":PackedVector2Array([Vector2(220, 272), Vector2(338, 265), Vector2(374, 290), Vector2(363, 338), Vector2(219, 338), Vector2(204, 304)])},
 				{"name":"GroveSouthEastLog", "polygon":PackedVector2Array([Vector2(442, 278), Vector2(535, 277), Vector2(568, 311), Vector2(557, 338), Vector2(431, 338), Vector2(423, 306)])},
 			]
 		"ruins":
@@ -990,9 +996,11 @@ func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
 				{"name":"RuinsNorthBell", "rect":Rect2(419, 54, 84, 80)},
 				{"name":"RuinsNorthEastTank", "polygon":PackedVector2Array([Vector2(530, 54), Vector2(620, 54), Vector2(620, 137), Vector2(547, 137), Vector2(526, 116)])},
 				{"name":"RuinsNorthEastChannel", "rect":Rect2(503, 54, 28, 84)},
-				{"name":"RuinsWestWheel", "polygon":PackedVector2Array([Vector2(73, 137), Vector2(183, 137), Vector2(190, 207), Vector2(163, 225), Vector2(84, 218), Vector2(69, 178)])},
-				{"name":"RuinsCentralMachine", "polygon":PackedVector2Array([Vector2(257, 135), Vector2(389, 135), Vector2(407, 180), Vector2(388, 219), Vector2(264, 218), Vector2(243, 180)])},
-				{"name":"RuinsEastMachine", "polygon":PackedVector2Array([Vector2(443, 140), Vector2(555, 140), Vector2(568, 187), Vector2(548, 221), Vector2(453, 218), Vector2(431, 183)])},
+				# Leave the three visible east-west service roads at least one full
+				# capsule high. NPCs are positioned in plazas instead of those chokepoints.
+				{"name":"RuinsWestWheel", "polygon":PackedVector2Array([Vector2(73, 137), Vector2(183, 137), Vector2(190, 207), Vector2(163, 214), Vector2(84, 211), Vector2(69, 178)])},
+				{"name":"RuinsCentralMachine", "polygon":PackedVector2Array([Vector2(257, 145), Vector2(389, 145), Vector2(407, 180), Vector2(388, 211), Vector2(264, 211), Vector2(243, 180)])},
+				{"name":"RuinsEastMachine", "polygon":PackedVector2Array([Vector2(443, 140), Vector2(555, 140), Vector2(568, 187), Vector2(548, 212), Vector2(453, 212), Vector2(431, 183)])},
 				{"name":"RuinsSouthWestField", "rect":Rect2(137, 248, 99, 82)},
 				{"name":"RuinsSouthVault", "polygon":PackedVector2Array([Vector2(257, 249), Vector2(388, 249), Vector2(388, 292), Vector2(351, 296), Vector2(320, 279), Vector2(288, 296), Vector2(257, 292)])},
 				{"name":"RuinsSouthEastField", "rect":Rect2(430, 250, 126, 82)},

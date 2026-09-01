@@ -241,16 +241,26 @@ func _test_combat_and_dungeon() -> void:
 	Input.action_release("attack")
 	await _physics_frames(24)
 	_record("戰鬥", "近戰攻擊命中", target.health < attack_before, "傷害 %d" % (attack_before - target.health))
+	for _wait_hit_attack_frame in range(120):
+		if player.state == 0:
+			break
+		await physics_frame
 	target.health = 1000
 	var combo_before: int = int(target.health)
 	Input.action_press("attack")
 	await _physics_frames(2)
 	Input.action_release("attack")
-	await _physics_frames(7)
+	for _wait_combo_window_frame in range(120):
+		await physics_frame
+		if player.state == 1 and player.state_timer <= player.ATTACK_DURATIONS[player.combo_stage] * 0.5:
+			break
 	Input.action_press("attack")
 	await _physics_frames(2)
 	Input.action_release("attack")
-	await _physics_frames(22)
+	for _wait_combo_damage_frame in range(180):
+		if combo_before - target.health > player.attack_power:
+			break
+		await physics_frame
 	_record("戰鬥", "連擊輸入緩衝", combo_before - target.health > player.attack_power, "累積傷害 %d" % (combo_before - target.health))
 	for _wait_combo_frame in range(60):
 		if player.state == 0:

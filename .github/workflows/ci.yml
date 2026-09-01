@@ -53,6 +53,7 @@ jobs:
           }
           run_godot_gate editor --headless --path . --editor --quit
           run_godot_gate smoke --headless --path . --script res://tests/godot/smoke_test.gd
+          run_godot_gate map-physics --headless --path . --script res://tests/godot/map_physics_reachability_test.gd
           run_godot_gate images --headless --path . --script res://tests/godot/image_integrity_test.gd
           run_godot_gate stress --headless --path . --script res://tests/godot/commercial_stress_test.gd
           run_godot_gate performance --headless --path . --script res://tests/godot/performance_test.gd
