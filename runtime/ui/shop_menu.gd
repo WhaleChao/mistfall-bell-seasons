@@ -1,6 +1,8 @@
 class_name PixelRPGShopMenu
 extends CanvasLayer
 
+const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
+
 var active_shop_id := StringName()
 var title_label: Label
 var coins_label: Label
@@ -49,6 +51,12 @@ func refresh() -> void:
 	for offer: Dictionary in GameState.shops.offers(active_shop_id, GameState.calendar.season_id(), GameState.farm.rank, GameState.tools.tool_levels):
 		var button := Button.new()
 		button.text = "%s　%dG" % [offer.get("display_name", "商品"), offer.get("price", 0)]
+		var target_id := StringName(offer.get("target_id", ""))
+		var offer_kind := StringName(offer.get("kind", "item"))
+		button.icon = ItemIconFactory.texture_for(target_id, offer_kind, 32)
+		button.expand_icon = true
+		button.custom_minimum_size = Vector2(0, 40)
+		button.tooltip_text = "%s\n%s" % [ItemIconFactory.display_name_for(target_id), ItemIconFactory.description_for(target_id)]
 		button.disabled = GameState.coins < int(offer.get("price", 0))
 		button.pressed.connect(_purchase.bind(String(offer.get("id", ""))))
 		offer_box.add_child(button)

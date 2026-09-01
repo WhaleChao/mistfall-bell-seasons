@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="paper" x1="24" y1="18" x2="103" y2="111" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F2C66D"/>
+      <stop offset="0.55" stop-color="#C98435"/>
+      <stop offset="1" stop-color="#7B421F"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="48" y1="28" x2="82" y2="76" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B7E46F"/>
+      <stop offset="1" stop-color="#3D874E"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset dy="3" result="offset"/>
+      <feColorMatrix in="offset" values="0 0 0 0 0.05 0 0 0 0 0.08 0 0 0 0 0.11 0 0 0 .55 0"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M22 35 91 23l17 78-69 13z" fill="url(#paper)" stroke="#4A2C1B" stroke-width="6"/>
+    <path d="m22 35 38 15 31-27" fill="#F8D98B" stroke="#6D4424" stroke-width="5"/>
+    <path d="M40 76c8-17 23-23 32-20 2 14-8 25-26 28" fill="url(#leaf)" stroke="#285F3E" stroke-width="5"/>
+    <path d="M49 82c14-18 25-31 40-41" fill="none" stroke="#285F3E" stroke-width="5"/>
+    <path d="M69 61c3-16 13-25 26-26 3 14-4 26-20 32" fill="url(#leaf)" stroke="#285F3E" stroke-width="5"/>
+    <ellipse cx="53" cy="99" rx="8" ry="5" transform="rotate(-14 53 99)" fill="#E8C28A" stroke="#57351F" stroke-width="3"/>
+    <ellipse cx="75" cy="95" rx="8" ry="5" transform="rotate(10 75 95)" fill="#DFAE6E" stroke="#57351F" stroke-width="3"/>
+    <ellipse cx="91" cy="88" rx="7" ry="4.5" transform="rotate(-18 91 88)" fill="#F0C98B" stroke="#57351F" stroke-width="3"/>
+    <path d="M31 44 96 32" stroke="#FFE5A9" stroke-width="3" opacity=".75"/>
+  </g>
+</svg>

@@ -9,6 +9,9 @@ const DODGE_DURATION := 0.24
 const DODGE_COOLDOWN := 0.42
 const ATTACK_DURATIONS := [0.24, 0.22, 0.34]
 const ATTACK_DAMAGE_MULTIPLIERS := [1.0, 1.15, 1.5]
+const ATTACK_EFFECT_TEXTURE: Texture2D = preload("res://assets/runtime/ui/attack_slash_v2.svg")
+const ATTACK_EFFECT_TAIL := Vector2(14, 34)
+const ATTACK_EFFECT_TIP := Vector2(118, -5)
 
 var max_health := 100
 var health := 100
@@ -29,6 +32,8 @@ var visual_sprite: Sprite2D
 var visual_region: AtlasTexture
 var visual_frame := -1
 var visual_direction_row := -1
+var visual_animation := &"idle"
+var attack_visual_progress := 0.0
 
 
 func _ready() -> void:
@@ -280,6 +285,7 @@ func _update_visual() -> void:
 	var outfit_tint: Color = outfit_tints[outfit_index]
 	visual_sprite.modulate = Color(outfit_tint.r, outfit_tint.g, outfit_tint.b, 0.55 if state == State.DODGE else 1.0)
 	var moving := velocity.length_squared() > 36.0 and state == State.MOVE
+	visual_animation = &"walk" if moving else &"idle"
 	var direction_row := 0
 	if absf(facing.x) > absf(facing.y):
 		direction_row = 1 if facing.x < 0.0 else 2
@@ -293,17 +299,55 @@ func _update_visual() -> void:
 		var frame_width := floori(atlas.get_width() / 4.0)
 		var frame_height := floori(atlas.get_height() / 4.0)
 		visual_region.region = Rect2(frame * frame_width, direction_row * frame_height, frame_width, frame_height)
-	visual_sprite.position = Vector2(0, -12)
+	var idle_phase := float(Time.get_ticks_msec()) * 0.0045
+	var idle_breath := sin(idle_phase) if visual_animation == &"idle" and state == State.MOVE else 0.0
+	visual_sprite.position = Vector2(0, -12.0 + idle_breath * 0.65)
+	visual_sprite.scale = Vector2(0.15 - idle_breath * 0.0008, 0.15 + idle_breath * 0.0012)
 	visual_sprite.flip_h = false
 	visual_sprite.rotation = 0.0
+	attack_visual_progress = 0.0
+	if state == State.ATTACK:
+		var duration: float = ATTACK_DURATIONS[combo_stage]
+		attack_visual_progress = clampf(1.0 - state_timer / duration, 0.0, 1.0)
+		var motion := sin(attack_visual_progress * PI)
+		var perpendicular := facing.normalized().rotated(PI * 0.5)
+		visual_sprite.position += facing.normalized() * motion * 3.2 + perpendicular * sin(attack_visual_progress * TAU) * 1.1
+		visual_sprite.rotation = sin(attack_visual_progress * PI) * (0.095 if facing.x >= 0.0 else -0.095)
+		visual_sprite.scale = Vector2(0.15 + motion * 0.006, 0.15 - motion * 0.003)
 	if hurt_flash_timer > 0.0:
 		visual_sprite.modulate = Color(1.4, 1.4, 1.4, visual_sprite.modulate.a)
 
 
 func _draw() -> void:
 	if state == State.ATTACK:
-		var arc_center := facing.normalized() * 22.0
-		draw_arc(arc_center, 17.0 + combo_stage * 2.0, -1.5, 1.5, 12, Color("fff3cf"), 4.0)
+		var duration: float = ATTACK_DURATIONS[combo_stage]
+		var progress := clampf(1.0 - state_timer / duration, 0.0, 1.0)
+		for trail_index in range(4, -1, -1):
+			var trail_progress := clampf(progress - float(trail_index) * 0.035, 0.0, 1.0)
+			var geometry := attack_effect_geometry(trail_progress)
+			var trail_alpha := sin(trail_progress * PI) * (1.0 - float(trail_index) * 0.17)
+			var trail_color := Color(0.58, 0.93, 0.91, trail_alpha * 0.42) if trail_index > 0 else Color(1.0, 1.0, 1.0, trail_alpha)
+			draw_set_transform_matrix(Transform2D(geometry.transform))
+			# The texture's tail is anchored at the player's hand (x=0) and its
+			# bright tip always extends away from the player. Centering this rect
+			# made the old effect sweep back through the character.
+			draw_texture_rect(ATTACK_EFFECT_TEXTURE, Rect2(0, -64, 128, 128), false, trail_color)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if skill_flash_timer > 0.0:
 		var progress := 1.0 - skill_flash_timer / 0.32
 		draw_arc(Vector2.ZERO, lerpf(18.0, 74.0, progress), 0.0, TAU, 40, Color(0.47, 0.86, 0.79, 1.0 - progress), 3.0)
+
+
+func attack_effect_geometry(progress: float) -> Dictionary:
+	var eased := smoothstep(0.0, 1.0, clampf(progress, 0.0, 1.0))
+	var direction := facing.normalized() if facing.length_squared() > 0.01 else Vector2.DOWN
+	# Godot's Transform2D local X axis is the authored forward direction and
+	# positive 2D rotation is clockwise. The effect therefore travels from the
+	# upper-front quadrant to the lower-front quadrant in every facing direction.
+	var angle := direction.angle() + lerpf(-0.72, 0.72, eased)
+	var scale := 0.31 + float(combo_stage) * 0.045 + eased * 0.045
+	var origin := direction * (18.0 + eased * 3.0)
+	var effect_transform := Transform2D(angle, Vector2.ONE * scale, 0.0, origin)
+	var tail := effect_transform * ATTACK_EFFECT_TAIL
+	var tip := effect_transform * ATTACK_EFFECT_TIP
+	return {"transform":effect_transform, "origin":origin, "angle":angle, "scale":scale, "tail":tail, "tip":tip}

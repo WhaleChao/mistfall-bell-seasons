@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- The effect's authored forward axis is +X: hilt/tail at the left,
+         cutting edge at the right. Runtime only has to align +X to facing. -->
+    <linearGradient id="slash" x1="10" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#55E3DE" stop-opacity=".12"/>
+      <stop offset=".42" stop-color="#78DCCA" stop-opacity=".82"/>
+      <stop offset=".78" stop-color="#FFE89A"/>
+      <stop offset="1" stop-color="#FFFDF0"/>
+    </linearGradient>
+    <filter id="glow" x="-25%" y="-35%" width="155%" height="170%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#glow)" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M10 100C33 34 77 23 119 58C80 40 48 54 27 110Z" fill="#163D4B" opacity=".72"/>
+    <path d="M14 98C38 39 78 29 118 59C80 45 51 58 30 106Z" fill="url(#slash)"/>
+    <path d="M27 96C49 53 80 43 112 59" fill="none" stroke="#FFF8D7" stroke-width="4"/>
+  </g>
+  <circle cx="116" cy="59" r="4" fill="#FFFDF0"/>
+  <path d="M116 47v8M110 51h12" stroke="#FFF4AE" stroke-width="3" stroke-linecap="round"/>
+</svg>

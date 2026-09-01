@@ -140,6 +140,26 @@
       "license": {"spdx": "MIT", "source": "Original PixelRPG Studio vector artwork, 2026-08-30", "author": "PixelRPG Studio contributors"},
       "tags": ["original", "vector", "application_icon", "bell", "leaf"],
       "links": ["project:mistfall_bell_seasons"]
+    },
+    {
+      "schema_version": 1,
+      "id": "seed_packet_ui_v2",
+      "source_path": "res://assets/runtime/ui/seed_packet_v2.svg",
+      "kind": "other",
+      "sha256": "c40b4c0caab2cd1e5b2741d8b5560f1143a94035b8a0ece2989124d6ebf3482c",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen concept; deterministic transparent SVG redraw, 2026-09-01", "author": "User-directed AI generation and PixelRPG Studio contributors"},
+      "tags": ["original", "vector", "ui", "seed_packet", "transparent"],
+      "links": ["system:farming", "ui:selected_seed"]
+    },
+    {
+      "schema_version": 1,
+      "id": "attack_slash_ui_v2",
+      "source_path": "res://assets/runtime/ui/attack_slash_v2.svg",
+      "kind": "other",
+      "sha256": "866b430f749898b71db782c9197baccfc7d9eec7f25d29dd273b98822cad0ab1",
+      "license": {"spdx": "LicenseRef-OpenAI-Generated", "source": "OpenAI built-in imagegen concept; deterministic transparent SVG redraw, 2026-09-01", "author": "User-directed AI generation and PixelRPG Studio contributors"},
+      "tags": ["original", "vector", "ui", "attack", "slash", "transparent"],
+      "links": ["system:combat", "animation:attack"]
     }
   ]
 }

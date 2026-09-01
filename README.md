@@ -73,7 +73,7 @@ macOS 成品由 GitHub 的 macOS runner 實際簽署、啟動與觀測離線行�
 .\launcher\Test-CodeSigningPipeline.ps1
 ```
 
-發行閘門會驗證 297 筆內容、JSON Schema／引用、資產 SHA-256／授權、13 張 Runtime 圖片、Save v1→v2→v3→v4→v5、12,000 日／100 年、12,000 個自動化週期、400 次自動化月存檔、250 次磁碟存讀、20 敵人效能、五種解析度、PCK 邊界與正式 ZIP。非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)以真實 macOS 遊戲視窗驅動輸入與 UI，157 項全數通過並保存 20 張畫面；[圖片閘門](reports/image_integrity/REPORT.md)共 794 項，檢查 47 張遊戲／Studio／解析度／去背對比／宣傳畫面。[Steam 品質基準](reports/steam_candidate/REPORT.md)通過 51/51，但只作檢查、不執行上傳。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成農場自動化整合／隔離、四種篇章、戀愛競爭及原子世界保存。正式版預設離線；公開成品另由全新 GitHub Runner 重新下載、核對、解壓、啟動並驗證零網路端點。
+發行閘門會驗證 299 筆內容、JSON Schema／引用、資產 SHA-256／授權、13 張 Runtime 圖片與 2 張透明向量 UI 圖示、Save v1→v2→v3→v4→v5、12,000 日／100 年、12,000 個自動化週期、400 次自動化月存檔、250 次磁碟存讀、20 敵人效能、五種解析度、PCK 邊界與正式 ZIP。非 headless 的[全功能實機驗收報告](reports/full_feature_acceptance/REPORT.md)以真實 macOS 遊戲視窗驅動輸入與 UI，174 項全數通過並保存 20 張畫面；[圖片閘門](reports/image_integrity/REPORT.md)共 794 項，檢查 47 張遊戲／Studio／解析度／去背對比／宣傳畫面。[Steam 品質基準](reports/steam_candidate/REPORT.md)通過 51/51，但只作檢查、不執行上傳。[多人連線證據](reports/multiplayer_acceptance.json)由 38 個獨立 Godot 程序完成農場自動化整合／隔離、四種篇章、戀愛競爭及原子世界保存。正式版預設離線；公開成品另由全新 GitHub Runner 重新下載、核對、解壓、啟動並驗證零網路端點。
 
 ## PixelRPG Studio 與本機 AI
 

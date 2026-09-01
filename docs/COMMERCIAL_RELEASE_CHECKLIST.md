@@ -4,9 +4,9 @@ Steam 僅作輸入、Big Picture、解析度與商店宣稱的品質基準；本
 
 ## 自動化門檻
 
-- [x] 297 筆內容通過 JSON Schema、穩定 ID、三年主線完整性與跨檔引用驗證。
-- [x] 14 個發行圖片／圖示逐檔存在、授權非空且 SHA-256 完全相符；13 張 Runtime 圖片另通過解碼、真 alpha、灰白光暈清除、亮色內容保留、原稿雜湊、圖集邊界及 47 張實機證據檢查，共 794 項。
-- [x] 16 個 Python 測試通過；Godot smoke 與 600 幀／20 敵人模擬通過。
+- [x] 299 筆內容通過 JSON Schema、穩定 ID、三年主線完整性與跨檔引用驗證。
+- [x] 16 個發行圖片／圖示逐檔存在、授權非空且 SHA-256 完全相符；13 張 Runtime 圖片與 2 張透明向量 UI 圖示另通過解碼、真 alpha、灰白光暈清除、亮色內容保留、原稿雜湊、圖集邊界及 47 張實機證據檢查，共 794 項。
+- [x] 19 個 Python 測試通過；Godot smoke 與 600 幀／20 敵人模擬通過。
 - [x] 四季 30 日與 12,000 日／100 年模擬無漂移；1,200 場節慶與第 4 年後委託持續生成。
 - [x] 250 次磁碟存讀、主檔截斷備份復原、暫存檔復原與未知 schema 拒絕通過。
 - [x] SaveGame v1、v2、v3、v4 可逐版遷移至 v5。
@@ -21,14 +21,14 @@ Steam 僅作輸入、Big Picture、解析度與商店宣稱的品質基準；本
 - [x] 640×360、1280×720、1280×800、1920×1080、2560×1440 實際 Windows 視窗、GPU 內容與 1×–4× 整數縮放通過；1280×800 為 1280×720 內容加上下各 40px 留邊。
 - [x] Steam 品質基準 51/51：Big Picture 全螢幕、兩個啟動項、功能勾選契約、18 組鍵盤／XInput 映射、0 支手把的證據限制及 1280×800 最小 30px 有效字級通過；未上傳 Steam。
 - [x] v1.2.0 正式 EXE 的 `SteamTenfoot=1` 視窗覆蓋與正常退出通過；視窗 1920×1082，覆蓋 1920×1080 螢幕。
-- [x] 完整 Creator Service 環境 138 個依賴的已知漏洞掃描為 0，16 個 Python 測試通過；Godot 4.7.2 授權與完整第三方著作權原文以固定雜湊納入 ZIP。
+- [x] 完整 Creator Service 環境 138 個依賴的已知漏洞掃描為 0，19 個 Python 測試通過；Godot 4.7.2 授權與完整第三方著作權原文以固定雜湊納入 ZIP。
 - [x] 最終 Creator Service EXE 以真實 Ollama／Qwen 通過 24/24，並以 Docling、RapidOCR、sqlite-vec 通過 9/9 文件格式與離線增量索引。
 - [x] Godot EditorPlugin 通過 57/57 實機 UI 驗收與 16 張互異畫面，涵蓋 15 頁、UndoRedo、節點圖、引用、diff 與套用前驗證。
 - [x] Godot CLI 閘門除 exit code 外亦拒絕腳本解析、編譯、資源載入及一般 `ERROR` 日誌；Studio 僅隔離成功標記後三種已知 Editor 關閉診斷。
 - [x] 最終發行資料夾與 ZIP 經 Windows Defender 定義 1.457.393.0 掃描，偵測 0 項威脅。
 - [x] v1.2.0 公開 Release 已在全新 Windows／macOS runner 重新下載、驗證、解壓及啟動，並完成零網路端點觀測。
 - [x] PFX Authenticode 管線以公開 EXE 隔離複本完成，且正式 EXE 原雜湊不變。
-- [x] Apple M4／OpenGL Metal 的非 headless Godot 視窗完成 157 項全功能實機驗收，並保存 20 張畫面證據。
+- [x] Apple M4／OpenGL Metal 的非 headless Godot 視窗完成 174 項全功能實機驗收，並保存 20 張畫面證據。
 
 ## 人工檢查
 

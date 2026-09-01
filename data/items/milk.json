@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "milk",
+  "display_name": "鐘乳鮮奶",
+  "icon": "generated://item/milk",
+  "category": "material",
+  "description": "鐘乳牛每日提供的濃醇鮮奶，是湯品、甜點與飲料的材料。",
+  "stack_limit": 999,
+  "effects": []
+}

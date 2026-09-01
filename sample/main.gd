@@ -7,6 +7,8 @@ const ShopMenuScript := preload("res://runtime/ui/shop_menu.gd")
 const DialogueOverlayScript := preload("res://runtime/ui/dialogue_overlay.gd")
 const FestivalOverlayScript := preload("res://runtime/ui/festival_overlay.gd")
 const MultiplayerMenuScript := preload("res://runtime/ui/multiplayer_menu.gd")
+const AutomationConsoleScript := preload("res://runtime/ui/automation_console.gd")
+const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
 const RemotePlayerScript := preload("res://runtime/network/remote_player.gd")
 
 const PLOT_ORIGIN := Vector2(221, 159)
@@ -18,11 +20,57 @@ const CHICKEN_POSITION := Vector2(500, 155)
 const COW_POSITION := Vector2(532, 188)
 const CAVE_POSITION := Vector2(574, 294)
 const SHIPPING_POSITION := Vector2(274, 290)
+const POND_FISH_POSITION := Vector2(185, 270)
+const DUNGEON_EXIT_POSITION := Vector2(320, 92)
+const DUNGEON_ENTRY_SPAWN := Vector2(320, 126)
+const DUNGEON_DESCENT_POSITION := Vector2(438, 286)
+const FARM_DESTINATIONS := {
+	"mistfall_village": {"position": Vector2(36, 170), "label": "霧落村"},
+	"mistfall_river": {"position": Vector2(354, 82), "label": "鳴鐘河畔"},
+	"bellwood_grove": {"position": Vector2(450, 320), "label": "古鐘林"},
+	"clockwork_ruins": {"position": Vector2(606, 205), "label": "古代都市"},
+	"mistfall_depths": {"position": CAVE_POSITION, "label": "四季鐘窟"},
+}
+const REGION_CONNECTIONS := {
+	"farm": FARM_DESTINATIONS,
+	"village": {
+		"mistfall_farm": {"position": Vector2(260, 320), "label": "霧落農場"},
+		"mistfall_river": {"position": Vector2(392, 82), "label": "鳴鐘河畔"},
+		"bellwood_grove": {"position": Vector2(606, 215), "label": "古鐘林"},
+		"clockwork_ruins": {"position": Vector2(606, 320), "label": "古代都市"},
+	},
+	"river": {
+		"mistfall_farm": {"position": Vector2(42, 300), "label": "霧落農場"},
+		"mistfall_village": {"position": Vector2(184, 132), "label": "霧落村"},
+		"bellwood_grove": {"position": Vector2(425, 100), "label": "古鐘林"},
+		"clockwork_ruins": {"position": Vector2(520, 318), "label": "古代都市"},
+	},
+	"grove": {
+		"mistfall_farm": {"position": Vector2(200, 320), "label": "霧落農場"},
+		"mistfall_village": {"position": Vector2(70, 82), "label": "霧落村"},
+		"mistfall_river": {"position": Vector2(330, 82), "label": "鳴鐘河畔"},
+		"clockwork_ruins": {"position": Vector2(606, 220), "label": "古代都市"},
+	},
+	"ruins": {
+		"mistfall_farm": {"position": Vector2(42, 300), "label": "霧落農場"},
+		"mistfall_village": {"position": Vector2(80, 155), "label": "霧落村"},
+		"mistfall_river": {"position": Vector2(520, 82), "label": "鳴鐘河畔"},
+		"bellwood_grove": {"position": Vector2(600, 300), "label": "古鐘林"},
+		"mistfall_depths": {"position": Vector2(320, 318), "label": "四季鐘窟"},
+	},
+	"dungeon": {
+		"mistfall_farm": {"position": DUNGEON_EXIT_POSITION, "label": "霧落農場"},
+		"clockwork_ruins": {"position": Vector2(92, 286), "label": "古代都市"},
+	},
+	"abyss": {
+		"mistfall_farm": {"position": DUNGEON_EXIT_POSITION, "label": "撤退農場"},
+	},
+}
 const SHOP_POSITIONS := {
-	"mira_seed_shop": Vector2(145, 148),
-	"soren_forge": Vector2(310, 112),
-	"toma_general_store": Vector2(500, 150),
-	"orin_ranch": Vector2(230, 260),
+	"mira_seed_shop": Vector2(170, 180),
+	"soren_forge": Vector2(310, 145),
+	"toma_general_store": Vector2(500, 165),
+	"orin_ranch": Vector2(170, 310),
 }
 const FARM_RESOURCES := {
 	"tree_west": {"position": Vector2(42, 92), "kind": "tree"},
@@ -30,20 +78,26 @@ const FARM_RESOURCES := {
 	"stone_south": {"position": Vector2(105, 318), "kind": "stone"},
 }
 const DUNGEON_ORE_POSITION := Vector2(126, 108)
-const VILLAGE_GATE_POSITION := Vector2(24, 224)
+const VILLAGE_GATE_POSITION := Vector2(260, 320)
+const AUTOMATION_CONSOLE_POSITION := Vector2(360, 294)
 const OUTDOOR_EXIT_POSITION := Vector2(42, 300)
 const RIVER_FISH_POSITION := Vector2(446, 236)
 const RIVER_RESOURCE_POSITION := Vector2(318, 118)
 const GROVE_RESOURCE_POSITION := Vector2(164, 258)
 const RUINS_RESOURCE_POSITION := Vector2(330, 230)
 const NPC_POSITIONS := {
-	"mira": Vector2(110, 115), "lian": Vector2(180, 245), "soren": Vector2(286, 112), "yuna": Vector2(370, 220),
-	"orin": Vector2(455, 112), "eira": Vector2(525, 205), "toma": Vector2(555, 104), "nori": Vector2(305, 252),
-	"asha": Vector2(220, 174), "piko": Vector2(430, 276),
+	"mira": Vector2(110, 180), "lian": Vector2(255, 235), "soren": Vector2(245, 145), "yuna": Vector2(370, 220),
+	"orin": Vector2(445, 165), "eira": Vector2(580, 270), "toma": Vector2(555, 165), "nori": Vector2(305, 252),
+	"asha": Vector2(220, 174), "piko": Vector2(370, 285),
 }
 const RIVER_NPC_POSITIONS := {"lian": Vector2(545, 118), "nori": Vector2(245, 120)}
 const GROVE_NPC_POSITIONS := {"asha": Vector2(505, 150), "piko": Vector2(260, 230)}
 const RUINS_NPC_POSITIONS := {"soren": Vector2(350, 172), "toma": Vector2(180, 246)}
+const NPC_SPRITE_SCALE := 0.145
+const NPC_FOOT_OFFSETS := {
+	"mira":18.6, "lian":19.4, "soren":19.6, "yuna":20.4, "orin":20.3,
+	"eira":21.0, "toma":20.6, "nori":20.3, "asha":21.6, "piko":17.4,
+}
 
 var player: PixelRPGPlayer
 var hud_label: Label
@@ -67,12 +121,21 @@ var shop_menu: PixelRPGShopMenu
 var dialogue_overlay: PixelRPGDialogueOverlay
 var festival_overlay: PixelRPGFestivalOverlay
 var multiplayer_menu: PixelRPGMultiplayerMenu
+var automation_console: PixelRPGAutomationConsole
 var world_background: Sprite2D
 var npc_sprites: Dictionary = {}
 var animal_sprites: Dictionary = {}
 var ui_refresh_timer := 0.0
 var weather_refresh_timer := 0.0
 var remote_players: Dictionary = {}
+var world_collision_root: Node2D
+var active_obstacle_rects: Array[Rect2] = []
+var seed_card: PanelContainer
+var seed_icon: TextureRect
+var seed_card_label: Label
+var attack_card: PanelContainer
+var potion_card: PanelContainer
+var potion_label: Label
 
 
 func _ready() -> void:
@@ -186,6 +249,7 @@ func _is_line_edit_focused() -> bool:
 
 
 func _draw() -> void:
+	_draw_visible_npc_shadows()
 	if mode == "farm":
 		_draw_farm()
 	elif mode == "village":
@@ -222,13 +286,7 @@ func _draw_farm() -> void:
 			var crop_id := String(plot.get("crop_id", ""))
 			if not crop_id.is_empty():
 				var crop := ContentRegistry.get_artifact("crops", crop_id)
-				var crop_color := Color(String(crop.get("color", "78dcca")))
-				if bool(plot.get("withered", false)):
-					crop_color = Color("625747")
-				var progress := float(plot.get("growth_progress", 0)) / maxf(1.0, float(crop.get("growth_days", 1)))
-				var size := lerpf(4.0, 11.0, clampf(progress, 0.0, 1.0))
-				draw_line(center + Vector2(0, 7), center - Vector2(0, size), Color("3f6f48"), 3.0)
-				draw_circle(center - Vector2(0, size), size * 0.55, crop_color)
+				_draw_crop_visual(center, crop_id, crop, plot)
 	# Automation network: adjacent machines are linked visibly on the same farm grid.
 	for key: String in GameState.farm.automation_devices:
 		var device: Dictionary = GameState.farm.automation_devices[key]
@@ -256,22 +314,26 @@ func _draw_farm() -> void:
 		if not bool(GameState.get_flag("gathered_%d_%s" % [GameState.calendar.absolute_day(), node_id], false)):
 			var resource: Dictionary = FARM_RESOURCES[node_id]
 			_draw_resource(Vector2(resource.position), String(resource.kind))
-	draw_string(ThemeDB.fallback_font, CAVE_POSITION + Vector2(-31, 38), "四季鐘窟", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("dce5ee"))
+	_draw_region_connections()
+	_draw_automation_console_marker()
 	var festival: Dictionary = GameState.festivals.festival_on(GameState.calendar.season_id(), GameState.calendar.day)
 	if not festival.is_empty():
 		draw_string(ThemeDB.fallback_font, Vector2(242, 86), "★ 今日：%s（F 參加）" % festival.get("display_name"), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("fff1b6"))
 	var tide_active: bool = GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather)
-	draw_string(ThemeDB.fallback_font, Vector2(25, 322), "池塘 E/Y・%s" % ("無星異潮" if tide_active else "四季釣場"), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("b6f3ef") if tide_active else Color("dce5ee"))
+	draw_circle(POND_FISH_POSITION, 14.0, Color(0.47, 0.86, 0.79, 0.72), false, 2.0)
+	draw_string(ThemeDB.fallback_font, POND_FISH_POSITION + Vector2(-32, 27), "E 池塘・%s" % ("異潮" if tide_active else "釣魚"), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("b6f3ef") if tide_active else Color("dce5ee"))
 
 
 func _draw_dungeon() -> void:
 	var floor_number := maxi(1, GameState.dungeon.current_floor)
 	var zone_index := clampi((floor_number - 1) / 10, 0, 3)
 	draw_rect(Rect2(18, 52, 604, 286), [Color("6bbf83"), Color("df704e"), Color("d6a348"), Color("89cfe2")][zone_index], false, 2.0)
+	_draw_region_connections()
 	if floor_cleared:
-		draw_circle(Vector2(570, 292), 22, Color("78dcca"))
-		draw_circle(Vector2(570, 292), 13, Color("171a2b"))
-		draw_string(ThemeDB.fallback_font, Vector2(520, 328), "E 前往下一層", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1b6"))
+		_draw_travel_marker(DUNGEON_DESCENT_POSITION, "前往下一層")
+	else:
+		draw_circle(DUNGEON_DESCENT_POSITION, 18.0, Color(0.28, 0.32, 0.39, 0.72), false, 2.0)
+		draw_string(ThemeDB.fallback_font, DUNGEON_DESCENT_POSITION + Vector2(-42, 29), "擊敗敵人解鎖下層", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color("a9b0bd"))
 	var ore_id := "ore_%d" % floor_number
 	if not bool(GameState.get_flag("gathered_%d_%s" % [GameState.calendar.absolute_day(), ore_id], false)):
 		_draw_resource(DUNGEON_ORE_POSITION, "ore")
@@ -281,10 +343,9 @@ func _draw_abyss() -> void:
 	draw_rect(Rect2(18, 52, 604, 286), Color("34265e"), false, 3.0)
 	for ring in range(5):
 		draw_arc(Vector2(320, 196), 44.0 + ring * 21.0, 0.0, TAU, 48, Color(0.29, 0.84, 0.78, 0.16), 2.0)
+	_draw_region_connections()
 	if floor_cleared:
-		draw_circle(Vector2(570, 292), 22, Color("78dcca"))
-		draw_circle(Vector2(570, 292), 13, Color("171a2b"))
-		draw_string(ThemeDB.fallback_font, Vector2(510, 328), "E/Y 返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1b6"))
+		_draw_travel_marker(DUNGEON_DESCENT_POSITION, "返回農場")
 
 
 func _draw_village() -> void:
@@ -297,7 +358,7 @@ func _draw_village() -> void:
 		var sign_position: Vector2 = SHOP_POSITIONS[shop_id]
 		draw_circle(sign_position, 8, Color(0.47, 0.86, 0.79, 0.78), false, 2.0)
 		draw_string(ThemeDB.fallback_font, sign_position + Vector2(-22, 24), String(ContentRegistry.get_artifact("shops", shop_id).get("display_name", "商店")), HORIZONTAL_ALIGNMENT_LEFT, 80, 10, Color("fff1b6"))
-	draw_string(ThemeDB.fallback_font, VILLAGE_GATE_POSITION + Vector2(-14, 34), "農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("fff1b6"))
+	_draw_region_connections()
 
 
 func _draw_river() -> void:
@@ -306,7 +367,7 @@ func _draw_river() -> void:
 	draw_string(ThemeDB.fallback_font, RIVER_FISH_POSITION + Vector2(-35, 30), "E 釣魚", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("b6f3ef"))
 	draw_circle(RIVER_RESOURCE_POSITION, 10, Color("d7c276"), false, 2.0)
 	draw_string(ThemeDB.fallback_font, RIVER_RESOURCE_POSITION + Vector2(-28, 25), "鳴河蘆葦", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
-	draw_string(ThemeDB.fallback_font, OUTDOOR_EXIT_POSITION + Vector2(-20, 28), "返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	_draw_region_connections()
 
 
 func _draw_grove() -> void:
@@ -314,7 +375,7 @@ func _draw_grove() -> void:
 	draw_circle(GROVE_RESOURCE_POSITION, 10, Color("80c981"), false, 2.0)
 	draw_string(ThemeDB.fallback_font, GROVE_RESOURCE_POSITION + Vector2(-28, 25), "鐘林藥草", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
 	draw_string(ThemeDB.fallback_font, Vector2(450, 112), "裂鐘神龕", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("fff1b6"))
-	draw_string(ThemeDB.fallback_font, OUTDOOR_EXIT_POSITION + Vector2(-20, 28), "返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	_draw_region_connections()
 
 
 func _draw_ruins() -> void:
@@ -322,12 +383,31 @@ func _draw_ruins() -> void:
 	draw_circle(RUINS_RESOURCE_POSITION, 12, Color("e8b54b"), false, 2.0)
 	draw_string(ThemeDB.fallback_font, RUINS_RESOURCE_POSITION + Vector2(-34, 30), "古代鐘齒輪", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
 	draw_string(ThemeDB.fallback_font, Vector2(448, 306), "深潮封印導管", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("c4a8ff"))
-	draw_string(ThemeDB.fallback_font, OUTDOOR_EXIT_POSITION + Vector2(-20, 28), "返回農場", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	_draw_region_connections()
 
 
 func _draw_person(position: Vector2, color: Color, label: String) -> void:
 	var _unused_color := color
 	draw_string(ThemeDB.fallback_font, position + Vector2(-14, 32), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1b6"))
+
+
+func _draw_visible_npc_shadows() -> void:
+	var ground_positions: Dictionary = {}
+	if mode == "village":
+		ground_positions = NPC_POSITIONS
+	elif mode == "river":
+		ground_positions = RIVER_NPC_POSITIONS
+	elif mode == "grove":
+		ground_positions = GROVE_NPC_POSITIONS
+	elif mode == "ruins":
+		ground_positions = RUINS_NPC_POSITIONS
+	elif mode == "farm" and _mira_is_on_farm():
+		ground_positions = {"mira":MIRA_POSITION}
+	for npc_id: String in ground_positions:
+		var ground := Vector2(ground_positions[npc_id])
+		draw_set_transform(ground + Vector2(0, 1.5), 0.0, Vector2(1.0, 0.34))
+		draw_circle(Vector2.ZERO, 10.0, Color(0.02, 0.03, 0.04, 0.42))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_chicken(position: Vector2) -> void:
@@ -346,12 +426,94 @@ func _draw_resource(position: Vector2, kind: String) -> void:
 	var _unused := [position, kind]
 
 
+func _draw_crop_visual(center: Vector2, crop_id: String, crop: Dictionary, plot: Dictionary) -> void:
+	var crop_color := Color(String(crop.get("color", "78dcca")))
+	var withered := bool(plot.get("withered", false))
+	if withered:
+		crop_color = Color("625747")
+	var progress := clampf(float(plot.get("growth_progress", 0)) / maxf(1.0, float(crop.get("growth_days", 1))), 0.0, 1.0)
+	var height := lerpf(5.0, 13.0, progress)
+	var stem_color := Color("75634b") if withered else Color("356f47")
+	draw_line(center + Vector2(0, 7), center - Vector2(0, height), stem_color, 2.5)
+	var leaf_size := lerpf(2.5, 5.0, progress)
+	draw_polygon(PackedVector2Array([center + Vector2(-1, 1), center + Vector2(-leaf_size - 2, -leaf_size), center + Vector2(-2, -leaf_size - 1)]), PackedColorArray([stem_color]))
+	draw_polygon(PackedVector2Array([center + Vector2(1, -2), center + Vector2(leaf_size + 2, -leaf_size - 3), center + Vector2(2, -leaf_size - 4)]), PackedColorArray([stem_color.lightened(0.12)]))
+	if progress >= 0.45:
+		var is_flower := _crop_id_has_any(crop_id, ["tulip", "bloom", "sunflower", "chrysanthemum", "rose", "bellflower"])
+		var is_root := _crop_id_has_any(crop_id, ["turnip", "radish", "potato", "carrot", "garlic", "beet", "onion", "yam", "parsnip"])
+		var is_grain := _crop_id_has_any(crop_id, ["wheat", "rice", "corn", "sugarcane"])
+		var is_cluster := _crop_id_has_any(crop_id, ["peas", "bean", "grape", "berry", "coffee", "tomato", "pepper"])
+		if is_flower:
+			var blossom := center - Vector2(0, height)
+			for offset: Vector2 in [Vector2(-4, 0), Vector2(4, 0), Vector2(0, -4), Vector2(0, 4)]:
+				draw_circle(blossom + offset * 0.55, 3.2, crop_color)
+			draw_circle(blossom, 2.4, Color("f4c95d") if not withered else crop_color)
+		elif is_root:
+			draw_circle(center + Vector2(0, 3), lerpf(3.0, 6.2, progress), crop_color)
+			draw_line(center + Vector2(-3, 1), center + Vector2(-6, -5), stem_color, 2.0)
+			draw_line(center + Vector2(3, 1), center + Vector2(6, -5), stem_color, 2.0)
+		elif is_grain:
+			for x_offset in [-5.0, 0.0, 5.0]:
+				draw_line(center + Vector2(x_offset, 7), center + Vector2(x_offset, -height), stem_color, 1.8)
+				draw_circle(center + Vector2(x_offset, -height), 2.6, crop_color)
+		elif is_cluster:
+			for offset: Vector2 in [Vector2(-4, -height + 2), Vector2(3, -height), Vector2(0, -height + 5)]:
+				draw_circle(center + offset, 3.0, crop_color)
+		else:
+			draw_circle(center - Vector2(0, height), lerpf(3.5, 6.5, progress), crop_color)
+	if is_instance_valid(player) and player.global_position.distance_to(center) <= 30.0:
+		var display_name := String(crop.get("display_name", crop_id))
+		var label_width := clampf(14.0 + display_name.length() * 9.0, 50.0, 86.0)
+		var label_rect := Rect2(center.x - label_width * 0.5, center.y - 31.0, label_width, 14.0)
+		draw_rect(label_rect, Color(0.055, 0.063, 0.105, 0.9), true)
+		draw_rect(label_rect, Color("78dcca"), false, 1.0)
+		draw_string(ThemeDB.fallback_font, label_rect.position + Vector2(4, 10), display_name, HORIZONTAL_ALIGNMENT_CENTER, label_width - 8.0, 9, Color("fff1b6"))
+
+
+func _crop_id_has_any(crop_id: String, tokens: Array[String]) -> bool:
+	for token: String in tokens:
+		if crop_id.contains(token):
+			return true
+	return false
+
+
+func _draw_travel_marker(position: Vector2, label: String) -> void:
+	var pulse := 2.0 + sin(float(Time.get_ticks_msec()) * 0.005) * 1.5
+	draw_circle(position, 15.0 + pulse, Color(0.47, 0.86, 0.79, 0.72), false, 2.5)
+	draw_circle(position, 5.0, Color("fff1b6"))
+	draw_line(position + Vector2(0, -10), position + Vector2(0, 8), Color("171a2b"), 2.0)
+	var label_width := clampf(28.0 + label.length() * 10.0, 68.0, 116.0)
+	var label_position := Vector2(clampf(position.x - label_width * 0.5, 4.0, 636.0 - label_width), clampf(position.y + 20.0, 58.0, 321.0))
+	var label_rect := Rect2(label_position, Vector2(label_width, 16.0))
+	draw_rect(label_rect, Color(0.055, 0.063, 0.105, 0.9), true)
+	draw_rect(label_rect, Color(0.47, 0.86, 0.79, 0.9), false, 1.0)
+	draw_string(ThemeDB.fallback_font, label_rect.position + Vector2(4, 11), "E %s" % label, HORIZONTAL_ALIGNMENT_CENTER, label_width - 8.0, 9, Color("fff1b6"))
+
+
+func _draw_region_connections() -> void:
+	var connections: Dictionary = Dictionary(REGION_CONNECTIONS.get(mode, {}))
+	for map_id: String in connections:
+		var connection: Dictionary = Dictionary(connections[map_id])
+		_draw_travel_marker(Vector2(connection.position), String(connection.label))
+
+
+func _draw_automation_console_marker() -> void:
+	var pulse := 2.0 + sin(float(Time.get_ticks_msec()) * 0.004) * 1.2
+	draw_circle(AUTOMATION_CONSOLE_POSITION, 17.0 + pulse, Color(0.91, 0.65, 0.24, 0.74), false, 2.5)
+	draw_circle(AUTOMATION_CONSOLE_POSITION, 8.0, Color("171a2b"))
+	for spoke in range(8):
+		var direction := Vector2.RIGHT.rotated(TAU * float(spoke) / 8.0)
+		draw_line(AUTOMATION_CONSOLE_POSITION + direction * 7.0, AUTOMATION_CONSOLE_POSITION + direction * 11.0, Color("f2c768"), 2.0)
+	draw_string(ThemeDB.fallback_font, AUTOMATION_CONSOLE_POSITION + Vector2(-51, 32), "E 鐘網控制台", HORIZONTAL_ALIGNMENT_CENTER, 102, 10, Color("fff1b6"))
+
+
 func _create_player() -> void:
 	player = PlayerSceneScript.new() as PixelRPGPlayer
 	player.name = "Player"
 	player.global_position = GameState.player_position
 	add_child(player)
 	NetworkManager.set_local_player_node(player)
+	_sanitize_player_position()
 
 
 func _create_background() -> void:
@@ -382,6 +544,8 @@ func _set_background_for_mode() -> void:
 		world_background.scale = Vector2(640.0 / world_background.texture.get_width(), 360.0 / world_background.texture.get_height())
 	_update_npc_sprites()
 	_update_environment_tint()
+	if is_instance_valid(world_collision_root):
+		_rebuild_world_collisions()
 
 
 func _update_environment_tint() -> void:
@@ -436,7 +600,7 @@ func _create_npc_sprites() -> void:
 		region.region = Rect2((index % 4) * frame_width, (index / 4) * frame_height, frame_width, frame_height)
 		var sprite := Sprite2D.new()
 		sprite.texture = region
-		sprite.scale = Vector2(0.145, 0.145)
+		sprite.scale = Vector2(NPC_SPRITE_SCALE, NPC_SPRITE_SCALE)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sprite.z_index = 2
 		add_child(sprite)
@@ -451,31 +615,109 @@ func _update_npc_sprites() -> void:
 		var sprite: Sprite2D = npc_sprites[npc_id]
 		sprite.visible = false
 		if mode == "village":
-			sprite.position = Vector2(NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.position = _npc_sprite_anchor(npc_id, Vector2(NPC_POSITIONS[npc_id]))
 			sprite.visible = true
 		elif mode == "river" and RIVER_NPC_POSITIONS.has(npc_id):
-			sprite.position = Vector2(RIVER_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.position = _npc_sprite_anchor(npc_id, Vector2(RIVER_NPC_POSITIONS[npc_id]))
 			sprite.visible = true
 		elif mode == "grove" and GROVE_NPC_POSITIONS.has(npc_id):
-			sprite.position = Vector2(GROVE_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.position = _npc_sprite_anchor(npc_id, Vector2(GROVE_NPC_POSITIONS[npc_id]))
 			sprite.visible = true
 		elif mode == "ruins" and RUINS_NPC_POSITIONS.has(npc_id):
-			sprite.position = Vector2(RUINS_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+			sprite.position = _npc_sprite_anchor(npc_id, Vector2(RUINS_NPC_POSITIONS[npc_id]))
 			sprite.visible = true
 		elif mode == "farm" and npc_id == "mira" and _mira_is_on_farm():
-			sprite.position = MIRA_POSITION + Vector2(0, -12)
+			sprite.position = _npc_sprite_anchor(npc_id, MIRA_POSITION)
 			sprite.visible = true
 
 
 func _create_world_walls() -> void:
-	_create_wall(Vector2(320, 46), Vector2(640, 16))
-	_create_wall(Vector2(320, 348), Vector2(640, 16))
-	_create_wall(Vector2(12, 180), Vector2(16, 360))
-	_create_wall(Vector2(628, 180), Vector2(16, 360))
+	world_collision_root = Node2D.new()
+	world_collision_root.name = "WorldCollisions"
+	add_child(world_collision_root)
+	_rebuild_world_collisions()
 
 
-func _create_wall(wall_position: Vector2, size: Vector2) -> void:
+func _rebuild_world_collisions() -> void:
+	if not is_instance_valid(world_collision_root):
+		return
+	for child: Node in world_collision_root.get_children():
+		world_collision_root.remove_child(child)
+		child.queue_free()
+	active_obstacle_rects.clear()
+	_add_world_obstacle("BoundaryTop", Rect2(0, 38, 640, 16), false)
+	_add_world_obstacle("BoundaryBottom", Rect2(0, 338, 640, 20), false)
+	_add_world_obstacle("BoundaryLeft", Rect2(4, 38, 16, 320), false)
+	_add_world_obstacle("BoundaryRight", Rect2(620, 38, 16, 320), false)
+	var obstacles: Array[Dictionary] = []
+	match mode:
+		"farm":
+			obstacles = [
+				{"name":"FarmHouse", "rect":Rect2(94, 54, 136, 78)},
+				{"name":"FarmBarn", "rect":Rect2(397, 54, 166, 82)},
+				{"name":"FarmPondNorth", "rect":Rect2(66, 207, 100, 25)},
+				{"name":"FarmPondCenter", "rect":Rect2(34, 228, 130, 63)},
+				{"name":"FarmPondSouth", "rect":Rect2(60, 287, 97, 28)},
+				{"name":"CaveRocksLeft", "rect":Rect2(510, 245, 47, 78)},
+				{"name":"CaveRocksTop", "rect":Rect2(552, 240, 47, 29)},
+				{"name":"CaveRocksRight", "rect":Rect2(600, 243, 28, 80)},
+			]
+		"village":
+			obstacles = [
+				{"name":"VillageLibrary", "rect":Rect2(54, 62, 153, 98)},
+				{"name":"VillageForge", "rect":Rect2(261, 56, 110, 65)},
+				{"name":"VillageStore", "rect":Rect2(429, 64, 139, 88)},
+				{"name":"VillageClinic", "rect":Rect2(444, 179, 123, 70)},
+				{"name":"VillageHome", "rect":Rect2(139, 220, 99, 72)},
+				{"name":"VillageShrine", "rect":Rect2(397, 267, 171, 61)},
+				{"name":"VillageRiver", "rect":Rect2(20, 230, 117, 100)},
+				{"name":"VillageBell", "rect":Rect2(292, 168, 59, 56)},
+			]
+		"river":
+			obstacles = [
+				{"name":"RiverNorthWater", "rect":Rect2(76, 54, 298, 58)},
+				{"name":"RiverCenterWater", "rect":Rect2(218, 151, 172, 76)},
+				{"name":"RiverSouthWater", "rect":Rect2(250, 250, 158, 80)},
+				{"name":"RiverEastChannel", "rect":Rect2(450, 114, 62, 145)},
+				{"name":"RiverMill", "rect":Rect2(547, 218, 80, 95)},
+			]
+		"grove":
+			obstacles = [
+				{"name":"GrovePond", "rect":Rect2(16, 222, 151, 77)},
+				{"name":"GroveShrine", "rect":Rect2(438, 55, 112, 91)},
+				{"name":"GroveMound", "rect":Rect2(304, 170, 95, 69)},
+				{"name":"GroveSouthLog", "rect":Rect2(430, 281, 120, 48)},
+			]
+		"ruins":
+			obstacles = [
+				{"name":"RuinsBoiler", "rect":Rect2(96, 54, 90, 74)},
+				{"name":"RuinsNorthBell", "rect":Rect2(424, 51, 69, 79)},
+				{"name":"RuinsTank", "rect":Rect2(552, 51, 70, 103)},
+				{"name":"RuinsCentralMachine", "rect":Rect2(281, 119, 115, 87)},
+				{"name":"RuinsSouthVault", "rect":Rect2(301, 251, 108, 57)},
+			]
+		"dungeon", "abyss":
+			obstacles = [
+				{"name":"DungeonCrystal", "rect":Rect2(91, 57, 105, 82)},
+				{"name":"DungeonCenterBell", "rect":Rect2(278, 155, 86, 71)},
+				{"name":"DungeonWestCliff", "rect":Rect2(20, 58, 49, 246)},
+				{"name":"DungeonEastCliff", "rect":Rect2(577, 57, 43, 260)},
+			]
+	for obstacle: Dictionary in obstacles:
+		_add_world_obstacle(String(obstacle.name), Rect2(obstacle.rect), true)
+	if is_instance_valid(player):
+		_sanitize_player_position()
+
+
+func _add_world_obstacle(obstacle_name: String, rect: Rect2, track_for_safety: bool = true) -> void:
+	if track_for_safety:
+		active_obstacle_rects.append(rect)
+	_create_wall(rect.get_center(), rect.size, obstacle_name)
+
+
+func _create_wall(wall_position: Vector2, size: Vector2, wall_name: String = "WorldWall") -> void:
 	var wall := StaticBody2D.new()
+	wall.name = wall_name
 	wall.position = wall_position
 	wall.collision_layer = 1
 	wall.collision_mask = 0
@@ -484,7 +726,33 @@ func _create_wall(wall_position: Vector2, size: Vector2) -> void:
 	shape.size = size
 	collision.shape = shape
 	wall.add_child(collision)
-	add_child(wall)
+	world_collision_root.add_child(wall)
+
+
+func is_world_position_blocked(position: Vector2, margin: float = 0.0) -> bool:
+	for rect: Rect2 in active_obstacle_rects:
+		if rect.grow(margin).has_point(position):
+			return true
+	return false
+
+
+func _sanitize_player_position() -> void:
+	if not is_instance_valid(player) or not is_world_position_blocked(player.global_position, 9.0):
+		return
+	player.global_position = _safe_spawn_for_mode()
+	GameState.player_position = player.global_position
+
+
+func _safe_spawn_for_mode() -> Vector2:
+	return {
+		"farm": Vector2(318, 300),
+		"village": Vector2(260, 300),
+		"river": Vector2(72, 286),
+		"grove": Vector2(250, 300),
+		"ruins": Vector2(72, 286),
+		"dungeon": DUNGEON_ENTRY_SPAWN,
+		"abyss": DUNGEON_ENTRY_SPAWN,
+	}.get(mode, Vector2(318, 300))
 
 
 func _create_hud() -> void:
@@ -501,6 +769,61 @@ func _create_hud() -> void:
 	hud_label.add_theme_font_size_override("font_size", 13)
 	hud_label.add_theme_color_override("font_color", Color("fff1b6"))
 	top_panel.add_child(hud_label)
+	seed_card = PanelContainer.new()
+	seed_card.position = Vector2(8, 58)
+	seed_card.size = Vector2(204, 38)
+	seed_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	canvas.add_child(seed_card)
+	var seed_row := HBoxContainer.new()
+	seed_card.add_child(seed_row)
+	seed_icon = TextureRect.new()
+	seed_icon.texture = ItemIconFactory.texture_for(&"spring_turnip", &"seed")
+	seed_icon.custom_minimum_size = Vector2(34, 34)
+	seed_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	seed_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	seed_row.add_child(seed_icon)
+	seed_card_label = Label.new()
+	seed_card_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	seed_card_label.add_theme_font_size_override("font_size", 11)
+	seed_card_label.add_theme_color_override("font_color", Color("fff1b6"))
+	seed_row.add_child(seed_card_label)
+	attack_card = PanelContainer.new()
+	attack_card.position = Vector2(510, 58)
+	attack_card.size = Vector2(122, 38)
+	attack_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	canvas.add_child(attack_card)
+	var attack_row := HBoxContainer.new()
+	attack_card.add_child(attack_row)
+	var attack_icon := TextureRect.new()
+	attack_icon.texture = load("res://assets/runtime/ui/attack_slash_v2.svg")
+	attack_icon.custom_minimum_size = Vector2(34, 34)
+	attack_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	attack_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	attack_row.add_child(attack_icon)
+	var attack_label := Label.new()
+	attack_label.text = "J/A 攻擊"
+	attack_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	attack_label.add_theme_font_size_override("font_size", 11)
+	attack_label.add_theme_color_override("font_color", Color("fff1b6"))
+	attack_row.add_child(attack_label)
+	potion_card = PanelContainer.new()
+	potion_card.position = Vector2(374, 58)
+	potion_card.size = Vector2(130, 38)
+	potion_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	canvas.add_child(potion_card)
+	var potion_row := HBoxContainer.new()
+	potion_card.add_child(potion_row)
+	var potion_icon := TextureRect.new()
+	potion_icon.texture = ItemIconFactory.texture_for(&"health_potion")
+	potion_icon.custom_minimum_size = Vector2(34, 34)
+	potion_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	potion_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	potion_row.add_child(potion_icon)
+	potion_label = Label.new()
+	potion_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	potion_label.add_theme_font_size_override("font_size", 10)
+	potion_label.add_theme_color_override("font_color", Color("fff1b6"))
+	potion_row.add_child(potion_label)
 	var bottom_panel := ColorRect.new()
 	bottom_panel.color = Color(0.055, 0.063, 0.105, 0.9)
 	bottom_panel.position = Vector2(0, 336)
@@ -540,6 +863,8 @@ func _create_commercial_menus() -> void:
 	add_child(festival_overlay)
 	multiplayer_menu = MultiplayerMenuScript.new() as PixelRPGMultiplayerMenu
 	add_child(multiplayer_menu)
+	automation_console = AutomationConsoleScript.new() as PixelRPGAutomationConsole
+	add_child(automation_console)
 
 
 func _create_title_screen() -> void:
@@ -652,48 +977,58 @@ func _update_hud() -> void:
 		return
 	var forecast := PixelRPGCalendarSystem.forecast_for_tomorrow(GameState.calendar.year, GameState.calendar.season_index, GameState.calendar.day)
 	var warning := " ⚠明日%s" % _weather_name(String(forecast.weather)) if bool(forecast.warning) else ""
+	seed_card.visible = mode == "farm"
+	attack_card.visible = mode in ["dungeon", "abyss"]
+	potion_card.visible = mode in ["dungeon", "abyss"]
+	potion_label.text = "H/LB 藥水\n×%d" % int(GameState.inventory.get("health_potion", 0))
 	if mode in ["farm", "village"]:
 		var seed_id := _selected_seed_id()
 		var crop := ContentRegistry.get_artifact("crops", seed_id)
+		if mode == "farm":
+			seed_icon.texture = ItemIconFactory.texture_for(seed_id, &"seed")
+			seed_card_label.text = "目前種子\n%s ×%d" % [crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0))]
 		var animal_products := int(GameState.farm.produce.get("egg", 0)) + int(GameState.farm.produce.get("milk", 0))
 		var tide_text := "異潮" if GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮"
 		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), tide_text]
-		controls_label.text = "E/Y 互動/釣魚　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度　C/D→ 睡覺"
+		controls_label.text = "E/Y 互動／道路／鐘網　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度　C/D→ 睡覺"
 	elif mode in ["river", "grove", "ruins"]:
 		var map_title: String = {"river":"鳴鐘河畔","grove":"古鐘林","ruins":"古鐘機械遺跡"}.get(mode, mode)
 		var local_hint: String = {"river":"釣魚、蘆葦與河燈線索","grove":"藥草、神龕與同行事件","ruins":"齒輪、鐘能與封印歷史"}.get(mode, "探索")
 		var tide_text := "無星異潮可釣" if mode == "river" and GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮探索"
 		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100\n%s｜%s｜%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, map_title, local_hint, tide_text]
-		controls_label.text = "WASD/搖桿 移動　E/Y 互動／釣魚　Esc/Start 旅行圖　B/RS 返回農場　M/Select 連線"
+		controls_label.text = "WASD/搖桿 移動　E/Y 道路／互動／釣魚　Esc/Start 旅行圖　M/Select 連線"
 	elif mode == "dungeon":
 		hud_label.text = "%s　%s　HP %d/%d　四季鐘窟 %dF　敵人 %d\n封印 %d/4　電梯 %s　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), player.health, player.max_health, GameState.dungeon.current_floor, enemies_remaining, GameState.dungeon.seals.size(), str(GameState.dungeon.available_elevators()), "無限挑戰已開放" if GameState.dungeon.endless_unlocked else "主線無期限"]
-		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　E/Y 下層　B/RS 返回　H/LB 藥水"
+		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　E/Y 鐘門／下層　B/RS 返回　H/LB 藥水"
 	else:
 		hud_label.text = "%s　%s　HP %d/%d　夢岸敵影 %d\n理智 %d/100　異魚 %d/8　洞見 %d　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), player.health, player.max_health, enemies_remaining, GameState.eldritch.sanity, GameState.eldritch.eldritch_catches.size(), GameState.eldritch.insight, "古神已沉睡" if GameState.eldritch.boss_defeated else "克蘇魯之影正在凝視"]
 		controls_label.text = "WASD/搖桿 移動　J/A 攻擊　K/B 翻滾　L/X 技能　H/LB 藥水　B/RS 撤退"
 
 
 func _interact() -> void:
+	var region_destination := _nearby_region_destination()
+	if not region_destination.is_empty():
+		_activate_region_destination(region_destination)
+		return
 	if mode == "abyss":
-		if floor_cleared:
+		if floor_cleared and player.global_position.distance_to(DUNGEON_DESCENT_POSITION) <= 48.0:
 			_leave_eldritch_shore()
 		else:
-			_show_toast("深潮尚未平息")
+			_show_toast("上方鐘門可撤退；擊敗古神後右下傳送門也會開啟")
 		return
 	if mode == "dungeon":
 		if player.global_position.distance_to(DUNGEON_ORE_POSITION) <= 38.0:
 			var ore_result := GameState.gather_resource("ore_%d" % GameState.dungeon.current_floor, "ore")
 			_show_toast(String(ore_result.get("message", "")))
 			return
-		if floor_cleared:
+		if floor_cleared and player.global_position.distance_to(DUNGEON_DESCENT_POSITION) <= 48.0:
 			_descend_dungeon()
+		elif floor_cleared:
+			_show_toast("右下發光鐘台：E 前往下一層；上方鐘門：E 返回農場")
 		else:
-			_show_toast("清除本層敵人後才能前進")
+			_show_toast("清除敵人解鎖右下鐘台；上方鐘門隨時可返回農場")
 		return
 	if mode in ["river", "grove", "ruins"]:
-		if player.global_position.distance_to(OUTDOOR_EXIT_POSITION) <= 48.0:
-			_travel_to_map(&"mistfall_farm")
-			return
 		var map_npc := _nearby_map_npc()
 		if not map_npc.is_empty():
 			_talk_to_npc(map_npc)
@@ -717,9 +1052,6 @@ func _interact() -> void:
 		_show_toast("走近發光採集點、釣點、同行村民或出口再互動")
 		return
 	if mode == "village":
-		if player.global_position.distance_to(VILLAGE_GATE_POSITION) <= 44.0:
-			_enter_farm_from_village()
-			return
 		var village_shop := _nearby_shop()
 		if not village_shop.is_empty():
 			shop_menu.open(village_shop)
@@ -728,10 +1060,10 @@ func _interact() -> void:
 		if not npc_id.is_empty():
 			_talk_to_npc(npc_id)
 			return
-	if mode == "farm" and player.global_position.distance_to(VILLAGE_GATE_POSITION) <= 44.0:
-		_enter_village()
-		return
 	if mode == "farm":
+		if player.global_position.distance_to(AUTOMATION_CONSOLE_POSITION) <= 44.0:
+			automation_console.open()
+			return
 		for node_id: String in FARM_RESOURCES:
 			var resource: Dictionary = FARM_RESOURCES[node_id]
 			if player.global_position.distance_to(Vector2(resource.position)) <= 36.0:
@@ -754,7 +1086,7 @@ func _interact() -> void:
 	if _mira_is_on_farm() and player.global_position.distance_to(MIRA_POSITION) <= 42.0:
 		_talk_to_npc("mira")
 		return
-	if player.global_position.distance_to(Vector2(52, 292)) <= 48.0:
+	if player.global_position.distance_to(POND_FISH_POSITION) <= 48.0:
 		if GameState.eldritch.can_challenge() and GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather):
 			_begin_eldritch_challenge()
 			return
@@ -770,9 +1102,6 @@ func _interact() -> void:
 			NetworkManager.request_world_action("tend_animal", {"animal_id": nearby_animal})
 			return
 		_interact_animal(nearby_animal)
-		return
-	if player.global_position.distance_to(CAVE_POSITION) <= 48.0:
-		_enter_dungeon()
 		return
 	var tile := _nearest_plot()
 	if tile.x < 0:
@@ -790,6 +1119,32 @@ func _nearby_shop() -> StringName:
 		if player.global_position.distance_to(Vector2(SHOP_POSITIONS[shop_id])) <= 38.0:
 			return StringName(shop_id)
 	return &""
+
+
+func _nearby_region_destination() -> StringName:
+	var best_id := &""
+	var best_distance := 44.0
+	var connections: Dictionary = Dictionary(REGION_CONNECTIONS.get(mode, {}))
+	for map_id: String in connections:
+		var distance := player.global_position.distance_to(Vector2(Dictionary(connections[map_id]).position))
+		if distance < best_distance:
+			best_id = StringName(map_id)
+			best_distance = distance
+	return best_id
+
+
+func _activate_region_destination(map_id: StringName) -> void:
+	if map_id == &"mistfall_depths":
+		_enter_dungeon()
+		return
+	if mode == "abyss":
+		_leave_eldritch_shore()
+		return
+	if mode == "dungeon":
+		_clear_enemies()
+		final_challenge_active = false
+		GameState.dungeon.current_floor = 0
+	_travel_to_map(map_id)
 
 
 func _nearby_animal() -> String:
@@ -867,26 +1222,29 @@ func _heart_milestone_line(npc_id: String, hearts: int) -> String:
 
 
 func _animate_world_sprites() -> void:
-	var ticks := float(Time.get_ticks_msec()) / 1000.0
 	for npc_id: String in npc_sprites:
 		var sprite: Sprite2D = npc_sprites[npc_id]
 		if not sprite.visible:
 			continue
-		var anchor := _npc_anchor(npc_id)
-		var phase := float(npc_id.unicode_at(0) % 7)
-		sprite.position = anchor + Vector2(0, sin(ticks * 2.2 + phase) * 1.2)
+		# Keep the alpha silhouette's lowest foot pixel locked to its world
+		# ground point. A vertical sine wave made NPCs, especially Mira, hover.
+		sprite.position = _npc_anchor(npc_id)
 
 
 func _npc_anchor(npc_id: String) -> Vector2:
 	if mode == "village":
-		return Vector2(NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+		return _npc_sprite_anchor(npc_id, Vector2(NPC_POSITIONS[npc_id]))
 	if mode == "river" and RIVER_NPC_POSITIONS.has(npc_id):
-		return Vector2(RIVER_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+		return _npc_sprite_anchor(npc_id, Vector2(RIVER_NPC_POSITIONS[npc_id]))
 	if mode == "grove" and GROVE_NPC_POSITIONS.has(npc_id):
-		return Vector2(GROVE_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
+		return _npc_sprite_anchor(npc_id, Vector2(GROVE_NPC_POSITIONS[npc_id]))
 	if mode == "ruins" and RUINS_NPC_POSITIONS.has(npc_id):
-		return Vector2(RUINS_NPC_POSITIONS[npc_id]) + Vector2(0, -12)
-	return MIRA_POSITION + Vector2(0, -12)
+		return _npc_sprite_anchor(npc_id, Vector2(RUINS_NPC_POSITIONS[npc_id]))
+	return _npc_sprite_anchor(npc_id, MIRA_POSITION)
+
+
+func _npc_sprite_anchor(npc_id: String, ground_position: Vector2) -> Vector2:
+	return ground_position + Vector2(0, -float(NPC_FOOT_OFFSETS.get(npc_id, 20.0)))
 
 
 func _nearby_map_npc() -> String:
@@ -991,12 +1349,7 @@ func _next_heart_event(npc_id: String) -> Dictionary:
 
 
 func _enter_village() -> void:
-	mode = "village"
-	_set_background_for_mode()
-	GameState.current_map_id = &"mistfall_village"
-	player.global_position = Vector2(58, 278)
-	_show_toast("來到霧落村。村民與商店都在這裡。")
-	queue_redraw()
+	_travel_to_map(&"mistfall_village")
 
 
 func _mode_for_map(map_id: StringName) -> String:
@@ -1021,11 +1374,13 @@ func _travel_to_map(map_id: StringName) -> void:
 		else:
 			_show_toast("釣齊四種異魚後，夢岸才會顯現")
 		return
+	var source_map_id := GameState.current_map_id
 	_clear_enemies()
 	mode = _mode_for_map(map_id)
 	GameState.current_map_id = map_id
 	_set_background_for_mode()
-	player.global_position = Vector2(72, 286)
+	player.global_position = _arrival_position_for_mode(mode, source_map_id)
+	_sanitize_player_position()
 	GameState.player_position = player.global_position
 	title_label.text = ""
 	var names := {"mistfall_farm":"霧落農場", "mistfall_village":"霧落村", "mistfall_river":"鳴鐘河畔", "bellwood_grove":"古鐘林", "clockwork_ruins":"古鐘機械遺跡"}
@@ -1034,12 +1389,18 @@ func _travel_to_map(map_id: StringName) -> void:
 
 
 func _enter_farm_from_village() -> void:
-	mode = "farm"
-	_set_background_for_mode()
-	GameState.current_map_id = &"mistfall_farm"
-	player.global_position = Vector2(58, 278)
-	_show_toast("返回霧落農場")
-	queue_redraw()
+	_travel_to_map(&"mistfall_farm")
+
+
+func _arrival_position_for_mode(target_mode: String, source_map_id: StringName) -> Vector2:
+	var connections: Dictionary = Dictionary(REGION_CONNECTIONS.get(target_mode, {}))
+	if connections.has(String(source_map_id)):
+		var entry_position := Vector2(Dictionary(connections[String(source_map_id)]).position)
+		var inward := entry_position.direction_to(Vector2(320, 190))
+		var candidate := entry_position + inward * 34.0
+		if not is_world_position_blocked(candidate, 9.0):
+			return candidate
+	return _safe_spawn_for_mode()
 
 
 func _interact_animal(animal_id: String) -> void:
@@ -1103,7 +1464,8 @@ func _enter_dungeon(reset_position: bool = true) -> void:
 			var target_floor := 1 if elevators.is_empty() else mini(PixelRPGDungeonSystem.MAX_FLOOR, int(elevators.back()) + 1)
 			GameState.dungeon.enter_floor(target_floor)
 	if reset_position:
-		player.global_position = Vector2(84, 285)
+		player.global_position = DUNGEON_ENTRY_SPAWN
+		_sanitize_player_position()
 	_clear_enemies()
 	if resume_final_challenge:
 		_begin_final_challenge()
@@ -1121,11 +1483,13 @@ func _enter_dungeon(reset_position: bool = true) -> void:
 func _leave_dungeon() -> void:
 	_clear_enemies()
 	final_challenge_active = false
-	mode = "farm"
-	_set_background_for_mode()
-	GameState.current_map_id = &"mistfall_farm"
 	GameState.dungeon.current_floor = 0
-	player.global_position = CAVE_POSITION + Vector2(-45, 0)
+	mode = "farm"
+	GameState.current_map_id = &"mistfall_farm"
+	_set_background_for_mode()
+	player.global_position = CAVE_POSITION + Vector2(0, 30)
+	_sanitize_player_position()
+	GameState.player_position = player.global_position
 	_refresh_seasonal_seeds()
 	_show_toast("返回霧落農場")
 	queue_redraw()
@@ -1137,7 +1501,8 @@ func _begin_eldritch_challenge(reset_position: bool = true) -> void:
 	_clear_enemies()
 	_set_background_for_mode()
 	if reset_position:
-		player.global_position = Vector2(84, 285)
+		player.global_position = DUNGEON_ENTRY_SPAWN
+		_sanitize_player_position()
 	if GameState.eldritch.boss_defeated:
 		floor_cleared = true
 		final_challenge_active = false
@@ -1223,7 +1588,8 @@ func _descend_dungeon() -> void:
 	if not GameState.dungeon.enter_floor(current + 1):
 		_show_toast("下一層尚未開放")
 		return
-	player.global_position = Vector2(84, 285)
+	player.global_position = DUNGEON_ENTRY_SPAWN
+	_sanitize_player_position()
 	_spawn_dungeon_floor()
 
 

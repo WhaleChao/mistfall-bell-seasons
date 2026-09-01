@@ -1,6 +1,7 @@
 extends SceneTree
 
 const INPUT_BINDINGS_TEST_PATH := "user://pixelrpg_input_smoke_test.json"
+const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
 
 
 func _initialize() -> void:
@@ -19,6 +20,7 @@ func _run() -> void:
 		failures.append_array(registry.errors)
 	failures.append_array(registry.validate_references())
 	_assert_content(registry, failures)
+	_assert_item_icon_catalog(registry, failures)
 	_assert_calendar(failures)
 	_assert_input_bindings(failures)
 	_assert_farming(failures)
@@ -46,6 +48,29 @@ func _run() -> void:
 	_finish(failures)
 
 
+func _assert_item_icon_catalog(registry: Node, failures: PackedStringArray) -> void:
+	var requests: Array[Dictionary] = []
+	for crop: Dictionary in registry.get_all("crops"):
+		requests.append({"id":String(crop.id), "kind":&"seed"})
+		requests.append({"id":String(crop.id), "kind":&"crop"})
+	for artifact_type: String in ["fish", "items", "recipes", "animals", "tools", "automation_devices"]:
+		var kind := StringName({"fish":"fish", "items":"item", "recipes":"dish", "animals":"animal", "tools":"tool", "automation_devices":"automation"}[artifact_type])
+		for definition: Dictionary in registry.get_all(artifact_type):
+			requests.append({"id":String(definition.id), "kind":kind})
+	if requests.size() != 194:
+		failures.append("Expected 194 seed, produce, fish, item, dish, animal, tool, and automation icon variants; got %d" % requests.size())
+	for request: Dictionary in requests:
+		var icon := ItemIconFactory.texture_for(StringName(request.id), StringName(request.kind))
+		if icon == null:
+			failures.append("Icon generator returned null: %s/%s" % [request.kind, request.id])
+			continue
+		var image := icon.get_image()
+		if image.get_width() != 64 or image.get_height() != 64 or image.get_used_rect().size.x < 12 or image.get_used_rect().size.y < 12:
+			failures.append("Icon is blank or incorrectly sized: %s/%s" % [request.kind, request.id])
+		if image.get_pixel(0, 0).a > 0.02:
+			failures.append("Icon lost transparent corners: %s/%s" % [request.kind, request.id])
+
+
 func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArray) -> void:
 	state_store.reset()
 	state_store.set_flag(&"title_seen", true)
@@ -55,13 +80,115 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 		await process_frame
 	var runtime_player: Node = game.get("player")
 	var game_menu: Node = game.get("game_menu")
-	if not is_instance_valid(runtime_player) or not is_instance_valid(game_menu):
+	var automation_console: Node = game.get("automation_console")
+	if not is_instance_valid(runtime_player) or not is_instance_valid(game_menu) or not is_instance_valid(automation_console):
 		failures.append("Runtime scene did not create the player and game menu")
 	else:
 		var visual_sprite: Sprite2D = runtime_player.get("visual_sprite") as Sprite2D
 		if runtime_player.z_index <= game.z_index or not is_instance_valid(visual_sprite) or visual_sprite.z_index < 0:
 			failures.append("Player sprite can render behind farm plots or world decoration")
+		for icon_path: String in ["res://assets/runtime/ui/seed_packet_v2.svg", "res://assets/runtime/ui/attack_slash_v2.svg"]:
+			var icon_texture := load(icon_path) as Texture2D
+			if icon_texture == null or icon_texture.get_width() < 64 or icon_texture.get_height() < 64:
+				failures.append("Gameplay icon could not be loaded: %s" % icon_path)
+			elif icon_texture.get_image().get_pixel(0, 0).a > 0.02:
+				failures.append("Gameplay icon lost its transparent background: %s" % icon_path)
+		if game_menu.tabs.get_tab_count() != 10:
+			failures.append("Handbook should have ten tabs after moving automation into the world")
+		for tab_index in range(game_menu.tabs.get_tab_count()):
+			if game_menu.tabs.get_tab_title(tab_index) == "自動化":
+				failures.append("Automation is still exposed as a handbook/settings tab")
+		if not game.is_world_position_blocked(Vector2(160, 90)) or not game.is_world_position_blocked(Vector2(100, 250)):
+			failures.append("Farm houses or pond are missing collision obstacles")
+		runtime_player.global_position = Vector2(160, 155)
+		var collision_start_y: float = float(runtime_player.global_position.y)
+		Input.action_press("ui_up")
+		for _frame in range(30):
+			await physics_frame
+		Input.action_release("ui_up")
+		for _frame in range(10):
+			await physics_frame
+		if collision_start_y - runtime_player.global_position.y >= 25.0:
+			failures.append("Player can still walk through the farm house")
+		if runtime_player.visual_animation != &"idle" or runtime_player.visual_frame != 0:
+			failures.append("Player did not return to the standing idle animation")
+		var slash_direction_ok := true
+		for direction in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
+			runtime_player.facing = direction
+			for progress in [0.0, 0.5, 1.0]:
+				var slash_geometry: Dictionary = runtime_player.attack_effect_geometry(progress)
+				var tail_forward := Vector2(slash_geometry.tail).dot(direction)
+				var tip_forward := Vector2(slash_geometry.tip).dot(direction)
+				slash_direction_ok = slash_direction_ok and tail_forward > 0.0 and tip_forward > tail_forward + 10.0
+		if not slash_direction_ok:
+			failures.append("Melee slash points back through the player in one or more directions")
+		runtime_player.facing = Vector2.RIGHT
+		Input.action_press("attack")
+		await physics_frame
+		Input.action_release("attack")
+		var attack_samples: Dictionary = {}
+		var attack_rotation_min := INF
+		var attack_rotation_max := -INF
+		var previous_attack_progress := -1.0
+		var attack_progress_monotonic := true
+		for _frame in range(11):
+			await physics_frame
+			var progress := float(runtime_player.attack_visual_progress)
+			if progress > 0.0:
+				attack_samples[snappedf(progress, 0.01)] = true
+				attack_progress_monotonic = attack_progress_monotonic and progress >= previous_attack_progress
+				previous_attack_progress = progress
+				attack_rotation_min = minf(attack_rotation_min, float(runtime_player.visual_sprite.rotation))
+				attack_rotation_max = maxf(attack_rotation_max, float(runtime_player.visual_sprite.rotation))
+		if attack_samples.size() < 8 or not attack_progress_monotonic or attack_rotation_max - attack_rotation_min < 0.025:
+			failures.append("Melee animation does not provide a smooth multi-frame swing")
+		while runtime_player.state != 0:
+			await physics_frame
+		var map_ids := {"farm":"mistfall_farm", "village":"mistfall_village", "river":"mistfall_river", "grove":"bellwood_grove", "ruins":"clockwork_ruins", "dungeon":"mistfall_depths"}
+		for source_mode: String in ["farm", "village", "river", "grove", "ruins", "dungeon"]:
+			var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
+			if source_mode != "dungeon" and connections.size() < 4:
+				failures.append("Outdoor region lacks direct routes: %s" % source_mode)
+			for destination_id: String in connections:
+				var target_mode: String = game._mode_for_map(StringName(destination_id))
+				if not Dictionary(game.REGION_CONNECTIONS.get(target_mode, {})).has(String(map_ids[source_mode])):
+					failures.append("Region route is not bidirectional: %s -> %s" % [source_mode, destination_id])
+		game._travel_to_map(&"mistfall_village")
+		var mira_sprite: Sprite2D = game.npc_sprites.get("mira")
+		var grounded_mira_position: Vector2 = game._npc_sprite_anchor("mira", Vector2(game.NPC_POSITIONS["mira"]))
+		var mira_position_before := mira_sprite.position
+		for _frame in range(4):
+			await process_frame
+		if mira_sprite.position.distance_to(grounded_mira_position) >= 0.1 or mira_sprite.position.distance_to(mira_position_before) >= 0.1:
+			failures.append("Mira is not foot-anchored to the village ground")
+		for npc_id: String in game.NPC_POSITIONS:
+			if game.is_world_position_blocked(Vector2(game.NPC_POSITIONS[npc_id]), 9.0):
+				failures.append("Village NPC is positioned inside an obstacle: %s" % npc_id)
+		for shop_id: String in game.SHOP_POSITIONS:
+			if game.is_world_position_blocked(Vector2(game.SHOP_POSITIONS[shop_id]), 9.0):
+				failures.append("Village shop interaction is positioned inside an obstacle: %s" % shop_id)
+		var river_marker: Dictionary = Dictionary(Dictionary(game.REGION_CONNECTIONS.village)["mistfall_river"])
+		runtime_player.global_position = Vector2(river_marker.position)
+		game._interact()
+		await process_frame
+		if game.mode != "river":
+			failures.append("Village physical route did not reach the river")
+		game._travel_to_map(&"mistfall_farm")
+		runtime_player.global_position = game.AUTOMATION_CONSOLE_POSITION
+		game._interact()
+		await process_frame
+		if not automation_console.visible or not paused or automation_console.automation_tile_buttons.size() != 24:
+			failures.append("Farm automation console is not an in-world interactive device")
+		if automation_console.automation_device_select.get_item_icon(0) == null or automation_console.automation_crop_select.get_item_icon(0) == null:
+			failures.append("Automation device or crop selector is missing icons")
+		automation_console.close()
 		game_menu.open()
+		if game_menu.inventory_icon_count < 4:
+			failures.append("Inventory did not render owned seeds and potion as icon cards")
+		for recipe_index in range(game_menu.recipe_select.item_count):
+			if game_menu.recipe_select.get_item_icon(recipe_index) == null:
+				failures.append("Cooking recipe is missing an icon at index %d" % recipe_index)
+				break
 		game_menu.tabs.current_tab = 7
 		game_menu._on_volume_changed(0.0)
 		game_menu.volume_slider.grab_focus()
@@ -81,6 +208,9 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 		shop_menu.open(&"mira_seed_shop")
 		await process_frame
 		if shop_menu.visible:
+			var first_shop_offer := shop_menu.offer_box.get_child(0) as Button
+			if first_shop_offer == null or first_shop_offer.icon == null:
+				failures.append("Shop offer did not render its seed/item icon")
 			await _send_runtime_key(KEY_ESCAPE)
 			if shop_menu.visible or game_menu.visible or paused or state_store.calendar.paused:
 				failures.append("Escape could not close a shop without reopening the pause menu")

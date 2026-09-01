@@ -139,6 +139,24 @@ func _test_movement_and_animation() -> void:
 		_record("移動動畫", "%s 方向移動" % direction.action, signed_distance > 18.0, "位移 %.1f px" % signed_distance)
 		_record("移動動畫", "%s 使用正確方向列" % direction.action, player.visual_direction_row == int(direction.row), "atlas row=%d" % player.visual_direction_row)
 		_record("移動動畫", "%s 播放多幀循環" % direction.action, seen_frames.size() >= 3, "觀察到 %d/4 幀" % seen_frames.size())
+	await _physics_frames(10)
+	var idle_min_y := INF
+	var idle_max_y := -INF
+	for _idle_frame in range(30):
+		await physics_frame
+		idle_min_y = minf(idle_min_y, float(player.visual_sprite.position.y))
+		idle_max_y = maxf(idle_max_y, float(player.visual_sprite.position.y))
+	_record("待機動畫", "停止移動後切換站立狀態", player.visual_animation == &"idle" and player.visual_frame == 0)
+	_record("待機動畫", "站立時有呼吸動態而非保持走路循環", idle_max_y - idle_min_y > 0.2, "呼吸位移 %.2f px" % (idle_max_y - idle_min_y))
+	game._travel_to_map(&"mistfall_farm")
+	player.global_position = Vector2(160, 155)
+	var blocked_start_y: float = float(player.global_position.y)
+	Input.action_press("ui_up")
+	await _physics_frames(30)
+	Input.action_release("ui_up")
+	await _physics_frames(3)
+	_record("地圖碰撞", "農舍屋頂會阻擋玩家", blocked_start_y - player.global_position.y < 25.0, "起點 %.1f／終點 %.1f" % [blocked_start_y, player.global_position.y])
+	_record("地圖碰撞", "池塘、房屋與洞窟岩壁均登錄為不可通行區", game.is_world_position_blocked(Vector2(100, 250)) and game.is_world_position_blocked(Vector2(160, 90)) and game.is_world_position_blocked(Vector2(530, 280)))
 	_record("輸入", "斜向速度正規化", is_equal_approx(Vector2(1, 1).normalized().length(), 1.0))
 	_record("畫面層級", "玩家角色始終繪製在田地與地面裝飾之上", player.z_index > game.z_index and is_instance_valid(player.visual_sprite) and player.visual_sprite.z_index >= 0)
 
@@ -154,7 +172,8 @@ func _test_combat_and_dungeon() -> void:
 	_record("洞窟", "第 1 層生成敵人", enemies.size() >= 2, "%d 名" % enemies.size())
 	var enemy_layers_ok := enemies.all(func(enemy: Node) -> bool: return enemy.z_index > game.z_index and is_instance_valid(enemy.visual_sprite) and enemy.visual_sprite.z_index >= 0)
 	_record("畫面層級", "敵人角色始終繪製在地形裝飾之上", enemy_layers_ok)
-	await _capture("03_dungeon_combat")
+	game._update_hud()
+	_record("物品圖示", "戰鬥 HUD 顯示攻擊與藥水圖示及數量", game.attack_card.visible and game.potion_card.visible and game.potion_label.text.contains("×"))
 	for node: Node in enemies:
 		node.set_physics_process(false)
 	var target: Node = enemies[0]
@@ -163,8 +182,37 @@ func _test_combat_and_dungeon() -> void:
 	player.global_position = Vector2(300, 210)
 	player.facing = Vector2.RIGHT
 	target.global_position = player.global_position + Vector2(28, 0)
+	var slash_direction_ok := true
+	for direction in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
+		player.facing = direction
+		for progress in [0.0, 0.5, 1.0]:
+			var slash_geometry: Dictionary = player.attack_effect_geometry(progress)
+			var tail_forward := Vector2(slash_geometry.tail).dot(direction)
+			var tip_forward := Vector2(slash_geometry.tip).dot(direction)
+			slash_direction_ok = slash_direction_ok and tail_forward > 0.0 and tip_forward > tail_forward + 10.0
+	_record("戰鬥動畫", "四方向刀光皆從角色身前向外揮出，不會反向砍中自己", slash_direction_ok)
+	player.facing = Vector2.RIGHT
 	var attack_before: int = int(target.health)
-	await _tap_action("attack", 12)
+	Input.action_press("attack")
+	await physics_frame
+	Input.action_release("attack")
+	var attack_samples: Dictionary = {}
+	var attack_rotation_min := INF
+	var attack_rotation_max := -INF
+	var previous_attack_progress := -1.0
+	var attack_progress_monotonic := true
+	for animation_frame in range(11):
+		await physics_frame
+		var progress := float(player.attack_visual_progress)
+		if progress > 0.0:
+			attack_samples[snappedf(progress, 0.01)] = true
+			attack_progress_monotonic = attack_progress_monotonic and progress >= previous_attack_progress
+			previous_attack_progress = progress
+			attack_rotation_min = minf(attack_rotation_min, float(player.visual_sprite.rotation))
+			attack_rotation_max = maxf(attack_rotation_max, float(player.visual_sprite.rotation))
+		if animation_frame == 4:
+			await _capture("03_dungeon_combat")
+	_record("戰鬥動畫", "揮砍以至少八個連續時間點插值並帶角色動作", attack_samples.size() >= 8 and attack_progress_monotonic and attack_rotation_max - attack_rotation_min >= 0.025, "%d 個時間點／轉動 %.3f rad" % [attack_samples.size(), attack_rotation_max - attack_rotation_min])
 	_record("戰鬥", "近戰攻擊命中", target.health < attack_before, "傷害 %d" % (attack_before - target.health))
 	while player.state != 0:
 		await physics_frame
@@ -283,14 +331,14 @@ func _test_farming_animals_and_economy() -> void:
 		state_store.farm.unlock_rank(rank)
 	_record("農場升級", "Lv.10 與溫室解鎖", state_store.farm.rank == 10 and state_store.farm.greenhouse_unlocked)
 	state_store.tools.stamina = 100
-	player.global_position = Vector2(52, 292)
+	player.global_position = game.POND_FISH_POSITION
 	var fish_before := int(state_store.lifetime_stats.fish_caught)
 	for attempt in range(8):
 		state_store.tools.stamina = 100
 		state_store.calendar.day = attempt + 1
 		state_store.calendar.minute_of_day = 10 * 60
 		state_store.current_weather = "clear"
-		player.global_position = Vector2(52, 292)
+		player.global_position = game.POND_FISH_POSITION
 		game._interact()
 		if int(state_store.lifetime_stats.fish_caught) > fish_before:
 			break
@@ -347,6 +395,46 @@ func _test_farming_animals_and_economy() -> void:
 
 
 func _test_maps_and_automation() -> void:
+	var world_map_ids := {"farm":"mistfall_farm", "village":"mistfall_village", "river":"mistfall_river", "grove":"bellwood_grove", "ruins":"clockwork_ruins", "dungeon":"mistfall_depths"}
+	var bidirectional := true
+	var outdoor_connected := true
+	for source_mode: String in ["farm", "village", "river", "grove", "ruins", "dungeon"]:
+		var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
+		if source_mode != "dungeon" and connections.size() < 4:
+			outdoor_connected = false
+		for destination_id: String in connections:
+			var target_mode: String = game._mode_for_map(StringName(destination_id))
+			var reverse_connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(target_mode, {}))
+			if not reverse_connections.has(String(world_map_ids[source_mode])):
+				bidirectional = false
+	_record("地圖連接", "農場、村莊、河畔、鐘林、古代都市均至少四向互通", outdoor_connected)
+	_record("地圖連接", "所有區域連接點都有反向出口", bidirectional)
+	game._travel_to_map(&"mistfall_village")
+	await _frames(3)
+	var physical_route_ok := true
+	for leg: Dictionary in [
+		{"target":"mistfall_river", "expected":"river"},
+		{"target":"bellwood_grove", "expected":"grove"},
+		{"target":"clockwork_ruins", "expected":"ruins"},
+		{"target":"mistfall_village", "expected":"village"},
+	]:
+		var marker: Dictionary = Dictionary(Dictionary(game.REGION_CONNECTIONS[game.mode])[leg.target])
+		player.global_position = Vector2(marker.position)
+		game._interact()
+		await _frames(3)
+		physical_route_ok = physical_route_ok and game.mode == String(leg.expected)
+	_record("地圖連接", "村莊→河畔→鐘林→古代都市→村莊可走實體路標，不必回農場", physical_route_ok)
+	game._travel_to_map(&"clockwork_ruins")
+	var dungeon_marker: Dictionary = Dictionary(Dictionary(game.REGION_CONNECTIONS.ruins)["mistfall_depths"])
+	player.global_position = Vector2(dungeon_marker.position)
+	game._interact()
+	await _frames(5)
+	var entered_dungeon_from_ruins: bool = game.mode == "dungeon"
+	var ruins_exit_marker: Dictionary = Dictionary(Dictionary(game.REGION_CONNECTIONS.dungeon)["clockwork_ruins"])
+	player.global_position = Vector2(ruins_exit_marker.position)
+	game._interact()
+	await _frames(4)
+	_record("地圖連接", "古代都市可直入鐘窟，鐘窟內有可見返回古代都市出口", entered_dungeon_from_ruins and game.mode == "ruins")
 	game._travel_to_map(&"mistfall_river")
 	await _frames(6)
 	var river_path := String(game.world_background.texture.resource_path)
@@ -428,13 +516,16 @@ func _test_maps_and_automation() -> void:
 	_record("農場自動化", "九種設備可購買並連成單一鐘能網路", built == 9 and state_store.farm.automation_networks().size() == 1)
 	_record("農場自動化", "供電供水、播種、澆水、收割、餵食與雙加工每日實際運作", int(automation_report.get("stalled", 99)) == 0 and int(automation_report.get("watered", 0)) >= 1 and int(automation_report.get("harvested", 0)) >= 1 and int(automation_report.get("fed", 0)) == 1 and int(automation_report.get("processed", 0)) == 2)
 	_record("農場自動化", "霧封農產與夢潮鹽進入可出貨庫", int(state_store.farm.produce.get("mist_preserves", 0)) >= 1 and int(state_store.farm.produce.get("dream_tide_salt", 0)) >= 1)
-	game.game_menu.open()
-	game.game_menu.tabs.current_tab = 8
-	game.game_menu.refresh()
+	player.global_position = game.AUTOMATION_CONSOLE_POSITION
+	game._interact()
 	await _frames(5)
-	_record("農場自動化", "可視化 6×4 設計圖、設備選擇、作物篩選、優先序與停機資訊可操作", game.game_menu.automation_tile_buttons.size() == 24 and game.game_menu.automation_device_select.item_count == 9 and "1 網路" in game.game_menu.automation_status_label.text)
+	var handbook_has_automation := false
+	for tab_index in range(game.game_menu.tabs.get_tab_count()):
+		handbook_has_automation = handbook_has_automation or game.game_menu.tabs.get_tab_title(tab_index) == "自動化"
+	_record("農場自動化", "自動化是農場內鐘網控制台互動，不在設定手冊", game.automation_console.visible and paused and not handbook_has_automation)
+	_record("農場自動化", "可視化 6×4 設計圖、設備選擇、作物篩選、優先序與停機資訊可操作", game.automation_console.automation_tile_buttons.size() == 24 and game.automation_console.automation_device_select.item_count == 9 and "1 網路" in game.automation_console.automation_status_label.text)
 	await _capture("19_automation_network")
-	game.game_menu.close()
+	game.automation_console.close()
 	await _frames(3)
 
 
@@ -464,10 +555,10 @@ func _test_eldritch_fishing_and_boss() -> void:
 	game._set_background_for_mode()
 	game.game_menu.open()
 	await _frames(3)
-	game.game_menu.tabs.current_tab = 10
+	game.game_menu.tabs.current_tab = 9
 	game.game_menu.refresh()
 	await _capture("13_eldritch_journal")
-	_record("異潮手冊", "異魚圖鑑與理智頁可開啟", game.game_menu.tabs.get_tab_count() == 11 and game.game_menu.tabs.current_tab == 10)
+	_record("異潮手冊", "異魚圖鑑與理智頁可開啟", game.game_menu.tabs.get_tab_count() == 10 and game.game_menu.tabs.current_tab == 9)
 	game.game_menu.close()
 	await _frames(2)
 
@@ -498,7 +589,12 @@ func _test_village_dialogue_and_festival() -> void:
 	for sprite: Sprite2D in game.npc_sprites.values():
 		visible_npcs += int(sprite.visible)
 	_record("村莊", "10 名 NPC 可見與排程", visible_npcs == 10)
-	player.global_position = Vector2(110, 115)
+	var mira_sprite: Sprite2D = game.npc_sprites.get("mira")
+	var mira_grounded_position: Vector2 = game._npc_sprite_anchor("mira", Vector2(game.NPC_POSITIONS["mira"]))
+	var mira_position_before := mira_sprite.position
+	await _frames(8)
+	_record("村莊", "米拉腳底固定在地面座標並有接地陰影，不再上下漂浮", mira_sprite.position.distance_to(mira_grounded_position) < 0.1 and mira_sprite.position.distance_to(mira_position_before) < 0.1)
+	player.global_position = Vector2(game.NPC_POSITIONS["mira"])
 	var hearts_before: int = int(state_store.social.hearts(&"mira"))
 	game._interact()
 	await _frames(4)
@@ -608,16 +704,25 @@ func _test_story_dialogue_recovery() -> void:
 
 
 func _test_menus_relationships_and_settings() -> void:
+	state_store.inventory["health_potion"] = maxi(1, int(state_store.inventory.get("health_potion", 0)))
+	state_store.farm.seed_stock["spring_turnip"] = maxi(1, int(state_store.farm.seed_stock.get("spring_turnip", 0)))
+	state_store.farm.produce["brook_trout"] = 1
+	state_store.farm.produce["egg"] = 1
+	state_store.farm.produce["milk"] = 1
 	game.game_menu.open()
 	await _frames(4)
 	_record("選單", "旅人手冊暫停遊戲", game.game_menu.visible and paused and state_store.calendar.paused)
-	_record("選單", "十一個功能分頁", game.game_menu.tabs.get_tab_count() == 11)
+	_record("選單", "十個功能分頁", game.game_menu.tabs.get_tab_count() == 10)
+	game.game_menu.tabs.current_tab = 1
+	game.game_menu.refresh()
+	await _frames(3)
+	_record("物品圖示", "背包以圖示區分種子、魚、雞蛋、牛奶與藥水", game.game_menu.inventory_icon_count >= 6)
 	await _capture("11_status_inventory_menu")
 	for tab_index in range(game.game_menu.tabs.get_tab_count()):
 		game.game_menu.tabs.current_tab = tab_index
 		game.game_menu.refresh()
 		await _frames(1)
-	_record("選單", "狀態、背包、關係、日曆、主線、成就、料理、設定、自動化、地圖、深潮均可切換", game.game_menu.tabs.current_tab == 10)
+	_record("選單", "狀態、背包、關係、日曆、主線、成就、料理、設定、地圖、深潮均可切換", game.game_menu.tabs.current_tab == 9)
 
 	state_store.social.add_affection(&"mira", 2500)
 	game.game_menu.candidate_select.select(0)
@@ -649,7 +754,10 @@ func _test_menus_relationships_and_settings() -> void:
 	var cooked := int(state_store.farm.produce.get(String(recipe_id), 0)) == 1
 	state_store.tools.stamina = 0
 	game.game_menu._on_eat_pressed()
-	_record("料理", "40 道料理清單", game.game_menu.recipe_select.item_count == 40)
+	var recipe_icons_complete := game.game_menu.recipe_icon.texture != null
+	for recipe_index in range(game.game_menu.recipe_select.item_count):
+		recipe_icons_complete = recipe_icons_complete and game.game_menu.recipe_select.get_item_icon(recipe_index) != null
+	_record("料理", "40 道料理清單與圖示", game.game_menu.recipe_select.item_count == 40 and recipe_icons_complete)
 	_record("料理", "烹調與享用恢復體力", cooked and state_store.tools.stamina > 0)
 
 	game.game_menu.tabs.current_tab = 7
