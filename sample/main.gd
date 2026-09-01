@@ -18,81 +18,87 @@ const PLOT_ROWS := 4
 const MIRA_POSITION := Vector2(102, 166)
 const CHICKEN_POSITION := Vector2(500, 155)
 const COW_POSITION := Vector2(532, 188)
-const CAVE_POSITION := Vector2(574, 294)
-const SHIPPING_POSITION := Vector2(274, 290)
-const POND_FISH_POSITION := Vector2(185, 270)
-const DUNGEON_EXIT_POSITION := Vector2(320, 92)
-const DUNGEON_ENTRY_SPAWN := Vector2(320, 126)
+const CAVE_POSITION := Vector2(514, 254)
+const SHIPPING_POSITION := Vector2(268, 278)
+const POND_FISH_POSITION := Vector2(174, 262)
+const DUNGEON_EXIT_POSITION := Vector2(320, 116)
+const DUNGEON_ENTRY_SPAWN := Vector2(320, 142)
 const DUNGEON_DESCENT_POSITION := Vector2(438, 286)
 const FARM_DESTINATIONS := {
-	"mistfall_village": {"position": Vector2(36, 170), "label": "霧落村"},
-	"mistfall_river": {"position": Vector2(354, 82), "label": "鳴鐘河畔"},
-	"bellwood_grove": {"position": Vector2(450, 320), "label": "古鐘林"},
-	"clockwork_ruins": {"position": Vector2(606, 205), "label": "古代都市"},
+	"mistfall_village": {"position": Vector2(54, 138), "label": "霧落村"},
+	"mistfall_river": {"position": Vector2(320, 82), "label": "鳴鐘河畔"},
+	"bellwood_grove": {"position": Vector2(310, 320), "label": "古鐘林"},
+	"clockwork_ruins": {"position": Vector2(580, 138), "label": "古代都市"},
 	"mistfall_depths": {"position": CAVE_POSITION, "label": "四季鐘窟"},
 }
 const REGION_CONNECTIONS := {
 	"farm": FARM_DESTINATIONS,
 	"village": {
-		"mistfall_farm": {"position": Vector2(260, 320), "label": "霧落農場"},
-		"mistfall_river": {"position": Vector2(392, 82), "label": "鳴鐘河畔"},
-		"bellwood_grove": {"position": Vector2(606, 215), "label": "古鐘林"},
-		"clockwork_ruins": {"position": Vector2(606, 320), "label": "古代都市"},
+		"mistfall_farm": {"position": Vector2(318, 320), "label": "霧落農場"},
+		"mistfall_river": {"position": Vector2(232, 72), "label": "鳴鐘河畔"},
+		"bellwood_grove": {"position": Vector2(592, 172), "label": "古鐘林"},
+		"clockwork_ruins": {"position": Vector2(606, 300), "label": "古代都市"},
 	},
 	"river": {
-		"mistfall_farm": {"position": Vector2(42, 300), "label": "霧落農場"},
-		"mistfall_village": {"position": Vector2(184, 132), "label": "霧落村"},
-		"bellwood_grove": {"position": Vector2(425, 100), "label": "古鐘林"},
-		"clockwork_ruins": {"position": Vector2(520, 318), "label": "古代都市"},
+		"mistfall_farm": {"position": Vector2(92, 304), "label": "霧落農場"},
+		"mistfall_village": {"position": Vector2(145, 185), "label": "霧落村"},
+		"bellwood_grove": {"position": Vector2(545, 72), "label": "古鐘林"},
+		"clockwork_ruins": {"position": Vector2(548, 304), "label": "古代都市"},
 	},
 	"grove": {
-		"mistfall_farm": {"position": Vector2(200, 320), "label": "霧落農場"},
-		"mistfall_village": {"position": Vector2(70, 82), "label": "霧落村"},
-		"mistfall_river": {"position": Vector2(330, 82), "label": "鳴鐘河畔"},
-		"clockwork_ruins": {"position": Vector2(606, 220), "label": "古代都市"},
+		"mistfall_farm": {"position": Vector2(184, 320), "label": "霧落農場"},
+		"mistfall_village": {"position": Vector2(122, 72), "label": "霧落村"},
+		"mistfall_river": {"position": Vector2(394, 320), "label": "鳴鐘河畔"},
+		"clockwork_ruins": {"position": Vector2(574, 156), "label": "古代都市"},
 	},
 	"ruins": {
-		"mistfall_farm": {"position": Vector2(42, 300), "label": "霧落農場"},
-		"mistfall_village": {"position": Vector2(80, 155), "label": "霧落村"},
-		"mistfall_river": {"position": Vector2(520, 82), "label": "鳴鐘河畔"},
-		"bellwood_grove": {"position": Vector2(600, 300), "label": "古鐘林"},
+		"mistfall_farm": {"position": Vector2(36, 176), "label": "霧落農場"},
+		"mistfall_village": {"position": Vector2(320, 64), "label": "霧落村"},
+		"mistfall_river": {"position": Vector2(604, 176), "label": "鳴鐘河畔"},
+		"bellwood_grove": {"position": Vector2(604, 232), "label": "古鐘林"},
 		"mistfall_depths": {"position": Vector2(320, 318), "label": "四季鐘窟"},
 	},
 	"dungeon": {
 		"mistfall_farm": {"position": DUNGEON_EXIT_POSITION, "label": "霧落農場"},
-		"clockwork_ruins": {"position": Vector2(92, 286), "label": "古代都市"},
+		"clockwork_ruins": {"position": Vector2(204, 304), "label": "古代都市"},
 	},
 	"abyss": {
 		"mistfall_farm": {"position": DUNGEON_EXIT_POSITION, "label": "撤退農場"},
 	},
 }
 const SHOP_POSITIONS := {
-	"mira_seed_shop": Vector2(170, 180),
-	"soren_forge": Vector2(310, 145),
-	"toma_general_store": Vector2(500, 165),
-	"orin_ranch": Vector2(170, 310),
+	"mira_seed_shop": Vector2(128, 170),
+	"soren_forge": Vector2(270, 145),
+	"toma_general_store": Vector2(590, 170),
+	"orin_ranch": Vector2(270, 300),
+}
+const SHOP_SIGN_STYLES := {
+	"mira_seed_shop":{"symbol":"苗", "color":Color("79c98a")},
+	"soren_forge":{"symbol":"鍛", "color":Color("e19b58")},
+	"toma_general_store":{"symbol":"雜", "color":Color("78b8cf")},
+	"orin_ranch":{"symbol":"牧", "color":Color("d8b66a")},
 }
 const FARM_RESOURCES := {
 	"tree_west": {"position": Vector2(42, 92), "kind": "tree"},
 	"tree_north": {"position": Vector2(610, 92), "kind": "tree"},
 	"stone_south": {"position": Vector2(105, 318), "kind": "stone"},
 }
-const DUNGEON_ORE_POSITION := Vector2(126, 108)
-const VILLAGE_GATE_POSITION := Vector2(260, 320)
+const DUNGEON_ORE_POSITION := Vector2(212, 130)
+const VILLAGE_GATE_POSITION := Vector2(318, 320)
 const AUTOMATION_CONSOLE_POSITION := Vector2(360, 294)
-const OUTDOOR_EXIT_POSITION := Vector2(42, 300)
-const RIVER_FISH_POSITION := Vector2(446, 236)
-const RIVER_RESOURCE_POSITION := Vector2(318, 118)
-const GROVE_RESOURCE_POSITION := Vector2(164, 258)
-const RUINS_RESOURCE_POSITION := Vector2(330, 230)
+const OUTDOOR_EXIT_POSITION := Vector2(92, 304)
+const RIVER_FISH_POSITION := Vector2(468, 208)
+const RIVER_RESOURCE_POSITION := Vector2(494, 258)
+const GROVE_RESOURCE_POSITION := Vector2(254, 224)
+const RUINS_RESOURCE_POSITION := Vector2(505, 238)
 const NPC_POSITIONS := {
-	"mira": Vector2(110, 180), "lian": Vector2(255, 235), "soren": Vector2(245, 145), "yuna": Vector2(370, 220),
-	"orin": Vector2(445, 165), "eira": Vector2(580, 270), "toma": Vector2(555, 165), "nori": Vector2(305, 252),
-	"asha": Vector2(220, 174), "piko": Vector2(370, 285),
+	"mira": Vector2(220, 200), "lian": Vector2(275, 240), "soren": Vector2(280, 155), "yuna": Vector2(380, 235),
+	"orin": Vector2(425, 180), "eira": Vector2(590, 240), "toma": Vector2(585, 190), "nori": Vector2(320, 260),
+	"asha": Vector2(170, 200), "piko": Vector2(340, 285),
 }
-const RIVER_NPC_POSITIONS := {"lian": Vector2(545, 118), "nori": Vector2(245, 120)}
-const GROVE_NPC_POSITIONS := {"asha": Vector2(505, 150), "piko": Vector2(260, 230)}
-const RUINS_NPC_POSITIONS := {"soren": Vector2(350, 172), "toma": Vector2(180, 246)}
+const RIVER_NPC_POSITIONS := {"lian": Vector2(420, 165), "nori": Vector2(245, 180)}
+const GROVE_NPC_POSITIONS := {"asha": Vector2(475, 150), "piko": Vector2(350, 250)}
+const RUINS_NPC_POSITIONS := {"soren": Vector2(245, 230), "toma": Vector2(410, 230)}
 const NPC_SPRITE_SCALE := 0.145
 const NPC_FOOT_OFFSETS := {
 	"mira":18.6, "lian":19.4, "soren":19.6, "yuna":20.4, "orin":20.3,
@@ -102,9 +108,16 @@ const NPC_FOOT_OFFSETS := {
 var player: PixelRPGPlayer
 var hud_label: Label
 var toast_label: Label
+var toast_panel: PanelContainer
 var title_label: Label
 var controls_label: Label
 var title_overlay: CanvasLayer
+var world_prompt_layer: CanvasLayer
+var world_prompt_panel: PanelContainer
+var world_prompt_key_panel: PanelContainer
+var world_prompt_symbol_label: Label
+var world_prompt_action_label: Label
+var world_prompt_title_label: Label
 var mode := "farm"
 var selected_seed_index := 0
 var seasonal_seed_ids: Array[StringName] = []
@@ -130,6 +143,8 @@ var weather_refresh_timer := 0.0
 var remote_players: Dictionary = {}
 var world_collision_root: Node2D
 var active_obstacle_rects: Array[Rect2] = []
+var active_obstacle_polygons: Array[PackedVector2Array] = []
+var world_foreground_root: Node2D
 var seed_card: PanelContainer
 var seed_icon: TextureRect
 var seed_card_label: Label
@@ -183,20 +198,24 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("multiplayer_menu"):
 		get_viewport().set_input_as_handled()
+		_hide_world_prompt()
 		multiplayer_menu.toggle()
 		return
 	if not is_instance_valid(title_overlay) and event.is_action_pressed("pause_menu"):
 		get_viewport().set_input_as_handled()
+		_hide_world_prompt()
 		game_menu.toggle()
 
 
 func _process(delta: float) -> void:
 	var text_input_focused := _is_line_edit_focused()
 	if is_instance_valid(title_overlay):
+		_hide_world_prompt()
 		if Input.is_action_just_pressed("ui_accept"):
 			_close_title_screen()
 		return
 	_animate_world_sprites()
+	_update_world_prompt_ui()
 	ui_refresh_timer -= delta
 	if ui_refresh_timer <= 0.0:
 		ui_refresh_timer = 0.25
@@ -236,6 +255,7 @@ func _process(delta: float) -> void:
 		else:
 			_show_toast("請先由村口返回農場")
 	if Input.is_action_just_pressed("attend_festival") and mode == "farm":
+		_hide_world_prompt()
 		festival_overlay.open_today()
 	if Input.is_action_just_pressed("use_potion") and is_instance_valid(player):
 		if GameState.consume_item(&"health_potion"):
@@ -268,8 +288,6 @@ func _draw() -> void:
 
 
 func _draw_farm() -> void:
-	draw_rect(Rect2(SHIPPING_POSITION - Vector2(16, 13), Vector2(32, 26)), Color(0.47, 0.86, 0.79, 0.78), false, 2.0)
-	draw_string(ThemeDB.fallback_font, SHIPPING_POSITION + Vector2(-25, 27), "出貨箱", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("fff1b6"))
 	# Farm plots and crop growth stages.
 	for y in range(PLOT_ROWS):
 		for x in range(PLOT_COLUMNS):
@@ -306,8 +324,6 @@ func _draw_farm() -> void:
 		draw_circle(center + Vector2(8, -7), 6, device_color, false, 2.0)
 		draw_string(ThemeDB.fallback_font, center + Vector2(4, -3), String(definition.get("symbol", "?")), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("fff1b6"))
 	# NPC and animals.
-	if _mira_is_on_farm():
-		_draw_person(MIRA_POSITION, Color("6b5fa8"), "米拉")
 	for index in range(GameState.farm.animals.size()):
 		var _animal: Dictionary = GameState.farm.animals[index]
 	for node_id: String in FARM_RESOURCES:
@@ -316,12 +332,8 @@ func _draw_farm() -> void:
 			_draw_resource(Vector2(resource.position), String(resource.kind))
 	_draw_region_connections()
 	_draw_automation_console_marker()
-	var festival: Dictionary = GameState.festivals.festival_on(GameState.calendar.season_id(), GameState.calendar.day)
-	if not festival.is_empty():
-		draw_string(ThemeDB.fallback_font, Vector2(242, 86), "★ 今日：%s（F 參加）" % festival.get("display_name"), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("fff1b6"))
 	var tide_active: bool = GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather)
-	draw_circle(POND_FISH_POSITION, 14.0, Color(0.47, 0.86, 0.79, 0.72), false, 2.0)
-	draw_string(ThemeDB.fallback_font, POND_FISH_POSITION + Vector2(-32, 27), "E 池塘・%s" % ("異潮" if tide_active else "釣魚"), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("b6f3ef") if tide_active else Color("dce5ee"))
+	_draw_fishing_spot(POND_FISH_POSITION, tide_active)
 
 
 func _draw_dungeon() -> void:
@@ -330,10 +342,9 @@ func _draw_dungeon() -> void:
 	draw_rect(Rect2(18, 52, 604, 286), [Color("6bbf83"), Color("df704e"), Color("d6a348"), Color("89cfe2")][zone_index], false, 2.0)
 	_draw_region_connections()
 	if floor_cleared:
-		_draw_travel_marker(DUNGEON_DESCENT_POSITION, "前往下一層")
+		_draw_travel_marker(DUNGEON_DESCENT_POSITION, "前往下一層", "next_floor")
 	else:
-		draw_circle(DUNGEON_DESCENT_POSITION, 18.0, Color(0.28, 0.32, 0.39, 0.72), false, 2.0)
-		draw_string(ThemeDB.fallback_font, DUNGEON_DESCENT_POSITION + Vector2(-42, 29), "擊敗敵人解鎖下層", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color("a9b0bd"))
+		_draw_locked_gateway(DUNGEON_DESCENT_POSITION)
 	var ore_id := "ore_%d" % floor_number
 	if not bool(GameState.get_flag("gathered_%d_%s" % [GameState.calendar.absolute_day(), ore_id], false)):
 		_draw_resource(DUNGEON_ORE_POSITION, "ore")
@@ -345,50 +356,74 @@ func _draw_abyss() -> void:
 		draw_arc(Vector2(320, 196), 44.0 + ring * 21.0, 0.0, TAU, 48, Color(0.29, 0.84, 0.78, 0.16), 2.0)
 	_draw_region_connections()
 	if floor_cleared:
-		_draw_travel_marker(DUNGEON_DESCENT_POSITION, "返回農場")
+		_draw_travel_marker(DUNGEON_DESCENT_POSITION, "返回農場", "mistfall_farm")
 
 
 func _draw_village() -> void:
-	draw_string(ThemeDB.fallback_font, Vector2(270, 84), "霧落村廣場", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
-	for npc_id: String in NPC_POSITIONS:
-		var character := ContentRegistry.get_artifact("characters", npc_id)
-		var color := Color("6b5fa8") if npc_id in ["mira", "lian", "soren", "yuna"] else Color("557a68")
-		_draw_person(Vector2(NPC_POSITIONS[npc_id]), color, String(character.get("display_name", npc_id)))
 	for shop_id: String in SHOP_POSITIONS:
-		var sign_position: Vector2 = SHOP_POSITIONS[shop_id]
-		draw_circle(sign_position, 8, Color(0.47, 0.86, 0.79, 0.78), false, 2.0)
-		draw_string(ThemeDB.fallback_font, sign_position + Vector2(-22, 24), String(ContentRegistry.get_artifact("shops", shop_id).get("display_name", "商店")), HORIZONTAL_ALIGNMENT_LEFT, 80, 10, Color("fff1b6"))
+		_draw_shop_sign(shop_id, Vector2(SHOP_POSITIONS[shop_id]))
 	_draw_region_connections()
 
 
 func _draw_river() -> void:
-	draw_string(ThemeDB.fallback_font, Vector2(255, 78), "鳴鐘河畔", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
-	draw_circle(RIVER_FISH_POSITION, 13, Color(0.47, 0.86, 0.79, 0.32), false, 2.0)
-	draw_string(ThemeDB.fallback_font, RIVER_FISH_POSITION + Vector2(-35, 30), "E 釣魚", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("b6f3ef"))
-	draw_circle(RIVER_RESOURCE_POSITION, 10, Color("d7c276"), false, 2.0)
-	draw_string(ThemeDB.fallback_font, RIVER_RESOURCE_POSITION + Vector2(-28, 25), "鳴河蘆葦", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
+	_draw_fishing_spot(RIVER_FISH_POSITION, false)
+	_draw_world_pickup(RIVER_RESOURCE_POSITION, &"river_reed", Color("c5bd6d"))
 	_draw_region_connections()
 
 
 func _draw_grove() -> void:
-	draw_string(ThemeDB.fallback_font, Vector2(278, 78), "古鐘林", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
-	draw_circle(GROVE_RESOURCE_POSITION, 10, Color("80c981"), false, 2.0)
-	draw_string(ThemeDB.fallback_font, GROVE_RESOURCE_POSITION + Vector2(-28, 25), "鐘林藥草", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
-	draw_string(ThemeDB.fallback_font, Vector2(450, 112), "裂鐘神龕", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("fff1b6"))
+	_draw_world_pickup(GROVE_RESOURCE_POSITION, &"forest_herb", Color("75c98a"))
 	_draw_region_connections()
 
 
 func _draw_ruins() -> void:
-	draw_string(ThemeDB.fallback_font, Vector2(240, 78), "古鐘機械遺跡", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("fff1b6"))
-	draw_circle(RUINS_RESOURCE_POSITION, 12, Color("e8b54b"), false, 2.0)
-	draw_string(ThemeDB.fallback_font, RUINS_RESOURCE_POSITION + Vector2(-34, 30), "古代鐘齒輪", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("fff1b6"))
-	draw_string(ThemeDB.fallback_font, Vector2(448, 306), "深潮封印導管", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("c4a8ff"))
+	_draw_world_pickup(RUINS_RESOURCE_POSITION, &"ancient_gear", Color("d39c55"))
 	_draw_region_connections()
 
 
-func _draw_person(position: Vector2, color: Color, label: String) -> void:
-	var _unused_color := color
-	draw_string(ThemeDB.fallback_font, position + Vector2(-14, 32), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1b6"))
+func _draw_shop_sign(shop_id: String, position: Vector2) -> void:
+	var style: Dictionary = Dictionary(SHOP_SIGN_STYLES.get(shop_id, {"symbol":"店", "color":Color("78dcca")}))
+	var accent := Color(style.color)
+	# A physical two-post placard remains readable without adding another line
+	# of permanent map text. The exact shop name appears in one context banner.
+	draw_set_transform(position, 0.0, Vector2.ONE)
+	draw_set_transform(position + Vector2(0, 7), 0.0, Vector2(1.0, 0.32))
+	draw_circle(Vector2.ZERO, 12.0, Color(0.02, 0.03, 0.04, 0.4))
+	draw_set_transform(position, 0.0, Vector2.ONE)
+	draw_line(Vector2(-8, -1), Vector2(-8, 12), Color("4c3427"), 3.0)
+	draw_line(Vector2(8, -1), Vector2(8, 12), Color("4c3427"), 3.0)
+	draw_rect(Rect2(-14, -13, 28, 16), Color(0.055, 0.063, 0.105, 0.96), true)
+	draw_rect(Rect2(-14, -13, 28, 16), accent, false, 1.5)
+	draw_polygon(PackedVector2Array([Vector2(-16, -13), Vector2(0, -20), Vector2(16, -13)]), PackedColorArray([accent.darkened(0.3)]))
+	draw_string(ThemeDB.fallback_font, Vector2(-10, -1), String(style.symbol), HORIZONTAL_ALIGNMENT_CENTER, 20, 11, Color("fff1b6"))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _context_prompt_rect() -> Rect2:
+	return Rect2(140, 298, 360, 32)
+
+
+func village_label_rects_for_position(test_position: Vector2) -> Array[Rect2]:
+	# World-space destination names were deliberately removed. At most one
+	# screen-space prompt can exist, so villagers can never cover or split it.
+	for connection: Dictionary in REGION_CONNECTIONS.village.values():
+		if test_position.distance_to(Vector2(connection.position)) < 44.0:
+			return [_context_prompt_rect()]
+	for shop_position: Vector2 in SHOP_POSITIONS.values():
+		if test_position.distance_to(shop_position) <= 38.0:
+			return [_context_prompt_rect()]
+	for npc_position: Vector2 in NPC_POSITIONS.values():
+		if test_position.distance_to(npc_position) <= 34.0:
+			return [_context_prompt_rect()]
+	return []
+
+
+func rects_do_not_overlap(rects: Array[Rect2]) -> bool:
+	for left_index in range(rects.size()):
+		for right_index in range(left_index + 1, rects.size()):
+			if rects[left_index].intersects(rects[right_index]):
+				return false
+	return true
 
 
 func _draw_visible_npc_shadows() -> void:
@@ -423,7 +458,73 @@ func _draw_cow(position: Vector2) -> void:
 
 
 func _draw_resource(position: Vector2, kind: String) -> void:
-	var _unused := [position, kind]
+	var item_id := &"wood" if kind == "tree" else (&"stone" if kind == "stone" else _dungeon_ore_item_id())
+	var accent := Color("9b6848") if kind == "tree" else (Color("8a9299") if kind == "stone" else Color("c97950"))
+	_draw_world_pickup(position, item_id, accent)
+
+
+func _dungeon_ore_item_id() -> StringName:
+	var floor_number := maxi(1, GameState.dungeon.current_floor)
+	if floor_number >= 31:
+		return &"gold_ore"
+	if floor_number >= 11:
+		return &"iron_ore"
+	return &"copper_ore"
+
+
+func _draw_world_pickup(position: Vector2, item_id: StringName, accent: Color) -> void:
+	var geometry := world_pickup_geometry(position)
+	# The item sits on a real stone-and-wood salvage stand. Corner brackets and
+	# sparks draw attention without surrounding it with a placeholder ring.
+	draw_set_transform(position + Vector2(0, 8), 0.0, Vector2(1.0, 0.32))
+	draw_circle(Vector2.ZERO, 17.0, Color(0.02, 0.03, 0.04, 0.46))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	draw_polygon(PackedVector2Array([position + Vector2(-19, 8), position + Vector2(19, 8), position + Vector2(14, 15), position + Vector2(-14, 15)]), PackedColorArray([Color("2f3438")]))
+	draw_line(position + Vector2(-17, 9), position + Vector2(17, 9), accent.darkened(0.22), 2.0)
+	var texture := ItemIconFactory.texture_for(item_id, &"item", 42)
+	if texture != null:
+		draw_texture_rect(texture, Rect2(geometry.icon_rect), false)
+	for spark: Vector2 in geometry.sparks:
+		draw_line(position + spark * 0.62, position + spark, accent.lightened(0.28), 1.5)
+	for corner: Vector2 in [Vector2(-22, -27), Vector2(22, -27), Vector2(-22, 10), Vector2(22, 10)]:
+		var horizontal := Vector2(5.0 if corner.x < 0.0 else -5.0, 0)
+		var vertical := Vector2(0, 5.0 if corner.y < 0.0 else -5.0)
+		draw_line(position + corner, position + corner + horizontal, accent, 1.5)
+		draw_line(position + corner, position + corner + vertical, accent, 1.5)
+
+
+func world_pickup_geometry(position: Vector2) -> Dictionary:
+	return {
+		"icon_rect":Rect2(position - Vector2(21, 32), Vector2(42, 42)),
+		"support_rect":Rect2(position - Vector2(19, -8), Vector2(38, 7)),
+		"sparks":[Vector2(-18, -20), Vector2(18, -18), Vector2(-13, -34), Vector2(14, -36)],
+		"uses_placeholder_ring":false,
+	}
+
+
+func _draw_fishing_spot(position: Vector2, eldritch: bool) -> void:
+	var accent := Color("a998dd") if eldritch else Color("64c9dc")
+	var motion := sin(float(Time.get_ticks_msec()) * 0.004)
+	# A line, float and broken water ripples read as an actual fishing location.
+	draw_line(position + Vector2(-23, -25), position + Vector2(-6, -9), Color("5b412d"), 3.0)
+	draw_line(position + Vector2(-6, -9), position + Vector2(2, -1 + motion), Color("dce5ee"), 1.0)
+	draw_rect(Rect2(position + Vector2(-2, -5 + motion), Vector2(5, 8)), Color("f0d37a"), true)
+	draw_rect(Rect2(position + Vector2(-2, -5 + motion), Vector2(5, 3)), Color("d75f5f"), true)
+	for radius in [10.0, 18.0, 27.0]:
+		draw_arc(position + Vector2(0, 3), radius, 0.10, PI * 0.82, 12, accent, 1.4)
+		draw_arc(position + Vector2(0, 3), radius, PI * 1.1, PI * 1.82, 12, accent, 1.4)
+	if eldritch:
+		draw_polyline(PackedVector2Array([position + Vector2(-13, 11), position + Vector2(0, 16), position + Vector2(13, 11)]), accent.lightened(0.25), 2.0)
+
+
+func _draw_locked_gateway(position: Vector2) -> void:
+	draw_set_transform(position, 0.0, Vector2.ONE)
+	draw_polygon(PackedVector2Array([Vector2(-24, 10), Vector2(-18, -10), Vector2(0, -18), Vector2(18, -10), Vector2(24, 10), Vector2(0, 18)]), PackedColorArray([Color("28323a")]))
+	draw_polyline(PackedVector2Array([Vector2(-20, -9), Vector2(20, 9)]), Color("828894"), 4.0)
+	draw_polyline(PackedVector2Array([Vector2(20, -9), Vector2(-20, 9)]), Color("828894"), 4.0)
+	draw_rect(Rect2(-6, -6, 12, 13), Color("171a2b"), true)
+	draw_arc(Vector2(0, -6), 5.0, PI, TAU, 10, Color("a9b0bd"), 2.0)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_crop_visual(center: Vector2, crop_id: String, crop: Dictionary, plot: Dictionary) -> void:
@@ -461,13 +562,6 @@ func _draw_crop_visual(center: Vector2, crop_id: String, crop: Dictionary, plot:
 				draw_circle(center + offset, 3.0, crop_color)
 		else:
 			draw_circle(center - Vector2(0, height), lerpf(3.5, 6.5, progress), crop_color)
-	if is_instance_valid(player) and player.global_position.distance_to(center) <= 30.0:
-		var display_name := String(crop.get("display_name", crop_id))
-		var label_width := clampf(14.0 + display_name.length() * 9.0, 50.0, 86.0)
-		var label_rect := Rect2(center.x - label_width * 0.5, center.y - 31.0, label_width, 14.0)
-		draw_rect(label_rect, Color(0.055, 0.063, 0.105, 0.9), true)
-		draw_rect(label_rect, Color("78dcca"), false, 1.0)
-		draw_string(ThemeDB.fallback_font, label_rect.position + Vector2(4, 10), display_name, HORIZONTAL_ALIGNMENT_CENTER, label_width - 8.0, 9, Color("fff1b6"))
 
 
 func _crop_id_has_any(crop_id: String, tokens: Array[String]) -> bool:
@@ -477,34 +571,98 @@ func _crop_id_has_any(crop_id: String, tokens: Array[String]) -> bool:
 	return false
 
 
-func _draw_travel_marker(position: Vector2, label: String) -> void:
-	var pulse := 2.0 + sin(float(Time.get_ticks_msec()) * 0.005) * 1.5
-	draw_circle(position, 15.0 + pulse, Color(0.47, 0.86, 0.79, 0.72), false, 2.5)
-	draw_circle(position, 5.0, Color("fff1b6"))
-	draw_line(position + Vector2(0, -10), position + Vector2(0, 8), Color("171a2b"), 2.0)
-	var label_width := clampf(28.0 + label.length() * 10.0, 68.0, 116.0)
-	var label_position := Vector2(clampf(position.x - label_width * 0.5, 4.0, 636.0 - label_width), clampf(position.y + 20.0, 58.0, 321.0))
-	var label_rect := Rect2(label_position, Vector2(label_width, 16.0))
-	draw_rect(label_rect, Color(0.055, 0.063, 0.105, 0.9), true)
-	draw_rect(label_rect, Color(0.47, 0.86, 0.79, 0.9), false, 1.0)
-	draw_string(ThemeDB.fallback_font, label_rect.position + Vector2(4, 11), "E %s" % label, HORIZONTAL_ALIGNMENT_CENTER, label_width - 8.0, 9, Color("fff1b6"))
+func _draw_travel_marker(position: Vector2, label: String, destination_id: String = "") -> void:
+	var geometry := _gateway_geometry(position, label, destination_id)
+	var accent := Color(geometry.accent)
+	var angle := float(geometry.angle)
+	var nearby := is_instance_valid(player) and player.global_position.distance_to(position) <= 52.0
+	var emphasis := 0.92 if nearby else 0.58
+	# A compact stone threshold, banner posts and engraved destination crest form
+	# part of the world art. Interaction text lives exclusively in the HUD.
+	draw_set_transform(position, angle, Vector2.ONE)
+	draw_polygon(PackedVector2Array([Vector2(-23, -10), Vector2(19, -10), Vector2(25, -6), Vector2(25, 6), Vector2(19, 10), Vector2(-23, 10)]), PackedColorArray([Color(0.10, 0.13, 0.16, 0.52)]))
+	for slab_x in [-20.0, -9.0, 2.0, 13.0]:
+		draw_rect(Rect2(slab_x, -8, 8, 16), Color(0.34, 0.36, 0.35, emphasis), true)
+		draw_line(Vector2(slab_x, -7), Vector2(slab_x + 7, -7), Color(0.69, 0.70, 0.64, emphasis * 0.62), 1.0)
+	for post_y in [-15.0, 15.0]:
+		draw_rect(Rect2(-3, post_y - 7, 8, 15), Color("3d342e"), true)
+		draw_polygon(PackedVector2Array([Vector2(5, post_y - 5), Vector2(12, post_y), Vector2(5, post_y + 5)]), PackedColorArray([Color(accent.r, accent.g, accent.b, emphasis)]))
+		draw_circle(Vector2(1, post_y - 8), 3.0, Color("8c806d"))
+	for chevron_x in [-14.0, -3.0]:
+		draw_polyline(PackedVector2Array([Vector2(chevron_x - 3, -3), Vector2(chevron_x + 2, 0), Vector2(chevron_x - 3, 3)]), Color(accent.r, accent.g, accent.b, emphasis), 1.5)
+	# A small engraved crest distinguishes destinations without behaving like UI.
+	draw_rect(Rect2(16, -8, 14, 16), Color("28323a"), true)
+	draw_rect(Rect2(16, -8, 14, 16), Color(accent.r, accent.g, accent.b, emphasis), false, 1.0)
+	draw_string(ThemeDB.fallback_font, Vector2(18, 4), String(geometry.symbol), HORIZONTAL_ALIGNMENT_CENTER, 10, 8, Color("fff1b6"))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _gateway_geometry(position: Vector2, _label: String, destination_id: String = "") -> Dictionary:
+	var outward := _gateway_outward_direction(position)
+	var perpendicular := outward.rotated(PI * 0.5)
+	var style := _gateway_style(destination_id)
+	return {
+		"outward":outward,
+		"angle":outward.angle(),
+		"accent":style.color,
+		"symbol":style.symbol,
+		"has_world_text":false,
+		"posts":[position + perpendicular * 15.0, position - perpendicular * 15.0],
+		"chevrons":[position - outward * 14.0, position - outward * 3.0],
+		"path_length":48.0,
+	}
+
+
+func _gateway_outward_direction(position: Vector2) -> Vector2:
+	if position.y >= 290.0:
+		return Vector2.DOWN
+	if position.y <= 95.0:
+		return Vector2.UP
+	if position.x <= 70.0:
+		return Vector2.LEFT
+	if position.x >= 570.0:
+		return Vector2.RIGHT
+	var from_center := position - Vector2(320, 196)
+	if absf(from_center.x) >= absf(from_center.y):
+		return Vector2.RIGHT if from_center.x >= 0.0 else Vector2.LEFT
+	return Vector2.DOWN if from_center.y >= 0.0 else Vector2.UP
+
+
+func _gateway_style(destination_id: String) -> Dictionary:
+	return {
+		"mistfall_farm":{"symbol":"田", "color":Color("d8b66a")},
+		"mistfall_village":{"symbol":"村", "color":Color("c98ab1")},
+		"mistfall_river":{"symbol":"川", "color":Color("64c9dc")},
+		"bellwood_grove":{"symbol":"林", "color":Color("75c98a")},
+		"clockwork_ruins":{"symbol":"遺", "color":Color("d39c55")},
+		"mistfall_depths":{"symbol":"窟", "color":Color("a998dd")},
+		"next_floor":{"symbol":"層", "color":Color("e8b54b")},
+	}.get(destination_id, {"symbol":"門", "color":Color("78dcca")})
 
 
 func _draw_region_connections() -> void:
 	var connections: Dictionary = Dictionary(REGION_CONNECTIONS.get(mode, {}))
 	for map_id: String in connections:
 		var connection: Dictionary = Dictionary(connections[map_id])
-		_draw_travel_marker(Vector2(connection.position), String(connection.label))
+		_draw_travel_marker(Vector2(connection.position), String(connection.label), map_id)
 
 
 func _draw_automation_console_marker() -> void:
-	var pulse := 2.0 + sin(float(Time.get_ticks_msec()) * 0.004) * 1.2
-	draw_circle(AUTOMATION_CONSOLE_POSITION, 17.0 + pulse, Color(0.91, 0.65, 0.24, 0.74), false, 2.5)
-	draw_circle(AUTOMATION_CONSOLE_POSITION, 8.0, Color("171a2b"))
-	for spoke in range(8):
-		var direction := Vector2.RIGHT.rotated(TAU * float(spoke) / 8.0)
-		draw_line(AUTOMATION_CONSOLE_POSITION + direction * 7.0, AUTOMATION_CONSOLE_POSITION + direction * 11.0, Color("f2c768"), 2.0)
-	draw_string(ThemeDB.fallback_font, AUTOMATION_CONSOLE_POSITION + Vector2(-51, 32), "E 鐘網控制台", HORIZONTAL_ALIGNMENT_CENTER, 102, 10, Color("fff1b6"))
+	var position := AUTOMATION_CONSOLE_POSITION
+	draw_set_transform(position + Vector2(0, 11), 0.0, Vector2(1.0, 0.3))
+	draw_circle(Vector2.ZERO, 20.0, Color(0.02, 0.03, 0.04, 0.5))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# A bolted field terminal with lever, cable and device diagram replaces the
+	# old floating gear-ring marker. Its name appears only in the nearby prompt.
+	draw_polygon(PackedVector2Array([position + Vector2(-18, 12), position + Vector2(18, 12), position + Vector2(13, -17), position + Vector2(-13, -17)]), PackedColorArray([Color("3c3935")]))
+	draw_rect(Rect2(position + Vector2(-11, -13), Vector2(22, 20)), Color("171a2b"), true)
+	draw_rect(Rect2(position + Vector2(-11, -13), Vector2(22, 20)), Color("e8b54b"), false, 1.5)
+	var icon := ItemIconFactory.texture_for(&"bell_generator", &"automation", 26)
+	if icon != null:
+		draw_texture_rect(icon, Rect2(position + Vector2(-13, -17), Vector2(26, 26)), false)
+	draw_line(position + Vector2(13, -6), position + Vector2(22, -18), Color("b7a279"), 2.5)
+	draw_circle(position + Vector2(22, -18), 3.0, Color("e8b54b"))
+	draw_polyline(PackedVector2Array([position + Vector2(-15, 13), position + Vector2(-23, 18), position + Vector2(-31, 15)]), Color("c97950"), 2.0)
 
 
 func _create_player() -> void:
@@ -522,6 +680,10 @@ func _create_background() -> void:
 	world_background.position = Vector2(320, 180)
 	world_background.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(world_background)
+	world_foreground_root = Node2D.new()
+	world_foreground_root.name = "WorldForeground"
+	world_foreground_root.z_index = 6
+	add_child(world_foreground_root)
 	_set_background_for_mode()
 
 
@@ -542,6 +704,7 @@ func _set_background_for_mode() -> void:
 	world_background.texture = load(path)
 	if world_background.texture != null:
 		world_background.scale = Vector2(640.0 / world_background.texture.get_width(), 360.0 / world_background.texture.get_height())
+	_rebuild_world_foreground()
 	_update_npc_sprites()
 	_update_environment_tint()
 	if is_instance_valid(world_collision_root):
@@ -555,6 +718,8 @@ func _update_environment_tint() -> void:
 	var tint: Color = season_tints[GameState.calendar.season_index]
 	if mode == "abyss":
 		world_background.modulate = Color("51427e")
+		if is_instance_valid(world_foreground_root):
+			world_foreground_root.modulate = Color("51427e")
 		return
 	var hour: float = float(GameState.calendar.minute_of_day) / 60.0
 	if hour >= 20.0:
@@ -563,6 +728,49 @@ func _update_environment_tint() -> void:
 		var dusk := clampf((hour - 18.0) / 2.0, 0.0, 1.0)
 		tint = tint.lerp(tint * Color(0.52, 0.59, 0.82), dusk)
 	world_background.modulate = tint
+	if is_instance_valid(world_foreground_root):
+		world_foreground_root.modulate = tint
+
+
+func _rebuild_world_foreground() -> void:
+	if not is_instance_valid(world_foreground_root) or world_background.texture == null:
+		return
+	for child: Node in world_foreground_root.get_children():
+		world_foreground_root.remove_child(child)
+		child.queue_free()
+	var scale_factor := world_background.scale
+	for world_rect: Rect2 in _foreground_regions_for_mode(mode):
+		var sprite := Sprite2D.new()
+		sprite.texture = world_background.texture
+		sprite.region_enabled = true
+		sprite.region_rect = Rect2(world_rect.position / scale_factor, world_rect.size / scale_factor)
+		sprite.position = world_rect.get_center()
+		sprite.scale = scale_factor
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		world_foreground_root.add_child(sprite)
+
+
+func _foreground_regions_for_mode(map_mode: String) -> Array[Rect2]:
+	# These are the upper visual slices of tall landmarks. Re-drawing the exact
+	# background pixels above actors creates Stone Age-style walk-behind depth
+	# without changing the source palette or adding foreign-looking assets.
+	var raw_regions: Array = {
+		"farm":[Rect2(94, 54, 151, 55), Rect2(399, 54, 145, 55), Rect2(452, 181, 138, 49)],
+		"village":[Rect2(67, 54, 151, 73), Rect2(251, 54, 123, 56), Rect2(440, 54, 139, 70), Rect2(438, 171, 127, 44), Rect2(127, 218, 126, 38), Rect2(371, 257, 221, 35)],
+		"river":[Rect2(20, 79, 103, 61), Rect2(70, 54, 52, 49), Rect2(522, 54, 54, 50), Rect2(67, 271, 52, 50), Rect2(522, 273, 54, 49), Rect2(431, 164, 77, 31)],
+		"grove":[Rect2(20, 54, 75, 105), Rect2(151, 54, 79, 69), Rect2(265, 54, 156, 63), Rect2(420, 54, 120, 72), Rect2(535, 54, 85, 107), Rect2(214, 268, 150, 70)],
+		"ruins":[Rect2(25, 54, 182, 51), Rect2(419, 54, 84, 51), Rect2(530, 54, 90, 64), Rect2(73, 137, 110, 42), Rect2(257, 135, 150, 47), Rect2(443, 140, 125, 42)],
+		"dungeon":[Rect2(20, 54, 202, 67), Rect2(281, 54, 79, 37), Rect2(394, 54, 226, 70), Rect2(536, 134, 84, 71)],
+		"abyss":[Rect2(20, 54, 202, 67), Rect2(281, 54, 79, 37), Rect2(394, 54, 226, 70), Rect2(536, 134, 84, 71)],
+	}.get(map_mode, [])
+	var regions: Array[Rect2] = []
+	for region: Variant in raw_regions:
+		regions.append(Rect2(region))
+	return regions
+
+
+func foreground_layer_count(map_mode: String) -> int:
+	return _foreground_regions_for_mode(map_mode).size()
 
 
 func _draw_weather() -> void:
@@ -602,7 +810,7 @@ func _create_npc_sprites() -> void:
 		sprite.texture = region
 		sprite.scale = Vector2(NPC_SPRITE_SCALE, NPC_SPRITE_SCALE)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		sprite.z_index = 2
+		sprite.z_index = 7
 		add_child(sprite)
 		npc_sprites[npc_id] = sprite
 	_update_npc_sprites()
@@ -645,74 +853,123 @@ func _rebuild_world_collisions() -> void:
 		world_collision_root.remove_child(child)
 		child.queue_free()
 	active_obstacle_rects.clear()
+	active_obstacle_polygons.clear()
 	_add_world_obstacle("BoundaryTop", Rect2(0, 38, 640, 16), false)
 	_add_world_obstacle("BoundaryBottom", Rect2(0, 338, 640, 20), false)
 	_add_world_obstacle("BoundaryLeft", Rect2(4, 38, 16, 320), false)
 	_add_world_obstacle("BoundaryRight", Rect2(620, 38, 16, 320), false)
-	var obstacles: Array[Dictionary] = []
-	match mode:
-		"farm":
-			obstacles = [
-				{"name":"FarmHouse", "rect":Rect2(94, 54, 136, 78)},
-				{"name":"FarmBarn", "rect":Rect2(397, 54, 166, 82)},
-				{"name":"FarmPondNorth", "rect":Rect2(66, 207, 100, 25)},
-				{"name":"FarmPondCenter", "rect":Rect2(34, 228, 130, 63)},
-				{"name":"FarmPondSouth", "rect":Rect2(60, 287, 97, 28)},
-				{"name":"CaveRocksLeft", "rect":Rect2(510, 245, 47, 78)},
-				{"name":"CaveRocksTop", "rect":Rect2(552, 240, 47, 29)},
-				{"name":"CaveRocksRight", "rect":Rect2(600, 243, 28, 80)},
-			]
-		"village":
-			obstacles = [
-				{"name":"VillageLibrary", "rect":Rect2(54, 62, 153, 98)},
-				{"name":"VillageForge", "rect":Rect2(261, 56, 110, 65)},
-				{"name":"VillageStore", "rect":Rect2(429, 64, 139, 88)},
-				{"name":"VillageClinic", "rect":Rect2(444, 179, 123, 70)},
-				{"name":"VillageHome", "rect":Rect2(139, 220, 99, 72)},
-				{"name":"VillageShrine", "rect":Rect2(397, 267, 171, 61)},
-				{"name":"VillageRiver", "rect":Rect2(20, 230, 117, 100)},
-				{"name":"VillageBell", "rect":Rect2(292, 168, 59, 56)},
-			]
-		"river":
-			obstacles = [
-				{"name":"RiverNorthWater", "rect":Rect2(76, 54, 298, 58)},
-				{"name":"RiverCenterWater", "rect":Rect2(218, 151, 172, 76)},
-				{"name":"RiverSouthWater", "rect":Rect2(250, 250, 158, 80)},
-				{"name":"RiverEastChannel", "rect":Rect2(450, 114, 62, 145)},
-				{"name":"RiverMill", "rect":Rect2(547, 218, 80, 95)},
-			]
-		"grove":
-			obstacles = [
-				{"name":"GrovePond", "rect":Rect2(16, 222, 151, 77)},
-				{"name":"GroveShrine", "rect":Rect2(438, 55, 112, 91)},
-				{"name":"GroveMound", "rect":Rect2(304, 170, 95, 69)},
-				{"name":"GroveSouthLog", "rect":Rect2(430, 281, 120, 48)},
-			]
-		"ruins":
-			obstacles = [
-				{"name":"RuinsBoiler", "rect":Rect2(96, 54, 90, 74)},
-				{"name":"RuinsNorthBell", "rect":Rect2(424, 51, 69, 79)},
-				{"name":"RuinsTank", "rect":Rect2(552, 51, 70, 103)},
-				{"name":"RuinsCentralMachine", "rect":Rect2(281, 119, 115, 87)},
-				{"name":"RuinsSouthVault", "rect":Rect2(301, 251, 108, 57)},
-			]
-		"dungeon", "abyss":
-			obstacles = [
-				{"name":"DungeonCrystal", "rect":Rect2(91, 57, 105, 82)},
-				{"name":"DungeonCenterBell", "rect":Rect2(278, 155, 86, 71)},
-				{"name":"DungeonWestCliff", "rect":Rect2(20, 58, 49, 246)},
-				{"name":"DungeonEastCliff", "rect":Rect2(577, 57, 43, 260)},
-			]
-	for obstacle: Dictionary in obstacles:
-		_add_world_obstacle(String(obstacle.name), Rect2(obstacle.rect), true)
+	for obstacle: Dictionary in _world_obstacle_layout(mode):
+		if obstacle.has("rect"):
+			_add_world_obstacle(String(obstacle.name), Rect2(obstacle.rect), true)
+		else:
+			_add_world_polygon(String(obstacle.name), PackedVector2Array(obstacle.polygon), true)
 	if is_instance_valid(player):
 		_sanitize_player_position()
+
+
+func _world_obstacle_layout(map_mode: String) -> Array[Dictionary]:
+	# Each map is traced against its production background. Rectangles describe
+	# architectural footprints; polygons follow shorelines, cliffs and irregular
+	# machinery. The open gaps coincide with the paths, bridges and gate mouths.
+	match map_mode:
+		"farm":
+			return [
+				{"name":"FarmHouse", "rect":Rect2(94, 54, 151, 76)},
+				{"name":"FarmBarn", "rect":Rect2(399, 54, 145, 78)},
+				{"name":"FarmPond", "polygon":PackedVector2Array([Vector2(70, 196), Vector2(151, 195), Vector2(181, 209), Vector2(191, 238), Vector2(184, 276), Vector2(151, 292), Vector2(91, 289), Vector2(67, 264), Vector2(64, 225)])},
+				{"name":"FarmCaveCrown", "polygon":PackedVector2Array([Vector2(452, 192), Vector2(479, 177), Vector2(558, 180), Vector2(586, 199), Vector2(578, 228), Vector2(548, 224), Vector2(531, 210), Vector2(504, 211), Vector2(486, 228), Vector2(458, 229)])},
+				{"name":"FarmCaveLeft", "rect":Rect2(450, 218, 45, 60)},
+				{"name":"FarmCaveRight", "rect":Rect2(548, 217, 42, 61)},
+				{"name":"FarmWestOrchard", "polygon":PackedVector2Array([Vector2(20, 54), Vector2(83, 54), Vector2(83, 104), Vector2(61, 122), Vector2(20, 122)])},
+				{"name":"FarmEastOrchard", "polygon":PackedVector2Array([Vector2(558, 54), Vector2(620, 54), Vector2(620, 119), Vector2(592, 119), Vector2(566, 101)])},
+			]
+		"village":
+			return [
+				{"name":"VillageLibrary", "rect":Rect2(67, 54, 151, 101)},
+				{"name":"VillageForge", "rect":Rect2(251, 54, 123, 78)},
+				{"name":"VillageStore", "rect":Rect2(440, 54, 139, 103)},
+				{"name":"VillageClinic", "rect":Rect2(438, 171, 127, 79)},
+				{"name":"VillageHome", "rect":Rect2(127, 218, 126, 68)},
+				{"name":"VillageBell", "polygon":PackedVector2Array([Vector2(297, 147), Vector2(346, 147), Vector2(365, 177), Vector2(348, 212), Vector2(294, 212), Vector2(276, 178)])},
+				{"name":"VillageUpperRiver", "polygon":PackedVector2Array([Vector2(20, 187), Vector2(151, 187), Vector2(157, 216), Vector2(132, 246), Vector2(82, 256), Vector2(20, 245)])},
+				{"name":"VillageLowerRiverWest", "polygon":PackedVector2Array([Vector2(20, 245), Vector2(127, 247), Vector2(130, 278), Vector2(112, 302), Vector2(20, 323)])},
+				{"name":"VillageLowerRiverEast", "polygon":PackedVector2Array([Vector2(177, 281), Vector2(227, 286), Vector2(244, 317), Vector2(226, 338), Vector2(164, 338), Vector2(164, 308)])},
+				{"name":"VillageShrineWest", "polygon":PackedVector2Array([Vector2(371, 257), Vector2(430, 250), Vector2(447, 277), Vector2(435, 338), Vector2(370, 338)])},
+				{"name":"VillageShrineEast", "polygon":PackedVector2Array([Vector2(489, 260), Vector2(570, 252), Vector2(592, 279), Vector2(592, 338), Vector2(489, 338)])},
+			]
+		"river":
+			return [
+				{"name":"RiverMill", "rect":Rect2(20, 79, 103, 92)},
+				{"name":"RiverUpperWestWater", "polygon":PackedVector2Array([Vector2(128, 54), Vector2(282, 54), Vector2(283, 111), Vector2(255, 119), Vector2(251, 151), Vector2(220, 174), Vector2(165, 177), Vector2(158, 151), Vector2(131, 134)])},
+				{"name":"RiverUpperCenterWater", "polygon":PackedVector2Array([Vector2(283, 54), Vector2(382, 54), Vector2(382, 111), Vector2(360, 119), Vector2(313, 114), Vector2(283, 111)])},
+				{"name":"RiverCenterChannelNorth", "polygon":PackedVector2Array([Vector2(315, 142), Vector2(395, 143), Vector2(391, 181), Vector2(373, 205), Vector2(379, 240), Vector2(408, 248), Vector2(408, 250), Vector2(317, 250), Vector2(306, 211)])},
+				{"name":"RiverCenterChannelSouth", "polygon":PackedVector2Array([Vector2(330, 276), Vector2(408, 276), Vector2(408, 338), Vector2(332, 338)])},
+				{"name":"RiverEastChannel", "polygon":PackedVector2Array([Vector2(470, 104), Vector2(535, 100), Vector2(537, 151), Vector2(519, 177), Vector2(526, 216), Vector2(535, 258), Vector2(517, 282), Vector2(480, 273), Vector2(458, 247), Vector2(456, 208), Vector2(470, 178)])},
+				{"name":"RiverLowerWestWater", "polygon":PackedVector2Array([Vector2(20, 222), Vector2(76, 226), Vector2(78, 271), Vector2(64, 291), Vector2(61, 338), Vector2(20, 338)])},
+				{"name":"RiverLowerBasin", "polygon":PackedVector2Array([Vector2(123, 252), Vector2(190, 247), Vector2(222, 270), Vector2(270, 279), Vector2(296, 313), Vector2(295, 338), Vector2(123, 338)])},
+				{"name":"RiverSouthEastWater", "polygon":PackedVector2Array([Vector2(423, 286), Vector2(499, 278), Vector2(526, 299), Vector2(525, 338), Vector2(420, 338)])},
+			]
+		"grove":
+			return [
+				{"name":"GroveNorthWestForest", "polygon":PackedVector2Array([Vector2(20, 54), Vector2(91, 54), Vector2(100, 100), Vector2(80, 153), Vector2(20, 166)])},
+				{"name":"GroveNorthForest", "polygon":PackedVector2Array([Vector2(148, 54), Vector2(224, 54), Vector2(232, 104), Vector2(205, 126), Vector2(157, 113)])},
+				{"name":"GroveNorthCenterForest", "polygon":PackedVector2Array([Vector2(265, 54), Vector2(421, 54), Vector2(421, 113), Vector2(388, 126), Vector2(338, 112), Vector2(294, 124), Vector2(264, 103)])},
+				{"name":"GroveShrine", "polygon":PackedVector2Array([Vector2(425, 54), Vector2(528, 54), Vector2(538, 112), Vector2(518, 135), Vector2(438, 134), Vector2(414, 111)])},
+				{"name":"GroveWestLog", "polygon":PackedVector2Array([Vector2(169, 122), Vector2(238, 128), Vector2(258, 154), Vector2(239, 180), Vector2(181, 169), Vector2(161, 146)])},
+				{"name":"GroveMound", "polygon":PackedVector2Array([Vector2(306, 145), Vector2(391, 144), Vector2(421, 178), Vector2(405, 227), Vector2(326, 235), Vector2(294, 201)])},
+				{"name":"GrovePond", "polygon":PackedVector2Array([Vector2(51, 195), Vector2(127, 190), Vector2(171, 215), Vector2(183, 257), Vector2(158, 297), Vector2(84, 302), Vector2(51, 275)])},
+				{"name":"GroveSouthForest", "polygon":PackedVector2Array([Vector2(220, 262), Vector2(338, 251), Vector2(374, 288), Vector2(363, 338), Vector2(219, 338), Vector2(204, 304)])},
+				{"name":"GroveSouthEastLog", "polygon":PackedVector2Array([Vector2(442, 278), Vector2(535, 277), Vector2(568, 311), Vector2(557, 338), Vector2(431, 338), Vector2(423, 306)])},
+			]
+		"ruins":
+			return [
+				{"name":"RuinsNorthWestMachine", "polygon":PackedVector2Array([Vector2(25, 54), Vector2(202, 54), Vector2(207, 113), Vector2(183, 129), Vector2(77, 128), Vector2(25, 110)])},
+				{"name":"RuinsNorthFieldWest", "rect":Rect2(250, 54, 55, 62)},
+				{"name":"RuinsNorthFieldEast", "rect":Rect2(342, 54, 53, 62)},
+				{"name":"RuinsNorthBell", "rect":Rect2(419, 54, 84, 80)},
+				{"name":"RuinsNorthEastTank", "polygon":PackedVector2Array([Vector2(530, 54), Vector2(620, 54), Vector2(620, 137), Vector2(547, 137), Vector2(526, 116)])},
+				{"name":"RuinsWestWheel", "polygon":PackedVector2Array([Vector2(73, 137), Vector2(183, 137), Vector2(190, 207), Vector2(163, 225), Vector2(84, 218), Vector2(69, 178)])},
+				{"name":"RuinsCentralMachine", "polygon":PackedVector2Array([Vector2(257, 135), Vector2(389, 135), Vector2(407, 180), Vector2(388, 219), Vector2(264, 218), Vector2(243, 180)])},
+				{"name":"RuinsEastMachine", "polygon":PackedVector2Array([Vector2(443, 140), Vector2(555, 140), Vector2(568, 187), Vector2(548, 221), Vector2(453, 218), Vector2(431, 183)])},
+				{"name":"RuinsSouthWestField", "rect":Rect2(137, 248, 99, 82)},
+				{"name":"RuinsSouthVault", "polygon":PackedVector2Array([Vector2(257, 249), Vector2(388, 249), Vector2(388, 292), Vector2(351, 296), Vector2(320, 279), Vector2(288, 296), Vector2(257, 292)])},
+				{"name":"RuinsSouthEastField", "rect":Rect2(430, 250, 126, 82)},
+				{"name":"RuinsWestWater", "rect":Rect2(20, 248, 49, 90)},
+				{"name":"RuinsEastWater", "rect":Rect2(569, 245, 51, 93)},
+			]
+		"dungeon", "abyss":
+			return [
+				{"name":"DungeonWestCliff", "polygon":PackedVector2Array([Vector2(20, 54), Vector2(153, 54), Vector2(165, 98), Vector2(140, 151), Vector2(92, 181), Vector2(62, 248), Vector2(20, 259)])},
+				{"name":"DungeonCrystal", "polygon":PackedVector2Array([Vector2(137, 54), Vector2(218, 54), Vector2(222, 103), Vector2(194, 125), Vector2(151, 117), Vector2(130, 86)])},
+				{"name":"DungeonDoor", "rect":Rect2(281, 54, 79, 50)},
+				{"name":"DungeonNorthEastCliff", "polygon":PackedVector2Array([Vector2(394, 54), Vector2(620, 54), Vector2(620, 139), Vector2(588, 158), Vector2(532, 142), Vector2(493, 114), Vector2(432, 116)])},
+				{"name":"DungeonEastCrystal", "polygon":PackedVector2Array([Vector2(536, 134), Vector2(620, 128), Vector2(620, 241), Vector2(568, 244), Vector2(535, 206)])},
+				{"name":"DungeonSouthWestCliff", "polygon":PackedVector2Array([Vector2(20, 258), Vector2(83, 243), Vector2(150, 276), Vector2(202, 321), Vector2(197, 338), Vector2(20, 338)])},
+				{"name":"DungeonSouthEastCliff", "polygon":PackedVector2Array([Vector2(498, 259), Vector2(555, 235), Vector2(620, 238), Vector2(620, 338), Vector2(495, 338)])},
+			]
+	return []
 
 
 func _add_world_obstacle(obstacle_name: String, rect: Rect2, track_for_safety: bool = true) -> void:
 	if track_for_safety:
 		active_obstacle_rects.append(rect)
 	_create_wall(rect.get_center(), rect.size, obstacle_name)
+
+
+func _add_world_polygon(obstacle_name: String, polygon: PackedVector2Array, track_for_safety: bool = true) -> void:
+	if polygon.size() < 3:
+		return
+	if track_for_safety:
+		active_obstacle_polygons.append(polygon)
+	var body := StaticBody2D.new()
+	body.name = obstacle_name
+	body.collision_layer = 1
+	body.collision_mask = 0
+	var collision := CollisionPolygon2D.new()
+	collision.build_mode = CollisionPolygon2D.BUILD_SOLIDS
+	collision.polygon = polygon
+	body.add_child(collision)
+	world_collision_root.add_child(body)
 
 
 func _create_wall(wall_position: Vector2, size: Vector2, wall_name: String = "WorldWall") -> void:
@@ -733,7 +990,71 @@ func is_world_position_blocked(position: Vector2, margin: float = 0.0) -> bool:
 	for rect: Rect2 in active_obstacle_rects:
 		if rect.grow(margin).has_point(position):
 			return true
+	for polygon: PackedVector2Array in active_obstacle_polygons:
+		if _point_in_or_near_polygon(position, polygon, margin):
+			return true
 	return false
+
+
+func is_map_position_blocked(map_mode: String, position: Vector2, margin: float = 0.0) -> bool:
+	if position.x < 20.0 + margin or position.x > 620.0 - margin or position.y < 54.0 + margin or position.y > 338.0 - margin:
+		return true
+	for obstacle: Dictionary in _world_obstacle_layout(map_mode):
+		if obstacle.has("rect"):
+			if Rect2(obstacle.rect).grow(margin).has_point(position):
+				return true
+		elif _point_in_or_near_polygon(position, PackedVector2Array(obstacle.polygon), margin):
+			return true
+	return false
+
+
+func _point_in_or_near_polygon(position: Vector2, polygon: PackedVector2Array, margin: float) -> bool:
+	if Geometry2D.is_point_in_polygon(position, polygon):
+		return true
+	if margin <= 0.0:
+		return false
+	for index in range(polygon.size()):
+		var edge_start := polygon[index]
+		var edge_end := polygon[(index + 1) % polygon.size()]
+		if Geometry2D.get_closest_point_to_segment(position, edge_start, edge_end).distance_to(position) <= margin:
+			return true
+	return false
+
+
+func map_has_walkable_path(map_mode: String, start: Vector2, target: Vector2, clearance: float = 7.0) -> bool:
+	if is_map_position_blocked(map_mode, start, clearance) or is_map_position_blocked(map_mode, target, clearance):
+		return false
+	var step := 8.0
+	var frontier: Array[Vector2] = [start]
+	var visited := {"%d,%d" % [roundi(start.x / step), roundi(start.y / step)]:true}
+	var cursor := 0
+	while cursor < frontier.size() and frontier.size() < 7000:
+		var current := frontier[cursor]
+		cursor += 1
+		if current.distance_to(target) <= step * 1.5:
+			return true
+		for direction: Vector2 in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
+			var next := current + direction * step
+			var key := "%d,%d" % [roundi(next.x / step), roundi(next.y / step)]
+			if visited.has(key) or is_map_position_blocked(map_mode, next, clearance):
+				continue
+			visited[key] = true
+			frontier.append(next)
+	return false
+
+
+func world_collision_summary(map_mode: String) -> Dictionary:
+	var layout := _world_obstacle_layout(map_mode)
+	var rectangles := 0
+	var polygons := 0
+	var vertices := 0
+	for obstacle: Dictionary in layout:
+		if obstacle.has("rect"):
+			rectangles += 1
+		else:
+			polygons += 1
+			vertices += PackedVector2Array(obstacle.polygon).size()
+	return {"obstacles":layout.size(), "rectangles":rectangles, "polygons":polygons, "vertices":vertices}
 
 
 func _sanitize_player_position() -> void:
@@ -743,16 +1064,17 @@ func _sanitize_player_position() -> void:
 	GameState.player_position = player.global_position
 
 
-func _safe_spawn_for_mode() -> Vector2:
+func _safe_spawn_for_mode(map_mode: String = "") -> Vector2:
+	var resolved_mode := mode if map_mode.is_empty() else map_mode
 	return {
 		"farm": Vector2(318, 300),
 		"village": Vector2(260, 300),
-		"river": Vector2(72, 286),
-		"grove": Vector2(250, 300),
-		"ruins": Vector2(72, 286),
+		"river": Vector2(105, 285),
+		"grove": Vector2(390, 270),
+		"ruins": Vector2(100, 235),
 		"dungeon": DUNGEON_ENTRY_SPAWN,
 		"abyss": DUNGEON_ENTRY_SPAWN,
-	}.get(mode, Vector2(318, 300))
+	}.get(resolved_mode, Vector2(318, 300))
 
 
 func _create_hud() -> void:
@@ -836,13 +1158,19 @@ func _create_hud() -> void:
 	controls_label.add_theme_font_size_override("font_size", 10)
 	controls_label.add_theme_color_override("font_color", Color("b8c4d9"))
 	bottom_panel.add_child(controls_label)
+	toast_panel = PanelContainer.new()
+	toast_panel.position = Vector2(150, 298)
+	toast_panel.size = Vector2(340, 32)
+	toast_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	toast_panel.modulate.a = 0.0
+	toast_panel.add_theme_stylebox_override("panel", _world_prompt_style(Color("d8b66a")))
+	canvas.add_child(toast_panel)
 	toast_label = Label.new()
 	toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	toast_label.position = Vector2(120, 304)
-	toast_label.size = Vector2(400, 28)
-	toast_label.add_theme_font_size_override("font_size", 14)
+	toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	toast_label.add_theme_font_size_override("font_size", 12)
 	toast_label.add_theme_color_override("font_color", Color("fff1b6"))
-	canvas.add_child(toast_label)
+	toast_panel.add_child(toast_label)
 	title_label = Label.new()
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.position = Vector2(135, 125)
@@ -850,6 +1178,171 @@ func _create_hud() -> void:
 	title_label.add_theme_font_size_override("font_size", 20)
 	title_label.add_theme_color_override("font_color", Color("fff1b6"))
 	canvas.add_child(title_label)
+	_create_world_prompt_ui()
+
+
+func _create_world_prompt_ui() -> void:
+	world_prompt_layer = CanvasLayer.new()
+	world_prompt_layer.layer = 10
+	add_child(world_prompt_layer)
+	world_prompt_panel = PanelContainer.new()
+	world_prompt_panel.position = _context_prompt_rect().position
+	world_prompt_panel.size = _context_prompt_rect().size
+	world_prompt_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	world_prompt_panel.visible = false
+	world_prompt_layer.add_child(world_prompt_panel)
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 7)
+	margin.add_theme_constant_override("margin_right", 8)
+	margin.add_theme_constant_override("margin_top", 4)
+	margin.add_theme_constant_override("margin_bottom", 4)
+	world_prompt_panel.add_child(margin)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 7)
+	margin.add_child(row)
+	world_prompt_key_panel = PanelContainer.new()
+	world_prompt_key_panel.custom_minimum_size = Vector2(25, 22)
+	row.add_child(world_prompt_key_panel)
+	var key_label := Label.new()
+	key_label.text = "E"
+	key_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	key_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	key_label.add_theme_font_size_override("font_size", 11)
+	key_label.add_theme_color_override("font_color", Color("fff1b6"))
+	world_prompt_key_panel.add_child(key_label)
+	world_prompt_symbol_label = Label.new()
+	world_prompt_symbol_label.custom_minimum_size = Vector2(20, 0)
+	world_prompt_symbol_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	world_prompt_symbol_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	world_prompt_symbol_label.add_theme_font_size_override("font_size", 12)
+	row.add_child(world_prompt_symbol_label)
+	world_prompt_action_label = Label.new()
+	world_prompt_action_label.custom_minimum_size = Vector2(42, 0)
+	world_prompt_action_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	world_prompt_action_label.add_theme_font_size_override("font_size", 10)
+	row.add_child(world_prompt_action_label)
+	world_prompt_title_label = Label.new()
+	world_prompt_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	world_prompt_title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	world_prompt_title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	world_prompt_title_label.add_theme_font_size_override("font_size", 12)
+	world_prompt_title_label.add_theme_color_override("font_color", Color("fff1b6"))
+	row.add_child(world_prompt_title_label)
+
+
+func _world_prompt_style(accent: Color, keycap: bool = false) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.055, 0.063, 0.105, 0.98) if not keycap else Color(accent.r * 0.32, accent.g * 0.32, accent.b * 0.32, 0.98)
+	style.border_color = accent
+	style.border_width_left = 2
+	style.border_width_top = 2
+	style.border_width_right = 2
+	style.border_width_bottom = 2
+	style.corner_radius_top_left = 5 if not keycap else 3
+	style.corner_radius_top_right = 5 if not keycap else 3
+	style.corner_radius_bottom_left = 5 if not keycap else 3
+	style.corner_radius_bottom_right = 5 if not keycap else 3
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.48)
+	style.shadow_size = 3 if not keycap else 0
+	return style
+
+
+func _hide_world_prompt() -> void:
+	if is_instance_valid(world_prompt_panel):
+		world_prompt_panel.visible = false
+
+
+func _world_prompt_blocked_by_overlay() -> bool:
+	if is_instance_valid(title_overlay) or (is_instance_valid(title_label) and not title_label.text.is_empty()):
+		return true
+	for overlay: CanvasLayer in [game_menu, shop_menu, dialogue_overlay, festival_overlay, multiplayer_menu, automation_console]:
+		if is_instance_valid(overlay) and overlay.visible:
+			return true
+	return false
+
+
+func _update_world_prompt_ui() -> void:
+	if not is_instance_valid(world_prompt_panel) or not is_instance_valid(player):
+		return
+	if _world_prompt_blocked_by_overlay() or (is_instance_valid(toast_panel) and not toast_label.text.is_empty() and toast_panel.modulate.a > 0.05):
+		_hide_world_prompt()
+		return
+	var prompt := _world_prompt_data()
+	if prompt.is_empty():
+		_hide_world_prompt()
+		return
+	var accent := Color(prompt.get("accent", Color("78dcca")))
+	world_prompt_symbol_label.text = String(prompt.get("symbol", "◇"))
+	world_prompt_symbol_label.add_theme_color_override("font_color", accent.lightened(0.2))
+	world_prompt_action_label.text = String(prompt.get("action", "互動"))
+	world_prompt_action_label.add_theme_color_override("font_color", accent)
+	world_prompt_title_label.text = String(prompt.get("title", ""))
+	world_prompt_panel.add_theme_stylebox_override("panel", _world_prompt_style(accent))
+	world_prompt_key_panel.add_theme_stylebox_override("panel", _world_prompt_style(accent, true))
+	world_prompt_panel.visible = true
+
+
+func _world_prompt_data() -> Dictionary:
+	var route_id := _nearby_region_destination()
+	if not route_id.is_empty():
+		var connection: Dictionary = Dictionary(Dictionary(REGION_CONNECTIONS.get(mode, {})).get(String(route_id), {}))
+		var route_style := _gateway_style(String(route_id))
+		return {"symbol":route_style.symbol, "action":"前往", "title":connection.get("label", String(route_id)), "accent":route_style.color}
+	if mode == "dungeon":
+		if player.global_position.distance_to(DUNGEON_DESCENT_POSITION) <= 52.0:
+			if floor_cleared:
+				return {"symbol":"層", "action":"前往", "title":"鐘窟下一層", "accent":Color("e8b54b")}
+			return {"symbol":"鎖", "action":"封鎖", "title":"擊敗本層敵人解除鐘印", "accent":Color("828894")}
+		if player.global_position.distance_to(DUNGEON_ORE_POSITION) <= 38.0:
+			return {"symbol":"礦", "action":"採集", "title":"鐘窟礦脈", "accent":Color("d39c55")}
+		return {}
+	if mode == "village":
+		var nearby_shop := _nearby_shop()
+		if not nearby_shop.is_empty():
+			var shop: Dictionary = ContentRegistry.get_artifact("shops", nearby_shop)
+			return {"symbol":Dictionary(SHOP_SIGN_STYLES.get(nearby_shop, {"symbol":"店"})).get("symbol", "店"), "action":"進入", "title":shop.get("display_name", "商店"), "accent":Color("78dcca")}
+		var nearby_npc := _nearby_npc()
+		if not nearby_npc.is_empty():
+			var character: Dictionary = ContentRegistry.get_artifact("characters", nearby_npc)
+			return {"symbol":"話", "action":"對話", "title":character.get("display_name", nearby_npc), "accent":Color("d8b66a")}
+		return {}
+	if mode in ["river", "grove", "ruins"]:
+		var npc_id := _nearby_map_npc()
+		if not npc_id.is_empty():
+			var character: Dictionary = ContentRegistry.get_artifact("characters", npc_id)
+			return {"symbol":"話", "action":"對話", "title":character.get("display_name", npc_id), "accent":Color("d8b66a")}
+		if mode == "river" and player.global_position.distance_to(RIVER_FISH_POSITION) <= 52.0:
+			return {"symbol":"魚", "action":"垂釣", "title":"鳴鐘河木棧", "accent":Color("64c9dc")}
+		var item_id := &"river_reed" if mode == "river" else (&"forest_herb" if mode == "grove" else &"ancient_gear")
+		var resource_position := RIVER_RESOURCE_POSITION if mode == "river" else (GROVE_RESOURCE_POSITION if mode == "grove" else RUINS_RESOURCE_POSITION)
+		if player.global_position.distance_to(resource_position) <= 48.0:
+			var resource_accent := Color("75c98a") if mode == "grove" else (Color("d39c55") if mode == "ruins" else Color("c5bd6d"))
+			return {"symbol":"取", "action":"採集", "title":ItemIconFactory.display_name_for(item_id), "accent":resource_accent}
+		return {}
+	if mode == "farm":
+		if player.global_position.distance_to(AUTOMATION_CONSOLE_POSITION) <= 44.0:
+			return {"symbol":"鐘", "action":"操作", "title":"農場鐘網控制台", "accent":Color("e8b54b")}
+		if player.global_position.distance_to(SHIPPING_POSITION) <= 42.0:
+			return {"symbol":"箱", "action":"出貨", "title":"農場出貨箱", "accent":Color("78dcca")}
+		if _mira_is_on_farm() and player.global_position.distance_to(MIRA_POSITION) <= 42.0:
+			return {"symbol":"話", "action":"對話", "title":"米拉", "accent":Color("d8b66a")}
+		if player.global_position.distance_to(POND_FISH_POSITION) <= 48.0:
+			var tide_active: bool = GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather)
+			return {"symbol":"潮" if tide_active and GameState.eldritch.can_challenge() else "魚", "action":"踏入" if tide_active and GameState.eldritch.can_challenge() else "垂釣", "title":"池塘釣點", "accent":Color("a998dd") if tide_active else Color("64c9dc")}
+		for node_id: String in FARM_RESOURCES:
+			var resource: Dictionary = FARM_RESOURCES[node_id]
+			if player.global_position.distance_to(Vector2(resource.position)) <= 36.0:
+				return {"symbol":"木" if String(resource.kind) == "tree" else "礦", "action":"採集", "title":"農場木材" if String(resource.kind) == "tree" else "農場石材", "accent":Color("75c98a") if String(resource.kind) == "tree" else Color("b7a279")}
+		if not _nearby_animal().is_empty():
+			return {"symbol":"畜", "action":"照料", "title":"農場動物", "accent":Color("d8b66a")}
+		var nearby_plot := _nearest_plot()
+		if nearby_plot.x >= 0:
+			var plot: Dictionary = Dictionary(GameState.farm.plots.get("%d,%d" % [nearby_plot.x, nearby_plot.y], {}))
+			var crop_id := String(plot.get("crop_id", ""))
+			if not crop_id.is_empty():
+				var crop: Dictionary = ContentRegistry.get_artifact("crops", crop_id)
+				return {"symbol":"苗", "action":"照料", "title":crop.get("display_name", crop_id), "accent":Color("75c98a")}
+	return {}
 
 
 func _create_commercial_menus() -> void:
@@ -981,16 +1474,21 @@ func _update_hud() -> void:
 	attack_card.visible = mode in ["dungeon", "abyss"]
 	potion_card.visible = mode in ["dungeon", "abyss"]
 	potion_label.text = "H/LB 藥水\n×%d" % int(GameState.inventory.get("health_potion", 0))
-	if mode in ["farm", "village"]:
+	if mode == "farm":
 		var seed_id := _selected_seed_id()
 		var crop := ContentRegistry.get_artifact("crops", seed_id)
-		if mode == "farm":
-			seed_icon.texture = ItemIconFactory.texture_for(seed_id, &"seed")
-			seed_card_label.text = "目前種子\n%s ×%d" % [crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0))]
+		seed_icon.texture = ItemIconFactory.texture_for(seed_id, &"seed")
+		seed_card_label.text = "目前種子\n%s ×%d" % [crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0))]
 		var animal_products := int(GameState.farm.produce.get("egg", 0)) + int(GameState.farm.produce.get("milk", 0))
 		var tide_text := "異潮" if GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮"
-		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), tide_text]
+		var festival: Dictionary = GameState.festivals.festival_on(GameState.calendar.season_id(), GameState.calendar.day)
+		var day_status := "祭・%s" % festival.get("display_name") if not festival.is_empty() else tide_text
+		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n農場 Lv.%d　種子：%s ×%d　收成庫 %d　出貨 %dG　%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, crop.get("display_name", "無"), int(GameState.farm.seed_stock.get(String(seed_id), 0)), GameState.farm.produce.size() + animal_products, GameState.economy.pending_value(), day_status]
 		controls_label.text = "E/Y 互動／道路／鐘網　Q/RB 換種子　Esc/Start 手冊　M/Select 連線　T/D← 速度　C/D→ 睡覺"
+	elif mode == "village":
+		var tide_text := "異潮" if GameState.eldritch.is_tide_active(GameState.calendar.day, GameState.calendar.minute_of_day, GameState.current_weather) else "平潮"
+		hud_label.text = "%s　%s　%s%s　%dG　體力 %d/100　理智 %d/100\n霧落村｜廣場、商店與居民｜%s" % [GameState.calendar.date_text(), GameState.calendar.time_text(), _weather_name(GameState.current_weather), warning, GameState.coins, GameState.tools.stamina, GameState.eldritch.sanity, tide_text]
+		controls_label.text = "WASD/搖桿 移動　E/Y 道路／商店／對話　Esc/Start 旅行圖　M/Select 連線"
 	elif mode in ["river", "grove", "ruins"]:
 		var map_title: String = {"river":"鳴鐘河畔","grove":"古鐘林","ruins":"古鐘機械遺跡"}.get(mode, mode)
 		var local_hint: String = {"river":"釣魚、蘆葦與河燈線索","grove":"藥草、神龕與同行事件","ruins":"齒輪、鐘能與封印歷史"}.get(mode, "探索")
@@ -1006,6 +1504,7 @@ func _update_hud() -> void:
 
 
 func _interact() -> void:
+	_hide_world_prompt()
 	var region_destination := _nearby_region_destination()
 	if not region_destination.is_empty():
 		_activate_region_destination(region_destination)
@@ -1700,13 +2199,14 @@ func _on_farm_changed(_action: StringName, _payload: Dictionary) -> void:
 func _show_toast(message: String) -> void:
 	if not is_instance_valid(toast_label) or message.is_empty():
 		return
+	_hide_world_prompt()
 	if is_instance_valid(toast_tween):
 		toast_tween.kill()
 	toast_label.text = message
-	toast_label.modulate = Color.WHITE
+	toast_panel.modulate = Color.WHITE
 	toast_tween = create_tween()
 	toast_tween.tween_interval(1.4)
-	toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.45)
+	toast_tween.tween_property(toast_panel, "modulate:a", 0.0, 0.45)
 
 
 func _weather_name(weather: String) -> String:

@@ -5,6 +5,7 @@ const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
 
 
 func _initialize() -> void:
+	OS.set_environment("PIXELRPG_TEST_ISOLATED", "1")
 	call_deferred("_run")
 
 
@@ -146,13 +147,49 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			await physics_frame
 		var map_ids := {"farm":"mistfall_farm", "village":"mistfall_village", "river":"mistfall_river", "grove":"bellwood_grove", "ruins":"clockwork_ruins", "dungeon":"mistfall_depths"}
 		for source_mode: String in ["farm", "village", "river", "grove", "ruins", "dungeon"]:
+			var collision_summary: Dictionary = game.world_collision_summary(source_mode)
+			if int(collision_summary.obstacles) < 6 or int(collision_summary.polygons) < 3:
+				failures.append("World map lacks recalculated multi-shape collision coverage: %s" % source_mode)
+			if game.foreground_layer_count(source_mode) < 3:
+				failures.append("World map lacks dimensional walk-behind foreground layers: %s" % source_mode)
 			var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
 			if source_mode != "dungeon" and connections.size() < 4:
 				failures.append("Outdoor region lacks direct routes: %s" % source_mode)
+			var safe_spawn: Vector2 = game._safe_spawn_for_mode(source_mode)
 			for destination_id: String in connections:
 				var target_mode: String = game._mode_for_map(StringName(destination_id))
 				if not Dictionary(game.REGION_CONNECTIONS.get(target_mode, {})).has(String(map_ids[source_mode])):
 					failures.append("Region route is not bidirectional: %s -> %s" % [source_mode, destination_id])
+				var route_position := Vector2(Dictionary(connections[destination_id]).position)
+				if game.is_map_position_blocked(source_mode, route_position, 7.0):
+					failures.append("Physical route is embedded in scenery: %s -> %s" % [source_mode, destination_id])
+				elif not game.map_has_walkable_path(source_mode, safe_spawn, route_position, 6.0):
+					failures.append("Physical route is disconnected from the walkable road network: %s -> %s" % [source_mode, destination_id])
+		var collision_samples := {
+			"farm":[Vector2(160, 90), Vector2(110, 240), Vector2(470, 240)],
+			"village":[Vector2(110, 100), Vector2(320, 180), Vector2(80, 220), Vector2(470, 200)],
+			"river":[Vector2(200, 80), Vector2(350, 180), Vector2(500, 190)],
+			"grove":[Vector2(100, 250), Vector2(350, 180), Vector2(470, 90), Vector2(205, 145)],
+			"ruins":[Vector2(130, 180), Vector2(320, 180), Vector2(500, 180), Vector2(480, 290)],
+			"dungeon":[Vector2(160, 90), Vector2(590, 180), Vector2(320, 80)],
+		}
+		for sample_mode: String in collision_samples:
+			for sample: Vector2 in collision_samples[sample_mode]:
+				if not game.is_map_position_blocked(sample_mode, sample, 0.0):
+					failures.append("Background landmark is missing collision: %s @ %s" % [sample_mode, sample])
+		if game.is_map_position_blocked("river", Vector2(350, 263), 5.0):
+			failures.append("River bridge is blocked even though surrounding water is impassable")
+		for village_probe: Vector2 in [Vector2(320, 230), Vector2(game.SHOP_POSITIONS.mira_seed_shop), Vector2(game.NPC_POSITIONS.mira)]:
+			var prompt_rects: Array[Rect2] = game.village_label_rects_for_position(village_probe)
+			if prompt_rects.size() > 1 or not game.rects_do_not_overlap(prompt_rects):
+				failures.append("Village contextual labels overlap at %s" % village_probe)
+		for destination_id: String in game.REGION_CONNECTIONS.village:
+			var route: Dictionary = Dictionary(game.REGION_CONNECTIONS.village[destination_id])
+			if bool(game._gateway_geometry(Vector2(route.position), String(route.label), destination_id).has_world_text):
+				failures.append("Village gateway reverted to character-overlappable world text: %s" % destination_id)
+		var pickup_geometry: Dictionary = game.world_pickup_geometry(Vector2.ZERO)
+		if bool(pickup_geometry.uses_placeholder_ring) or Rect2(pickup_geometry.icon_rect).size != Vector2(42, 42) or Array(pickup_geometry.sparks).size() < 4:
+			failures.append("Gatherable herb/reed/gear/ore visuals reverted to placeholder circles")
 		game._travel_to_map(&"mistfall_village")
 		var mira_sprite: Sprite2D = game.npc_sprites.get("mira")
 		var grounded_mira_position: Vector2 = game._npc_sprite_anchor("mira", Vector2(game.NPC_POSITIONS["mira"]))

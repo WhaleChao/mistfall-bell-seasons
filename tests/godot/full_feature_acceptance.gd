@@ -15,6 +15,10 @@ var started_usec := 0
 
 
 func _initialize() -> void:
+	# Direct local runs must never read or overwrite a player's bindings/saves.
+	# Release scripts already set this, but keeping the guard here makes the test
+	# safe when launched manually from the editor or command line as well.
+	OS.set_environment("PIXELRPG_TEST_ISOLATED", "1")
 	call_deferred("_run")
 
 
@@ -156,7 +160,7 @@ func _test_movement_and_animation() -> void:
 	Input.action_release("ui_up")
 	await _physics_frames(3)
 	_record("地圖碰撞", "農舍屋頂會阻擋玩家", blocked_start_y - player.global_position.y < 25.0, "起點 %.1f／終點 %.1f" % [blocked_start_y, player.global_position.y])
-	_record("地圖碰撞", "池塘、房屋與洞窟岩壁均登錄為不可通行區", game.is_world_position_blocked(Vector2(100, 250)) and game.is_world_position_blocked(Vector2(160, 90)) and game.is_world_position_blocked(Vector2(530, 280)))
+	_record("地圖碰撞", "池塘、房屋與田床均登錄為不可通行區", game.is_world_position_blocked(Vector2(110, 240)) and game.is_world_position_blocked(Vector2(160, 90)) and game.is_world_position_blocked(Vector2(470, 240)))
 	_record("輸入", "斜向速度正規化", is_equal_approx(Vector2(1, 1).normalized().length(), 1.0))
 	_record("畫面層級", "玩家角色始終繪製在田地與地面裝飾之上", player.z_index > game.z_index and is_instance_valid(player.visual_sprite) and player.visual_sprite.z_index >= 0)
 
@@ -398,17 +402,54 @@ func _test_maps_and_automation() -> void:
 	var world_map_ids := {"farm":"mistfall_farm", "village":"mistfall_village", "river":"mistfall_river", "grove":"bellwood_grove", "ruins":"clockwork_ruins", "dungeon":"mistfall_depths"}
 	var bidirectional := true
 	var outdoor_connected := true
+	var collision_rebuilt := true
+	var foreground_depth_ok := true
+	var routes_clear_and_reachable := true
 	for source_mode: String in ["farm", "village", "river", "grove", "ruins", "dungeon"]:
 		var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
+		var collision_summary: Dictionary = game.world_collision_summary(source_mode)
+		collision_rebuilt = collision_rebuilt and int(collision_summary.obstacles) >= 6 and int(collision_summary.polygons) >= 3
+		foreground_depth_ok = foreground_depth_ok and game.foreground_layer_count(source_mode) >= 3
 		if source_mode != "dungeon" and connections.size() < 4:
 			outdoor_connected = false
+		var safe_spawn: Vector2 = game._safe_spawn_for_mode(source_mode)
 		for destination_id: String in connections:
 			var target_mode: String = game._mode_for_map(StringName(destination_id))
 			var reverse_connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(target_mode, {}))
 			if not reverse_connections.has(String(world_map_ids[source_mode])):
 				bidirectional = false
+			var route_position := Vector2(Dictionary(connections[destination_id]).position)
+			routes_clear_and_reachable = routes_clear_and_reachable and not game.is_map_position_blocked(source_mode, route_position, 7.0) and game.map_has_walkable_path(source_mode, safe_spawn, route_position, 6.0)
 	_record("地圖連接", "農場、村莊、河畔、鐘林、古代都市均至少四向互通", outdoor_connected)
 	_record("地圖連接", "所有區域連接點都有反向出口", bidirectional)
+	_record("地圖重構", "六張地圖皆依背景重算多段矩形與多邊形碰撞", collision_rebuilt)
+	_record("地圖重構", "所有出口都位於可行走道路且可由安全出生點抵達", routes_clear_and_reachable)
+	_record("立體景深", "六張地圖均有屋頂、樹冠、機械或崖壁前景遮擋層", foreground_depth_ok)
+	var collision_samples := {
+		"farm":[Vector2(160, 90), Vector2(110, 240), Vector2(470, 240)],
+		"village":[Vector2(110, 100), Vector2(320, 180), Vector2(80, 220), Vector2(470, 200)],
+		"river":[Vector2(200, 80), Vector2(350, 180), Vector2(500, 190)],
+		"grove":[Vector2(100, 250), Vector2(350, 180), Vector2(470, 90), Vector2(205, 145)],
+		"ruins":[Vector2(130, 180), Vector2(320, 180), Vector2(500, 180), Vector2(480, 290)],
+		"dungeon":[Vector2(160, 90), Vector2(590, 180), Vector2(320, 80)],
+	}
+	var landmarks_blocked := true
+	for sample_mode: String in collision_samples:
+		for sample: Vector2 in collision_samples[sample_mode]:
+			landmarks_blocked = landmarks_blocked and game.is_map_position_blocked(sample_mode, sample)
+	_record("地圖碰撞", "房屋、水域、樹牆、遺跡機械、田床與鐘窟崖壁皆不可穿越", landmarks_blocked)
+	_record("河岸碰撞", "河水不可通行但兩岸木橋維持可走", game.is_map_position_blocked("river", Vector2(200, 80)) and game.is_map_position_blocked("river", Vector2(350, 180)) and not game.is_map_position_blocked("river", Vector2(350, 263), 5.0))
+	var village_labels_ok := true
+	for village_probe: Vector2 in [Vector2(280, 285), Vector2(game.SHOP_POSITIONS.mira_seed_shop), Vector2(game.NPC_POSITIONS.mira)]:
+		var prompt_rects: Array[Rect2] = game.village_label_rects_for_position(village_probe)
+		village_labels_ok = village_labels_ok and prompt_rects.size() <= 1 and game.rects_do_not_overlap(prompt_rects)
+	var route_has_no_world_text := true
+	for destination_id: String in game.REGION_CONNECTIONS.village:
+		var route: Dictionary = Dictionary(game.REGION_CONNECTIONS.village[destination_id])
+		route_has_no_world_text = route_has_no_world_text and not bool(game._gateway_geometry(Vector2(route.position), String(route.label), destination_id).has_world_text)
+	_record("文字配置", "出口、商店與村民共用單一固定 HUD 提示，沒有可被角色遮住的世界文字", village_labels_ok and route_has_no_world_text)
+	var pickup_geometry: Dictionary = game.world_pickup_geometry(Vector2.ZERO)
+	_record("採集視覺", "蘆葦、藥草、齒輪、木石與礦石使用物件圖、底座及火花而非圓圈", not bool(pickup_geometry.uses_placeholder_ring) and Rect2(pickup_geometry.icon_rect).size == Vector2(42, 42) and Array(pickup_geometry.sparks).size() >= 4)
 	game._travel_to_map(&"mistfall_village")
 	await _frames(3)
 	var physical_route_ok := true
@@ -594,13 +635,21 @@ func _test_village_dialogue_and_festival() -> void:
 	var mira_position_before := mira_sprite.position
 	await _frames(8)
 	_record("村莊", "米拉腳底固定在地面座標並有接地陰影，不再上下漂浮", mira_sprite.position.distance_to(mira_grounded_position) < 0.1 and mira_sprite.position.distance_to(mira_position_before) < 0.1)
+	# Finish the arrival toast without advancing the in-game NPC schedule, then
+	# capture the route prompt layout that previously sat behind Mira.
+	if is_instance_valid(game.toast_tween):
+		game.toast_tween.kill()
+	game.toast_panel.modulate.a = 0.0
+	player.global_position = Vector2(game.VILLAGE_GATE_POSITION)
+	await _frames(3)
+	_record("文字配置", "村莊出口提示固定在 CanvasLayer 且位於所有人物上方", game.world_prompt_panel.visible and game.world_prompt_layer.layer > 0 and game.world_prompt_title_label.text == "霧落農場")
+	await _capture("09_village_dialogue")
 	player.global_position = Vector2(game.NPC_POSITIONS["mira"])
 	var hearts_before: int = int(state_store.social.hearts(&"mira"))
 	game._interact()
 	await _frames(4)
 	_record("對話", "NPC 對話、肖像與時間暫停", game.dialogue_overlay.visible and paused and state_store.calendar.paused)
 	_record("關係", "每日交談增加好感", state_store.social.hearts(&"mira") >= hearts_before)
-	await _capture("09_village_dialogue")
 	game.dialogue_overlay.close()
 	await _frames(3)
 	game._enter_farm_from_village()
@@ -1031,14 +1080,16 @@ func _send_key_event(keycode: int, unicode_value: int = 0) -> void:
 	press.physical_keycode = keycode
 	press.unicode = unicode_value
 	Input.parse_input_event(press)
-	await process_frame
+	# Give the runtime a complete frame to sample the pressed state before the
+	# synthetic key is released. One frame was race-prone on fast Apple Silicon.
+	await _frames(2)
 	var release := InputEventKey.new()
 	release.pressed = false
 	release.keycode = keycode
 	release.physical_keycode = keycode
 	release.unicode = unicode_value
 	Input.parse_input_event(release)
-	await process_frame
+	await _frames(2)
 
 
 func _press_dialogue_button(index: int) -> bool:

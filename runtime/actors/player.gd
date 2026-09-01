@@ -38,7 +38,7 @@ var attack_visual_progress := 0.0
 
 func _ready() -> void:
 	add_to_group("player")
-	z_index = 5
+	z_index = 8
 	collision_layer = 2
 	collision_mask = 1 | 4 | 16
 	var collision := CollisionShape2D.new()
