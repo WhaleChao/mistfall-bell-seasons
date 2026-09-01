@@ -47,6 +47,7 @@ var lifetime_stats: Dictionary = {}
 var settings: Dictionary = {}
 var game_time_running := true
 var _ending_day := false
+var _pause_owners: Dictionary = {}
 
 
 func _ready() -> void:
@@ -60,6 +61,9 @@ func _process(delta: float) -> void:
 
 
 func reset() -> void:
+	_pause_owners.clear()
+	if get_tree() != null:
+		get_tree().paused = false
 	flags.clear()
 	quest_states.clear()
 	inventory = {"health_potion": 3, "egg": 0, "milk": 0}
@@ -118,8 +122,44 @@ func consume_item(item_id: StringName, quantity: int = 1) -> bool:
 	return true
 
 
+func set_pause_owner(owner: StringName, active: bool, pauses_scene_tree: bool = true) -> void:
+	# Modal screens can overlap (the title screen may open multiplayer, and
+	# network/dialogue events can arrive while another panel is visible).  A
+	# single boolean lets whichever panel closes first resume the world behind
+	# the remaining panel.  Named claims make the last owner the only one that
+	# can release the pause.
+	var owner_key := String(owner)
+	if owner_key.is_empty():
+		return
+	if active:
+		_pause_owners[owner_key] = pauses_scene_tree
+	else:
+		_pause_owners.erase(owner_key)
+	_sync_pause_owners()
+
+
 func pause_game_time(value: bool) -> void:
-	calendar.paused = value
+	# Backwards-compatible non-modal claim for systems and older save tests.
+	set_pause_owner(&"legacy", value, false)
+
+
+func is_pause_owner_active(owner: StringName) -> bool:
+	return _pause_owners.has(String(owner))
+
+
+func pause_owner_count() -> int:
+	return _pause_owners.size()
+
+
+func _sync_pause_owners() -> void:
+	calendar.paused = not _pause_owners.is_empty()
+	var should_pause_tree := false
+	for pauses_tree: Variant in _pause_owners.values():
+		if bool(pauses_tree):
+			should_pause_tree = true
+			break
+	if get_tree() != null:
+		get_tree().paused = should_pause_tree
 
 
 func cycle_time_speed() -> String:

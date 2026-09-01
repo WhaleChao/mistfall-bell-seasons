@@ -24,6 +24,11 @@ const POND_FISH_POSITION := Vector2(174, 262)
 const DUNGEON_EXIT_POSITION := Vector2(320, 116)
 const DUNGEON_ENTRY_SPAWN := Vector2(320, 142)
 const DUNGEON_DESCENT_POSITION := Vector2(438, 286)
+const DUNGEON_ENEMY_SPAWN_POSITIONS := [
+	Vector2(220, 175), Vector2(455, 175), Vector2(380, 270),
+	Vector2(475, 250), Vector2(290, 255),
+]
+const ENEMY_SPAWN_VISUAL_EXTENTS := Vector2(31, 41)
 const FARM_DESTINATIONS := {
 	"mistfall_village": {"position": Vector2(54, 138), "label": "霧落村"},
 	"mistfall_river": {"position": Vector2(320, 82), "label": "鳴鐘河畔"},
@@ -69,7 +74,9 @@ const REGION_CONNECTIONS := {
 const SHOP_POSITIONS := {
 	"mira_seed_shop": Vector2(128, 170),
 	"soren_forge": Vector2(270, 145),
-	"toma_general_store": Vector2(590, 170),
+	# The general-store entrance is on the narrow east-side doorway. Keeping the
+	# interaction above Toma leaves distinct approach zones for buying and talking.
+	"toma_general_store": Vector2(590, 138),
 	"orin_ranch": Vector2(270, 300),
 }
 const SHOP_SIGN_STYLES := {
@@ -81,8 +88,10 @@ const SHOP_SIGN_STYLES := {
 	"orin_ranch":{"symbol":"牧", "color":Color("d8b66a")},
 }
 const FARM_RESOURCES := {
-	"tree_west": {"position": Vector2(80, 98), "kind": "tree"},
-	"tree_north": {"position": Vector2(610, 92), "kind": "tree"},
+	# The approach crescents face inward, away from the west/east travel gates,
+	# so gathering wood cannot accidentally send the player to another map.
+	"tree_west": {"position": Vector2(85, 110), "kind": "tree"},
+	"tree_north": {"position": Vector2(540, 150), "kind": "tree"},
 	"stone_south": {"position": Vector2(105, 318), "kind": "stone"},
 }
 const DUNGEON_ORE_POSITION := Vector2(230, 145)
@@ -94,8 +103,8 @@ const RIVER_RESOURCE_POSITION := Vector2(494, 258)
 const GROVE_RESOURCE_POSITION := Vector2(254, 224)
 const RUINS_RESOURCE_POSITION := Vector2(505, 238)
 const NPC_POSITIONS := {
-	"mira": Vector2(220, 200), "lian": Vector2(275, 240), "soren": Vector2(280, 155), "yuna": Vector2(380, 235),
-	"orin": Vector2(425, 180), "eira": Vector2(590, 240), "toma": Vector2(585, 190), "nori": Vector2(320, 260),
+	"mira": Vector2(220, 200), "lian": Vector2(275, 240), "soren": Vector2(380, 155), "yuna": Vector2(380, 235),
+	"orin": Vector2(425, 180), "eira": Vector2(600, 260), "toma": Vector2(610, 210), "nori": Vector2(325, 230),
 	"asha": Vector2(170, 200), "piko": Vector2(340, 285),
 }
 const RIVER_NPC_POSITIONS := {"lian": Vector2(420, 165), "nori": Vector2(245, 180)}
@@ -106,6 +115,10 @@ const NPC_FOOT_OFFSETS := {
 	"mira":18.6, "lian":19.4, "soren":19.6, "yuna":20.4, "orin":20.3,
 	"eira":21.0, "toma":20.6, "nori":20.3, "asha":21.6, "piko":17.4,
 }
+const ANIMAL_STALL_POSITIONS := [
+	Vector2(410, 150), Vector2(470, 150),
+	Vector2(410, 310), Vector2(470, 310), Vector2(530, 310), Vector2(590, 310),
+]
 
 var player: PixelRPGPlayer
 var hud_label: Label
@@ -131,6 +144,9 @@ var eldritch_challenge_active := false
 var toast_tween: Tween
 var name_input: LineEdit
 var appearance_input: OptionButton
+var title_continue_button: Button
+var title_start_button: Button
+var title_multiplayer_button: Button
 var game_menu: PixelRPGGameMenu
 var shop_menu: PixelRPGShopMenu
 var dialogue_overlay: PixelRPGDialogueOverlay
@@ -145,6 +161,8 @@ var weather_refresh_timer := 0.0
 var remote_players: Dictionary = {}
 var world_collision_root: Node2D
 var npc_collision_root: Node2D
+var animal_collision_root: Node2D
+var animal_collision_signature := ""
 var active_obstacle_rects: Array[Rect2] = []
 var active_obstacle_polygons: Array[PackedVector2Array] = []
 var world_foreground_root: Node2D
@@ -193,7 +211,7 @@ func _apply_launch_display_mode() -> void:
 
 
 func _exit_tree() -> void:
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(&"title_screen", false)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -214,8 +232,6 @@ func _process(delta: float) -> void:
 	var text_input_focused := _is_line_edit_focused()
 	if is_instance_valid(title_overlay):
 		_hide_world_prompt()
-		if Input.is_action_just_pressed("ui_accept"):
-			_close_title_screen()
 		return
 	_animate_world_sprites()
 	_update_world_prompt_ui()
@@ -676,6 +692,7 @@ func _set_background_for_mode() -> void:
 		world_background.scale = Vector2(640.0 / world_background.texture.get_width(), 360.0 / world_background.texture.get_height())
 	_rebuild_world_foreground()
 	_update_npc_sprites()
+	_update_animal_sprites()
 	_update_environment_tint()
 	if is_instance_valid(world_collision_root):
 		_rebuild_world_collisions()
@@ -743,6 +760,21 @@ func foreground_layer_count(map_mode: String) -> int:
 	return _foreground_regions_for_mode(map_mode).size()
 
 
+func dungeon_enemy_spawn_is_clear(spawn_position: Vector2) -> bool:
+	if is_map_position_blocked("dungeon", spawn_position, 18.0):
+		return false
+	if not map_has_walkable_path("dungeon", _safe_spawn_for_mode("dungeon"), spawn_position, 10.0):
+		return false
+	# Foreground slices intentionally cover actors walking behind tall cliffs.
+	# Spawn silhouettes must never begin under one of those slices, otherwise a
+	# newly created monster looks missing until it happens to walk downward.
+	var visual_bounds := Rect2(spawn_position - ENEMY_SPAWN_VISUAL_EXTENTS, ENEMY_SPAWN_VISUAL_EXTENTS * 2.0)
+	for foreground_region: Rect2 in _foreground_regions_for_mode("dungeon"):
+		if visual_bounds.intersects(foreground_region):
+			return false
+	return true
+
+
 func _draw_weather() -> void:
 	if mode in ["dungeon", "abyss"]:
 		return
@@ -768,6 +800,9 @@ func _create_npc_sprites() -> void:
 	npc_collision_root = Node2D.new()
 	npc_collision_root.name = "NPCNavigationCollisions"
 	add_child(npc_collision_root)
+	animal_collision_root = Node2D.new()
+	animal_collision_root.name = "AnimalNavigationCollisions"
+	add_child(animal_collision_root)
 	var atlas: Texture2D = load("res://assets/runtime/sprites/character_atlas_alpha.png")
 	if atlas == null:
 		return
@@ -786,6 +821,7 @@ func _create_npc_sprites() -> void:
 		add_child(sprite)
 		npc_sprites[npc_id] = sprite
 	_update_npc_sprites()
+	_update_animal_sprites()
 
 
 func _update_npc_sprites() -> void:
@@ -854,6 +890,10 @@ func _rebuild_npc_collisions() -> void:
 
 func npc_collision_count() -> int:
 	return npc_collision_root.get_child_count() if is_instance_valid(npc_collision_root) else 0
+
+
+func animal_collision_count() -> int:
+	return animal_collision_root.get_child_count() if is_instance_valid(animal_collision_root) else 0
 
 
 func _create_world_walls() -> void:
@@ -1090,15 +1130,115 @@ func map_has_reachable_interaction(map_mode: String, start: Vector2, target: Vec
 	return false
 
 
+func interaction_id_at(map_mode: String, test_position: Vector2) -> String:
+	# This mirrors the real E/Y resolution order. It is intentionally pure so
+	# release tests can prove that an interaction is not merely near a road but
+	# can actually win against higher-priority routes, shops, and nearby actors.
+	var route_id := _region_destination_at(map_mode, test_position)
+	if not route_id.is_empty():
+		return "route:%s" % route_id
+	match map_mode:
+		"village":
+			var shop_id := _village_shop_at(test_position)
+			if not shop_id.is_empty():
+				return "shop:%s" % shop_id
+			var npc_id := _village_npc_at(test_position)
+			return "npc:%s" % npc_id if not npc_id.is_empty() else ""
+		"river", "grove", "ruins":
+			var map_npc_id := _map_npc_at(map_mode, test_position)
+			if not map_npc_id.is_empty():
+				return "npc:%s" % map_npc_id
+			if map_mode == "river" and test_position.distance_to(RIVER_FISH_POSITION) <= 52.0:
+				return "fishing"
+			var resource_position := RIVER_RESOURCE_POSITION if map_mode == "river" else (GROVE_RESOURCE_POSITION if map_mode == "grove" else RUINS_RESOURCE_POSITION)
+			if test_position.distance_to(resource_position) <= 48.0:
+				return {"river":"reeds", "grove":"herb", "ruins":"gear"}[map_mode]
+		"farm":
+			if test_position.distance_to(AUTOMATION_CONSOLE_POSITION) <= 44.0:
+				return "automation"
+			for node_id: String in FARM_RESOURCES:
+				if test_position.distance_to(Vector2(FARM_RESOURCES[node_id].position)) <= 36.0:
+					return node_id
+			if test_position.distance_to(SHIPPING_POSITION) <= 42.0:
+				return "shipping"
+			if _mira_is_on_farm() and test_position.distance_to(MIRA_POSITION) <= 42.0:
+				return "mira"
+			if test_position.distance_to(POND_FISH_POSITION) <= 48.0:
+				return "pond_fishing"
+			var animal_id := _animal_id_at_position(test_position)
+			if not animal_id.is_empty():
+				return "animal:%s" % animal_id
+		"dungeon":
+			if test_position.distance_to(DUNGEON_ORE_POSITION) <= 38.0:
+				return "ore"
+	return ""
+
+
+func map_has_unambiguous_interaction(map_mode: String, interaction_name: String, target: Vector2, interaction_radius: float, clearance: float = 7.0, step: int = 2) -> bool:
+	var expected_id := _interaction_case_resolved_id(map_mode, interaction_name)
+	if expected_id.is_empty():
+		return false
+	var actor_positions := _actor_ground_positions_for_map(map_mode)
+	var minimum := Vector2(maxf(22.0, target.x - interaction_radius), maxf(56.0, target.y - interaction_radius))
+	var maximum := Vector2(minf(618.0, target.x + interaction_radius), minf(336.0, target.y + interaction_radius))
+	for y in range(floori(minimum.y), ceili(maximum.y) + 1, maxi(1, step)):
+		for x in range(floori(minimum.x), ceili(maximum.x) + 1, maxi(1, step)):
+			var stand := Vector2(x, y)
+			if stand.distance_to(target) > interaction_radius or is_map_position_blocked(map_mode, stand, clearance):
+				continue
+			var collides_with_actor := false
+			for actor_position: Vector2 in actor_positions:
+				if stand.distance_to(actor_position) < 16.0:
+					collides_with_actor = true
+					break
+			if not collides_with_actor and interaction_id_at(map_mode, stand) == expected_id:
+				return true
+	return false
+
+
+func _interaction_case_resolved_id(map_mode: String, interaction_name: String) -> String:
+	if map_mode == "village":
+		return ("shop:%s" % interaction_name) if SHOP_POSITIONS.has(interaction_name) else ("npc:%s" % interaction_name)
+	if map_mode in ["river", "grove", "ruins"]:
+		var npc_positions := RIVER_NPC_POSITIONS if map_mode == "river" else (GROVE_NPC_POSITIONS if map_mode == "grove" else RUINS_NPC_POSITIONS)
+		return ("npc:%s" % interaction_name) if npc_positions.has(interaction_name) else interaction_name
+	return interaction_name
+
+
+func _actor_ground_positions_for_map(map_mode: String) -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	var positions: Dictionary = {}
+	if map_mode == "village":
+		positions = NPC_POSITIONS
+	elif map_mode == "river":
+		positions = RIVER_NPC_POSITIONS
+	elif map_mode == "grove":
+		positions = GROVE_NPC_POSITIONS
+	elif map_mode == "ruins":
+		positions = RUINS_NPC_POSITIONS
+	elif map_mode == "farm" and _mira_is_on_farm():
+		result.append(MIRA_POSITION)
+	if map_mode == "farm":
+		for animal_index in range(mini(GameState.farm.animals.size(), ANIMAL_STALL_POSITIONS.size())):
+			result.append(animal_world_position(animal_index))
+	for actor_position: Vector2 in positions.values():
+		result.append(actor_position)
+	return result
+
+
 func interaction_reachability_cases() -> Dictionary:
 	var farm_cases: Array[Dictionary] = [
 		{"name":"shipping", "position":SHIPPING_POSITION, "radius":42.0},
 		{"name":"pond_fishing", "position":POND_FISH_POSITION, "radius":48.0},
 		{"name":"automation", "position":AUTOMATION_CONSOLE_POSITION, "radius":44.0},
-		{"name":"mira", "position":MIRA_POSITION, "radius":42.0},
 	]
+	if _mira_is_on_farm():
+		farm_cases.append({"name":"mira", "position":MIRA_POSITION, "radius":42.0})
 	for resource_id: String in FARM_RESOURCES:
 		farm_cases.append({"name":resource_id, "position":Vector2(FARM_RESOURCES[resource_id].position), "radius":36.0})
+	for animal_index in range(GameState.farm.animals.size()):
+		var animal: Dictionary = GameState.farm.animals[animal_index]
+		farm_cases.append({"name":"animal:%s" % String(animal.get("id", "")), "position":animal_world_position(animal_index), "radius":38.0})
 	var village_cases: Array[Dictionary] = []
 	for shop_id: String in SHOP_POSITIONS:
 		village_cases.append({"name":shop_id, "position":Vector2(SHOP_POSITIONS[shop_id]), "radius":38.0})
@@ -1492,7 +1632,7 @@ func _create_commercial_menus() -> void:
 
 
 func _create_title_screen() -> void:
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(&"title_screen", true, false)
 	player.set_physics_process(false)
 	title_overlay = CanvasLayer.new()
 	title_overlay.layer = 20
@@ -1512,14 +1652,14 @@ func _create_title_screen() -> void:
 	var title := Label.new()
 	title.text = "霧落農歌\n鐘塔之季"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.position = Vector2(125, 74)
-	title.size = Vector2(390, 100)
+	title.position = Vector2(125, 48)
+	title.size = Vector2(390, 96)
 	title.add_theme_font_size_override("font_size", 34)
 	title.add_theme_color_override("font_color", Color("fff1b6"))
 	title_overlay.add_child(title)
 	var profile_panel := PanelContainer.new()
-	profile_panel.position = Vector2(190, 184)
-	profile_panel.size = Vector2(260, 92)
+	profile_panel.position = Vector2(178, 148)
+	profile_panel.size = Vector2(284, 148)
 	title_overlay.add_child(profile_panel)
 	var profile_box := VBoxContainer.new()
 	profile_panel.add_child(profile_box)
@@ -1527,17 +1667,37 @@ func _create_title_screen() -> void:
 	name_input.placeholder_text = "輸入玩家名字"
 	name_input.text = String(GameState.player_profile.get("name", "旅人"))
 	name_input.max_length = 12
+	name_input.text_submitted.connect(_on_title_name_submitted)
 	profile_box.add_child(name_input)
 	appearance_input = OptionButton.new()
 	for appearance_name in ["旅人裝束・晨霧", "旅人裝束・松葉", "旅人裝束・晚霞", "旅人裝束・星夜"]:
 		appearance_input.add_item(appearance_name)
 	appearance_input.selected = int(Dictionary(GameState.player_profile.get("appearance", {})).get("outfit", 0))
 	profile_box.add_child(appearance_input)
+	var action_row := HBoxContainer.new()
+	action_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	profile_box.add_child(action_row)
+	title_continue_button = Button.new()
+	title_continue_button.text = "繼續"
+	title_continue_button.tooltip_text = "讀取最近一次快速存檔"
+	title_continue_button.disabled = not SaveManager.has_quick_save_candidate()
+	title_continue_button.pressed.connect(_continue_from_title)
+	action_row.add_child(title_continue_button)
+	title_start_button = Button.new()
+	title_start_button.text = "新旅程"
+	title_start_button.tooltip_text = "以目前名稱與外觀開始；既有存檔會保留到下次存檔"
+	title_start_button.pressed.connect(_close_title_screen)
+	action_row.add_child(title_start_button)
+	title_multiplayer_button = Button.new()
+	title_multiplayer_button.text = "多人連線"
+	title_multiplayer_button.tooltip_text = "自行開設主機或使用 IP 加入"
+	title_multiplayer_button.pressed.connect(_open_multiplayer_from_title)
+	action_row.add_child(title_multiplayer_button)
 	var subtitle := Label.new()
-	subtitle.text = "30 日 × 四季 × 無限年份　｜　Enter／A 開始　M／Select 連線"
+	subtitle.text = "30 日 × 四季 × 無限年份　｜　Enter 開始　｜　Tab 選擇繼續／連線"
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	subtitle.position = Vector2(90, 292)
-	subtitle.size = Vector2(460, 35)
+	subtitle.position = Vector2(76, 306)
+	subtitle.size = Vector2(488, 35)
 	subtitle.add_theme_font_size_override("font_size", 15)
 	subtitle.add_theme_color_override("font_color", Color("f4ead3"))
 	title_overlay.add_child(subtitle)
@@ -1551,11 +1711,36 @@ func _close_title_screen() -> void:
 	appearance["outfit"] = appearance_input.selected if is_instance_valid(appearance_input) else 0
 	GameState.player_profile["appearance"] = appearance
 	GameState.set_flag(&"title_seen", true)
-	GameState.pause_game_time(false)
-	player.set_physics_process(true)
-	title_overlay.queue_free()
-	title_overlay = null
+	_dismiss_title_screen()
 	_show_toast("歡迎來到霧落村。先走近農地按 E 翻土。")
+
+
+func _on_title_name_submitted(_submitted_text: String) -> void:
+	_close_title_screen()
+
+
+func _continue_from_title() -> void:
+	if not SaveManager.load_quick():
+		if is_instance_valid(title_continue_button):
+			title_continue_button.disabled = not SaveManager.has_quick_save_candidate()
+		if is_instance_valid(name_input):
+			name_input.grab_focus()
+		return
+	GameState.set_flag(&"title_seen", true)
+	_dismiss_title_screen()
+
+
+func _open_multiplayer_from_title() -> void:
+	_hide_world_prompt()
+	multiplayer_menu.open()
+
+
+func _dismiss_title_screen() -> void:
+	GameState.set_pause_owner(&"title_screen", false)
+	player.set_physics_process(true)
+	if is_instance_valid(title_overlay):
+		title_overlay.queue_free()
+	title_overlay = null
 
 
 func _connect_events() -> void:
@@ -1575,6 +1760,7 @@ func _connect_events() -> void:
 
 
 func _on_quick_load_completed() -> void:
+	_apply_launch_display_mode()
 	var restored_mode := _mode_for_map(GameState.current_map_id)
 	if restored_mode == "dungeon":
 		_enter_dungeon(false)
@@ -1745,22 +1931,33 @@ func _interact() -> void:
 
 
 func _nearby_shop() -> StringName:
-	for shop_id: String in SHOP_POSITIONS:
-		if player.global_position.distance_to(Vector2(SHOP_POSITIONS[shop_id])) <= 38.0:
-			return StringName(shop_id)
-	return &""
+	return StringName(_village_shop_at(player.global_position))
 
 
 func _nearby_region_destination() -> StringName:
+	return _region_destination_at(mode, player.global_position)
+
+
+func _region_destination_at(map_mode: String, test_position: Vector2) -> StringName:
 	var best_id := &""
-	var best_distance := 44.0
-	var connections: Dictionary = Dictionary(REGION_CONNECTIONS.get(mode, {}))
+	# Gate signs are precise physical landmarks. A broad trigger steals nearby
+	# shops, actors and gathering nodes; 28 px still gives a comfortable approach
+	# zone while requiring the player to actually stand at the signed path.
+	var best_distance := 28.0
+	var connections: Dictionary = Dictionary(REGION_CONNECTIONS.get(map_mode, {}))
 	for map_id: String in connections:
-		var distance := player.global_position.distance_to(Vector2(Dictionary(connections[map_id]).position))
+		var distance := test_position.distance_to(Vector2(Dictionary(connections[map_id]).position))
 		if distance < best_distance:
 			best_id = StringName(map_id)
 			best_distance = distance
 	return best_id
+
+
+func _village_shop_at(test_position: Vector2) -> String:
+	for shop_id: String in SHOP_POSITIONS:
+		if test_position.distance_to(Vector2(SHOP_POSITIONS[shop_id])) <= 38.0:
+			return shop_id
+	return ""
 
 
 func _activate_region_destination(map_id: StringName) -> void:
@@ -1778,17 +1975,34 @@ func _activate_region_destination(map_id: StringName) -> void:
 
 
 func _nearby_animal() -> String:
+	return _animal_id_at_position(player.global_position)
+
+
+func _animal_id_at_position(test_position: Vector2) -> String:
 	for index in range(GameState.farm.animals.size()):
 		var animal: Dictionary = GameState.farm.animals[index]
-		var animal_position := Vector2(490 + (index % 4) * 31, 154 + (index / 4) * 33)
-		if player.global_position.distance_to(animal_position) <= 38.0:
+		var animal_position := animal_world_position(index)
+		if test_position.distance_to(animal_position) <= 38.0:
 			return String(animal.get("id", ""))
 	return ""
 
 
+func animal_world_position(index: int) -> Vector2:
+	if index >= 0 and index < ANIMAL_STALL_POSITIONS.size():
+		return Vector2(ANIMAL_STALL_POSITIONS[index])
+	# Old development saves could predate the capacity rule. Keep their extra
+	# animals deterministic and on-screen rather than stacking at (0, 0).
+	var overflow_index := maxi(0, index - ANIMAL_STALL_POSITIONS.size())
+	return Vector2(410 + (overflow_index % 4) * 60, 310 - (overflow_index / 4 + 1) * 60)
+
+
 func _nearby_npc() -> String:
+	return _village_npc_at(player.global_position)
+
+
+func _village_npc_at(test_position: Vector2) -> String:
 	for npc_id: String in NPC_POSITIONS:
-		if player.global_position.distance_to(Vector2(NPC_POSITIONS[npc_id])) <= 34.0:
+		if test_position.distance_to(Vector2(NPC_POSITIONS[npc_id])) <= 34.0:
 			return npc_id
 	return ""
 
@@ -1860,6 +2074,23 @@ func _animate_world_sprites() -> void:
 		# ground point. A vertical sine wave made NPCs, especially Mira, hover.
 		sprite.position = _npc_anchor(npc_id)
 		sprite.z_index = 100 + clampi(roundi(_npc_ground_position(npc_id).y), 0, 360)
+	_animate_animal_sprites()
+
+
+func _animate_animal_sprites() -> void:
+	var elapsed := float(Time.get_ticks_msec()) / 1000.0
+	for animal_id: String in animal_sprites:
+		var sprite: Sprite2D = animal_sprites[animal_id]
+		if not is_instance_valid(sprite) or not sprite.visible:
+			continue
+		var base_scale: Vector2 = Vector2(sprite.get_meta("base_scale", sprite.scale))
+		var ground_position: Vector2 = Vector2(sprite.get_meta("ground_position", sprite.position + Vector2(0, 9)))
+		var phase_offset := float(sprite.get_meta("phase_offset", 0.0))
+		var breath := sin(elapsed * 2.6 + phase_offset)
+		sprite.scale = Vector2(base_scale.x * (1.0 + breath * 0.012), base_scale.y * (1.0 - breath * 0.009))
+		# Counter-adjust the cell's bottom edge so breathing changes the body shape,
+		# not its contact point with the ground.
+		sprite.position = ground_position + Vector2(0, -9.0 + 222.0 * (base_scale.y - sprite.scale.y))
 
 
 func _npc_anchor(npc_id: String) -> Vector2:
@@ -1879,11 +2110,15 @@ func _npc_sprite_anchor(npc_id: String, ground_position: Vector2) -> Vector2:
 
 
 func _nearby_map_npc() -> String:
-	var positions: Dictionary = RIVER_NPC_POSITIONS if mode == "river" else (GROVE_NPC_POSITIONS if mode == "grove" else RUINS_NPC_POSITIONS)
+	return _map_npc_at(mode, player.global_position)
+
+
+func _map_npc_at(map_mode: String, test_position: Vector2) -> String:
+	var positions: Dictionary = RIVER_NPC_POSITIONS if map_mode == "river" else (GROVE_NPC_POSITIONS if map_mode == "grove" else RUINS_NPC_POSITIONS)
 	var best_id := ""
 	var best_distance := 46.0
 	for npc_id: String in positions:
-		var distance := player.global_position.distance_to(Vector2(positions[npc_id]))
+		var distance := test_position.distance_to(Vector2(positions[npc_id]))
 		if distance < best_distance:
 			best_id = npc_id
 			best_distance = distance
@@ -1947,10 +2182,14 @@ func _update_animal_sprites() -> void:
 			sprite = Sprite2D.new()
 			sprite.texture = region
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			sprite.scale = Vector2(0.105, 0.105) if String(animal.get("species", "")) == "chicken" else Vector2(0.13, 0.13)
+			var base_scale := Vector2(0.105, 0.105) if String(animal.get("species", "")) == "chicken" else Vector2(0.13, 0.13)
+			sprite.scale = base_scale
+			sprite.set_meta("base_scale", base_scale)
+			sprite.set_meta("phase_offset", float(index) * 0.91)
 			add_child(sprite)
 			animal_sprites[animal_id] = sprite
-		var animal_position := Vector2(490 + (index % 4) * 31, 154 + (index / 4) * 33)
+		var animal_position := animal_world_position(index)
+		sprite.set_meta("ground_position", animal_position)
 		sprite.position = animal_position + Vector2(0, -9)
 		sprite.z_index = 100 + clampi(roundi(animal_position.y), 0, 360)
 		sprite.visible = mode == "farm"
@@ -1961,6 +2200,41 @@ func _update_animal_sprites() -> void:
 		if is_instance_valid(stale):
 			stale.queue_free()
 		animal_sprites.erase(animal_id)
+	_rebuild_animal_collisions()
+
+
+func _rebuild_animal_collisions() -> void:
+	if not is_instance_valid(animal_collision_root):
+		return
+	var signature_parts := PackedStringArray([mode])
+	if mode == "farm":
+		for index in range(GameState.farm.animals.size()):
+			var animal: Dictionary = GameState.farm.animals[index]
+			signature_parts.append("%s:%s:%s" % [String(animal.get("id", index)), String(animal.get("species", "")), animal_world_position(index)])
+	var next_signature := "|".join(signature_parts)
+	var expected_count: int = GameState.farm.animals.size() if mode == "farm" else 0
+	if next_signature == animal_collision_signature and animal_collision_root.get_child_count() == expected_count:
+		return
+	animal_collision_signature = next_signature
+	for child: Node in animal_collision_root.get_children():
+		animal_collision_root.remove_child(child)
+		child.queue_free()
+	if mode != "farm":
+		return
+	for index in range(GameState.farm.animals.size()):
+		var animal: Dictionary = GameState.farm.animals[index]
+		var body := StaticBody2D.new()
+		body.name = "Animal_%s" % String(animal.get("id", index))
+		body.position = animal_world_position(index)
+		body.collision_layer = 1
+		body.collision_mask = 0
+		var collision := CollisionShape2D.new()
+		var shape := CircleShape2D.new()
+		shape.radius = 9.0 if String(animal.get("species", "")) == "chicken" else 12.0
+		collision.shape = shape
+		collision.position = Vector2(0, -1)
+		body.add_child(collision)
+		animal_collision_root.add_child(body)
 
 
 func _next_heart_event(npc_id: String) -> Dictionary:
@@ -2192,7 +2466,6 @@ func _spawn_dungeon_floor() -> void:
 		var count := clampi(2 + floor_number / 8, 2, 5)
 		for index in range(count):
 			enemy_ids.append(StringName(all_common[zone_start + posmod(floor_number + index, 3)]))
-	var positions := [Vector2(210, 125), Vector2(455, 120), Vector2(380, 270), Vector2(535, 250), Vector2(290, 255)]
 	enemies_remaining = 0
 	for index in range(enemy_ids.size()):
 		var definition := ContentRegistry.get_artifact("enemies", enemy_ids[index])
@@ -2200,7 +2473,7 @@ func _spawn_dungeon_floor() -> void:
 			continue
 		var enemy := EnemySceneScript.new() as PixelRPGEnemy
 		enemy.configure(definition)
-		enemy.global_position = positions[index]
+		enemy.global_position = DUNGEON_ENEMY_SPAWN_POSITIONS[index]
 		add_child(enemy)
 		enemies_remaining += 1
 	EventBus.dungeon_floor_changed.emit(floor_number)

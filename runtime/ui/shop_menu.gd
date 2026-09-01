@@ -2,6 +2,7 @@ class_name PixelRPGShopMenu
 extends CanvasLayer
 
 const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
+const PAUSE_OWNER := &"shop_menu"
 
 var active_shop_id := StringName()
 var title_label: Label
@@ -17,6 +18,10 @@ func _ready() -> void:
 	NetworkManager.world_state_received.connect(_on_network_world_received)
 
 
+func _exit_tree() -> void:
+	GameState.set_pause_owner(PAUSE_OWNER, false)
+
+
 func _input(event: InputEvent) -> void:
 	if visible and (event.is_action_pressed("pause_menu") or event.is_action_pressed("ui_cancel")):
 		get_viewport().set_input_as_handled()
@@ -30,16 +35,14 @@ func open(shop_id: StringName) -> void:
 	active_shop_id = shop_id
 	refresh()
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	if offer_box.get_child_count() > 0:
 		offer_box.get_child(0).grab_focus()
 
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(PAUSE_OWNER, false)
 
 
 func refresh() -> void:
@@ -58,6 +61,10 @@ func refresh() -> void:
 		button.custom_minimum_size = Vector2(0, 40)
 		button.tooltip_text = "%s\n%s" % [ItemIconFactory.display_name_for(target_id), ItemIconFactory.description_for(target_id)]
 		button.disabled = GameState.coins < int(offer.get("price", 0))
+		if offer_kind == &"animal" and GameState.farm.reserved_animal_slots() >= GameState.farm.animal_capacity():
+			button.disabled = true
+			button.text += "　（畜舍已滿）"
+			button.tooltip_text += "\n目前容量 %d/%d；提升農場等級可擴建。" % [GameState.farm.animals.size(), GameState.farm.animal_capacity()]
 		button.pressed.connect(_purchase.bind(String(offer.get("id", ""))))
 		offer_box.add_child(button)
 	if offer_box.get_child_count() == 0:

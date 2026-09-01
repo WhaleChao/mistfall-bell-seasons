@@ -1,6 +1,8 @@
 class_name PixelRPGFestivalOverlay
 extends CanvasLayer
 
+const PAUSE_OWNER := &"festival_overlay"
+
 var festival: Dictionary = {}
 var marker_value := 0.0
 var marker_direction := 1.0
@@ -24,6 +26,10 @@ func _ready() -> void:
 	visible = false
 
 
+func _exit_tree() -> void:
+	GameState.set_pause_owner(PAUSE_OWNER, false)
+
+
 func open_today() -> void:
 	festival = GameState.festivals.festival_on(GameState.calendar.season_id(), GameState.calendar.day)
 	if festival.is_empty():
@@ -38,7 +44,7 @@ func open_today() -> void:
 	marker_direction = 1.0
 	title_label.text = String(festival.get("display_name", "節慶"))
 	var variants: Array = festival.get("year_variants", [])
-	story_label.text = "第 %d 年・%s" % [GameState.calendar.year, variants[mini(GameState.calendar.year, 3) - 1]]
+	story_label.text = "第 %d 年・%s　｜　Esc／B 可放棄" % [GameState.calendar.year, variants[mini(GameState.calendar.year, 3) - 1]]
 	result_label.text = ""
 	_update_instruction()
 	action_button.visible = true
@@ -47,15 +53,13 @@ func open_today() -> void:
 	target.visible = true
 	marker.visible = true
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	action_button.grab_focus()
 
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(PAUSE_OWNER, false)
 
 
 func _process(delta: float) -> void:
@@ -74,12 +78,12 @@ func _process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event.is_action_pressed("attend_festival") or event.is_action_pressed("interact"):
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause_menu"):
+		close()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("attend_festival") or event.is_action_pressed("interact"):
 		if action_button.visible:
 			_attempt()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("ui_cancel") and close_button.visible:
-		close()
 		get_viewport().set_input_as_handled()
 
 

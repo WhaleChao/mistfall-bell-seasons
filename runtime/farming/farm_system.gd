@@ -4,6 +4,7 @@ extends RefCounted
 const MAX_RANK := 10
 const AUTOMATION_WIDTH := 6
 const AUTOMATION_HEIGHT := 4
+const MAX_ANIMAL_CAPACITY := 6
 
 var rank := 1
 var plots: Dictionary = {}
@@ -155,6 +156,8 @@ func begin_breeding(animal_id: String) -> Dictionary:
 			return {"ok": false, "message": "動物需要至少 5 心才能繁殖"}
 		if int(animal.get("pregnant_days", 0)) > 0:
 			return {"ok": false, "message": "已在等待新生命到來"}
+		if reserved_animal_slots() >= animal_capacity():
+			return {"ok": false, "message": "畜舍已滿；提升農場等級或等待預留欄位空出"}
 		var definition := ContentRegistry.get_artifact("animals", StringName(animal.get("species", "")))
 		animal.pregnant_days = int(definition.get("gestation_days", 10))
 		animals[index] = animal
@@ -169,6 +172,8 @@ func purchase_animal(species: String) -> Dictionary:
 	var required_rank := 3 if species == "chicken" else 6
 	if rank < required_rank:
 		return {"ok": false, "message": "農場需達 Lv.%d" % required_rank}
+	if reserved_animal_slots() >= animal_capacity():
+		return {"ok": false, "message": "畜舍容量已滿（%d/%d）" % [animals.size(), animal_capacity()]}
 	var next_index := 1
 	for animal: Dictionary in animals:
 		if String(animal.get("species", "")) == species:
@@ -177,6 +182,23 @@ func purchase_animal(species: String) -> Dictionary:
 	var display_name := "小霧%d" % next_index if species == "chicken" else "奶鐘%d" % next_index
 	animals.append({"id": animal_id, "species": species, "name": display_name, "hearts": 0, "mood": 55, "fed": false, "grazed": false, "product_ready": false, "pregnant_days": 0})
 	return {"ok": true, "animal_id": animal_id, "message": "%s加入了農場" % definition.get("display_name", species)}
+
+
+func animal_capacity() -> int:
+	if rank < 3:
+		return 0
+	if rank < 6:
+		return 2
+	if rank < 9:
+		return 4
+	return MAX_ANIMAL_CAPACITY
+
+
+func reserved_animal_slots() -> int:
+	var pending_births := 0
+	for animal: Dictionary in animals:
+		pending_births += int(int(animal.get("pregnant_days", 0)) > 0)
+	return animals.size() + pending_births
 
 
 func unlock_rank(new_rank: int) -> bool:
@@ -521,8 +543,12 @@ func _advance_animals(weather: String) -> void:
 		if pregnant_days > 0:
 			animal.pregnant_days = pregnant_days - 1
 			if int(animal.pregnant_days) == 0:
-				var species := String(animal.get("species", "chicken"))
-				newborns.append({"id": "%s_%d" % [species, animals.size() + newborns.size() + 1], "species": species, "name": "新生%s" % ("小雞" if species == "chicken" else "小牛"), "hearts": 0, "mood": 55, "fed": false, "grazed": false, "product_ready": false, "pregnant_days": 0})
+				if animals.size() + newborns.size() < animal_capacity():
+					var species := String(animal.get("species", "chicken"))
+					newborns.append({"id": "%s_%d" % [species, animals.size() + newborns.size() + 1], "species": species, "name": "新生%s" % ("小雞" if species == "chicken" else "小牛"), "hearts": 0, "mood": 55, "fed": false, "grazed": false, "product_ready": false, "pregnant_days": 0})
+				else:
+					# Corrupt/legacy over-capacity saves must not silently lose a birth.
+					animal.pregnant_days = 1
 		animals[index] = animal
 	animals.append_array(newborns)
 

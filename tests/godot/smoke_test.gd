@@ -158,6 +158,10 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			for interaction: Dictionary in Array(game.interaction_reachability_cases()[source_mode]):
 				if not game.map_has_reachable_interaction(source_mode, game._safe_spawn_for_mode(source_mode), Vector2(interaction.position), float(interaction.radius), 6.0):
 					failures.append("World interaction cannot be reached without teleporting: %s/%s" % [source_mode, interaction.name])
+				elif game.interaction_id_at(source_mode, Vector2(interaction.position)) != game._interaction_case_resolved_id(source_mode, String(interaction.name)):
+					failures.append("World interaction target resolves to the wrong action: %s/%s -> %s" % [source_mode, interaction.name, game.interaction_id_at(source_mode, Vector2(interaction.position))])
+				elif not game.map_has_unambiguous_interaction(source_mode, String(interaction.name), Vector2(interaction.position), float(interaction.radius), 6.0):
+					failures.append("World interaction is reachable but masked by another route, actor, or action: %s/%s" % [source_mode, interaction.name])
 			var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
 			if source_mode != "dungeon" and connections.size() < 4:
 				failures.append("Outdoor region lacks direct routes: %s" % source_mode)
@@ -207,6 +211,26 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			failures.append("Mira is not foot-anchored to the village ground")
 		if game.npc_collision_count() != game.NPC_POSITIONS.size():
 			failures.append("Visible village NPCs do not all have physical collision bodies")
+		for spawn_index in range(game.DUNGEON_ENEMY_SPAWN_POSITIONS.size()):
+			var dungeon_spawn: Vector2 = Vector2(game.DUNGEON_ENEMY_SPAWN_POSITIONS[spawn_index])
+			if not game.dungeon_enemy_spawn_is_clear(dungeon_spawn):
+				failures.append("Dungeon enemy spawn is blocked or hidden by foreground: %d %s" % [spawn_index, dungeon_spawn])
+			for other_index in range(spawn_index + 1, game.DUNGEON_ENEMY_SPAWN_POSITIONS.size()):
+				if dungeon_spawn.distance_to(Vector2(game.DUNGEON_ENEMY_SPAWN_POSITIONS[other_index])) < 70.0:
+					failures.append("Dungeon enemy spawn points overlap each other: %d/%d" % [spawn_index, other_index])
+		var npc_frame_size: Vector2 = Vector2(1448.0 / 4.0, 1086.0 / 3.0) * float(game.NPC_SPRITE_SCALE)
+		var npc_ids: Array = game.NPC_POSITIONS.keys()
+		for first_index in range(npc_ids.size()):
+			for second_index in range(first_index + 1, npc_ids.size()):
+				var first_id := String(npc_ids[first_index])
+				var second_id := String(npc_ids[second_index])
+				var first_anchor: Vector2 = Vector2(game._npc_sprite_anchor(first_id, Vector2(game.NPC_POSITIONS[first_id])))
+				var second_anchor: Vector2 = Vector2(game._npc_sprite_anchor(second_id, Vector2(game.NPC_POSITIONS[second_id])))
+				var first_bounds: Rect2 = Rect2(first_anchor - npc_frame_size * 0.5, npc_frame_size)
+				var second_bounds: Rect2 = Rect2(second_anchor - npc_frame_size * 0.5, npc_frame_size)
+				var overlap: Rect2 = first_bounds.intersection(second_bounds)
+				if overlap.get_area() > 256.0:
+					failures.append("Village NPC silhouettes substantially overlap: %s/%s area=%.1f" % [first_id, second_id, overlap.get_area()])
 		if runtime_player.visual_sprite.position.distance_to(Vector2(0, -12)) >= 0.01 or runtime_player.visual_sprite.scale.distance_to(Vector2(0.15, 0.15)) >= 0.001:
 			failures.append("Player idle pose is not locked to a stable ground contact point")
 		runtime_player.global_position = Vector2(200, 190)
@@ -236,8 +260,15 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			failures.append("Farm automation console is not an in-world interactive device")
 		if automation_console.automation_device_select.get_item_icon(0) == null or automation_console.automation_crop_select.get_item_icon(0) == null:
 			failures.append("Automation device or crop selector is missing icons")
-		automation_console.close()
+		await _send_runtime_key(KEY_ESCAPE)
+		if automation_console.visible or paused or state_store.calendar.paused:
+			failures.append("Escape could not close the in-world automation console")
 		game_menu.open()
+		var bindings_before_cancel := _input_binding_snapshot()
+		game_menu._begin_rebind(&"attack")
+		await _send_runtime_key(KEY_ESCAPE)
+		if not game_menu.visible or not game_menu.capture_action.is_empty() or _input_binding_snapshot() != bindings_before_cancel:
+			failures.append("Escape did not cancel key rebinding without changing the binding or closing the menu")
 		if game_menu.inventory_icon_count < 4:
 			failures.append("Inventory did not render owned seeds and potion as icon cards")
 		for recipe_index in range(game_menu.recipe_select.item_count):
@@ -254,6 +285,16 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 		if game_menu.visible or paused or state_store.calendar.paused:
 			failures.append("Escape could not return from the muted settings menu to gameplay")
 		var multiplayer_menu: Node = game.get("multiplayer_menu")
+		game_menu.open()
+		multiplayer_menu.open()
+		multiplayer_menu.close()
+		await process_frame
+		if not game_menu.visible or not paused or not state_store.calendar.paused or not state_store.is_pause_owner_active(&"game_menu"):
+			failures.append("Closing one of two modal overlays incorrectly resumes gameplay")
+		game_menu.close()
+		await process_frame
+		if paused or state_store.calendar.paused or state_store.pause_owner_count() != 0:
+			failures.append("The final modal overlay did not release its pause claim")
 		multiplayer_menu.open()
 		await process_frame
 		await _send_runtime_key(KEY_ESCAPE)
@@ -269,13 +310,27 @@ func _assert_runtime_ui_regressions(state_store: Node, failures: PackedStringArr
 			await _send_runtime_key(KEY_ESCAPE)
 			if shop_menu.visible or game_menu.visible or paused or state_store.calendar.paused:
 				failures.append("Escape could not close a shop without reopening the pause menu")
+		var dialogue_overlay: Node = game.get("dialogue_overlay")
+		dialogue_overlay.open_line(&"mira", "返回鍵驗證")
+		await process_frame
+		await _send_runtime_key(KEY_ESCAPE)
+		if dialogue_overlay.visible or paused or state_store.calendar.paused:
+			failures.append("Escape could not leave dialogue and return to gameplay")
+		var festival_overlay: Node = game.get("festival_overlay")
+		state_store.calendar.season_index = 0
+		state_store.calendar.day = 8
+		state_store.festivals.attended.clear()
+		festival_overlay.open_today()
+		var cancelled_festival_id := StringName(festival_overlay.festival.get("id", ""))
+		await process_frame
+		await _send_runtime_key(KEY_ESCAPE)
+		if festival_overlay.visible or paused or state_store.calendar.paused or state_store.festivals.has_attended(cancelled_festival_id, state_store.calendar.year):
+			failures.append("Escape could not abandon an unfinished festival without consuming attendance")
 	paused = false
 	state_store.pause_game_time(false)
 	if is_instance_valid(game):
 		game.queue_free()
 	await process_frame
-
-
 func _send_runtime_key(keycode: int) -> void:
 	var press := InputEventKey.new()
 	press.pressed = true
@@ -572,6 +627,15 @@ func _assert_farming(failures: PackedStringArray) -> void:
 		farm.advance_day(&"summer", "clear")
 	if farm.animals.size() != 2:
 		failures.append("Chicken gestation did not create an offspring")
+	if farm.animal_capacity() != 2 or bool(farm.purchase_animal("chicken").get("ok", false)):
+		failures.append("Rank-three livestock capacity did not prevent overlapping overflow animals")
+	farm.rank = 10
+	while farm.animals.size() < farm.animal_capacity():
+		if not bool(farm.purchase_animal("chicken").get("ok", false)):
+			failures.append("Expanded livestock capacity rejected a legal animal slot")
+			break
+	if farm.animals.size() != farm.animal_capacity() or bool(farm.purchase_animal("cow").get("ok", false)):
+		failures.append("Maximum livestock capacity is not enforced at the commercial farm rank")
 
 
 func _assert_social(failures: PackedStringArray) -> void:

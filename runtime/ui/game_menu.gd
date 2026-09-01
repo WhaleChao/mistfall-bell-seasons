@@ -2,6 +2,7 @@ class_name PixelRPGGameMenu
 extends CanvasLayer
 
 const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
+const PAUSE_OWNER := &"game_menu"
 
 var panel: PanelContainer
 var tabs: TabContainer
@@ -35,15 +36,23 @@ func _ready() -> void:
 	NetworkManager.world_state_received.connect(_on_network_world_received)
 
 
+func _exit_tree() -> void:
+	GameState.set_pause_owner(PAUSE_OWNER, false)
+
+
 func _input(event: InputEvent) -> void:
 	if visible and not capture_action.is_empty() and event.is_pressed() and not event.is_echo() and (event is InputEventKey or event is InputEventJoypadButton):
 		get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_cancel") or (event is InputEventKey and (event.keycode == KEY_ESCAPE or event.physical_keycode == KEY_ESCAPE)):
+			capture_action = &""
+			_refresh_rebind_labels()
+			return
 		PixelRPGInputBindings.rebind_device(capture_action, event)
 		PixelRPGInputBindings.save()
 		capture_action = &""
 		_refresh_rebind_labels()
 		return
-	if visible and event.is_action_pressed("pause_menu"):
+	if visible and (event.is_action_pressed("pause_menu") or event.is_action_pressed("ui_cancel")):
 		get_viewport().set_input_as_handled()
 		close()
 
@@ -58,19 +67,17 @@ func toggle() -> void:
 func open() -> void:
 	refresh()
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	farm_upgrade_button.grab_focus()
 
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(PAUSE_OWNER, false)
 
 
 func refresh() -> void:
-	status_label.text = "%s\n%s　%s　%dG\nHP %d/%d　體力 %d/100　理智 %d/100\n農場 Lv.%d　鐘窟最深 %dF\n工具：%s" % [GameState.player_profile.get("name", "旅人"), GameState.calendar.date_text(), GameState.calendar.time_text(), GameState.coins, GameState.player_stats.get("health", 100), GameState.player_stats.get("max_health", 100), GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, GameState.dungeon.max_reached, _tool_summary()]
+	status_label.text = "%s\n%s　%s　%dG\nHP %d/%d　體力 %d/100　理智 %d/100\n農場 Lv.%d　動物 %d/%d　鐘窟最深 %dF\n工具：%s" % [GameState.player_profile.get("name", "旅人"), GameState.calendar.date_text(), GameState.calendar.time_text(), GameState.coins, GameState.player_stats.get("health", 100), GameState.player_stats.get("max_health", 100), GameState.tools.stamina, GameState.eldritch.sanity, GameState.farm.rank, GameState.farm.animals.size(), GameState.farm.animal_capacity(), GameState.dungeon.max_reached, _tool_summary()]
 	_refresh_inventory_icons()
 	calendar_label.text = "%s\n本季節慶：8、18、28 日\n今日天氣：%s\n明日預報：%s\n第 29、30 日保留給整理與特殊事件。" % [GameState.calendar.date_text(), GameState.current_weather, PixelRPGCalendarSystem.forecast_for_tomorrow(GameState.calendar.year, GameState.calendar.season_index, GameState.calendar.day).get("weather", "clear")]
 	relationships_label.text = _relationship_text()
@@ -99,7 +106,7 @@ func _build_ui() -> void:
 	var root_box := VBoxContainer.new()
 	panel.add_child(root_box)
 	var header := Label.new()
-	header.text = "霧落農歌・旅人手冊　　Esc／Start 關閉"
+	header.text = "霧落農歌・旅人手冊　　Esc／B／Start 關閉"
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	header.add_theme_font_size_override("font_size", 16)
 	root_box.add_child(header)

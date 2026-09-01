@@ -1,6 +1,8 @@
 class_name PixelRPGMultiplayerMenu
 extends CanvasLayer
 
+const PAUSE_OWNER := &"multiplayer_menu"
+
 var name_input: LineEdit
 var server_name_input: LineEdit
 var address_input: LineEdit
@@ -28,8 +30,12 @@ func _ready() -> void:
 	_refresh_state()
 
 
+func _exit_tree() -> void:
+	GameState.set_pause_owner(PAUSE_OWNER, false)
+
+
 func _input(event: InputEvent) -> void:
-	if visible and (event.is_action_pressed("multiplayer_menu") or event.is_action_pressed("pause_menu")):
+	if visible and (event.is_action_pressed("multiplayer_menu") or event.is_action_pressed("pause_menu") or event.is_action_pressed("ui_cancel")):
 		get_viewport().set_input_as_handled()
 		close()
 
@@ -44,16 +50,14 @@ func toggle() -> void:
 func open() -> void:
 	name_input.text = String(GameState.player_profile.get("name", "旅人"))
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	_refresh_state()
 	name_input.grab_focus()
 
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(PAUSE_OWNER, false)
 
 
 func _build_ui() -> void:

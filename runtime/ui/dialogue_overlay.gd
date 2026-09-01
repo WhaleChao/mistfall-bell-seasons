@@ -1,6 +1,8 @@
 class_name PixelRPGDialogueOverlay
 extends CanvasLayer
 
+const PAUSE_OWNER := &"dialogue_overlay"
+
 var graph: Dictionary = {}
 var nodes: Dictionary = {}
 var current_node_id := ""
@@ -19,6 +21,16 @@ func _ready() -> void:
 	EventBus.dialogue_requested.connect(open)
 
 
+func _exit_tree() -> void:
+	GameState.set_pause_owner(PAUSE_OWNER, false)
+
+
+func _input(event: InputEvent) -> void:
+	if visible and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause_menu")):
+		get_viewport().set_input_as_handled()
+		close()
+
+
 func open(dialogue_id: StringName, start_node: StringName = &"") -> void:
 	graph = ContentRegistry.get_artifact("dialogues", dialogue_id)
 	if graph.is_empty():
@@ -29,8 +41,7 @@ func open(dialogue_id: StringName, start_node: StringName = &"") -> void:
 		nodes[String(node.get("id", ""))] = node
 	accepted_quest = false
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	_show_node(String(start_node) if not String(start_node).is_empty() else String(graph.get("start_node", "")))
 
 
@@ -39,8 +50,7 @@ func open_line(speaker_id: StringName, line: String, heading: String = "") -> vo
 	nodes.clear()
 	accepted_quest = false
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	for child in choices.get_children():
 		child.queue_free()
 	var character := ContentRegistry.get_artifact("characters", speaker_id)
@@ -52,8 +62,7 @@ func open_line(speaker_id: StringName, line: String, heading: String = "") -> vo
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(PAUSE_OWNER, false)
 
 
 func _show_node(node_id: String) -> void:

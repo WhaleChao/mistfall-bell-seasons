@@ -29,6 +29,18 @@ func _quick_save_paths() -> Dictionary:
 	}
 
 
+func has_quick_save_candidate() -> bool:
+	var paths := _quick_save_paths()
+	for candidate: String in [String(paths.target), String(paths.backup), String(paths.old_backup), String(paths.temp)]:
+		if not FileAccess.file_exists(candidate):
+			continue
+		var payload := _read_save_payload(candidate)
+		var schema_version := int(payload.get("schema_version", 0))
+		if not payload.is_empty() and schema_version >= 1 and schema_version <= GameState.SAVE_SCHEMA_VERSION:
+			return true
+	return false
+
+
 func save_quick() -> bool:
 	if NetworkManager.is_online():
 		EventBus.toast("連線世界不可快速存檔；世界進度由伺服器保存")

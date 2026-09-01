@@ -2,6 +2,7 @@ class_name PixelRPGAutomationConsole
 extends CanvasLayer
 
 const ItemIconFactory := preload("res://runtime/ui/item_icon_factory.gd")
+const PAUSE_OWNER := &"automation_console"
 
 var panel: PanelContainer
 var automation_grid: GridContainer
@@ -21,8 +22,12 @@ func _ready() -> void:
 	visible = false
 
 
+func _exit_tree() -> void:
+	GameState.set_pause_owner(PAUSE_OWNER, false)
+
+
 func _input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("pause_menu"):
+	if visible and (event.is_action_pressed("pause_menu") or event.is_action_pressed("ui_cancel")):
 		get_viewport().set_input_as_handled()
 		close()
 
@@ -30,15 +35,13 @@ func _input(event: InputEvent) -> void:
 func open() -> void:
 	refresh()
 	visible = true
-	get_tree().paused = true
-	GameState.pause_game_time(true)
+	GameState.set_pause_owner(PAUSE_OWNER, true)
 	automation_grid.get_child(0).grab_focus()
 
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
-	GameState.pause_game_time(false)
+	GameState.set_pause_owner(PAUSE_OWNER, false)
 
 
 func _build_ui() -> void:
@@ -54,7 +57,7 @@ func _build_ui() -> void:
 	var outer := VBoxContainer.new()
 	panel.add_child(outer)
 	var header := Label.new()
-	header.text = "農場鐘網控制台　｜　場內設備建造與調度　｜　Esc／Start 關閉"
+	header.text = "農場鐘網控制台　｜　場內設備建造與調度　｜　Esc／B／Start 關閉"
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	header.add_theme_font_size_override("font_size", 15)
 	header.add_theme_color_override("font_color", Color("fff1b6"))

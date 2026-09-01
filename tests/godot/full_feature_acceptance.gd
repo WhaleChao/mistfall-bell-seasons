@@ -86,12 +86,20 @@ func _test_launch_and_profile() -> void:
 	_record("啟動", "標題畫面顯示", is_instance_valid(game.title_overlay), "玩家時間應暫停")
 	_record("角色建立", "玩家名稱欄位", is_instance_valid(game.name_input) and game.name_input.max_length == 12)
 	_record("角色建立", "四種外觀選項", is_instance_valid(game.appearance_input) and game.appearance_input.item_count == 4)
+	_record("標題流程", "繼續、新旅程與多人連線都有明確按鈕", is_instance_valid(game.title_continue_button) and is_instance_valid(game.title_start_button) and is_instance_valid(game.title_multiplayer_button))
 	_record("輸入焦點", "首啟自動聚焦玩家名稱欄位", is_instance_valid(game.name_input) and game.name_input.has_focus())
 	await _capture("01_title_and_profile")
 	await _send_key_event(KEY_E, "e".unicode_at(0))
 	_record("輸入焦點", "名稱輸入 E 不會誤觸互動或開始遊戲", is_instance_valid(game.title_overlay) and not game.multiplayer_menu.visible)
 	await _send_key_event(KEY_M, "m".unicode_at(0))
 	_record("輸入焦點", "名稱輸入 M 不會誤開連線介面", is_instance_valid(game.title_overlay) and not game.multiplayer_menu.visible)
+	var title_minute_before := int(state_store.calendar.minute_of_day)
+	game.title_multiplayer_button.pressed.emit()
+	await _frames(2)
+	_record("標題流程", "名稱欄位聚焦時仍可由明確按鈕進入多人連線", game.multiplayer_menu.visible and paused and state_store.is_pause_owner_active(&"title_screen") and state_store.is_pause_owner_active(&"multiplayer_menu"))
+	game.multiplayer_menu.close()
+	await _frames(3)
+	_record("暫停狀態", "關閉標題上的多人視窗不會讓背景時間偷跑", is_instance_valid(game.title_overlay) and not paused and state_store.calendar.paused and state_store.is_pause_owner_active(&"title_screen") and int(state_store.calendar.minute_of_day) == title_minute_before)
 	game.name_input.release_focus()
 	await _frames(1)
 	await _send_key_event(KEY_E, "e".unicode_at(0))
@@ -161,6 +169,10 @@ func _test_movement_and_animation() -> void:
 	await _physics_frames(3)
 	_record("地圖碰撞", "農舍屋頂會阻擋玩家", blocked_start_y - player.global_position.y < 25.0, "起點 %.1f／終點 %.1f" % [blocked_start_y, player.global_position.y])
 	_record("地圖碰撞", "池塘、房屋與田床均登錄為不可通行區", game.is_world_position_blocked(Vector2(110, 240)) and game.is_world_position_blocked(Vector2(160, 90)) and game.is_world_position_blocked(Vector2(470, 240)))
+	var dungeon_spawns_clear := true
+	for dungeon_spawn: Vector2 in game.DUNGEON_ENEMY_SPAWN_POSITIONS:
+		dungeon_spawns_clear = dungeon_spawns_clear and game.dungeon_enemy_spawn_is_clear(dungeon_spawn)
+	_record("洞窟可見性", "所有普通怪物與 Boss 出生點皆在可走區且完整避開崖壁前景遮罩", dungeon_spawns_clear)
 	_record("輸入", "斜向速度正規化", is_equal_approx(Vector2(1, 1).normalized().length(), 1.0))
 	_record("畫面層級", "玩家角色始終繪製在田地與地面裝飾之上", player.z_index > game.z_index and is_instance_valid(player.visual_sprite) and player.visual_sprite.z_index >= 0)
 
@@ -185,7 +197,9 @@ func _test_combat_and_dungeon() -> void:
 	target.health = 1000
 	player.global_position = Vector2(300, 210)
 	player.facing = Vector2.RIGHT
-	target.global_position = player.global_position + Vector2(28, 0)
+	# Measure the authored swing without a hit-stop freezing the animation clock.
+	# Hit confirmation is exercised by a separate attack immediately afterward.
+	target.global_position = player.global_position + Vector2(72, 0)
 	var slash_direction_ok := true
 	for direction in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
 		player.facing = direction
@@ -196,7 +210,6 @@ func _test_combat_and_dungeon() -> void:
 			slash_direction_ok = slash_direction_ok and tail_forward > 0.0 and tip_forward > tail_forward + 10.0
 	_record("戰鬥動畫", "四方向刀光皆從角色身前向外揮出，不會反向砍中自己", slash_direction_ok)
 	player.facing = Vector2.RIGHT
-	var attack_before: int = int(target.health)
 	Input.action_press("attack")
 	await physics_frame
 	Input.action_release("attack")
@@ -217,9 +230,17 @@ func _test_combat_and_dungeon() -> void:
 		if animation_frame == 4:
 			await _capture("03_dungeon_combat")
 	_record("戰鬥動畫", "揮砍以至少八個連續時間點插值並帶角色動作", attack_samples.size() >= 8 and attack_progress_monotonic and attack_rotation_max - attack_rotation_min >= 0.025, "%d 個時間點／轉動 %.3f rad" % [attack_samples.size(), attack_rotation_max - attack_rotation_min])
-	_record("戰鬥", "近戰攻擊命中", target.health < attack_before, "傷害 %d" % (attack_before - target.health))
-	while player.state != 0:
+	for _wait_frame in range(30):
+		if player.state == 0:
+			break
 		await physics_frame
+	target.global_position = player.global_position + Vector2(28, 0)
+	var attack_before: int = int(target.health)
+	Input.action_press("attack")
+	await _physics_frames(2)
+	Input.action_release("attack")
+	await _physics_frames(24)
+	_record("戰鬥", "近戰攻擊命中", target.health < attack_before, "傷害 %d" % (attack_before - target.health))
 	target.health = 1000
 	var combo_before: int = int(target.health)
 	Input.action_press("attack")
@@ -231,7 +252,9 @@ func _test_combat_and_dungeon() -> void:
 	Input.action_release("attack")
 	await _physics_frames(22)
 	_record("戰鬥", "連擊輸入緩衝", combo_before - target.health > player.attack_power, "累積傷害 %d" % (combo_before - target.health))
-	while player.state != 0:
+	for _wait_combo_frame in range(60):
+		if player.state == 0:
+			break
 		await physics_frame
 	Input.action_press("dodge")
 	await _physics_frames(2)
@@ -363,9 +386,10 @@ func _test_farming_animals_and_economy() -> void:
 	chicken.hearts = 5
 	chicken.product_ready = true
 	state_store.farm.animals[0] = chicken
-	player.global_position = Vector2(490, 154)
+	player.global_position = game.animal_world_position(0)
 	game._interact()
 	_record("動物", "雞蛋產物收集", int(state_store.farm.produce.get("egg", 0)) == 1)
+	_record("動物", "動物使用分隔畜欄並具有實體碰撞", game.animal_world_position(0).distance_to(game.animal_world_position(1)) >= 58.0 and game.animal_collision_count() == 2)
 	var tending: Dictionary = state_store.interact_animal("chicken_1")
 	var breeding: Dictionary = state_store.interact_animal("chicken_1")
 	for _day in range(7):
@@ -407,6 +431,9 @@ func _test_maps_and_automation() -> void:
 	var routes_clear_and_reachable := true
 	var all_walkable_areas_connected := true
 	var all_interactions_reachable := true
+	var all_interactions_unambiguous := true
+	var all_interaction_targets_resolve := true
+	var interaction_failure_details := PackedStringArray()
 	for source_mode: String in ["farm", "village", "river", "grove", "ruins", "dungeon"]:
 		var connections: Dictionary = Dictionary(game.REGION_CONNECTIONS.get(source_mode, {}))
 		var collision_summary: Dictionary = game.world_collision_summary(source_mode)
@@ -414,7 +441,17 @@ func _test_maps_and_automation() -> void:
 		foreground_depth_ok = foreground_depth_ok and game.foreground_layer_count(source_mode) >= 3
 		all_walkable_areas_connected = all_walkable_areas_connected and int(game.walkable_component_summary(source_mode, 6.0).component_count) == 1
 		for interaction: Dictionary in Array(game.interaction_reachability_cases()[source_mode]):
-			all_interactions_reachable = all_interactions_reachable and game.map_has_reachable_interaction(source_mode, game._safe_spawn_for_mode(source_mode), Vector2(interaction.position), float(interaction.radius), 6.0)
+			var interaction_name := String(interaction.name)
+			var interaction_position := Vector2(interaction.position)
+			var expected_interaction_id: String = game._interaction_case_resolved_id(source_mode, interaction_name)
+			var resolved_interaction_id: String = game.interaction_id_at(source_mode, interaction_position)
+			var reachable: bool = game.map_has_reachable_interaction(source_mode, game._safe_spawn_for_mode(source_mode), interaction_position, float(interaction.radius), 6.0)
+			var unambiguous: bool = game.map_has_unambiguous_interaction(source_mode, interaction_name, interaction_position, float(interaction.radius), 6.0)
+			all_interactions_reachable = all_interactions_reachable and reachable
+			all_interactions_unambiguous = all_interactions_unambiguous and unambiguous
+			all_interaction_targets_resolve = all_interaction_targets_resolve and resolved_interaction_id == expected_interaction_id
+			if not reachable or not unambiguous or resolved_interaction_id != expected_interaction_id:
+				interaction_failure_details.append("%s/%s expected=%s actual=%s reachable=%s unambiguous=%s" % [source_mode, interaction_name, expected_interaction_id, resolved_interaction_id, reachable, unambiguous])
 		if source_mode != "dungeon" and connections.size() < 4:
 			outdoor_connected = false
 		var safe_spawn: Vector2 = game._safe_spawn_for_mode(source_mode)
@@ -431,6 +468,8 @@ func _test_maps_and_automation() -> void:
 	_record("地圖重構", "所有出口都位於可行走道路且可由安全出生點抵達", routes_clear_and_reachable)
 	_record("地圖重構", "六張地圖的全部可行走網格皆屬同一連通區，沒有到不了的道路孤島", all_walkable_areas_connected)
 	_record("地圖重構", "商店、NPC、釣點、採集物與自動化台均可由道路走到互動範圍，不靠瞬移", all_interactions_reachable)
+	_record("互動優先序", "每個圖示中心都會執行對應動作，不會誤觸相鄰出口或角色", all_interaction_targets_resolve, "\n".join(interaction_failure_details))
+	_record("互動優先序", "出口、商店、NPC、採集物、自動化台與每隻動物都有不被其他動作遮蔽的站位", all_interactions_unambiguous, "\n".join(interaction_failure_details))
 	_record("立體景深", "六張地圖均有屋頂、樹冠、機械或崖壁前景遮擋層", foreground_depth_ok)
 	var collision_samples := {
 		"farm":[Vector2(160, 90), Vector2(110, 240), Vector2(470, 240)],
@@ -674,7 +713,9 @@ func _test_village_dialogue_and_festival() -> void:
 	await _frames(4)
 	_record("對話", "NPC 對話、肖像與時間暫停", game.dialogue_overlay.visible and paused and state_store.calendar.paused)
 	_record("關係", "每日交談增加好感", state_store.social.hearts(&"mira") >= hearts_before)
-	game.dialogue_overlay.close()
+	await _send_key_event(KEY_ESCAPE)
+	await _frames(2)
+	_record("返回操作", "對話中可用 Esc／手把 B 返回遊戲", not game.dialogue_overlay.visible and not paused and not state_store.calendar.paused)
 	await _frames(3)
 	game._enter_farm_from_village()
 	state_store.calendar.year = 1
@@ -685,6 +726,12 @@ func _test_village_dialogue_and_festival() -> void:
 	game.festival_overlay.open_today()
 	await _frames(4)
 	_record("節慶", "指定日期開啟節慶", game.festival_overlay.visible and paused)
+	var cancelled_festival_id := StringName(game.festival_overlay.festival.get("id", ""))
+	await _send_key_event(KEY_ESCAPE)
+	await _frames(2)
+	_record("返回操作", "未完成節慶可用 Esc／手把 B 放棄且不消耗本年參加資格", not game.festival_overlay.visible and not state_store.festivals.has_attended(cancelled_festival_id, state_store.calendar.year))
+	game.festival_overlay.open_today()
+	await _frames(2)
 	await _capture("10_interactive_festival")
 	for _round in range(5):
 		game.festival_overlay.marker_value = float(game.festival_overlay.festival.get("challenge_target", 65)) / 100.0
@@ -910,6 +957,17 @@ func _test_menus_relationships_and_settings() -> void:
 	_record("存檔", "SaveGame v5 跨地圖快速存讀", save_ok and load_ok and state_store.coins == 12345 and map_restored)
 	game.game_menu.close()
 	await _frames(3)
+	state_store.coins = 7
+	state_store.current_map_id = &"mistfall_farm"
+	game.mode = "farm"
+	game._set_background_for_mode()
+	player.global_position = Vector2(320, 230)
+	game._create_title_screen()
+	await _frames(3)
+	var continue_was_enabled: bool = is_instance_valid(game.title_continue_button) and not game.title_continue_button.disabled
+	game.title_continue_button.pressed.emit()
+	await _frames(5)
+	_record("標題流程", "繼續按鈕可讀取最近存檔、恢復跨地圖位置並正確解除標題暫停", continue_was_enabled and not is_instance_valid(game.title_overlay) and state_store.coins == 12345 and game.mode == "river" and player.global_position.distance_to(Vector2(188, 214)) < 1.0 and state_store.pause_owner_count() == 0 and not paused)
 
 
 func _test_multiplayer_ui() -> void:
